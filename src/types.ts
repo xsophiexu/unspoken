@@ -12,10 +12,17 @@ export type Category =
   | 'Science and Nature'
   | 'Society'
   | 'Everyday Life'
-  | 'History and Myth';
+  | 'History and Myth'
+  | 'Sports and Games'
+  | 'Love and Relationships'
+  | 'Technology'
+  | 'Business'
+  | 'Arts and Entertainment'
+  | 'Fantasy and Sci-Fi';
 
-// A card as stored in the word bank.
-export type BankCard = Card & { difficulty: Difficulty; theme: Category; score: number };
+// A card as stored in the word bank. Banned words run strongest first, up to 10. Newer banks tag
+// each card with one or more themes; older ones have a single theme.
+export type BankCard = Card & { difficulty: Difficulty; score: number; themes?: Category[]; theme?: Category };
 
 export type ModeId =
   | 'classic'
@@ -30,8 +37,8 @@ export type ModeId =
 export type GameSettings = {
   mode: ModeId;
   difficulty: Difficulty;
-  // Word theme to draw from, or null for all cards.
-  category: Category | null;
+  // Word themes to draw from. Empty means all cards.
+  categories: Category[];
   // Round length in seconds. Ignored by modes without a clock.
   roundSeconds: number;
   // Skips allowed per round, or null for unlimited.

@@ -30,14 +30,20 @@ function secondsToDigits(seconds: number): string {
 export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const mode = modeOf(settings.mode);
   const [difficulty, setDifficulty] = useState<Difficulty>(settings.difficulty);
-  const [category, setCategory] = useState<Category | null>(settings.category);
+  const [categories, setCategories] = useState<Category[]>(settings.categories);
   const [digits, setDigits] = useState(secondsToDigits(settings.roundSeconds));
   const [skips, setSkips] = useState<number | null>(settings.skips);
   const [focused, setFocused] = useState(false);
   // Until the player types a time, the timer follows the difficulty.
   const [customTime, setCustomTime] = useState(settings.roundSeconds !== defaultSecondsFor(settings.difficulty));
   const input = useRef<TextInput>(null);
-  const deckSize = cardsFor(difficulty, category).length;
+  const deckSize = cardsFor(difficulty, categories).length;
+
+  // All cards clears the other themes; any other theme toggles, and clearing the last one means All cards.
+  const toggleTheme = (c: Category | null) => {
+    if (c === null) return setCategories([]);
+    setCategories((cur) => (cur.includes(c) ? cur.filter((x) => x !== c) : [...cur, c]));
+  };
 
   const padded = digits.padStart(3, '0');
   const clock = `${Number(padded.slice(0, -2))}:${padded.slice(-2)}`;
@@ -74,7 +80,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                 >
                   <Text style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
                   <Text style={[styles.diffSub, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
-                    {cardsFor(d.id, category).length} cards
+                    {cardsFor(d.id, categories).length} cards
                   </Text>
                 </Pressable>
               );
@@ -84,25 +90,25 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
 
         <Section
           t={t}
-          label="THEME"
-          aside={deckSize < 20 ? `Only ${deckSize} cards, words will repeat` : undefined}
+          label="THEMES"
+          aside={deckSize < 20 ? `Only ${deckSize} cards, words will repeat` : categories.length > 1 ? `${deckSize} cards` : 'Pick one or more'}
         >
           <View style={styles.themeWrap}>
             {([null, ...CATEGORIES] as (Category | null)[]).map((c) => {
-              const on = c === category;
+              const on = c === null ? categories.length === 0 : categories.includes(c);
               return (
                 <Pressable
                   key={c ?? 'all'}
-                  accessibilityRole="radio"
-                  accessibilityState={{ selected: on }}
-                  onPress={() => setCategory(c)}
+                  accessibilityRole={c === null ? 'radio' : 'checkbox'}
+                  accessibilityState={c === null ? { selected: on } : { checked: on }}
+                  onPress={() => toggleTheme(c)}
                   style={[styles.theme, { backgroundColor: on ? t.accent : t.tile }]}
                 >
                   <Text style={[styles.themeName, font(700), { color: on ? t.onAccent : t.ink }]}>
                     {c ?? 'All cards'}
                   </Text>
                   <Text style={[styles.themeCount, font(600), { color: on ? t.onAccentMuted : t.muted }]}>
-                    {cardsFor(difficulty, c).length}
+                    {cardsFor(difficulty, c === null ? [] : [c]).length}
                   </Text>
                 </Pressable>
               );
@@ -175,7 +181,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
       <Pressable
         accessibilityRole="button"
         disabled={!canStart}
-        onPress={() => onStart({ ...settings, difficulty, category, roundSeconds: seconds, skips })}
+        onPress={() => onStart({ ...settings, difficulty, categories, roundSeconds: seconds, skips })}
         style={[styles.start, { backgroundColor: t.accent, opacity: canStart ? 1 : 0.5 }]}
       >
         <Text style={[styles.startText, font(700), { color: t.onAccent }]}>Start game</Text>

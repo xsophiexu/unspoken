@@ -16,7 +16,17 @@ import { DifficultyPicker } from '../components/DifficultyPicker';
 import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
 import { TimerRing } from '../components/TimerRing';
-import { cardsFor, difficultyOf, formatClock, hiddenSecondsFor, modeOf, shuffled } from '../game';
+import {
+  ESCALATE,
+  bannedCountFor,
+  cardsFor,
+  difficultyOf,
+  formatClock,
+  hiddenSecondsFor,
+  modeOf,
+  shuffled,
+  themeLabel,
+} from '../game';
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
@@ -40,8 +50,14 @@ const HINT_IDLE_MS = 30_000;
 export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeDifficulty, onChangeTheme }: Props) {
   const mode = modeOf(settings.mode);
   const hot = mode.id === 'hotPotato';
+  const esc = mode.id === 'escalate';
   const difficulty = difficultyOf(settings.difficulty);
-  const pool = useMemo(() => cardsFor(settings.difficulty, settings.category), [settings.difficulty, settings.category]);
+  const pool = useMemo(() => {
+    const cards = cardsFor(settings.difficulty, settings.categories);
+    // Escalate needs cards with all 10 banned words; fall back to every card while the bank has fewer.
+    const full = cards.filter((c) => c.banned.length >= ESCALATE.max);
+    return esc && full.length >= 20 ? full : cards;
+  }, [settings.difficulty, settings.categories, esc]);
 
   const [deck, setDeck] = useState<Card[]>(() => shuffled(pool));
   const [idx, setIdx] = useState(0);
@@ -56,7 +72,12 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const [passing, setPassing] = useState(false);
   const [area, setArea] = useState({ w: MAX_W, h: MAX_H });
 
-  const over = mode.timed && left <= 0;
+  // Escalate: correct answers raise the banned-word count; three correct at the top level wins.
+  const level = Math.min(ESCALATE.max, ESCALATE.start + score);
+  const atMax = Math.max(0, score - (ESCALATE.max - ESCALATE.start));
+  const won = esc && atMax >= ESCALATE.winAtMax;
+  const shown = esc ? level : bannedCountFor(settings.difficulty);
+  const over = (mode.timed && left <= 0) || won;
   const halted = paused || menuOpen || pickingLevel || passing;
   const running = mode.timed && !halted && !over;
   const skipsLeft = !mode.skips || settings.skips === null ? null : Math.max(0, settings.skips - skipsUsed);
@@ -201,8 +222,10 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
     skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
   // Modes without a skip limit just count, like the Endless wireframe.
   const tally = `${score} correct · ${skipsUsed} skipped`;
-  const subline = hot ? 'Pass after every word' : !mode.scored ? 'Just practice' : mode.skips ? `${score} pts · ${skipText}` : tally;
-  const themeName = settings.category ?? 'All cards';
+  const escLine =
+    level < ESCALATE.max ? `${level} banned words · ${skipText}` : `10 banned · ${atMax} of ${ESCALATE.winAtMax} to win · ${skipText}`;
+  const subline = esc ? escLine : hot ? 'Pass after every word' : !mode.scored ? 'Just practice' : mode.skips ? `${score} pts · ${skipText}` : tally;
+  const themeName = themeLabel(settings.categories);
   const menuStatus = hot
     ? `Hot potato · timer hidden · ${themeName}`
     : mode.timed
@@ -287,11 +310,24 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
               <View style={styles.bannedBlock}>
                 <Text style={[styles.dontSay, font(700), { color: t.ink }]}>DON&apos;T SAY</Text>
                 <View style={styles.chips}>
-                  {card.banned.map((b) => (
-                    <View key={b} style={styles.chip}>
-                      <Text style={[styles.chipText, font(500), { color: t.ink }]}>{b}</Text>
-                    </View>
-                  ))}
+                  {card.banned.slice(0, shown).map((b, i, list) => {
+                    // The word added by the last correct answer, until the top level is reached.
+                    const fresh = esc && score > 0 && score <= ESCALATE.max - ESCALATE.start && i === level - 1;
+                    const small = list.length > 6;
+                    return (
+                      <View
+                        key={b}
+                        style={[
+                          styles.chip,
+                          small && styles.chipSmall,
+                          fresh && [styles.chipNew, small ? styles.chipNewSmall : null, { borderColor: t.accent }],
+                        ]}
+                      >
+                        <Text style={[styles.chipText, small && styles.chipTextSmall, font(500), { color: t.ink }]}>{b}</Text>
+                        {fresh ? <Text style={[styles.newTag, font(700), { color: t.accent }]}>NEW</Text> : null}
+                      </View>
+                    );
+                  })}
                 </View>
               </View>
             </View>
@@ -335,8 +371,17 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
 
       {over ? (
         <View style={[styles.overlay, { backgroundColor: t.bg }]}>
-          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>TIME&apos;S UP</Text>
-          {hot ? (
+          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>{won ? 'YOU WIN' : "TIME'S UP"}</Text>
+          {esc ? (
+            <>
+              <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{won ? formatClock(left) : level}</Text>
+              <Text style={[styles.overSub, font(500), { color: t.muted }]}>
+                {won
+                  ? `left on the clock · ${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}`
+                  : `banned words reached · ${score} correct`}
+              </Text>
+            </>
+          ) : hot ? (
             <>
               <Text style={[styles.hotTitle, font(800), { color: t.ink }]}>Whoever is holding the phone loses a point</Text>
               <Text style={[styles.overSub, font(500), { color: t.muted }]}>
@@ -391,7 +436,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         visible={pickingLevel}
         theme={t}
         current={settings.difficulty}
-        category={settings.category}
+        categories={settings.categories}
         onClose={() => setPickingLevel(false)}
         onPick={(d) => {
           setPickingLevel(false);
@@ -446,6 +491,11 @@ const styles = StyleSheet.create({
   chips: { marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   chip: { backgroundColor: '#FFFFFF', borderRadius: 10, paddingVertical: 11, paddingHorizontal: 15 },
   chipText: { fontSize: 18 },
+  chipSmall: { paddingVertical: 8, paddingHorizontal: 11 },
+  chipTextSmall: { fontSize: 15 },
+  chipNew: { borderWidth: 2, paddingVertical: 9, paddingHorizontal: 13, flexDirection: 'row', alignItems: 'center', gap: 6 },
+  chipNewSmall: { paddingVertical: 6, paddingHorizontal: 9 },
+  newTag: { fontSize: 11, letterSpacing: 0.6 },
   bars: { flexDirection: 'row', gap: 12, paddingHorizontal: 2 },
   barCol: { minWidth: 0 },
   barPress: { gap: 8, paddingTop: 8 },

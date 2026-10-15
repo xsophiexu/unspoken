@@ -3,7 +3,14 @@ import type { BankCard, Card, Category, Difficulty, GameSettings, ModeId } from 
 
 // The word bank is written in the "Harder difficulty word samples" thread and copied from
 // /mnt/project-files/unspoken/word-banks.json.
-export const BANK = bank as BankCard[];
+type Entry = Card & { difficulty: Difficulty; themes: Category[] };
+
+export const BANK: Entry[] = (bank as BankCard[]).map((c) => ({
+  word: c.word,
+  banned: c.banned,
+  difficulty: c.difficulty,
+  themes: c.themes ?? (c.theme ? [c.theme] : []),
+}));
 
 // Easiest to hardest.
 export const DIFFICULTIES: { id: Difficulty; badge: string }[] = [
@@ -15,21 +22,44 @@ export const DIFFICULTIES: { id: Difficulty; badge: string }[] = [
   { id: 'Master 2', badge: 'MASTER 2' },
 ];
 
-export const CATEGORIES: Category[] = [
+const ALL_CATEGORIES: Category[] = [
   'Inner World',
   'Literature and Language',
   'Pop Culture',
+  'Arts and Entertainment',
   'Science and Nature',
+  'Technology',
   'Society',
+  'Business',
+  'Love and Relationships',
   'Everyday Life',
+  'Sports and Games',
   'History and Myth',
+  'Fantasy and Sci-Fi',
 ];
 
-export function cardsFor(difficulty: Difficulty, category: Category | null): Card[] {
-  return BANK.filter((c) => c.difficulty === difficulty && (category === null || c.theme === category)).map(
-    ({ word, banned }) => ({ word, banned }),
-  );
+// Only themes that have cards in the current bank.
+export const CATEGORIES = ALL_CATEGORIES.filter((c) => BANK.some((card) => card.themes.includes(c)));
+
+export function cardsFor(difficulty: Difficulty, categories: Category[]): Card[] {
+  return BANK.filter(
+    (c) => c.difficulty === difficulty && (categories.length === 0 || c.themes.some((t) => categories.includes(t))),
+  ).map(({ word, banned }) => ({ word, banned }));
 }
+
+export function themeLabel(categories: Category[]): string {
+  if (categories.length === 0) return 'All cards';
+  if (categories.length === 1) return categories[0];
+  return `${categories.length} themes`;
+}
+
+// Banned words shown on each card: 5 at the two easiest levels, 6 everywhere else.
+export function bannedCountFor(difficulty: Difficulty): number {
+  return difficulty === 'Normal' || difficulty === 'Harder' ? 5 : 6;
+}
+
+// Escalate starts with 4 banned words and adds one per correct answer. Three correct at 10 wins.
+export const ESCALATE = { start: 4, max: 10, winAtMax: 3 };
 
 export type Mode = {
   id: ModeId;
@@ -50,7 +80,7 @@ export const MODES: Mode[] = [
   { id: 'endless', name: 'Endless', sub: 'No clock, no limits, go until you stop', timed: false, scored: true, skips: false, available: true },
   { id: 'teams', name: 'Teams', sub: 'Two teams, pass the phone', timed: true, scored: true, skips: true, available: false },
   { id: 'timeAttack', name: 'Time attack', sub: 'Correct answers add time', timed: true, scored: true, skips: true, bonusSeconds: 5, available: true },
-  { id: 'escalate', name: 'Escalate', sub: 'More banned words each level', timed: true, scored: true, skips: true, available: false },
+  { id: 'escalate', name: 'Escalate', sub: 'One more banned word per correct', timed: true, scored: true, skips: true, available: true },
   { id: 'hotPotato', name: 'Hot potato', sub: 'Hidden timer, pass it on', timed: true, scored: false, skips: false, available: true },
   { id: 'zen', name: 'Zen', sub: 'No score, no clock', timed: false, scored: false, skips: false, available: true },
   { id: 'reverse', name: 'Reverse', sub: 'Guess the word from its clues', timed: false, scored: true, skips: false, available: true },
@@ -75,7 +105,7 @@ export const SKIP_OPTIONS: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 export const DEFAULT_SETTINGS: GameSettings = {
   mode: 'endless',
   difficulty: 'Expert 1',
-  category: null,
+  categories: [],
   roundSeconds: 150,
   skips: 3,
 };

@@ -9,13 +9,13 @@ type Props = {
   visible: boolean;
   theme: Theme;
   current: Difficulty;
-  category: Category | null;
+  categories: Category[];
   onPick: (difficulty: Difficulty) => void;
   onClose: () => void;
 };
 
 // Opens from the difficulty badge on the play screen. Picking a level starts a new game at that level.
-export function DifficultyPicker({ visible, theme: t, current, category, onPick, onClose }: Props) {
+export function DifficultyPicker({ visible, theme: t, current, categories, onPick, onClose }: Props) {
   const insets = useSafeAreaInsets();
 
   return (
@@ -38,7 +38,7 @@ export function DifficultyPicker({ visible, theme: t, current, category, onPick,
               >
                 <Text style={[styles.name, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
                 <Text style={[styles.count, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
-                  {cardsFor(d.id, category).length} cards
+                  {cardsFor(d.id, categories).length} cards
                 </Text>
               </Pressable>
             );

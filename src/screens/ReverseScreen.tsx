@@ -5,7 +5,7 @@ import { Button } from '../components/Button';
 import { DifficultyPicker } from '../components/DifficultyPicker';
 import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
-import { cardsFor, difficultyOf, shuffled } from '../game';
+import { bannedCountFor, cardsFor, difficultyOf, shuffled, themeLabel } from '../game';
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
@@ -30,7 +30,7 @@ let seenHowTo = false;
 // Reverse mode from the design canvas: read the banned words as clues and guess the hidden word.
 export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeDifficulty, onChangeTheme }: Props) {
   const difficulty = difficultyOf(settings.difficulty);
-  const pool = useMemo(() => cardsFor(settings.difficulty, settings.category), [settings.difficulty, settings.category]);
+  const pool = useMemo(() => cardsFor(settings.difficulty, settings.categories), [settings.difficulty, settings.categories]);
 
   const [deck, setDeck] = useState<Card[]>(() => shuffled(pool));
   const [idx, setIdx] = useState(0);
@@ -42,11 +42,13 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
   const [pickingLevel, setPickingLevel] = useState(false);
   const [cardWidth, setCardWidth] = useState(342);
 
-  const card = deck[idx];
+  const shownCard = deck[idx];
+  // Reverse uses the same number of clues as the banned words a level shows.
+  const card = shownCard && { ...shownCard, banned: shownCard.banned.slice(0, bannedCountFor(settings.difficulty)) };
   const clueCount = card?.banned.length ?? 0;
   // All clues showing is still worth a point.
   const worth = clueCount + 1 - revealed;
-  const themeName = settings.category ?? 'All cards';
+  const themeName = themeLabel(settings.categories);
 
   const dx = useState(() => new Animated.Value(0))[0];
   const flying = useRef(false);
@@ -249,7 +251,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
         visible={pickingLevel}
         theme={t}
         current={settings.difficulty}
-        category={settings.category}
+        categories={settings.categories}
         onClose={() => setPickingLevel(false)}
         onPick={(d) => {
           setPickingLevel(false);
