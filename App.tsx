@@ -1,58 +1,71 @@
+import {
+  Manrope_400Regular,
+  Manrope_500Medium,
+  Manrope_600SemiBold,
+  Manrope_700Bold,
+  Manrope_800ExtraBold,
+  useFonts,
+} from '@expo-google-fonts/manrope';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { HomeScreen } from './src/screens/HomeScreen';
+import { DEFAULT_SETTINGS } from './src/game';
+import { ModesScreen } from './src/screens/ModesScreen';
 import { PlayScreen } from './src/screens/PlayScreen';
-import { ResultsScreen } from './src/screens/ResultsScreen';
-import { useTheme } from './src/theme';
-import type { RoundResult, RoundSettings } from './src/types';
+import { SetupScreen } from './src/screens/SetupScreen';
+import { THEMES } from './src/theme';
+import type { GameSettings } from './src/types';
 
-type Screen =
-  | { name: 'home' }
-  | { name: 'play'; settings: RoundSettings; round: number }
-  | { name: 'results'; settings: RoundSettings; result: RoundResult };
+type Screen = 'play' | 'setup' | 'modes';
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Manrope_400Regular,
+    Manrope_500Medium,
+    Manrope_600SemiBold,
+    Manrope_700Bold,
+    Manrope_800ExtraBold,
+  });
+
+  // The app opens straight into a Classic game, the Current Version screen.
+  const [screen, setScreen] = useState<Screen>('play');
+  const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
+  const [themeIndex, setThemeIndex] = useState(0);
+  const [gameKey, setGameKey] = useState(0);
+
+  const theme = THEMES[themeIndex];
+
+  const startGame = (next: GameSettings) => {
+    setSettings(next);
+    setGameKey((k) => k + 1);
+    setScreen('play');
+  };
+
+  if (!fontsLoaded) return null;
+
   return (
     <SafeAreaProvider>
-      <Root />
+      <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }}>
+        {screen === 'play' && (
+          <PlayScreen
+            key={gameKey}
+            settings={settings}
+            theme={theme}
+            onRestart={() => startGame(settings)}
+            onChangeSettings={() => setScreen('setup')}
+            onChangeMode={(mode) => startGame({ ...settings, mode })}
+            onChangeTheme={setThemeIndex}
+          />
+        )}
+        {screen === 'setup' && (
+          <SetupScreen settings={settings} theme={theme} onStart={startGame} onModes={() => setScreen('modes')} />
+        )}
+        {screen === 'modes' && (
+          <ModesScreen current={settings.mode} theme={theme} onPlay={(mode) => startGame({ ...settings, mode })} />
+        )}
+        <StatusBar style="dark" />
+      </SafeAreaView>
     </SafeAreaProvider>
-  );
-}
-
-function Root() {
-  const t = useTheme();
-  const [screen, setScreen] = useState<Screen>({ name: 'home' });
-
-  const start = useCallback(
-    (settings: RoundSettings) => setScreen({ name: 'play', settings, round: Date.now() }),
-    [],
-  );
-
-  const finish = useCallback((result: RoundResult) => {
-    setScreen((s) => (s.name === 'play' ? { name: 'results', settings: s.settings, result } : s));
-  }, []);
-
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: t.bg }}>
-      {screen.name === 'home' && <HomeScreen onStart={start} />}
-      {screen.name === 'play' && (
-        <PlayScreen
-          key={screen.round}
-          settings={screen.settings}
-          onFinish={finish}
-          onQuit={() => setScreen({ name: 'home' })}
-        />
-      )}
-      {screen.name === 'results' && (
-        <ResultsScreen
-          result={screen.result}
-          onPlayAgain={() => start(screen.settings)}
-          onHome={() => setScreen({ name: 'home' })}
-        />
-      )}
-      <StatusBar style="auto" />
-    </SafeAreaView>
   );
 }

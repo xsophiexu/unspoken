@@ -3,15 +3,23 @@ export type Card = {
   banned: string[];
 };
 
-export type Difficulty = 'normal' | 'evenHarder';
+export type Difficulty = 'easy' | 'hard' | 'evenHarder';
 
-export type RoundSettings = {
+export type ModeId =
+  | 'classic'
+  | 'endless'
+  | 'teams'
+  | 'timeAttack'
+  | 'escalate'
+  | 'hotPotato'
+  | 'zen'
+  | 'reverse';
+
+export type GameSettings = {
+  mode: ModeId;
   difficulty: Difficulty;
-  // Seconds per round, or null for no timer.
-  timer: number | null;
-};
-
-export type RoundResult = {
-  correct: Card[];
-  skipped: Card[];
+  // Round length in seconds. Ignored by modes without a clock.
+  roundSeconds: number;
+  // Skips allowed per round, or null for unlimited.
+  skips: number | null;
 };

@@ -1,158 +1,401 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Animated,
+  Easing,
+  PanResponder,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  type LayoutChangeEvent,
+} from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 
-import { DECKS, formatClock, shuffled } from '../game';
-import { useTheme } from '../theme';
-import type { Card, RoundResult, RoundSettings } from '../types';
+import { GameMenu } from '../components/GameMenu';
+import { TimerRing } from '../components/TimerRing';
+import { difficultyOf, formatClock, modeOf, shuffled } from '../game';
+import { font, type Theme } from '../theme';
+import type { Card, GameSettings, ModeId } from '../types';
 
 type Props = {
-  settings: RoundSettings;
-  onFinish: (result: RoundResult) => void;
-  onQuit: () => void;
+  settings: GameSettings;
+  theme: Theme;
+  onRestart: () => void;
+  onChangeSettings: () => void;
+  onChangeMode: (mode: ModeId) => void;
+  onChangeTheme: (index: number) => void;
 };
 
-export function PlayScreen({ settings, onFinish, onQuit }: Props) {
-  const t = useTheme();
-  const deck = useMemo(() => shuffled(DECKS[settings.difficulty].cards), [settings]);
-  const [index, setIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(settings.timer);
-  const result = useRef<RoundResult>({ correct: [], skipped: [] });
+const MAX_W = 350;
+const MAX_H = 580;
+const SWIPE_AT = 100;
 
-  const card: Card | undefined = deck[index];
+// The Current Version screen from the design canvas: a swipeable card inside a timer ring.
+export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeMode, onChangeTheme }: Props) {
+  const mode = modeOf(settings.mode);
+  const difficulty = difficultyOf(settings.difficulty);
 
-  // Count down once per second while a timer is set.
+  const [deck, setDeck] = useState<Card[]>(() => shuffled(difficulty.cards));
+  const [idx, setIdx] = useState(0);
+  const [score, setScore] = useState(0);
+  const [skipsUsed, setSkipsUsed] = useState(0);
+  const [total, setTotal] = useState(settings.roundSeconds);
+  const [left, setLeft] = useState(settings.roundSeconds);
+  const [paused, setPaused] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [area, setArea] = useState({ w: MAX_W, h: MAX_H });
+
+  const over = mode.timed && left <= 0;
+  const running = mode.timed && !paused && !menuOpen && !over;
+  const skipsLeft = settings.skips === null ? null : Math.max(0, settings.skips - skipsUsed);
+  const card = deck[idx];
+
+  const dx = useRef(new Animated.Value(0)).current;
+  const enter = useRef(new Animated.Value(1)).current;
+  const fade = useRef(new Animated.Value(1)).current;
+  const hint = useRef(new Animated.Value(0)).current;
+  const flying = useRef(false);
+  const swiped = useRef(false);
+
+  // Clock.
   useEffect(() => {
-    if (settings.timer === null) return;
-    const id = setInterval(() => {
-      setTimeLeft((s) => (s === null ? s : Math.max(0, s - 1)));
-    }, 1000);
+    if (!running) return;
+    const id = setInterval(() => setLeft((s) => Math.max(0, s - 1)), 1000);
     return () => clearInterval(id);
-  }, [settings.timer]);
+  }, [running]);
 
+  // Until the first swipe, nudge the card right every few seconds to show it moves.
   useEffect(() => {
-    if (timeLeft === 0 || index >= deck.length) onFinish(result.current);
-  }, [timeLeft, index, deck.length, onFinish]);
+    if (swiped.current || paused || menuOpen || over) return;
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.delay(600),
+        Animated.parallel([
+          Animated.timing(dx, { toValue: 70, duration: 320, easing: Easing.out(Easing.quad), useNativeDriver: false }),
+          Animated.timing(hint, { toValue: 1, duration: 200, useNativeDriver: false }),
+        ]),
+        Animated.delay(780),
+        Animated.parallel([
+          Animated.spring(dx, { toValue: 0, friction: 7, tension: 60, useNativeDriver: false }),
+          Animated.timing(hint, { toValue: 0, duration: 200, useNativeDriver: false }),
+        ]),
+        Animated.delay(1600),
+      ]),
+    );
+    loop.start();
+    return () => {
+      loop.stop();
+      hint.setValue(0);
+    };
+  }, [paused, menuOpen, over, dx, hint]);
 
-  function answer(gotIt: boolean) {
-    if (!card) return;
-    (gotIt ? result.current.correct : result.current.skipped).push(card);
-    setIndex((i) => i + 1);
-  }
+  const finish = useCallback(
+    (dir: 1 | -1) => {
+      if (flying.current || over || paused || menuOpen) return;
+      if (dir < 0 && skipsLeft === 0) {
+        Animated.spring(dx, { toValue: 0, friction: 6, useNativeDriver: false }).start();
+        return;
+      }
+      flying.current = true;
+      swiped.current = true;
+      Animated.parallel([
+        Animated.timing(dx, { toValue: dir * 520, duration: 260, easing: Easing.in(Easing.quad), useNativeDriver: false }),
+        Animated.timing(fade, { toValue: 0, duration: 260, useNativeDriver: false }),
+      ]).start(() => {
+        if (dir > 0) {
+          setScore((s) => s + 1);
+          if (mode.bonusSeconds) {
+            setLeft((s) => s + mode.bonusSeconds!);
+            setTotal((tt) => Math.max(tt, left + mode.bonusSeconds!));
+          }
+        } else {
+          setSkipsUsed((s) => s + 1);
+        }
+        if (idx + 1 >= deck.length) {
+          setDeck(shuffled(difficulty.cards));
+          setIdx(0);
+        } else {
+          setIdx(idx + 1);
+        }
+        dx.setValue(0);
+        fade.setValue(1);
+        enter.setValue(0);
+        Animated.spring(enter, { toValue: 1, friction: 9, tension: 70, useNativeDriver: false }).start(() => {
+          flying.current = false;
+        });
+      });
+    },
+    [over, paused, menuOpen, skipsLeft, mode.bonusSeconds, left, idx, deck.length, difficulty.cards, dx, fade, enter],
+  );
 
-  if (!card) return null;
+  const finishRef = useRef(finish);
+  finishRef.current = finish;
+
+  const pan = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => !flying.current,
+      onMoveShouldSetPanResponder: (_, g) => !flying.current && Math.abs(g.dx) > 6 && Math.abs(g.dx) > Math.abs(g.dy),
+      onPanResponderGrant: () => {
+        dx.stopAnimation();
+        hint.setValue(0);
+      },
+      onPanResponderMove: (_, g) => dx.setValue(g.dx),
+      onPanResponderRelease: (_, g) => {
+        if (g.dx > SWIPE_AT) finishRef.current(1);
+        else if (g.dx < -SWIPE_AT) finishRef.current(-1);
+        else Animated.spring(dx, { toValue: 0, friction: 7, tension: 60, useNativeDriver: false }).start();
+      },
+      onPanResponderTerminate: () => {
+        Animated.spring(dx, { toValue: 0, useNativeDriver: false }).start();
+      },
+    }),
+  ).current;
+
+  const onArea = (e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    setArea({ w: Math.min(MAX_W, width), h: Math.min(MAX_H, height - 24) });
+  };
+
+  const skipText =
+    skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
+  const subline = mode.scored ? `${score} pts · ${skipText}` : 'Just practice';
+  const menuStatus = mode.timed ? `${formatClock(left)} left · ${score} pts` : mode.scored ? `${score} pts` : 'Zen mode';
+
+  const rotate = dx.interpolate({ inputRange: [-180, 0, 180], outputRange: ['-10deg', '0deg', '10deg'] });
+  const enterY = enter.interpolate({ inputRange: [0, 1], outputRange: [40, 0] });
+  const enterScale = enter.interpolate({ inputRange: [0, 1], outputRange: [0.95, 1] });
+  const enterOpacity = enter.interpolate({ inputRange: [0, 1], outputRange: [0.3, 1] });
+  const corFlex = dx.interpolate({ inputRange: [-120, 0, 120], outputRange: [0.3, 1, 3.2], extrapolate: 'clamp' });
+  const skipFlex = dx.interpolate({ inputRange: [-120, 0, 120], outputRange: [3.2, 1, 0.3], extrapolate: 'clamp' });
+  const corOpacity = dx.interpolate({ inputRange: [-120, 0], outputRange: [0.4, 1], extrapolate: 'clamp' });
+  const skipOpacity = dx.interpolate({ inputRange: [0, 120], outputRange: [1, 0.4], extrapolate: 'clamp' });
+  const skipBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
+
+  const statusLine = useMemo(
+    () => (mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
+    [mode.scored, score, skipsLeft, skipsUsed, settings.skips],
+  );
 
   return (
-    <View style={styles.wrap}>
-      <View style={styles.top}>
-        <Pressable accessibilityRole="button" onPress={onQuit} hitSlop={12}>
-          <Text style={[styles.quit, { color: t.muted }]}>End round</Text>
+    <View style={[styles.wrap, { backgroundColor: t.bg }]}>
+      <View style={styles.header}>
+        <View style={styles.headerText}>
+          <View style={styles.titleRow}>
+            <Text style={[styles.mode, font(800), { color: t.ink }]}>{mode.name}</Text>
+            <View style={[styles.badge, { backgroundColor: t.accent }]}>
+              <Text style={[styles.badgeText, font(800), { color: t.onAccent }]}>{difficulty.badge}</Text>
+            </View>
+          </View>
+          <Text style={[styles.subline, font(500), { color: t.muted }]}>{subline}</Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Menu"
+          onPress={() => setMenuOpen(true)}
+          style={[styles.menuButton, { backgroundColor: t.tile }]}
+        >
+          {[0, 1, 2].map((k) => (
+            <View key={k} style={[styles.dot, { backgroundColor: t.ink }]} />
+          ))}
         </Pressable>
-        <Text style={[styles.meta, { color: t.muted }]}>
-          {timeLeft !== null ? formatClock(timeLeft) : `${deck.length - index} left`}
-        </Text>
-        <Text style={[styles.meta, { color: t.ok }]}>{result.current.correct.length} correct</Text>
       </View>
 
-      <View style={[styles.card, { backgroundColor: t.card }]}>
-        <Text style={[styles.level, { color: t.accent, borderColor: t.accent }]}>
-          {DECKS[settings.difficulty].label}
-        </Text>
-        <View style={styles.wordBlock}>
-          <Text style={[styles.label, { color: t.muted }]}>Get them to say</Text>
-          <Text style={[styles.word, { color: t.ink }]} adjustsFontSizeToFit numberOfLines={2}>
-            {card.word}
-          </Text>
-        </View>
-        <View style={[styles.banned, { borderTopColor: t.line }]}>
-          <Text style={[styles.label, { color: t.ban }]}>Don't say</Text>
-          <View style={styles.grid}>
-            {card.banned.map((b) => (
-              <View key={b} style={[styles.chip, { backgroundColor: t.banSoft }]}>
-                <Text style={[styles.chipX, { color: t.ban }]}>×</Text>
-                <Text style={[styles.chipText, { color: t.ink }]} numberOfLines={2}>
-                  {b}
-                </Text>
+      <View style={styles.middle} onLayout={onArea}>
+        <Animated.View style={[styles.hint, { opacity: hint }]} pointerEvents="none">
+          <Svg width={20} height={20} viewBox="0 0 18 18">
+            <Path d="M7 4 L12 9 L7 14" fill="none" stroke={t.accent} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" />
+          </Svg>
+          <Text style={[styles.hintText, font(800), { color: t.accent }]}>SWIPE</Text>
+        </Animated.View>
+
+        {card ? (
+          <Animated.View
+            {...pan.panHandlers}
+            style={{
+              width: area.w,
+              height: area.h,
+              opacity: Animated.multiply(fade, enterOpacity),
+              transform: [{ translateX: dx }, { translateY: enterY }, { rotate }, { scale: enterScale }],
+            }}
+          >
+            {mode.timed ? (
+              <>
+                <TimerRing width={area.w} height={area.h} progress={left / total} track={t.track} color={t.accent} />
+                <View style={[styles.clock, { backgroundColor: t.bg }]}>
+                  <Text style={[styles.clockText, font(800), { color: t.ink }]}>{formatClock(left)}</Text>
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityLabel="Pause"
+                    onPress={() => setPaused(true)}
+                    style={styles.pause}
+                  >
+                    <Svg width={14} height={14} viewBox="0 0 14 14">
+                      <Path d="M4.5 2.5 V11.5 M9.5 2.5 V11.5" stroke={t.ink} strokeWidth={2.2} strokeLinecap="round" />
+                    </Svg>
+                  </Pressable>
+                </View>
+              </>
+            ) : null}
+            <View
+              style={[
+                styles.tile,
+                { backgroundColor: t.tile },
+                mode.timed ? { top: 18, left: 18, right: 18, bottom: 18 } : StyleSheet.absoluteFill,
+              ]}
+            >
+              <Text style={[styles.yourWord, font(500), { color: t.ink }]}>Your word</Text>
+              <Text style={[styles.word, font(800), { color: t.ink }]} adjustsFontSizeToFit numberOfLines={2}>
+                {card.word}
+              </Text>
+              <View style={styles.bannedBlock}>
+                <Text style={[styles.dontSay, font(700), { color: t.ink }]}>DON'T SAY</Text>
+                <View style={styles.chips}>
+                  {card.banned.map((b) => (
+                    <View key={b} style={styles.chip}>
+                      <Text style={[styles.chipText, font(500), { color: t.ink }]}>{b}</Text>
+                    </View>
+                  ))}
+                </View>
               </View>
-            ))}
+            </View>
+          </Animated.View>
+        ) : null}
+      </View>
+
+      <View style={styles.bars}>
+        <Animated.View style={[styles.barCol, { flex: skipFlex }]}>
+          <Animated.Text style={[styles.barLabel, font(700), { color: t.muted, opacity: skipOpacity }]} numberOfLines={1}>
+            ← Skip
+          </Animated.Text>
+          <Animated.View style={[styles.bar, { backgroundColor: skipBar }]} />
+        </Animated.View>
+        <Animated.View style={[styles.barCol, styles.barColRight, { flex: corFlex }]}>
+          <Animated.Text style={[styles.barLabel, font(700), { color: t.correctText, opacity: corOpacity }]} numberOfLines={1}>
+            Correct →
+          </Animated.Text>
+          <View style={[styles.bar, styles.barStretch, { backgroundColor: t.accent }]} />
+        </Animated.View>
+      </View>
+
+      {over ? (
+        <View style={[styles.overlay, { backgroundColor: t.bg }]}>
+          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>TIME'S UP</Text>
+          <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{score}</Text>
+          <Text style={[styles.overSub, font(500), { color: t.muted }]}>
+            points · {skipsUsed} skip{skipsUsed === 1 ? '' : 's'}
+          </Text>
+          <View style={styles.overlayButtons}>
+            <Button t={t} primary label="Play again" onPress={onRestart} />
+            <Button t={t} label="Change settings" onPress={onChangeSettings} />
           </View>
         </View>
-      </View>
+      ) : null}
 
-      <View style={styles.controls}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => answer(false)}
-          style={({ pressed }) => [
-            styles.button,
-            { flex: 1, backgroundColor: t.card, borderColor: t.line, opacity: pressed ? 0.8 : 1 },
-          ]}
-        >
-          <Text style={[styles.buttonText, { color: t.ink }]}>Skip</Text>
-        </Pressable>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => answer(true)}
-          style={({ pressed }) => [
-            styles.button,
-            { flex: 1.6, backgroundColor: t.ok, borderColor: t.ok, opacity: pressed ? 0.85 : 1 },
-          ]}
-        >
-          <Text style={[styles.buttonText, { color: t.onSolid }]}>Correct</Text>
-        </Pressable>
-      </View>
+      {paused && !over ? (
+        <View style={[styles.overlay, { backgroundColor: t.bg + 'F0' }]}>
+          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>PAUSED</Text>
+          <Text style={[styles.pausedClock, font(800), { color: t.ink }]}>{formatClock(left)}</Text>
+          <Text style={[styles.overSub, font(500), { color: t.muted }]}>{statusLine}</Text>
+          <View style={styles.overlayButtons}>
+            <Button t={t} primary label="Resume" onPress={() => setPaused(false)} />
+            <Button t={t} label="Change settings" onPress={onChangeSettings} />
+            <Button t={t} label="New game" onPress={onRestart} />
+          </View>
+        </View>
+      ) : null}
+
+      <GameMenu
+        visible={menuOpen}
+        theme={t}
+        status={menuStatus}
+        modeId={settings.mode}
+        onResume={() => setMenuOpen(false)}
+        onRestart={() => {
+          setMenuOpen(false);
+          onRestart();
+        }}
+        onChangeMode={(m) => {
+          setMenuOpen(false);
+          onChangeMode(m);
+        }}
+        onChangeTheme={onChangeTheme}
+      />
     </View>
   );
 }
 
+function Button({ t, label, primary, onPress }: { t: Theme; label: string; primary?: boolean; onPress: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.button,
+        primary
+          ? { backgroundColor: t.accent, height: 58 }
+          : { borderWidth: 1.5, borderColor: t.outline, backgroundColor: 'transparent' },
+        { opacity: pressed ? 0.85 : 1 },
+      ]}
+    >
+      <Text style={[styles.buttonText, font(700), { color: primary ? t.onAccent : t.ink }]}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
-  wrap: { flex: 1, padding: 20, gap: 20, justifyContent: 'center' },
-  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  quit: { fontSize: 15, fontWeight: '600' },
-  meta: { fontSize: 15, fontWeight: '600', fontVariant: ['tabular-nums'] },
-  card: {
-    borderRadius: 24,
-    padding: 24,
-    gap: 22,
-    shadowColor: '#14163c',
-    shadowOpacity: 0.12,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 4,
-  },
-  level: {
-    alignSelf: 'flex-start',
-    fontSize: 12,
-    fontWeight: '700',
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-    borderWidth: 1.5,
-    borderRadius: 999,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    overflow: 'hidden',
-  },
-  wordBlock: { gap: 6 },
-  label: { fontSize: 12, fontWeight: '600', letterSpacing: 1, textTransform: 'uppercase' },
-  word: { fontSize: 46, fontWeight: '800', letterSpacing: -1 },
-  banned: { borderTopWidth: 1, paddingTop: 18, gap: 10 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: {
-    width: '48.5%',
+  wrap: { flex: 1, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
+  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingHorizontal: 2 },
+  headerText: { flex: 1 },
+  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  mode: { fontSize: 26, letterSpacing: -0.5 },
+  badge: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  badgeText: { fontSize: 11, letterSpacing: 0.6 },
+  subline: { fontSize: 13, marginTop: 1 },
+  menuButton: { width: 36, height: 36, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3 },
+  dot: { width: 4, height: 4, borderRadius: 2 },
+  middle: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  hint: { position: 'absolute', left: 4, width: 56, alignItems: 'center', gap: 4 },
+  hintText: { fontSize: 12, letterSpacing: 0.7 },
+  clock: {
+    position: 'absolute',
+    top: -16,
+    alignSelf: 'center',
+    height: 32,
+    paddingLeft: 10,
+    paddingRight: 6,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    borderRadius: 12,
-    padding: 12,
+    gap: 4,
+    zIndex: 2,
   },
-  chipX: { fontSize: 18, fontWeight: '700' },
-  chipText: { fontSize: 16, fontWeight: '500', flexShrink: 1 },
-  controls: { flexDirection: 'row', gap: 12 },
-  button: {
-    minHeight: 58,
-    borderRadius: 16,
-    borderWidth: 1.5,
+  clockText: { fontSize: 15, fontVariant: ['tabular-nums'] },
+  pause: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  tile: { position: 'absolute', borderRadius: 20, paddingVertical: 30, paddingHorizontal: 22, overflow: 'hidden' },
+  yourWord: { fontSize: 13, opacity: 0.75 },
+  word: { fontSize: 50, lineHeight: 54, letterSpacing: -1, marginTop: 2 },
+  bannedBlock: { marginTop: 'auto' },
+  dontSay: { fontSize: 11, letterSpacing: 0.9 },
+  chips: { marginTop: 14, flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  chip: { backgroundColor: '#FFFFFF', borderRadius: 10, paddingVertical: 11, paddingHorizontal: 15 },
+  chipText: { fontSize: 18 },
+  bars: { flexDirection: 'row', gap: 12, paddingHorizontal: 2 },
+  barCol: { minWidth: 0, gap: 8 },
+  barColRight: { alignItems: 'flex-end' },
+  barLabel: { fontSize: 16 },
+  bar: { height: 6, borderRadius: 3 },
+  barStretch: { alignSelf: 'stretch' },
+  overlay: {
+    ...StyleSheet.absoluteFill,
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10,
+    padding: 40,
   },
-  buttonText: { fontSize: 17, fontWeight: '700' },
+  overLabel: { fontSize: 13, letterSpacing: 1 },
+  bigScore: { fontSize: 72, lineHeight: 76 },
+  pausedClock: { fontSize: 56, lineHeight: 60, fontVariant: ['tabular-nums'] },
+  overSub: { fontSize: 15, textAlign: 'center' },
+  overlayButtons: { marginTop: 24, width: 240, gap: 10 },
+  button: { height: 54, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
+  buttonText: { fontSize: 16 },
 });
