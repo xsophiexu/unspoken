@@ -56,6 +56,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const hint = useRef(new Animated.Value(0)).current;
   const flying = useRef(false);
   const swiped = useRef(false);
+  const nudge = useRef<Animated.CompositeAnimation | null>(null);
 
   // Clock.
   useEffect(() => {
@@ -82,9 +83,11 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         Animated.delay(1600),
       ]),
     );
+    nudge.current = loop;
     loop.start();
     return () => {
       loop.stop();
+      nudge.current = null;
       hint.setValue(0);
     };
   }, [paused, menuOpen, over, dx, hint]);
@@ -135,7 +138,12 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
     PanResponder.create({
       onStartShouldSetPanResponder: () => !flying.current,
       onMoveShouldSetPanResponder: (_, g) => !flying.current && Math.abs(g.dx) > 6 && Math.abs(g.dx) > Math.abs(g.dy),
+      // Keep the gesture if the browser starts selecting text under the pointer.
+      onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: () => {
+        // Touching the card shows the player knows it moves, so stop the nudge.
+        swiped.current = true;
+        nudge.current?.stop();
         dx.stopAnimation();
         hint.setValue(0);
       },
