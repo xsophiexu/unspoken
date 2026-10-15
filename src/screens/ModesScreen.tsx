@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
-import { MODES, modeOf } from '../game';
+import { MODES } from '../game';
 import { font, type Theme } from '../theme';
 import type { ModeId } from '../types';
 
@@ -11,25 +10,24 @@ type Props = {
   onNext: (mode: ModeId) => void;
 };
 
-// The "Change mode · Tile grid" board from the design canvas. Picking a mode leads to New game setup.
+// The "Change mode · Tile grid" board from the design canvas. Tapping a mode goes straight to its New game setup.
 export function ModesScreen({ current, theme: t, onNext }: Props) {
-  const [selected, setSelected] = useState<ModeId>(current);
-  const mode = modeOf(selected);
 
   return (
     <View style={[styles.wrap, { backgroundColor: t.bg }]}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <Text style={[styles.title, font(800), { color: t.ink }]}>Modes</Text>
+        <Text style={[styles.hint, font(500), { color: t.muted }]}>Tap a mode to set up a game</Text>
         <View style={styles.grid}>
           {MODES.map((m) => {
-            const on = m.id === selected;
+            const on = m.id === current;
             return (
               <Pressable
                 key={m.id}
-                accessibilityRole="radio"
+                accessibilityRole="button"
                 accessibilityState={{ selected: on, disabled: !m.available }}
                 disabled={!m.available}
-                onPress={() => setSelected(m.id)}
+                onPress={() => onNext(m.id)}
                 style={[
                   styles.tile,
                   { backgroundColor: on ? t.accent : t.tile, opacity: m.available ? 1 : 0.55 },
@@ -44,13 +42,6 @@ export function ModesScreen({ current, theme: t, onNext }: Props) {
           })}
         </View>
       </ScrollView>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => onNext(selected)}
-        style={[styles.play, { backgroundColor: t.accent }]}
-      >
-        <Text style={[styles.playText, font(700), { color: t.onAccent }]}>Next: set up {mode.name}</Text>
-      </Pressable>
     </View>
   );
 }
@@ -59,6 +50,7 @@ const styles = StyleSheet.create({
   wrap: { flex: 1, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
   scroll: { paddingBottom: 20 },
   title: { fontSize: 28, paddingHorizontal: 4 },
+  hint: { fontSize: 14, paddingHorizontal: 4, marginTop: 2 },
   grid: { marginTop: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   tile: {
     width: '48.5%',
@@ -69,6 +61,4 @@ const styles = StyleSheet.create({
   },
   name: { fontSize: 16 },
   sub: { fontSize: 12 },
-  play: { height: 58, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  playText: { fontSize: 17 },
 });

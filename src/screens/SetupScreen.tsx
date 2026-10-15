@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, modeOf } from '../game';
+import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, defaultSecondsFor, modeOf } from '../game';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty, GameSettings } from '../types';
 
@@ -34,6 +34,8 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const [digits, setDigits] = useState(secondsToDigits(settings.roundSeconds));
   const [skips, setSkips] = useState<number | null>(settings.skips);
   const [focused, setFocused] = useState(false);
+  // Until the player types a time, the timer follows the difficulty.
+  const [customTime, setCustomTime] = useState(settings.roundSeconds !== defaultSecondsFor(settings.difficulty));
   const input = useRef<TextInput>(null);
   const deckSize = cardsFor(difficulty, category).length;
 
@@ -62,7 +64,10 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                   key={d.id}
                   accessibilityRole="radio"
                   accessibilityState={{ selected: on }}
-                  onPress={() => setDifficulty(d.id)}
+                  onPress={() => {
+                    setDifficulty(d.id);
+                    if (!customTime) setDigits(secondsToDigits(defaultSecondsFor(d.id)));
+                  }}
                   style={[styles.diff, { backgroundColor: on ? t.accent : t.tile }]}
                 >
                   <Text style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
@@ -104,7 +109,19 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
         </Section>
 
         {mode.timed ? (
-          <Section t={t} label="ROUND TIMER" aside={seconds < 10 ? 'At least 0:10' : undefined}>
+          <Section
+            t={t}
+            label={mode.id === 'hotPotato' ? 'ROUND TIMER · HIDDEN' : 'ROUND TIMER'}
+            aside={
+              seconds < 10
+                ? 'At least 0:10'
+                : mode.id === 'hotPotato'
+                  ? 'Ends at a random point near this'
+                  : customTime
+                    ? undefined
+                    : `Default for ${difficulty}`
+            }
+          >
             <Pressable
               accessibilityRole="button"
               accessibilityLabel={`Round timer ${clock}. Tap to type a new time.`}
@@ -123,7 +140,10 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
             <TextInput
               ref={input}
               value={digits}
-              onChangeText={(v) => setDigits(v.replace(/\D/g, '').replace(/^0+/, '').slice(0, 4))}
+              onChangeText={(v) => {
+                setCustomTime(true);
+                setDigits(v.replace(/\D/g, '').replace(/^0+/, '').slice(0, 4));
+              }}
               keyboardType="number-pad"
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
@@ -133,7 +153,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
           </Section>
         ) : null}
 
-        {mode.scored ? (
+        {mode.skips ? (
           <Section t={t} label="SKIPS PER ROUND" aside="∞ = unlimited">
             <View style={styles.skipGrid}>
               {SKIP_OPTIONS.map((n) => {

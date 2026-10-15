@@ -37,6 +37,8 @@ export type Mode = {
   sub: string;
   timed: boolean;
   scored: boolean;
+  // Whether setup offers a skip limit.
+  skips: boolean;
   // Seconds added to the clock for each correct answer.
   bonusSeconds?: number;
   available: boolean;
@@ -44,15 +46,26 @@ export type Mode = {
 
 // Order matches the Modes grid in the design canvas.
 export const MODES: Mode[] = [
-  { id: 'classic', name: 'Classic', sub: 'Timed round, score what you can', timed: true, scored: true, available: true },
-  { id: 'endless', name: 'Endless', sub: 'No clock, go until you stop', timed: false, scored: true, available: true },
-  { id: 'teams', name: 'Teams', sub: 'Two teams, pass the phone', timed: true, scored: true, available: false },
-  { id: 'timeAttack', name: 'Time attack', sub: 'Correct answers add time', timed: true, scored: true, bonusSeconds: 5, available: true },
-  { id: 'escalate', name: 'Escalate', sub: 'More banned words each level', timed: true, scored: true, available: false },
-  { id: 'hotPotato', name: 'Hot potato', sub: 'Hidden timer, pass it on', timed: true, scored: false, available: false },
-  { id: 'zen', name: 'Zen', sub: 'No score, no clock', timed: false, scored: false, available: true },
-  { id: 'reverse', name: 'Reverse', sub: 'Guess the word from its clues', timed: false, scored: true, available: false },
+  { id: 'classic', name: 'Classic', sub: 'Timed round, score what you can', timed: true, scored: true, skips: true, available: true },
+  { id: 'endless', name: 'Endless', sub: 'No clock, go until you stop', timed: false, scored: true, skips: true, available: true },
+  { id: 'teams', name: 'Teams', sub: 'Two teams, pass the phone', timed: true, scored: true, skips: true, available: false },
+  { id: 'timeAttack', name: 'Time attack', sub: 'Correct answers add time', timed: true, scored: true, skips: true, bonusSeconds: 5, available: true },
+  { id: 'escalate', name: 'Escalate', sub: 'More banned words each level', timed: true, scored: true, skips: true, available: false },
+  { id: 'hotPotato', name: 'Hot potato', sub: 'Hidden timer, pass it on', timed: true, scored: false, skips: false, available: true },
+  { id: 'zen', name: 'Zen', sub: 'No score, no clock', timed: false, scored: false, skips: false, available: true },
+  { id: 'reverse', name: 'Reverse', sub: 'Guess the word from its clues', timed: false, scored: true, skips: false, available: true },
 ];
+
+// Default round length grows with difficulty: 1:30 for Normal up to 4:00 for Master 2, 2:30 for Expert 1.
+export function defaultSecondsFor(difficulty: Difficulty): number {
+  const i = Math.max(0, DIFFICULTIES.findIndex((d) => d.id === difficulty));
+  return 90 + i * 30;
+}
+
+// Hot potato hides a round length somewhere between half and one and a half times the set time.
+export function hiddenSecondsFor(roundSeconds: number): number {
+  return Math.max(10, Math.round(roundSeconds * (0.5 + Math.random())));
+}
 
 export const SKIP_OPTIONS: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null];
 
@@ -60,7 +73,7 @@ export const DEFAULT_SETTINGS: GameSettings = {
   mode: 'classic',
   difficulty: 'Expert 1',
   category: null,
-  roundSeconds: 60,
+  roundSeconds: 150,
   skips: 3,
 };
 

@@ -10,12 +10,13 @@ import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
-import { DEFAULT_SETTINGS } from './src/game';
+import { DEFAULT_SETTINGS, defaultSecondsFor } from './src/game';
 import { ModesScreen } from './src/screens/ModesScreen';
 import { PlayScreen } from './src/screens/PlayScreen';
+import { ReverseScreen } from './src/screens/ReverseScreen';
 import { SetupScreen } from './src/screens/SetupScreen';
 import { THEMES } from './src/theme';
-import type { GameSettings } from './src/types';
+import type { Difficulty, GameSettings } from './src/types';
 
 type Screen = 'play' | 'setup' | 'modes';
 
@@ -42,22 +43,33 @@ export default function App() {
     setScreen('play');
   };
 
+  // A new level from the badge restarts the game. A timer still on its default follows the level.
+  const changeDifficulty = (difficulty: Difficulty) => {
+    const onDefault = settings.roundSeconds === defaultSecondsFor(settings.difficulty);
+    startGame({ ...settings, difficulty, roundSeconds: onDefault ? defaultSecondsFor(difficulty) : settings.roundSeconds });
+  };
+
+  const gameProps = {
+    settings,
+    theme,
+    onRestart: () => startGame(settings),
+    onChangeSettings: () => setScreen('modes'),
+    onChangeDifficulty: changeDifficulty,
+    onChangeTheme: setThemeIndex,
+  };
+
   // If the font fails to load, carry on with the system font rather than a blank screen.
   if (!fontsLoaded && !fontError) return null;
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={{ flex: 1, backgroundColor: theme.bg }}>
-        {screen === 'play' && (
-          <PlayScreen
-            key={gameKey}
-            settings={settings}
-            theme={theme}
-            onRestart={() => startGame(settings)}
-            onChangeSettings={() => setScreen('modes')}
-            onChangeTheme={setThemeIndex}
-          />
-        )}
+        {screen === 'play' &&
+          (settings.mode === 'reverse' ? (
+            <ReverseScreen key={gameKey} {...gameProps} />
+          ) : (
+            <PlayScreen key={gameKey} {...gameProps} />
+          ))}
         {screen === 'setup' && (
           <SetupScreen settings={settings} theme={theme} onStart={startGame} onModes={() => setScreen('modes')} />
         )}

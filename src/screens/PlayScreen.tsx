@@ -11,17 +11,21 @@ import {
 } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
+import { Button } from '../components/Button';
+import { DifficultyPicker } from '../components/DifficultyPicker';
+import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
 import { TimerRing } from '../components/TimerRing';
-import { cardsFor, difficultyOf, formatClock, modeOf, shuffled } from '../game';
+import { cardsFor, difficultyOf, formatClock, hiddenSecondsFor, modeOf, shuffled } from '../game';
 import { font, type Theme } from '../theme';
-import type { Card, GameSettings } from '../types';
+import type { Card, Difficulty, GameSettings } from '../types';
 
 type Props = {
   settings: GameSettings;
   theme: Theme;
   onRestart: () => void;
   onChangeSettings: () => void;
+  onChangeDifficulty: (difficulty: Difficulty) => void;
   onChangeTheme: (index: number) => void;
 };
 
@@ -30,8 +34,10 @@ const MAX_H = 580;
 const SWIPE_AT = 100;
 
 // The Current Version screen from the design canvas: a swipeable card inside a timer ring.
-export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeTheme }: Props) {
+// Hot potato reuses it with the clock hidden and a pass screen after every word.
+export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeDifficulty, onChangeTheme }: Props) {
   const mode = modeOf(settings.mode);
+  const hot = mode.id === 'hotPotato';
   const difficulty = difficultyOf(settings.difficulty);
   const pool = useMemo(() => cardsFor(settings.difficulty, settings.category), [settings.difficulty, settings.category]);
 
@@ -39,21 +45,25 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [skipsUsed, setSkipsUsed] = useState(0);
-  const [total, setTotal] = useState(settings.roundSeconds);
-  const [left, setLeft] = useState(settings.roundSeconds);
+  const [startSeconds] = useState(() => (hot ? hiddenSecondsFor(settings.roundSeconds) : settings.roundSeconds));
+  const [total, setTotal] = useState(startSeconds);
+  const [left, setLeft] = useState(startSeconds);
   const [paused, setPaused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pickingLevel, setPickingLevel] = useState(false);
+  const [passing, setPassing] = useState(false);
   const [area, setArea] = useState({ w: MAX_W, h: MAX_H });
 
   const over = mode.timed && left <= 0;
-  const running = mode.timed && !paused && !menuOpen && !over;
-  const skipsLeft = settings.skips === null ? null : Math.max(0, settings.skips - skipsUsed);
+  const halted = paused || menuOpen || pickingLevel || passing;
+  const running = mode.timed && !halted && !over;
+  const skipsLeft = !mode.skips || settings.skips === null ? null : Math.max(0, settings.skips - skipsUsed);
   const card = deck[idx];
 
-  const dx = useRef(new Animated.Value(0)).current;
-  const enter = useRef(new Animated.Value(1)).current;
-  const fade = useRef(new Animated.Value(1)).current;
-  const hint = useRef(new Animated.Value(0)).current;
+  const dx = useState(() => new Animated.Value(0))[0];
+  const enter = useState(() => new Animated.Value(1))[0];
+  const fade = useState(() => new Animated.Value(1))[0];
+  const hint = useState(() => new Animated.Value(0))[0];
   const flying = useRef(false);
   const swiped = useRef(false);
   const nudge = useRef<Animated.CompositeAnimation | null>(null);
@@ -67,7 +77,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
 
   // Until the first swipe, nudge the card right every few seconds to show it moves.
   useEffect(() => {
-    if (swiped.current || paused || menuOpen || over) return;
+    if (swiped.current || halted || over) return;
     const loop = Animated.loop(
       Animated.sequence([
         Animated.delay(600),
@@ -90,11 +100,11 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
       nudge.current = null;
       hint.setValue(0);
     };
-  }, [paused, menuOpen, over, dx, hint]);
+  }, [halted, over, dx, hint]);
 
   const finish = useCallback(
     (dir: 1 | -1) => {
-      if (flying.current || over || paused || menuOpen) return;
+      if (flying.current || over || halted) return;
       if (dir < 0 && skipsLeft === 0) {
         Animated.spring(dx, { toValue: 0, friction: 6, useNativeDriver: false }).start();
         return;
@@ -114,6 +124,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         } else {
           setSkipsUsed((s) => s + 1);
         }
+        if (hot) setPassing(true);
         if (idx + 1 >= deck.length) {
           setDeck(shuffled(pool));
           setIdx(0);
@@ -128,13 +139,17 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         });
       });
     },
-    [over, paused, menuOpen, skipsLeft, mode.bonusSeconds, left, idx, deck.length, pool, dx, fade, enter],
+    [over, halted, skipsLeft, mode.bonusSeconds, left, idx, deck.length, pool, hot, dx, fade, enter],
   );
 
   const finishRef = useRef(finish);
-  finishRef.current = finish;
+  useEffect(() => {
+    finishRef.current = finish;
+  });
 
-  const pan = useRef(
+  // The handlers only read refs when a gesture fires, never during render.
+  // eslint-disable-next-line react-hooks/refs
+  const [pan] = useState(() =>
     PanResponder.create({
       onStartShouldSetPanResponder: () => !flying.current,
       onMoveShouldSetPanResponder: (_, g) => !flying.current && Math.abs(g.dx) > 6 && Math.abs(g.dx) > Math.abs(g.dy),
@@ -157,7 +172,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         Animated.spring(dx, { toValue: 0, useNativeDriver: false }).start();
       },
     }),
-  ).current;
+  );
 
   const onArea = (e: LayoutChangeEvent) => {
     const { width, height } = e.nativeEvent.layout;
@@ -166,9 +181,11 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
 
   const skipText =
     skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
-  const subline = mode.scored ? `${score} pts · ${skipText}` : 'Just practice';
+  const subline = hot ? 'Pass after every word' : mode.scored ? `${score} pts · ${skipText}` : 'Just practice';
   const themeName = settings.category ?? 'All cards';
-  const menuStatus = mode.timed
+  const menuStatus = hot
+    ? `Hot potato · timer hidden · ${themeName}`
+    : mode.timed
     ? `${formatClock(left)} left · ${score} pts · ${themeName}`
     : mode.scored
       ? `${score} pts · ${themeName}`
@@ -185,33 +202,20 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const skipBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
 
   const statusLine = useMemo(
-    () => (mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
-    [mode.scored, score, skipsLeft, skipsUsed, settings.skips],
+    () => (hot ? `${score} words passed` : mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
+    [hot, mode.scored, score, skipsLeft, skipsUsed, settings.skips],
   );
 
   return (
     <View style={[styles.wrap, { backgroundColor: t.bg }]}>
-      <View style={styles.header}>
-        <View style={styles.headerText}>
-          <View style={styles.titleRow}>
-            <Text style={[styles.mode, font(800), { color: t.ink }]}>{mode.name}</Text>
-            <View style={[styles.badge, { backgroundColor: t.accent }]}>
-              <Text style={[styles.badgeText, font(800), { color: t.onAccent }]}>{difficulty.badge}</Text>
-            </View>
-          </View>
-          <Text style={[styles.subline, font(500), { color: t.muted }]}>{subline}</Text>
-        </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Menu"
-          onPress={() => setMenuOpen(true)}
-          style={[styles.menuButton, { backgroundColor: t.tile }]}
-        >
-          {[0, 1, 2].map((k) => (
-            <View key={k} style={[styles.dot, { backgroundColor: t.ink }]} />
-          ))}
-        </Pressable>
-      </View>
+      <GameHeader
+        theme={t}
+        title={mode.name}
+        badge={difficulty.badge}
+        subline={subline}
+        onBadge={() => setPickingLevel(true)}
+        onMenu={() => setMenuOpen(true)}
+      />
 
       <View style={styles.middle} onLayout={onArea}>
         <Animated.View style={[styles.hint, { opacity: hint }]} pointerEvents="none">
@@ -233,9 +237,9 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           >
             {mode.timed ? (
               <>
-                <TimerRing width={area.w} height={area.h} progress={left / total} track={t.track} color={t.accent} />
+                <TimerRing width={area.w} height={area.h} progress={hot ? 0 : left / total} track={t.track} color={t.accent} />
                 <View style={[styles.clock, { backgroundColor: t.bg }]}>
-                  <Text style={[styles.clockText, font(800), { color: t.ink }]}>{formatClock(left)}</Text>
+                  <Text style={[styles.clockText, font(800), { color: t.ink }]}>{hot ? 'Hidden' : formatClock(left)}</Text>
                   <Pressable
                     accessibilityRole="button"
                     accessibilityLabel="Pause"
@@ -261,7 +265,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
                 {card.word}
               </Text>
               <View style={styles.bannedBlock}>
-                <Text style={[styles.dontSay, font(700), { color: t.ink }]}>DON'T SAY</Text>
+                <Text style={[styles.dontSay, font(700), { color: t.ink }]}>DON&apos;T SAY</Text>
                 <View style={styles.chips}>
                   {card.banned.map((b) => (
                     <View key={b} style={styles.chip}>
@@ -289,14 +293,28 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           <View style={[styles.bar, styles.barStretch, { backgroundColor: t.accent }]} />
         </Animated.View>
       </View>
+      {hot ? (
+        <Text style={[styles.hotNote, font(500), { color: t.muted }]}>Holding it when time runs out loses a point</Text>
+      ) : null}
 
       {over ? (
         <View style={[styles.overlay, { backgroundColor: t.bg }]}>
-          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>TIME'S UP</Text>
-          <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{score}</Text>
-          <Text style={[styles.overSub, font(500), { color: t.muted }]}>
-            points · {skipsUsed} skip{skipsUsed === 1 ? '' : 's'}
-          </Text>
+          <Text style={[styles.overLabel, font(700), { color: t.muted }]}>TIME&apos;S UP</Text>
+          {hot ? (
+            <>
+              <Text style={[styles.hotTitle, font(800), { color: t.ink }]}>Whoever is holding the phone loses a point</Text>
+              <Text style={[styles.overSub, font(500), { color: t.muted }]}>
+                {score} word{score === 1 ? '' : 's'} guessed this round
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{score}</Text>
+              <Text style={[styles.overSub, font(500), { color: t.muted }]}>
+                points · {skipsUsed} skip{skipsUsed === 1 ? '' : 's'}
+              </Text>
+            </>
+          )}
           <View style={styles.overlayButtons}>
             <Button t={t} primary label="Play again" onPress={onRestart} />
             <Button t={t} label="Change settings" onPress={onChangeSettings} />
@@ -307,7 +325,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
       {paused && !over ? (
         <View style={[styles.overlay, { backgroundColor: t.bg + 'F0' }]}>
           <Text style={[styles.overLabel, font(700), { color: t.muted }]}>PAUSED</Text>
-          <Text style={[styles.pausedClock, font(800), { color: t.ink }]}>{formatClock(left)}</Text>
+          <Text style={[styles.pausedClock, font(800), { color: t.ink }]}>{hot ? 'Hidden' : formatClock(left)}</Text>
           <Text style={[styles.overSub, font(500), { color: t.muted }]}>{statusLine}</Text>
           <View style={styles.overlayButtons}>
             <Button t={t} primary label="Resume" onPress={() => setPaused(false)} />
@@ -316,6 +334,34 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           </View>
         </View>
       ) : null}
+
+      {passing && !over ? (
+        <View style={[styles.passScreen, { backgroundColor: t.bg }]}>
+          <View style={styles.passTop}>
+            <Text style={[styles.passTopText, font(500), { color: t.muted }]}>
+              <Text style={[font(700), { color: t.ink }]}>Hot potato</Text> · {difficulty.id}
+            </Text>
+            <Text style={[styles.passTopText, font(500), { color: t.muted }]}>Timer paused</Text>
+          </View>
+          <View style={styles.passMiddle}>
+            <Text style={[styles.overLabel, font(700), { color: t.muted }]}>PASS THE PHONE</Text>
+            <Text style={[styles.passTitle, font(800), { color: t.ink }]}>{'Next player,\nready?'}</Text>
+          </View>
+          <Button t={t} primary label="I'm ready" onPress={() => setPassing(false)} />
+        </View>
+      ) : null}
+
+      <DifficultyPicker
+        visible={pickingLevel}
+        theme={t}
+        current={settings.difficulty}
+        category={settings.category}
+        onClose={() => setPickingLevel(false)}
+        onPick={(d) => {
+          setPickingLevel(false);
+          onChangeDifficulty(d);
+        }}
+      />
 
       <GameMenu
         visible={menuOpen}
@@ -337,35 +383,8 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   );
 }
 
-function Button({ t, label, primary, onPress }: { t: Theme; label: string; primary?: boolean; onPress: () => void }) {
-  return (
-    <Pressable
-      accessibilityRole="button"
-      onPress={onPress}
-      style={({ pressed }) => [
-        styles.button,
-        primary
-          ? { backgroundColor: t.accent, height: 58 }
-          : { borderWidth: 1.5, borderColor: t.outline, backgroundColor: 'transparent' },
-        { opacity: pressed ? 0.85 : 1 },
-      ]}
-    >
-      <Text style={[styles.buttonText, font(700), { color: primary ? t.onAccent : t.ink }]}>{label}</Text>
-    </Pressable>
-  );
-}
-
 const styles = StyleSheet.create({
   wrap: { flex: 1, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingHorizontal: 2 },
-  headerText: { flex: 1 },
-  titleRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  mode: { fontSize: 26, letterSpacing: -0.5 },
-  badge: { borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
-  badgeText: { fontSize: 11, letterSpacing: 0.6 },
-  subline: { fontSize: 13, marginTop: 1 },
-  menuButton: { width: 36, height: 36, borderRadius: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 3 },
-  dot: { width: 4, height: 4, borderRadius: 2 },
   middle: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   hint: { position: 'absolute', left: 4, width: 56, alignItems: 'center', gap: 4 },
   hintText: { fontSize: 12, letterSpacing: 0.7 },
@@ -409,6 +428,11 @@ const styles = StyleSheet.create({
   pausedClock: { fontSize: 56, lineHeight: 60, fontVariant: ['tabular-nums'] },
   overSub: { fontSize: 15, textAlign: 'center' },
   overlayButtons: { marginTop: 24, width: 240, gap: 10 },
-  button: { height: 54, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  buttonText: { fontSize: 16 },
+  hotNote: { fontSize: 12, marginTop: 6, paddingHorizontal: 2 },
+  hotTitle: { fontSize: 30, lineHeight: 34, textAlign: 'center', letterSpacing: -0.5 },
+  passScreen: { ...StyleSheet.absoluteFill, paddingHorizontal: 20, paddingTop: 16, paddingBottom: 16 },
+  passTop: { flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 4 },
+  passTopText: { fontSize: 13 },
+  passMiddle: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 20 },
+  passTitle: { fontSize: 40, lineHeight: 44, textAlign: 'center', letterSpacing: -0.8 },
 });
