@@ -7,7 +7,7 @@ import {
   useFonts,
 } from '@expo-google-fonts/manrope';
 import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 import { DEFAULT_SETTINGS, defaultSecondsFor } from './src/game';
@@ -18,6 +18,7 @@ import { ReverseScreen } from './src/screens/ReverseScreen';
 import { SetupScreen } from './src/screens/SetupScreen';
 import { THEMES } from './src/theme';
 import type { Difficulty, GameSettings } from './src/types';
+import { styleWebScrollbars } from './src/webScrollbar';
 
 type Screen = 'play' | 'setup' | 'modes';
 
@@ -37,6 +38,8 @@ export default function App() {
   const [gameKey, setGameKey] = useState(0);
 
   const theme = THEMES[themeIndex];
+
+  useEffect(() => styleWebScrollbars(theme.ink), [theme.ink]);
 
   const startGame = (next: GameSettings) => {
     setSettings(next);
