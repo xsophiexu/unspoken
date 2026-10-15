@@ -17,6 +17,7 @@ import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
 import { TimerRing } from '../components/TimerRing';
 import { cardsFor, difficultyOf, formatClock, hiddenSecondsFor, modeOf, shuffled } from '../game';
+import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
 
@@ -261,7 +262,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
               ]}
             >
               <Text style={[styles.yourWord, font(500), { color: t.ink }]}>Your word</Text>
-              <Text style={[styles.word, font(800), { color: t.ink }]} adjustsFontSizeToFit numberOfLines={2}>
+              <Text style={[styles.word, font(800), { color: t.ink }, wordSize(card.word, area.w - 36 - 44)]} numberOfLines={3}>
                 {card.word}
               </Text>
               <View style={styles.bannedBlock}>
@@ -436,3 +437,8 @@ const styles = StyleSheet.create({
   passMiddle: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 20 },
   passTitle: { fontSize: 40, lineHeight: 44, textAlign: 'center', letterSpacing: -0.8 },
 });
+
+function wordSize(word: string, width: number) {
+  const size = fitWordSize(word, width);
+  return { fontSize: size, lineHeight: Math.round(size * 1.08), letterSpacing: -size * 0.02 };
+}

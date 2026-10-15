@@ -6,6 +6,7 @@ import { DifficultyPicker } from '../components/DifficultyPicker';
 import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
 import { cardsFor, difficultyOf, shuffled } from '../game';
+import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
 
@@ -39,6 +40,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
   const [played, setPlayed] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [pickingLevel, setPickingLevel] = useState(false);
+  const [cardWidth, setCardWidth] = useState(342);
 
   const card = deck[idx];
   const clueCount = card?.banned.length ?? 0;
@@ -186,10 +188,11 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
         {phase === 'answer' && card ? (
           <Animated.View
             {...pan.panHandlers}
+            onLayout={(e) => setCardWidth(e.nativeEvent.layout.width)}
             style={[styles.card, { backgroundColor: t.tile, transform: [{ translateX: dx }, { rotate }] }]}
           >
             <Text style={[styles.kicker, font(500), { color: t.ink }]}>The word was</Text>
-            <Text style={[styles.word, font(800), { color: t.ink }]} adjustsFontSizeToFit numberOfLines={2}>
+            <Text style={[styles.word, font(800), { color: t.ink }, wordSize(card.word, cardWidth - 48)]} numberOfLines={3}>
               {card.word}
             </Text>
             <Text style={[styles.question, font(500), { color: t.muted }]}>Did you say it before the reveal?</Text>
@@ -349,3 +352,8 @@ const styles = StyleSheet.create({
   bar: { height: 6, borderRadius: 3 },
   barStretch: { alignSelf: 'stretch' },
 });
+
+function wordSize(word: string, width: number) {
+  const size = fitWordSize(word, width);
+  return { fontSize: size, lineHeight: Math.round(size * 1.08), letterSpacing: -size * 0.02 };
+}
