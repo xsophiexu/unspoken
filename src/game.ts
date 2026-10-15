@@ -47,7 +47,7 @@ export type Mode = {
 // Order matches the Modes grid in the design canvas.
 export const MODES: Mode[] = [
   { id: 'classic', name: 'Classic', sub: 'Timed round, score what you can', timed: true, scored: true, skips: true, available: true },
-  { id: 'endless', name: 'Endless', sub: 'No clock, go until you stop', timed: false, scored: true, skips: true, available: true },
+  { id: 'endless', name: 'Endless', sub: 'No clock, no limits, go until you stop', timed: false, scored: true, skips: false, available: true },
   { id: 'teams', name: 'Teams', sub: 'Two teams, pass the phone', timed: true, scored: true, skips: true, available: false },
   { id: 'timeAttack', name: 'Time attack', sub: 'Correct answers add time', timed: true, scored: true, skips: true, bonusSeconds: 5, available: true },
   { id: 'escalate', name: 'Escalate', sub: 'More banned words each level', timed: true, scored: true, skips: true, available: false },
@@ -62,9 +62,12 @@ export function defaultSecondsFor(difficulty: Difficulty): number {
   return 90 + i * 30;
 }
 
-// Hot potato hides a round length somewhere between half and one and a half times the set time.
-export function hiddenSecondsFor(roundSeconds: number): number {
-  return Math.max(10, Math.round(roundSeconds * (0.5 + Math.random())));
+// Hot potato picks a hidden round length at random. The shortest possible round grows with difficulty,
+// from 45 s at Normal to 2:00 at Master 2, and the longest is double that.
+export function hiddenSecondsFor(difficulty: Difficulty): number {
+  const i = Math.max(0, DIFFICULTIES.findIndex((d) => d.id === difficulty));
+  const min = 45 + i * 15;
+  return Math.round(min + Math.random() * min);
 }
 
 export const SKIP_OPTIONS: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null];

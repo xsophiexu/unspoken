@@ -47,7 +47,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [skipsUsed, setSkipsUsed] = useState(0);
-  const [startSeconds] = useState(() => (hot ? hiddenSecondsFor(settings.roundSeconds) : settings.roundSeconds));
+  const [startSeconds] = useState(() => (hot ? hiddenSecondsFor(settings.difficulty) : settings.roundSeconds));
   const [total, setTotal] = useState(startSeconds);
   const [left, setLeft] = useState(startSeconds);
   const [paused, setPaused] = useState(false);
@@ -199,14 +199,16 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
 
   const skipText =
     skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
-  const subline = hot ? 'Pass after every word' : mode.scored ? `${score} pts · ${skipText}` : 'Just practice';
+  // Modes without a skip limit just count, like the Endless wireframe.
+  const tally = `${score} correct · ${skipsUsed} skipped`;
+  const subline = hot ? 'Pass after every word' : !mode.scored ? 'Just practice' : mode.skips ? `${score} pts · ${skipText}` : tally;
   const themeName = settings.category ?? 'All cards';
   const menuStatus = hot
     ? `Hot potato · timer hidden · ${themeName}`
     : mode.timed
     ? `${formatClock(left)} left · ${score} pts · ${themeName}`
     : mode.scored
-      ? `${score} pts · ${themeName}`
+      ? `${mode.skips ? `${score} pts` : tally} · ${themeName}`
       : `Zen mode · ${themeName}`;
 
   const rotate = dx.interpolate({ inputRange: [-180, 0, 180], outputRange: ['-10deg', '0deg', '10deg'] });
@@ -220,8 +222,8 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const skipBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
 
   const statusLine = useMemo(
-    () => (hot ? `${score} words passed` : mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
-    [hot, mode.scored, score, skipsLeft, skipsUsed, settings.skips],
+    () => (hot ? `${score} words passed` : mode.scored && !mode.skips ? tally : mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
+    [hot, mode.scored, mode.skips, tally, score, skipsLeft, skipsUsed, settings.skips],
   );
 
   return (

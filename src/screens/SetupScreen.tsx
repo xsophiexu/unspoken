@@ -42,7 +42,9 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const padded = digits.padStart(3, '0');
   const clock = `${Number(padded.slice(0, -2))}:${padded.slice(-2)}`;
   const seconds = digitsToSeconds(digits);
-  const canStart = !mode.timed || seconds >= 10;
+  // Hot potato's clock is hidden and random, so it has no timer to set.
+  const showTimer = mode.timed && mode.id !== 'hotPotato';
+  const canStart = !showTimer || seconds >= 10;
 
   return (
     <View style={[styles.wrap, { backgroundColor: t.bg }]}>
@@ -108,19 +110,11 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
           </View>
         </Section>
 
-        {mode.timed ? (
+        {showTimer ? (
           <Section
             t={t}
-            label={mode.id === 'hotPotato' ? 'ROUND TIMER · HIDDEN' : 'ROUND TIMER'}
-            aside={
-              seconds < 10
-                ? 'At least 0:10'
-                : mode.id === 'hotPotato'
-                  ? 'Ends at a random point near this'
-                  : customTime
-                    ? undefined
-                    : `Default for ${difficulty}`
-            }
+            label="ROUND TIMER"
+            aside={seconds < 10 ? 'At least 0:10' : customTime ? undefined : `Default for ${difficulty}`}
           >
             <Pressable
               accessibilityRole="button"
