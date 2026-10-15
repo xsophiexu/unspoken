@@ -9,7 +9,7 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - Swipe the card right for Correct, left for Skip, with a timer ring around the card
 - ··· menu to restart, change mode or change theme (Teal, Heather, Sage, Rose)
 - New game setup: difficulty, round timer and skips per round
-- Decks: Easy (40 cards), Hard (100) and Even harder (84)
+- Decks: Hard (100 cards) and Even harder (84)
 - Modes: Classic, Endless, Time attack and Zen. Teams, Escalate, Hot potato and Reverse are listed as coming soon.
 
 ## Run it

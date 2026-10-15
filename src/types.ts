@@ -3,7 +3,7 @@ export type Card = {
   banned: string[];
 };
 
-export type Difficulty = 'easy' | 'hard' | 'evenHarder';
+export type Difficulty = 'hard' | 'evenHarder';
 
 export type ModeId =
   | 'classic'

@@ -1,8 +1,7 @@
-import { easy, evenHarder, hard } from './data/cards';
+import { evenHarder, hard } from './data/cards';
 import type { Card, Difficulty, GameSettings, ModeId } from './types';
 
 export const DIFFICULTIES: { id: Difficulty; name: string; badge: string; sub: string; cards: Card[] }[] = [
-  { id: 'easy', name: 'Easy', badge: 'EASY', sub: 'Everyday words', cards: easy },
   { id: 'hard', name: 'Hard', badge: 'HARD', sub: 'Trickier words', cards: hard },
   { id: 'evenHarder', name: 'Even harder', badge: 'EVEN HARDER', sub: 'Expert level', cards: evenHarder },
 ];
@@ -44,7 +43,7 @@ export function modeOf(id: ModeId): Mode {
 }
 
 export function difficultyOf(id: Difficulty) {
-  return DIFFICULTIES.find((d) => d.id === id) ?? DIFFICULTIES[1];
+  return DIFFICULTIES.find((d) => d.id === id) ?? DIFFICULTIES[0];
 }
 
 export function shuffled<T>(items: T[]): T[] {
