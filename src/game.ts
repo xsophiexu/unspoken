@@ -70,7 +70,7 @@ export function hiddenSecondsFor(roundSeconds: number): number {
 export const SKIP_OPTIONS: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null];
 
 export const DEFAULT_SETTINGS: GameSettings = {
-  mode: 'classic',
+  mode: 'endless',
   difficulty: 'Expert 1',
   category: null,
   roundSeconds: 150,

@@ -4,7 +4,7 @@ A word guessing game for grown-ups. Get your team to say the word on the card wi
 
 **Play now, no setup:** https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 (works on any phone or computer browser)
 
-The interface follows the "Current interface · Decided" row of the Word Game Screens design canvas. The app opens straight into a game on the Current Version screen.
+The interface follows the "Current interface · Decided" row of the Word Game Screens design canvas. The app opens straight into an Endless game on the Current Version screen.
 
 ## Features
 
@@ -14,7 +14,7 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - Change settings: tap a mode, then set difficulty, theme, round timer and skips
 - The round timer defaults to 2:30 at Expert 1 and scales with difficulty, from 1:30 at Normal to 4:00 at Master 2. Type a time to override it.
 - 2,289 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and seven themes, plus All cards. Defaults: Expert 1, All cards.
-- Modes: Classic, Endless, Time attack, Hot potato, Zen and Reverse. Teams and Escalate are coming soon.
+- Modes: Classic, Endless, Time attack, Hot potato, Zen and Reverse. Endless is the default. Teams and Escalate are coming soon.
   - **Hot potato:** the clock is hidden and ends at a random point near the set time. Pass the phone after every word; whoever holds it when time runs out loses a point.
   - **Reverse:** the guesser reads the banned words as clues and guesses the hidden word. Three clues show to start; each extra clue makes the word worth a point less.
 

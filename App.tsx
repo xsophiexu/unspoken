@@ -29,7 +29,7 @@ export default function App() {
     Manrope_800ExtraBold,
   });
 
-  // The app opens straight into a Classic game, the Current Version screen.
+  // The app opens straight into an Endless game on the Current Version screen.
   const [screen, setScreen] = useState<Screen>('play');
   const [settings, setSettings] = useState<GameSettings>(DEFAULT_SETTINGS);
   const [themeIndex, setThemeIndex] = useState(0);
