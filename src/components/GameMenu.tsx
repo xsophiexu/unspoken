@@ -147,8 +147,12 @@ function Back({ t, title, onPress }: { t: Theme; title: string; onPress: () => v
 }
 
 const styles = StyleSheet.create({
-  scrim: { flex: 1, backgroundColor: 'rgba(20, 30, 30, 0.35)' },
+  scrim: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(20, 30, 30, 0.35)' },
   sheet: {
+    width: '100%',
+    maxWidth: 480,
+    alignSelf: 'center',
+    marginTop: 'auto',
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 20,

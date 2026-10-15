@@ -65,8 +65,8 @@ export function DifficultyPicker({ visible, theme: t, current, categories, onPic
 }
 
 const styles = StyleSheet.create({
-  scrim: { flex: 1, backgroundColor: 'rgba(20, 30, 30, 0.35)' },
-  sheet: { borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, gap: 6 },
+  scrim: { position: 'absolute', top: 0, right: 0, bottom: 0, left: 0, backgroundColor: 'rgba(20, 30, 30, 0.35)' },
+  sheet: { width: '100%', maxWidth: 480, alignSelf: 'center', marginTop: 'auto', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 20, paddingTop: 10, gap: 6 },
   grabber: { alignSelf: 'center', width: 40, height: 5, borderRadius: 3, marginBottom: 12, opacity: 0.6 },
   title: { fontSize: 24 },
   sub: { fontSize: 14 },

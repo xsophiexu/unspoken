@@ -40,6 +40,10 @@ export default function App() {
   const theme = THEMES[themeIndex];
 
   useEffect(() => styleWebScrollbars(theme.ink), [theme.ink]);
+  // On wide web screens the game sits in a centered column; fill the sides with the theme background.
+  useEffect(() => {
+    if (typeof document !== 'undefined') document.body.style.backgroundColor = theme.bg;
+  }, [theme.bg]);
 
   const startGame = (next: GameSettings) => {
     setSettings(next);
