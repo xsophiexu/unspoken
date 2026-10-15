@@ -8,11 +8,11 @@ import type { ModeId } from '../types';
 type Props = {
   current: ModeId;
   theme: Theme;
-  onPlay: (mode: ModeId) => void;
+  onNext: (mode: ModeId) => void;
 };
 
-// The "Change mode · Tile grid" board from the design canvas.
-export function ModesScreen({ current, theme: t, onPlay }: Props) {
+// The "Change mode · Tile grid" board from the design canvas. Picking a mode leads to New game setup.
+export function ModesScreen({ current, theme: t, onNext }: Props) {
   const [selected, setSelected] = useState<ModeId>(current);
   const mode = modeOf(selected);
 
@@ -46,10 +46,10 @@ export function ModesScreen({ current, theme: t, onPlay }: Props) {
       </ScrollView>
       <Pressable
         accessibilityRole="button"
-        onPress={() => onPlay(selected)}
+        onPress={() => onNext(selected)}
         style={[styles.play, { backgroundColor: t.accent }]}
       >
-        <Text style={[styles.playText, font(700), { color: t.onAccent }]}>Play {mode.name}</Text>
+        <Text style={[styles.playText, font(700), { color: t.onAccent }]}>Next: set up {mode.name}</Text>
       </Pressable>
     </View>
   );

@@ -54,8 +54,7 @@ export default function App() {
             settings={settings}
             theme={theme}
             onRestart={() => startGame(settings)}
-            onChangeSettings={() => setScreen('setup')}
-            onChangeMode={(mode) => startGame({ ...settings, mode })}
+            onChangeSettings={() => setScreen('modes')}
             onChangeTheme={setThemeIndex}
           />
         )}
@@ -63,7 +62,14 @@ export default function App() {
           <SetupScreen settings={settings} theme={theme} onStart={startGame} onModes={() => setScreen('modes')} />
         )}
         {screen === 'modes' && (
-          <ModesScreen current={settings.mode} theme={theme} onPlay={(mode) => startGame({ ...settings, mode })} />
+          <ModesScreen
+            current={settings.mode}
+            theme={theme}
+            onNext={(mode) => {
+              setSettings({ ...settings, mode });
+              setScreen('setup');
+            }}
+          />
         )}
         <StatusBar style="dark" />
       </SafeAreaView>

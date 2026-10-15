@@ -15,14 +15,13 @@ import { GameMenu } from '../components/GameMenu';
 import { TimerRing } from '../components/TimerRing';
 import { cardsFor, difficultyOf, formatClock, modeOf, shuffled } from '../game';
 import { font, type Theme } from '../theme';
-import type { Card, GameSettings, ModeId } from '../types';
+import type { Card, GameSettings } from '../types';
 
 type Props = {
   settings: GameSettings;
   theme: Theme;
   onRestart: () => void;
   onChangeSettings: () => void;
-  onChangeMode: (mode: ModeId) => void;
   onChangeTheme: (index: number) => void;
 };
 
@@ -31,7 +30,7 @@ const MAX_H = 580;
 const SWIPE_AT = 100;
 
 // The Current Version screen from the design canvas: a swipeable card inside a timer ring.
-export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeMode, onChangeTheme }: Props) {
+export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeTheme }: Props) {
   const mode = modeOf(settings.mode);
   const difficulty = difficultyOf(settings.difficulty);
   const pool = useMemo(() => cardsFor(settings.difficulty, settings.category), [settings.difficulty, settings.category]);
@@ -328,9 +327,9 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           setMenuOpen(false);
           onRestart();
         }}
-        onChangeMode={(m) => {
+        onChangeSettings={() => {
           setMenuOpen(false);
-          onChangeMode(m);
+          onChangeSettings();
         }}
         onChangeTheme={onChangeTheme}
       />
