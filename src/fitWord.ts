@@ -47,3 +47,9 @@ export function fitWordSize(word: string, width: number, max = 50, min = 22, max
   }
   return min;
 }
+
+// Font size for a difficulty name in a three-column tile grid, so long names like Grandmaster stay on one line.
+export function tileNameSize(name: string, screenWidth: number): number {
+  const inner = (Math.min(screenWidth, 480) - 40) * 0.31 - 24;
+  return fitWordSize(name, inner, 16, 11, 1);
+}

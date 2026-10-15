@@ -5,9 +5,14 @@ import type { BankCard, Card, Category, Difficulty, GameSettings, ModeId } from 
 // /mnt/project-files/unspoken/word-banks.json.
 type Entry = Card & { difficulty: Difficulty; themes: Category[] };
 
+// Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
+function capitalize(word: string): string {
+  return /^[a-z](?![A-Z])/.test(word) ? word[0].toUpperCase() + word.slice(1) : word;
+}
+
 export const BANK: Entry[] = (bank as BankCard[]).map((c) => ({
   word: c.word,
-  banned: c.banned,
+  banned: c.banned.map(capitalize),
   difficulty: c.difficulty,
   themes: c.themes ?? (c.theme ? [c.theme] : []),
 }));
@@ -20,6 +25,8 @@ export const DIFFICULTIES: { id: Difficulty; badge: string }[] = [
   { id: 'Expert 2', badge: 'EXPERT 2' },
   { id: 'Master 1', badge: 'MASTER 1' },
   { id: 'Master 2', badge: 'MASTER 2' },
+  { id: 'Master 3', badge: 'MASTER 3' },
+  { id: 'Grandmaster', badge: 'GRANDMASTER' },
 ];
 
 const ALL_CATEGORIES: Category[] = [
@@ -29,6 +36,7 @@ const ALL_CATEGORIES: Category[] = [
   'Arts and Entertainment',
   'Science and Nature',
   'Technology',
+  'Computer Science',
   'Society',
   'Business',
   'Love and Relationships',
@@ -86,14 +94,14 @@ export const MODES: Mode[] = [
   { id: 'reverse', name: 'Reverse', sub: 'Guess the word from its clues', timed: false, scored: true, skips: false, available: true },
 ];
 
-// Default round length grows with difficulty: 1:30 for Normal up to 4:00 for Master 2, 2:30 for Expert 1.
+// Default round length grows with difficulty: 1:30 for Normal up to 5:00 for Grandmaster, 2:30 for Expert 1.
 export function defaultSecondsFor(difficulty: Difficulty): number {
   const i = Math.max(0, DIFFICULTIES.findIndex((d) => d.id === difficulty));
   return 90 + i * 30;
 }
 
 // Hot potato picks a hidden round length at random. The shortest possible round grows with difficulty,
-// from 45 s at Normal to 2:00 at Master 2, and the longest is double that.
+// from 0:45 at Normal to 2:30 at Grandmaster, and the longest is double that.
 export function hiddenSecondsFor(difficulty: Difficulty): number {
   const i = Math.max(0, DIFFICULTIES.findIndex((d) => d.id === difficulty));
   const min = 45 + i * 15;

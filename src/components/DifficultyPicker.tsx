@@ -1,7 +1,8 @@
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { DIFFICULTIES, cardsFor } from '../game';
+import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty } from '../types';
 
@@ -17,6 +18,7 @@ type Props = {
 // Opens from the difficulty badge on the play screen. Picking a level starts a new game at that level.
 export function DifficultyPicker({ visible, theme: t, current, categories, onPick, onClose }: Props) {
   const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -36,7 +38,12 @@ export function DifficultyPicker({ visible, theme: t, current, categories, onPic
                 onPress={() => (on ? onClose() : onPick(d.id))}
                 style={[styles.tile, { backgroundColor: on ? t.accent : t.tile }]}
               >
-                <Text style={[styles.name, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
+                <Text
+                  style={[styles.name, font(800), { color: on ? t.onAccent : t.ink, fontSize: tileNameSize(d.id, width) }]}
+                  numberOfLines={1}
+                >
+                  {d.id}
+                </Text>
                 <Text style={[styles.count, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
                   {cardsFor(d.id, categories).length} cards
                 </Text>

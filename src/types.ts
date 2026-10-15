@@ -3,7 +3,7 @@ export type Card = {
   banned: string[];
 };
 
-export type Difficulty = 'Normal' | 'Harder' | 'Expert 1' | 'Expert 2' | 'Master 1' | 'Master 2';
+export type Difficulty = 'Normal' | 'Harder' | 'Expert 1' | 'Expert 2' | 'Master 1' | 'Master 2' | 'Master 3' | 'Grandmaster';
 
 export type Category =
   | 'Inner World'
@@ -16,6 +16,7 @@ export type Category =
   | 'Sports and Games'
   | 'Love and Relationships'
   | 'Technology'
+  | 'Computer Science'
   | 'Business'
   | 'Arts and Entertainment'
   | 'Fantasy and Sci-Fi';

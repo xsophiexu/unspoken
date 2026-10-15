@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 
 import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, defaultSecondsFor, modeOf } from '../game';
+import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty, GameSettings } from '../types';
 
@@ -29,6 +30,7 @@ function secondsToDigits(seconds: number): string {
 // The "New game" setup board from the design canvas.
 export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const mode = modeOf(settings.mode);
+  const { width } = useWindowDimensions();
   const [difficulty, setDifficulty] = useState<Difficulty>(settings.difficulty);
   const [categories, setCategories] = useState<Category[]>(settings.categories);
   const [digits, setDigits] = useState(secondsToDigits(settings.roundSeconds));
@@ -78,7 +80,12 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                   }}
                   style={[styles.diff, { backgroundColor: on ? t.accent : t.tile }]}
                 >
-                  <Text style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
+                  <Text
+                    style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink, fontSize: tileNameSize(d.id, width) }]}
+                    numberOfLines={1}
+                  >
+                    {d.id}
+                  </Text>
                   <Text style={[styles.diffSub, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
                     {cardsFor(d.id, categories).length} cards
                   </Text>
