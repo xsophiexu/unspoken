@@ -374,10 +374,10 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           <Text style={[styles.overLabel, font(700), { color: t.muted }]}>{won ? 'YOU WIN' : "TIME'S UP"}</Text>
           {esc ? (
             <>
-              <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{won ? formatClock(left) : level}</Text>
+              <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{won ? score + skipsUsed : level}</Text>
               <Text style={[styles.overSub, font(500), { color: t.muted }]}>
                 {won
-                  ? `left on the clock · ${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}`
+                  ? `cards played · ${score} correct · ${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}`
                   : `banned words reached · ${score} correct`}
               </Text>
             </>

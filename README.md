@@ -16,7 +16,7 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - The round timer defaults to 2:30 at Expert 1 and scales with difficulty, from 1:30 at Normal to 5:00 at Grandmaster. Type a time to override it.
 - 5,017 cards across eight difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2, Master 3, Grandmaster) and 17 themes, plus All cards. Every card has 10 banned words, strongest first, and some cards sit in two themes. All cards leaves out names, specific events and insider jargon (they stay in their themes) and balances the mix so niche themes come up less. Defaults: Expert 1, All cards.
 - Modes: Classic, Endless, Time attack, Hot potato, Zen and Reverse. Endless is the default. Teams is coming soon.
-  - **Escalate:** starts with 4 banned words and adds one for every correct answer. Get 3 correct with all 10 showing to win.
+  - **Escalate:** no clock. Starts with 4 banned words and adds one for every correct answer. Get 3 correct with all 10 showing to win.
   - **Endless:** no clock and no skip limit; the header counts correct and skipped words.
   - **Hot potato:** no timer to set. The hidden clock runs a random length; the shortest possible round grows with difficulty, from 0:45 at Normal to 2:30 at Grandmaster, and the longest is double that. Pass the phone after every word; whoever holds it when time runs out loses a point.
   - **Reverse:** the guesser reads the banned words as clues and guesses the hidden word. Three clues show to start; each extra clue makes the word worth a point less.
