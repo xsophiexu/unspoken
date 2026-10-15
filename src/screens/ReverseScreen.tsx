@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Easing, PanResponder, Pressable, StyleSheet, Text, View } from 'react-native';
+import Svg, { Circle, Path } from 'react-native-svg';
 
 import { Button } from '../components/Button';
 import { DifficultyPicker } from '../components/DifficultyPicker';
@@ -36,6 +37,8 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>(seenHowTo ? 'guess' : 'howTo');
   const [revealed, setRevealed] = useState(FIRST_CLUES);
+  // The eye button shows the hidden word in place of the blanks, for a quick check.
+  const [peek, setPeek] = useState(false);
   const [score, setScore] = useState(0);
   const [played, setPlayed] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -63,6 +66,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
       setIdx(idx + 1);
     }
     setRevealed(FIRST_CLUES);
+    setPeek(false);
     setPhase('guess');
   };
 
@@ -153,7 +157,26 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
                 </Text>
               </View>
             </View>
-            <Blanks word={card.word} color={t.accent} />
+            <View style={styles.wordRow}>
+              <View style={styles.wordSlot}>
+                {peek ? (
+                  <Text style={[styles.peekWord, font(800), { color: t.ink }]} numberOfLines={2}>
+                    {card.word}
+                  </Text>
+                ) : (
+                  <Blanks word={card.word} color={t.accent} />
+                )}
+              </View>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityLabel={peek ? 'Hide the word' : 'Show the word'}
+                onPress={() => setPeek((v) => !v)}
+                hitSlop={6}
+                style={({ pressed }) => [styles.eye, { opacity: pressed ? 0.7 : 1 }]}
+              >
+                <EyeIcon open={!peek} color={t.ink} />
+              </Pressable>
+            </View>
             <Text style={[styles.letters, font(500), { color: t.muted }]}>{letterCount(card.word)}</Text>
             <View style={styles.bottom}>
               <Text style={[styles.section, font(700), { color: t.ink }]}>CLUES</Text>
@@ -289,7 +312,8 @@ function letterCount(word: string): string {
 function Blanks({ word, color }: { word: string; color: string }) {
   const words = word.trim().split(/\s+/);
   const longest = Math.max(...words.map((w) => w.length));
-  const size = longest <= 8 ? 30 : longest <= 11 ? 22 : 16;
+  // Leave room for the eye button: about 230px on a typical phone.
+  const size = Math.max(12, Math.min(30, Math.floor((230 - 6 * (longest - 1)) / longest)));
   return (
     <View style={styles.blankWords}>
       {words.map((w, wi) => (
@@ -322,10 +346,14 @@ const styles = StyleSheet.create({
   stepText: { flex: 1 },
   stepTitle: { fontSize: 16 },
   stepBody: { fontSize: 14, marginTop: 2 },
+  wordRow: { marginTop: 8, flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
+  wordSlot: { flex: 1, minHeight: 44, justifyContent: 'flex-end' },
+  peekWord: { fontSize: 30, lineHeight: 36, letterSpacing: -0.5 },
+  eye: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' },
   guessTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   worth: { backgroundColor: '#FFFFFF', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 5 },
   worthText: { fontSize: 12 },
-  blankWords: { marginTop: 8, flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 6 },
+  blankWords: { flexDirection: 'row', flexWrap: 'wrap', columnGap: 18, rowGap: 6 },
   blankRow: { flexDirection: 'row', gap: 6, alignItems: 'flex-end' },
   blank: { borderBottomWidth: 4 },
   blankPunct: { fontSize: 24 },
@@ -358,4 +386,20 @@ const styles = StyleSheet.create({
 function wordSize(word: string, width: number) {
   const size = fitWordSize(word, width);
   return { fontSize: size, lineHeight: Math.round(size * 1.08), letterSpacing: -size * 0.02 };
+}
+
+// Open eye: the word is hidden, tap to show. Struck-through eye: the word is showing, tap to hide.
+function EyeIcon({ open, color }: { open: boolean; color: string }) {
+  return (
+    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
+      <Path
+        d="M2 12 C4.5 7 8 4.5 12 4.5 C16 4.5 19.5 7 22 12 C19.5 17 16 19.5 12 19.5 C8 19.5 4.5 17 2 12 Z"
+        stroke={color}
+        strokeWidth={2}
+        strokeLinejoin="round"
+      />
+      <Circle cx={12} cy={12} r={3.2} stroke={color} strokeWidth={2} />
+      {open ? null : <Path d="M4 20 L20 4" stroke={color} strokeWidth={2.2} strokeLinecap="round" />}
+    </Svg>
+  );
 }
