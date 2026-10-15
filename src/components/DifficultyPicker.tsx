@@ -5,6 +5,7 @@ import { DIFFICULTIES, cardsFor } from '../game';
 import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty } from '../types';
+import { count } from '../plural';
 
 type Props = {
   visible: boolean;
@@ -45,7 +46,7 @@ export function DifficultyPicker({ visible, theme: t, current, categories, onPic
                   {d.id}
                 </Text>
                 <Text style={[styles.count, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
-                  {cardsFor(d.id, categories).length} cards
+                  {count(cardsFor(d.id, categories).length, 'card')}
                 </Text>
               </Pressable>
             );

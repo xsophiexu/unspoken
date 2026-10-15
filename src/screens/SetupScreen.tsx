@@ -5,6 +5,7 @@ import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, defaultSecondsFor, mo
 import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty, GameSettings } from '../types';
+import { count } from '../plural';
 
 type Props = {
   settings: GameSettings;
@@ -87,7 +88,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                     {d.id}
                   </Text>
                   <Text style={[styles.diffSub, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
-                    {cardsFor(d.id, categories).length} cards
+                    {count(cardsFor(d.id, categories).length, 'card')}
                   </Text>
                 </Pressable>
               );
@@ -98,7 +99,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
         <Section
           t={t}
           label="THEMES"
-          aside={deckSize < 20 ? `Only ${deckSize} cards, words will repeat` : categories.length > 1 ? `${deckSize} cards` : 'Pick one or more'}
+          aside={deckSize < 20 ? `Only ${count(deckSize, 'card')}, words will repeat` : categories.length > 1 ? count(deckSize, 'card') : 'Pick one or more'}
         >
           <View style={styles.themeWrap}>
             {([null, ...CATEGORIES] as (Category | null)[]).map((c) => {
@@ -170,7 +171,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                     key={String(n)}
                     accessibilityRole="radio"
                     accessibilityState={{ selected: on }}
-                    accessibilityLabel={n === null ? 'Unlimited skips' : `${n} skips`}
+                    accessibilityLabel={n === null ? 'Unlimited skips' : count(n, 'skip')}
                     onPress={() => setSkips(n)}
                     style={[styles.skip, { backgroundColor: on ? t.accent : t.tile }]}
                   >

@@ -30,6 +30,7 @@ import {
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
+import { count } from '../plural';
 
 type Props = {
   settings: GameSettings;
@@ -219,18 +220,18 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   };
 
   const skipText =
-    skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
+    skipsLeft === null ? count(skipsUsed, 'skip') : `${count(skipsLeft, 'skip')} left`;
   // Modes without a skip limit just count, like the Endless wireframe.
   const tally = `${score} correct · ${skipsUsed} skipped`;
   const escLine =
-    level < ESCALATE.max ? `${level} banned words · ${skipText}` : `10 banned · ${atMax} of ${ESCALATE.winAtMax} to win · ${skipText}`;
-  const subline = esc ? escLine : hot ? 'Pass after every word' : mode.skips ? `${score} pts · ${skipText}` : tally;
+    level < ESCALATE.max ? `${count(level, 'banned word')} · ${skipText}` : `10 banned · ${atMax} of ${ESCALATE.winAtMax} to win · ${skipText}`;
+  const subline = esc ? escLine : hot ? 'Pass after every word' : mode.skips ? `${count(score, 'pt')} · ${skipText}` : tally;
   const themeName = themeLabel(settings.categories);
   const menuStatus = hot
     ? `Hot potato · timer hidden · ${themeName}`
     : mode.timed
-    ? `${formatClock(left)} left · ${score} pts · ${themeName}`
-    : `${mode.skips ? `${score} pts` : tally} · ${themeName}`;
+    ? `${formatClock(left)} left · ${count(score, 'pt')} · ${themeName}`
+    : `${mode.skips ? count(score, 'pt') : tally} · ${themeName}`;
 
   const rotate = dx.interpolate({ inputRange: [-180, 0, 180], outputRange: ['-10deg', '0deg', '10deg'] });
   const enterY = enter.interpolate({ inputRange: [0, 1], outputRange: [40, 0] });
@@ -243,7 +244,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const skipBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
 
   const statusLine = useMemo(
-    () => (hot ? `${score} words passed` : !mode.skips ? tally : `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}`),
+    () => (hot ? `${count(score, 'word')} passed` : !mode.skips ? tally : `${count(score, 'pt')} · ${skipsLeft === null ? count(skipsUsed, 'skip') : `${skipsUsed} of ${count(settings.skips ?? 0, 'skip')}`}`),
     [hot, mode.skips, tally, score, skipsLeft, skipsUsed, settings.skips],
   );
 
@@ -375,7 +376,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
               <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{won ? score + skipsUsed : level}</Text>
               <Text style={[styles.overSub, font(500), { color: t.muted }]}>
                 {won
-                  ? `cards played · ${score} correct · ${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}`
+                  ? `${score + skipsUsed === 1 ? 'card' : 'cards'} played · ${score} correct · ${count(skipsUsed, 'skip')}`
                   : `banned words reached · ${score} correct`}
               </Text>
             </>
@@ -383,14 +384,14 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
             <>
               <Text style={[styles.hotTitle, font(800), { color: t.ink }]}>Whoever is holding the phone loses a point</Text>
               <Text style={[styles.overSub, font(500), { color: t.muted }]}>
-                {score} word{score === 1 ? '' : 's'} guessed this round
+                {count(score, 'word')} guessed this round
               </Text>
             </>
           ) : (
             <>
               <Text style={[styles.bigScore, font(800), { color: t.ink }]}>{score}</Text>
               <Text style={[styles.overSub, font(500), { color: t.muted }]}>
-                points · {skipsUsed} skip{skipsUsed === 1 ? '' : 's'}
+                {score === 1 ? 'point' : 'points'} · {count(skipsUsed, 'skip')}
               </Text>
             </>
           )}

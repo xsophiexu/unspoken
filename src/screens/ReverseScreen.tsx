@@ -10,6 +10,7 @@ import { bannedCountFor, cardsFor, difficultyOf, dealDeck, themeLabel } from '..
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
+import { count } from '../plural';
 
 type Props = {
   settings: GameSettings;
@@ -110,7 +111,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
   const missFlex = dx.interpolate({ inputRange: [-120, 0, 120], outputRange: [3.2, 1, 0.3], extrapolate: 'clamp' });
   const missBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
 
-  const subline = `${score} pts · ${played} word${played === 1 ? '' : 's'}`;
+  const subline = `${count(score, 'pt')} · ${count(played, 'word')}`;
 
   return (
     <View style={[styles.wrap, { backgroundColor: t.bg }]}>
@@ -153,7 +154,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
               <Text style={[styles.kickerInline, font(500), { color: t.ink }]}>Hidden word</Text>
               <View style={styles.worth}>
                 <Text style={[styles.worthText, font(800), { color: t.correctText }]}>
-                  Worth {worth} pt{worth === 1 ? '' : 's'}
+                  Worth {count(worth, 'pt')}
                 </Text>
               </View>
             </View>
@@ -305,7 +306,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
 function letterCount(word: string): string {
   const words = word.trim().split(/\s+/);
   const letters = word.replace(/[^\p{L}\p{N}]/gu, '').length;
-  return words.length > 1 ? `${words.length} words · ${letters} letters` : `${letters} letters`;
+  return words.length > 1 ? `${count(words.length, 'word')} · ${count(letters, 'letter')}` : count(letters, 'letter');
 }
 
 // One underline per letter, grouped by word. Long answers get narrower blanks.
