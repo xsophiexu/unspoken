@@ -1,6 +1,8 @@
 export type Card = {
   word: string;
   banned: string[];
+  // Draw weight in All cards; cards drawn from chosen themes have none and are equally likely.
+  weight?: number;
 };
 
 export type Difficulty = 'Normal' | 'Harder' | 'Expert 1' | 'Expert 2' | 'Master 1' | 'Master 2' | 'Master 3' | 'Grandmaster';
@@ -23,7 +25,16 @@ export type Category =
 
 // A card as stored in the word bank. Banned words run strongest first, up to 10. Newer banks tag
 // each card with one or more themes; older ones have a single theme.
-export type BankCard = Card & { difficulty: Difficulty; score: number; themes?: Category[]; theme?: Category };
+export type BankCard = Card & {
+  difficulty: Difficulty;
+  score: number;
+  themes?: Category[];
+  theme?: Category;
+  // False for names, specific events and myths, and insider jargon: playable in their themes, never in All cards.
+  allCards?: boolean;
+  // Balances themes in All cards.
+  allCardsWeight?: number;
+};
 
 export type ModeId =
   | 'classic'

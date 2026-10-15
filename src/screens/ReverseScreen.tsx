@@ -6,7 +6,7 @@ import { Button } from '../components/Button';
 import { DifficultyPicker } from '../components/DifficultyPicker';
 import { GameHeader } from '../components/GameHeader';
 import { GameMenu } from '../components/GameMenu';
-import { bannedCountFor, cardsFor, difficultyOf, shuffled, themeLabel } from '../game';
+import { bannedCountFor, cardsFor, difficultyOf, dealDeck, themeLabel } from '../game';
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
@@ -33,7 +33,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
   const difficulty = difficultyOf(settings.difficulty);
   const pool = useMemo(() => cardsFor(settings.difficulty, settings.categories), [settings.difficulty, settings.categories]);
 
-  const [deck, setDeck] = useState<Card[]>(() => shuffled(pool));
+  const [deck, setDeck] = useState<Card[]>(() => dealDeck(pool));
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState<Phase>(seenHowTo ? 'guess' : 'howTo');
   const [revealed, setRevealed] = useState(FIRST_CLUES);
@@ -60,7 +60,7 @@ export function ReverseScreen({ settings, theme: t, onRestart, onChangeSettings,
     if (got) setScore((s) => s + worth);
     setPlayed((n) => n + 1);
     if (idx + 1 >= deck.length) {
-      setDeck(shuffled(pool));
+      setDeck(dealDeck(pool));
       setIdx(0);
     } else {
       setIdx(idx + 1);

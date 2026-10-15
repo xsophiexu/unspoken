@@ -3,7 +3,7 @@ import type { BankCard, Card, Category, Difficulty, GameSettings, ModeId } from 
 
 // The word bank is written in the "Harder difficulty word samples" thread and copied from
 // /mnt/project-files/unspoken/word-banks.json.
-type Entry = Card & { difficulty: Difficulty; themes: Category[] };
+type Entry = Card & { difficulty: Difficulty; themes: Category[]; inAll: boolean; allWeight: number };
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
 function capitalize(word: string): string {
@@ -15,6 +15,8 @@ export const BANK: Entry[] = (bank as BankCard[]).map((c) => ({
   banned: c.banned.map(capitalize),
   difficulty: c.difficulty,
   themes: c.themes ?? (c.theme ? [c.theme] : []),
+  inAll: c.allCards !== false,
+  allWeight: c.allCardsWeight ?? 1,
 }));
 
 // Easiest to hardest.
@@ -49,10 +51,18 @@ const ALL_CATEGORIES: Category[] = [
 // Only themes that have cards in the current bank.
 export const CATEGORIES = ALL_CATEGORIES.filter((c) => BANK.some((card) => card.themes.includes(c)));
 
+// All cards leaves out names and jargon and weights the rest to balance themes; chosen themes use every card evenly.
 export function cardsFor(difficulty: Difficulty, categories: Category[]): Card[] {
-  return BANK.filter(
-    (c) => c.difficulty === difficulty && (categories.length === 0 || c.themes.some((t) => categories.includes(t))),
-  ).map(({ word, banned }) => ({ word, banned }));
+  if (categories.length === 0) {
+    return BANK.filter((c) => c.difficulty === difficulty && c.inAll && c.allWeight > 0).map(({ word, banned, allWeight }) => ({
+      word,
+      banned,
+      weight: allWeight,
+    }));
+  }
+  return BANK.filter((c) => c.difficulty === difficulty && c.themes.some((t) => categories.includes(t))).map(
+    ({ word, banned }) => ({ word, banned }),
+  );
 }
 
 export function themeLabel(categories: Category[]): string {
@@ -133,6 +143,16 @@ export function shuffled<T>(items: T[]): T[] {
     [out[i], out[j]] = [out[j], out[i]];
   }
   return out;
+}
+
+// Deal a deck with no repeats. Weighted cards come up earlier in proportion to their weight
+// (each gets the key random^(1 / weight), highest first); unweighted cards are shuffled evenly.
+export function dealDeck(cards: Card[]): Card[] {
+  if (!cards.some((c) => c.weight !== undefined)) return shuffled(cards);
+  return cards
+    .map((c) => ({ c, key: Math.pow(Math.random(), 1 / (c.weight ?? 1)) }))
+    .sort((a, b) => b.key - a.key)
+    .map(({ c }) => c);
 }
 
 export function formatClock(seconds: number): string {

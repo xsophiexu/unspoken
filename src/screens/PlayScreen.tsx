@@ -24,7 +24,7 @@ import {
   formatClock,
   hiddenSecondsFor,
   modeOf,
-  shuffled,
+  dealDeck,
   themeLabel,
 } from '../game';
 import { fitWordSize } from '../fitWord';
@@ -59,7 +59,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
     return esc && full.length >= 20 ? full : cards;
   }, [settings.difficulty, settings.categories, esc]);
 
-  const [deck, setDeck] = useState<Card[]>(() => shuffled(pool));
+  const [deck, setDeck] = useState<Card[]>(() => dealDeck(pool));
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [skipsUsed, setSkipsUsed] = useState(0);
@@ -163,7 +163,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         }
         if (hot) setPassing(true);
         if (idx + 1 >= deck.length) {
-          setDeck(shuffled(pool));
+          setDeck(dealDeck(pool));
           setIdx(0);
         } else {
           setIdx(idx + 1);
