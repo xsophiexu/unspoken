@@ -46,7 +46,6 @@ export type ModeId =
   | 'timeAttack'
   | 'escalate'
   | 'hotPotato'
-  | 'zen'
   | 'reverse'
   | 'mindReader';
 

@@ -224,15 +224,13 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const tally = `${score} correct · ${skipsUsed} skipped`;
   const escLine =
     level < ESCALATE.max ? `${level} banned words · ${skipText}` : `10 banned · ${atMax} of ${ESCALATE.winAtMax} to win · ${skipText}`;
-  const subline = esc ? escLine : hot ? 'Pass after every word' : !mode.scored ? 'Just practice' : mode.skips ? `${score} pts · ${skipText}` : tally;
+  const subline = esc ? escLine : hot ? 'Pass after every word' : mode.skips ? `${score} pts · ${skipText}` : tally;
   const themeName = themeLabel(settings.categories);
   const menuStatus = hot
     ? `Hot potato · timer hidden · ${themeName}`
     : mode.timed
     ? `${formatClock(left)} left · ${score} pts · ${themeName}`
-    : mode.scored
-      ? `${mode.skips ? `${score} pts` : tally} · ${themeName}`
-      : `Zen mode · ${themeName}`;
+    : `${mode.skips ? `${score} pts` : tally} · ${themeName}`;
 
   const rotate = dx.interpolate({ inputRange: [-180, 0, 180], outputRange: ['-10deg', '0deg', '10deg'] });
   const enterY = enter.interpolate({ inputRange: [0, 1], outputRange: [40, 0] });
@@ -245,8 +243,8 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const skipBar = dx.interpolate({ inputRange: [-6, 0], outputRange: [t.barSkip, t.barIdle], extrapolate: 'clamp' });
 
   const statusLine = useMemo(
-    () => (hot ? `${score} words passed` : mode.scored && !mode.skips ? tally : mode.scored ? `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}` : 'Zen mode'),
-    [hot, mode.scored, mode.skips, tally, score, skipsLeft, skipsUsed, settings.skips],
+    () => (hot ? `${score} words passed` : !mode.skips ? tally : `${score} pts · ${skipsLeft === null ? `${skipsUsed} skips` : `${skipsUsed} of ${settings.skips} skips`}`),
+    [hot, mode.skips, tally, score, skipsLeft, skipsUsed, settings.skips],
   );
 
   return (
