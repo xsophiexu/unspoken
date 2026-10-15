@@ -2,7 +2,7 @@
 
 A word guessing game for grown-ups. Get your team to say the word on the card without saying any of the six banned words.
 
-**Play it in the browser:** https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1
+**Play now, no setup:** https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 (works on any phone or computer browser)
 
 The interface follows the "Current interface · Decided" row of the Word Game Screens design canvas. The app opens straight into a game on the Current Version screen.
 
@@ -18,52 +18,86 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
   - **Hot potato:** the clock is hidden and ends at a random point near the set time. Pass the phone after every word; whoever holds it when time runs out loses a point.
   - **Reverse:** the guesser reads the banned words as clues and guesses the hidden word. Three clues show to start; each extra clue makes the word worth a point less.
 
-## Run it
+## Ways to play
 
-You need [Node.js](https://nodejs.org) 20 or newer and [pnpm](https://pnpm.io/installation) (`corepack enable` sets it up). Then:
+| You want to | Use | Needs a computer? |
+| --- | --- | --- |
+| Just play | [The web version](https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1) | No |
+| Test the app on your own phone while editing code | Expo Go | Yes, to run the dev server |
+| Install the app on an Android phone | An APK from EAS Build | Only to start the build |
+| Test on a virtual phone | Android emulator or iOS simulator | Yes, they run on the computer |
 
-```bash
-git clone https://github.com/xsophiexu/unspoken.git
-cd unspoken
-pnpm install
-```
+The Android emulator and iOS simulator are programs on a Mac or PC. They can't run on a phone. On a phone, use the web version, Expo Go, or an installed APK.
 
-### In the browser
+### 1. Play in a browser (no setup)
+
+Open https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 on your phone or computer. On a phone, use your browser's **Add to Home Screen** for an app-like icon.
+
+### 2. One-time computer setup (for every other option)
+
+1. Install [Node.js](https://nodejs.org) (the LTS version).
+2. Open a terminal and turn on pnpm: `corepack enable`
+3. Get the code and install it:
+   ```bash
+   git clone https://github.com/xsophiexu/unspoken.git
+   cd unspoken
+   pnpm install
+   ```
+
+### 3. Your own phone with Expo Go (recommended for testing)
+
+1. Install **Expo Go** on your phone from the [App Store](https://apps.apple.com/app/expo-go/id982107779) or [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent).
+2. On the computer, in the `unspoken` folder, run:
+   ```bash
+   pnpm start
+   ```
+   A QR code appears in the terminal.
+3. Scan it. On iPhone use the Camera app; on Android use the scanner inside Expo Go. The game opens and reloads whenever the code changes.
+
+If your phone and computer are on different Wi-Fi networks, or the scan times out, run `pnpm start --tunnel` instead.
+
+### 4. Install it on an Android phone (APK)
+
+This builds a real app in Expo's cloud, so you don't need Android Studio.
+
+1. Create a free account at [expo.dev](https://expo.dev/signup).
+2. In the `unspoken` folder:
+   ```bash
+   npx eas-cli@latest login
+   npx eas-cli@latest build --platform android --profile preview
+   ```
+   The first build asks to create the project and an Android signing key; answer yes to both.
+3. When the build finishes (it shows a link and a QR code), open the link on your Android phone, download the APK and install it. Android may ask you to allow installs from your browser.
+
+iPhones can't install apps this way without an Apple Developer account; use the web version or Expo Go instead.
+
+### 5. Web dev server on the computer
 
 ```bash
 pnpm web
 ```
 
-This starts the Expo dev server and opens the game at http://localhost:8081. It reloads as you edit.
+Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:web` makes a static copy in `dist/` that any web host can serve.
 
-To build a static copy for hosting, run `pnpm build:web`. The site lands in `dist/`; serve it with any static file server, for example `npx serve dist`.
+### 6. Android emulator (on the computer)
 
-### Android emulator
-
-1. Install [Android Studio](https://developer.android.com/studio). In **More Actions → Virtual Device Manager**, create a device (any recent Pixel with a recent system image) and start it.
-2. Make sure `adb` is on your PATH. On macOS add these lines to your shell profile:
+1. Install [Android Studio](https://developer.android.com/studio) and open it.
+2. Go to **More Actions → Virtual Device Manager**, create a device (any recent Pixel) and press play to start it.
+3. Add the Android tools to your PATH. On macOS add these lines to `~/.zshrc`, then open a new terminal:
    ```bash
    export ANDROID_HOME=$HOME/Library/Android/sdk
    export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
    ```
-   On Windows the SDK is at `%LOCALAPPDATA%\Android\Sdk`.
-3. With the emulator running:
+   On Windows the SDK is at `%LOCALAPPDATA%\Android\Sdk`; add its `platform-tools` folder to PATH.
+4. With the emulator running, in the `unspoken` folder:
    ```bash
    pnpm android
    ```
    Expo installs Expo Go on the emulator and opens the game.
 
-### iOS simulator (macOS only)
+### 7. iOS simulator (Mac only)
 
-Install Xcode from the Mac App Store, open it once to finish setup, then:
-
-```bash
-pnpm ios
-```
-
-### On your phone
-
-Install **Expo Go** from the App Store or Google Play, run `pnpm start`, and scan the QR code (Camera app on iPhone, Expo Go on Android). Phone and computer need to be on the same Wi-Fi.
+Install Xcode from the Mac App Store, open it once to finish setup, then run `pnpm ios`.
 
 ## Checks
 
