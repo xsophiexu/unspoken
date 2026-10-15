@@ -1,10 +1,35 @@
-import { evenHarder, hard } from './data/cards';
-import type { Card, Difficulty, GameSettings, ModeId } from './types';
+import bank from './data/word-banks.json';
+import type { BankCard, Card, Category, Difficulty, GameSettings, ModeId } from './types';
 
-export const DIFFICULTIES: { id: Difficulty; name: string; badge: string; sub: string; cards: Card[] }[] = [
-  { id: 'hard', name: 'Hard', badge: 'HARD', sub: 'Trickier words', cards: hard },
-  { id: 'evenHarder', name: 'Even harder', badge: 'EVEN HARDER', sub: 'Expert level', cards: evenHarder },
+// The word bank is written in the "Harder difficulty word samples" thread and copied from
+// /mnt/project-files/unspoken/word-banks.json.
+export const BANK = bank as BankCard[];
+
+// Easiest to hardest.
+export const DIFFICULTIES: { id: Difficulty; badge: string }[] = [
+  { id: 'Normal', badge: 'NORMAL' },
+  { id: 'Harder', badge: 'HARDER' },
+  { id: 'Expert 1', badge: 'EXPERT 1' },
+  { id: 'Expert 2', badge: 'EXPERT 2' },
+  { id: 'Master 1', badge: 'MASTER 1' },
+  { id: 'Master 2', badge: 'MASTER 2' },
 ];
+
+export const CATEGORIES: Category[] = [
+  'Inner World',
+  'Literature and Language',
+  'Pop Culture',
+  'Science and Nature',
+  'Society',
+  'Everyday Life',
+  'History and Myth',
+];
+
+export function cardsFor(difficulty: Difficulty, category: Category | null): Card[] {
+  return BANK.filter((c) => c.difficulty === difficulty && (category === null || c.theme === category)).map(
+    ({ word, banned }) => ({ word, banned }),
+  );
+}
 
 export type Mode = {
   id: ModeId;
@@ -33,7 +58,8 @@ export const SKIP_OPTIONS: (number | null)[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
 
 export const DEFAULT_SETTINGS: GameSettings = {
   mode: 'classic',
-  difficulty: 'hard',
+  difficulty: 'Expert 1',
+  category: null,
   roundSeconds: 60,
   skips: 3,
 };
@@ -43,7 +69,7 @@ export function modeOf(id: ModeId): Mode {
 }
 
 export function difficultyOf(id: Difficulty) {
-  return DIFFICULTIES.find((d) => d.id === id) ?? DIFFICULTIES[0];
+  return DIFFICULTIES.find((d) => d.id === id) ?? DIFFICULTIES[2];
 }
 
 export function shuffled<T>(items: T[]): T[] {

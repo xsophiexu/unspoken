@@ -1,9 +1,9 @@
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { DIFFICULTIES, SKIP_OPTIONS, modeOf } from '../game';
+import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, modeOf } from '../game';
 import { font, type Theme } from '../theme';
-import type { Difficulty, GameSettings } from '../types';
+import type { Category, Difficulty, GameSettings } from '../types';
 
 type Props = {
   settings: GameSettings;
@@ -30,6 +30,7 @@ function secondsToDigits(seconds: number): string {
 export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const mode = modeOf(settings.mode);
   const [difficulty, setDifficulty] = useState<Difficulty>(settings.difficulty);
+  const [category, setCategory] = useState<Category | null>(settings.category);
   const [digits, setDigits] = useState(secondsToDigits(settings.roundSeconds));
   const [skips, setSkips] = useState<number | null>(settings.skips);
   const [focused, setFocused] = useState(false);
@@ -52,7 +53,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
         <Text style={[styles.title, font(800), { color: t.ink }]}>New game</Text>
 
         <Section t={t} label="DIFFICULTY">
-          <View style={styles.diffRow}>
+          <View style={styles.diffGrid}>
             {DIFFICULTIES.map((d) => {
               const on = d.id === difficulty;
               return (
@@ -63,8 +64,34 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                   onPress={() => setDifficulty(d.id)}
                   style={[styles.diff, { backgroundColor: on ? t.accent : t.tile }]}
                 >
-                  <Text style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink }]}>{d.name}</Text>
-                  <Text style={[styles.diffSub, font(500), { color: on ? t.onAccentMuted : t.muted }]}>{d.sub}</Text>
+                  <Text style={[styles.diffName, font(800), { color: on ? t.onAccent : t.ink }]}>{d.id}</Text>
+                  <Text style={[styles.diffSub, font(500), { color: on ? t.onAccentMuted : t.muted }]}>
+                    {cardsFor(d.id, category).length} cards
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </Section>
+
+        <Section t={t} label="THEME">
+          <View style={styles.themeWrap}>
+            {([null, ...CATEGORIES] as (Category | null)[]).map((c) => {
+              const on = c === category;
+              return (
+                <Pressable
+                  key={c ?? 'all'}
+                  accessibilityRole="radio"
+                  accessibilityState={{ selected: on }}
+                  onPress={() => setCategory(c)}
+                  style={[styles.theme, { backgroundColor: on ? t.accent : t.tile }]}
+                >
+                  <Text style={[styles.themeName, font(700), { color: on ? t.onAccent : t.ink }]}>
+                    {c ?? 'All cards'}
+                  </Text>
+                  <Text style={[styles.themeCount, font(600), { color: on ? t.onAccentMuted : t.muted }]}>
+                    {cardsFor(difficulty, c).length}
+                  </Text>
                 </Pressable>
               );
             })}
@@ -129,7 +156,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
       <Pressable
         accessibilityRole="button"
         disabled={!canStart}
-        onPress={() => onStart({ ...settings, difficulty, roundSeconds: seconds, skips })}
+        onPress={() => onStart({ ...settings, difficulty, category, roundSeconds: seconds, skips })}
         style={[styles.start, { backgroundColor: t.accent, opacity: canStart ? 1 : 0.5 }]}
       >
         <Text style={[styles.startText, font(700), { color: t.onAccent }]}>Start game</Text>
@@ -161,10 +188,21 @@ const styles = StyleSheet.create({
   sectionHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' },
   sectionLabel: { fontSize: 11, letterSpacing: 0.9 },
   aside: { fontSize: 13 },
-  diffRow: { flexDirection: 'row', gap: 8 },
-  diff: { flex: 1, borderRadius: 16, paddingVertical: 14, paddingHorizontal: 12 },
+  diffGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  diff: { width: '31%', borderRadius: 16, paddingVertical: 12, paddingHorizontal: 12 },
   diffName: { fontSize: 16 },
   diffSub: { fontSize: 12, marginTop: 4 },
+  themeWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  theme: {
+    minHeight: 40,
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  themeName: { fontSize: 14 },
+  themeCount: { fontSize: 13 },
   timer: {
     height: 64,
     borderRadius: 16,

@@ -13,7 +13,7 @@ import Svg, { Path } from 'react-native-svg';
 
 import { GameMenu } from '../components/GameMenu';
 import { TimerRing } from '../components/TimerRing';
-import { difficultyOf, formatClock, modeOf, shuffled } from '../game';
+import { cardsFor, difficultyOf, formatClock, modeOf, shuffled } from '../game';
 import { font, type Theme } from '../theme';
 import type { Card, GameSettings, ModeId } from '../types';
 
@@ -34,8 +34,9 @@ const SWIPE_AT = 100;
 export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, onChangeMode, onChangeTheme }: Props) {
   const mode = modeOf(settings.mode);
   const difficulty = difficultyOf(settings.difficulty);
+  const pool = useMemo(() => cardsFor(settings.difficulty, settings.category), [settings.difficulty, settings.category]);
 
-  const [deck, setDeck] = useState<Card[]>(() => shuffled(difficulty.cards));
+  const [deck, setDeck] = useState<Card[]>(() => shuffled(pool));
   const [idx, setIdx] = useState(0);
   const [score, setScore] = useState(0);
   const [skipsUsed, setSkipsUsed] = useState(0);
@@ -115,7 +116,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
           setSkipsUsed((s) => s + 1);
         }
         if (idx + 1 >= deck.length) {
-          setDeck(shuffled(difficulty.cards));
+          setDeck(shuffled(pool));
           setIdx(0);
         } else {
           setIdx(idx + 1);
@@ -128,7 +129,7 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         });
       });
     },
-    [over, paused, menuOpen, skipsLeft, mode.bonusSeconds, left, idx, deck.length, difficulty.cards, dx, fade, enter],
+    [over, paused, menuOpen, skipsLeft, mode.bonusSeconds, left, idx, deck.length, pool, dx, fade, enter],
   );
 
   const finishRef = useRef(finish);
@@ -167,7 +168,12 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const skipText =
     skipsLeft === null ? `${skipsUsed} skip${skipsUsed === 1 ? '' : 's'}` : `${skipsLeft} skip${skipsLeft === 1 ? '' : 's'} left`;
   const subline = mode.scored ? `${score} pts · ${skipText}` : 'Just practice';
-  const menuStatus = mode.timed ? `${formatClock(left)} left · ${score} pts` : mode.scored ? `${score} pts` : 'Zen mode';
+  const themeName = settings.category ?? 'All cards';
+  const menuStatus = mode.timed
+    ? `${formatClock(left)} left · ${score} pts · ${themeName}`
+    : mode.scored
+      ? `${score} pts · ${themeName}`
+      : `Zen mode · ${themeName}`;
 
   const rotate = dx.interpolate({ inputRange: [-180, 0, 180], outputRange: ['-10deg', '0deg', '10deg'] });
   const enterY = enter.interpolate({ inputRange: [0, 1], outputRange: [40, 0] });

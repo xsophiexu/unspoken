@@ -1,0 +1,4422 @@
+[
+ {
+  "word": "Hiccups",
+  "banned": [
+   "Breath",
+   "Stomach",
+   "Scare",
+   "Water",
+   "Sound",
+   "Throat"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Lottery",
+  "banned": [
+   "Ticket",
+   "Win",
+   "Money",
+   "Numbers",
+   "Jackpot",
+   "Luck"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Sunburn",
+  "banned": [
+   "Sun",
+   "Red",
+   "Skin",
+   "Beach",
+   "Sunscreen",
+   "Burn"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Leftovers",
+  "banned": [
+   "Food",
+   "Fridge",
+   "Dinner",
+   "Reheat",
+   "Extra",
+   "Yesterday"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Blind date",
+  "banned": [
+   "Meet",
+   "Stranger",
+   "Set up",
+   "Romance",
+   "Dinner",
+   "First"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Detour",
+  "banned": [
+   "Road",
+   "Route",
+   "Around",
+   "Closed",
+   "Drive",
+   "Longer"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Allergy",
+  "banned": [
+   "Sneeze",
+   "Peanut",
+   "Pollen",
+   "React",
+   "Itchy",
+   "Doctor"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Tattoo",
+  "banned": [
+   "Ink",
+   "Needle",
+   "Skin",
+   "Permanent",
+   "Art",
+   "Arm"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Commute",
+  "banned": [
+   "Work",
+   "Drive",
+   "Train",
+   "Travel",
+   "Daily",
+   "Traffic"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Selfie",
+  "banned": [
+   "Photo",
+   "Phone",
+   "Camera",
+   "Myself",
+   "Picture",
+   "Instagram"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Karaoke",
+  "banned": [
+   "Sing",
+   "Song",
+   "Bar",
+   "Microphone",
+   "Lyrics",
+   "Japan"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Brunch",
+  "banned": [
+   "Breakfast",
+   "Lunch",
+   "Sunday",
+   "Mimosa",
+   "Eggs",
+   "Late"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Road trip",
+  "banned": [
+   "Car",
+   "Drive",
+   "Travel",
+   "Highway",
+   "Friends",
+   "Map"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Hangover",
+  "banned": [
+   "Drink",
+   "Alcohol",
+   "Headache",
+   "Morning",
+   "Party",
+   "Sick"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Hibernation",
+  "banned": [
+   "Bear",
+   "Sleep",
+   "Winter",
+   "Cave",
+   "Animal",
+   "Cold"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Migration",
+  "banned": [
+   "Birds",
+   "Move",
+   "South",
+   "Travel",
+   "Season",
+   "Fly"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Eclipse",
+  "banned": [
+   "Sun",
+   "Moon",
+   "Dark",
+   "Block",
+   "Shadow",
+   "Solar"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Camouflage",
+  "banned": [
+   "Hide",
+   "Blend",
+   "Army",
+   "Pattern",
+   "Chameleon",
+   "Green"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Sequel",
+  "banned": [
+   "Movie",
+   "Second",
+   "Next",
+   "Part two",
+   "Follow",
+   "Series"
+  ],
+  "difficulty": "Normal",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Spoiler",
+  "banned": [
+   "Ruin",
+   "Ending",
+   "Movie",
+   "Tell",
+   "Alert",
+   "Show"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Echo",
+  "banned": [
+   "Sound",
+   "Repeat",
+   "Cave",
+   "Voice",
+   "Back",
+   "Bounce"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Equator",
+  "banned": [
+   "Earth",
+   "Line",
+   "Middle",
+   "Hot",
+   "North",
+   "South"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Static",
+  "banned": [
+   "Electric",
+   "Shock",
+   "Hair",
+   "Balloon",
+   "TV",
+   "Noise"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Curfew",
+  "banned": [
+   "Late",
+   "Home",
+   "Time",
+   "Night",
+   "Parents",
+   "Rule"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Jet lag",
+  "banned": [
+   "Tired",
+   "Travel",
+   "Time zone",
+   "Flight",
+   "Sleep",
+   "Plane"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Bucket list",
+  "banned": [
+   "Die",
+   "Before",
+   "Goals",
+   "Dream",
+   "List",
+   "Life"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Gravity",
+  "banned": [
+   "Fall",
+   "Earth",
+   "Newton",
+   "Apple",
+   "Pull",
+   "Weight"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Stand-up",
+  "banned": [
+   "Comedy",
+   "Jokes",
+   "Microphone",
+   "Stage",
+   "Comedian",
+   "Laugh"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Binge-watch",
+  "banned": [
+   "Netflix",
+   "Episodes",
+   "Show",
+   "Marathon",
+   "TV",
+   "Season"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Black hole",
+  "banned": [
+   "Space",
+   "Gravity",
+   "Star",
+   "Dark",
+   "Pull",
+   "Light"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Photosynthesis",
+  "banned": [
+   "Plant",
+   "Sun",
+   "Light",
+   "Leaf",
+   "Green",
+   "Oxygen"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Mortgage",
+  "banned": [
+   "House",
+   "Loan",
+   "Bank",
+   "Pay",
+   "Interest",
+   "Home"
+  ],
+  "difficulty": "Normal",
+  "theme": "Society"
+ },
+ {
+  "word": "Silence",
+  "banned": [
+   "Quiet",
+   "Noise",
+   "Sound",
+   "Mute",
+   "Shh",
+   "Golden"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Insomnia",
+  "banned": [
+   "Sleep",
+   "Awake",
+   "Night",
+   "Tired",
+   "Bed",
+   "Can't"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Mirage",
+  "banned": [
+   "Desert",
+   "Illusion",
+   "Water",
+   "Heat",
+   "Fake",
+   "See"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Encore",
+  "banned": [
+   "Again",
+   "Concert",
+   "More",
+   "Song",
+   "Applause",
+   "French"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Quarantine",
+  "banned": [
+   "Isolate",
+   "Sick",
+   "Virus",
+   "Covid",
+   "Days",
+   "Alone"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Thesaurus",
+  "banned": [
+   "Synonym",
+   "Words",
+   "Book",
+   "Dictionary",
+   "Meaning",
+   "Similar"
+  ],
+  "difficulty": "Normal",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Small talk",
+  "banned": [
+   "Weather",
+   "Chat",
+   "Conversation",
+   "Stranger",
+   "Polite",
+   "Boring"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Meme",
+  "banned": [
+   "Funny",
+   "Internet",
+   "Picture",
+   "Viral",
+   "Joke",
+   "Share"
+  ],
+  "difficulty": "Normal",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Pyramid",
+  "banned": [
+   "Egypt",
+   "Pharaoh",
+   "Triangle",
+   "Tomb",
+   "Desert",
+   "Ancient"
+  ],
+  "difficulty": "Normal",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Knight",
+  "banned": [
+   "Armor",
+   "Horse",
+   "Sword",
+   "Castle",
+   "Chess",
+   "Sir"
+  ],
+  "difficulty": "Normal",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Dinosaur",
+  "banned": [
+   "Extinct",
+   "Fossil",
+   "T-Rex",
+   "Jurassic",
+   "Reptile",
+   "Big"
+  ],
+  "difficulty": "Normal",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Vampire",
+  "banned": [
+   "Blood",
+   "Dracula",
+   "Fangs",
+   "Bite",
+   "Night",
+   "Garlic"
+  ],
+  "difficulty": "Normal",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Mermaid",
+  "banned": [
+   "Ocean",
+   "Fish",
+   "Tail",
+   "Ariel",
+   "Sea",
+   "Half"
+  ],
+  "difficulty": "Normal",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Fairy tale",
+  "banned": [
+   "Once upon a time",
+   "Princess",
+   "Story",
+   "Happily ever after",
+   "Magic",
+   "Children"
+  ],
+  "difficulty": "Normal",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Diary",
+  "banned": [
+   "Journal",
+   "Write",
+   "Secret",
+   "Dear",
+   "Book",
+   "Daily"
+  ],
+  "difficulty": "Normal",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Tongue twister",
+  "banned": [
+   "Say",
+   "Fast",
+   "Hard",
+   "Words",
+   "Sally",
+   "Repeat"
+  ],
+  "difficulty": "Normal",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Tax",
+  "banned": [
+   "Money",
+   "Government",
+   "IRS",
+   "Pay",
+   "April",
+   "Income"
+  ],
+  "difficulty": "Normal",
+  "theme": "Society"
+ },
+ {
+  "word": "Election",
+  "banned": [
+   "Vote",
+   "President",
+   "Ballot",
+   "Candidate",
+   "Win",
+   "Poll"
+  ],
+  "difficulty": "Normal",
+  "theme": "Society"
+ },
+ {
+  "word": "Tip",
+  "banned": [
+   "Waiter",
+   "Money",
+   "Restaurant",
+   "Extra",
+   "Percent",
+   "Service"
+  ],
+  "difficulty": "Normal",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Nightmare",
+  "banned": [
+   "Dream",
+   "Scary",
+   "Sleep",
+   "Bad",
+   "Night",
+   "Wake"
+  ],
+  "difficulty": "Normal",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Tantrum",
+  "banned": [
+   "Kid",
+   "Scream",
+   "Angry",
+   "Cry",
+   "Throw",
+   "Toddler"
+  ],
+  "difficulty": "Normal",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Crush",
+  "banned": [
+   "Like",
+   "Love",
+   "Secret",
+   "Romantic",
+   "Feelings",
+   "Squeeze"
+  ],
+  "difficulty": "Normal",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Stage fright",
+  "banned": [
+   "Nervous",
+   "Stage",
+   "Fear",
+   "Perform",
+   "Audience",
+   "Shake"
+  ],
+  "difficulty": "Normal",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Jury duty",
+  "banned": [
+   "Court",
+   "Trial",
+   "Summons",
+   "Peers",
+   "Civic",
+   "Judge"
+  ],
+  "difficulty": "Normal",
+  "theme": "Society"
+ },
+ {
+  "word": "Excuse",
+  "banned": [
+   "Reason",
+   "Lie",
+   "Late",
+   "Explain",
+   "Sorry",
+   "Why"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Prank",
+  "banned": [
+   "Joke",
+   "Trick",
+   "April Fools",
+   "Funny",
+   "Friend",
+   "Surprise"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Nickname",
+  "banned": [
+   "Name",
+   "Call",
+   "Friend",
+   "Real",
+   "Short",
+   "Pet"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Promise",
+  "banned": [
+   "Swear",
+   "Keep",
+   "Break",
+   "Word",
+   "Pinky",
+   "Trust"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Rivalry",
+  "banned": [
+   "Compete",
+   "Enemy",
+   "Team",
+   "Win",
+   "Opponent",
+   "Sports"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Hangry",
+  "banned": [
+   "Hungry",
+   "Angry",
+   "Food",
+   "Grumpy",
+   "Snack",
+   "Mood"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Shortcut",
+  "banned": [
+   "Faster",
+   "Way",
+   "Route",
+   "Quick",
+   "Keyboard",
+   "Cut"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Habit",
+  "banned": [
+   "Routine",
+   "Repeat",
+   "Bad",
+   "Break",
+   "Always",
+   "Addiction"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Viral",
+  "banned": [
+   "Spread",
+   "Internet",
+   "Video",
+   "Popular",
+   "Share",
+   "Million"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Gossip",
+  "banned": [
+   "Rumor",
+   "Talk",
+   "Secret",
+   "Spread",
+   "Whisper",
+   "Drama"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Homesick",
+  "banned": [
+   "Miss",
+   "Family",
+   "Away",
+   "Sad",
+   "Return",
+   "Missing"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Compromise",
+  "banned": [
+   "Agree",
+   "Middle",
+   "Meet",
+   "Both",
+   "Deal",
+   "Give"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Reflection",
+  "banned": [
+   "Mirror",
+   "Image",
+   "Think",
+   "Water",
+   "Glass",
+   "See"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Instinct",
+  "banned": [
+   "Gut",
+   "Feeling",
+   "Natural",
+   "Animal",
+   "Reaction",
+   "Sense"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Ambition",
+  "banned": [
+   "Goal",
+   "Drive",
+   "Success",
+   "Dream",
+   "Want",
+   "Career"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Procrastinate",
+  "banned": [
+   "Delay",
+   "Later",
+   "Put off",
+   "Lazy",
+   "Avoid",
+   "Deadline"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Loophole",
+  "banned": [
+   "Rule",
+   "Law",
+   "Gap",
+   "Escape",
+   "Technicality",
+   "Contract"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Placebo",
+  "banned": [
+   "Pill",
+   "Sugar",
+   "Fake",
+   "Medicine",
+   "Effect",
+   "Trial"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Sarcasm",
+  "banned": [
+   "Irony",
+   "Tone",
+   "Joke",
+   "Mean",
+   "Opposite",
+   "Eye roll"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Awkward",
+  "banned": [
+   "Uncomfortable",
+   "Silence",
+   "Clumsy",
+   "Embarrass",
+   "Weird",
+   "Social"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Grudge",
+  "banned": [
+   "Hold",
+   "Forgive",
+   "Resent",
+   "Anger",
+   "Revenge",
+   "Past"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Comfort zone",
+  "banned": [
+   "Safe",
+   "Leave",
+   "Step out",
+   "Familiar",
+   "Easy",
+   "Challenge"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Ghosting",
+  "banned": [
+   "Disappear",
+   "Text",
+   "Date",
+   "Ignore",
+   "Reply",
+   "Ghost"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Catfish",
+  "banned": [
+   "Fake",
+   "Online",
+   "Profile",
+   "Dating",
+   "Lie",
+   "Fish"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Clickbait",
+  "banned": [
+   "Headline",
+   "Click",
+   "Fake",
+   "Article",
+   "Online",
+   "Trick"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Influencer",
+  "banned": [
+   "Social media",
+   "Instagram",
+   "Followers",
+   "Sponsor",
+   "Famous",
+   "Post"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Alibi",
+  "banned": [
+   "Excuse",
+   "Crime",
+   "Where",
+   "Proof",
+   "Innocent",
+   "Witness"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Verdict",
+  "banned": [
+   "Jury",
+   "Guilty",
+   "Court",
+   "Decision",
+   "Judge",
+   "Trial"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Plagiarism",
+  "banned": [
+   "Copy",
+   "Steal",
+   "Write",
+   "School",
+   "Cheat",
+   "Credit"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Cliffhanger",
+  "banned": [
+   "Ending",
+   "Suspense",
+   "Episode",
+   "Next",
+   "Wait",
+   "Show"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Plot twist",
+  "banned": [
+   "Story",
+   "Surprise",
+   "Ending",
+   "Movie",
+   "Turn",
+   "Unexpected"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Veto",
+  "banned": [
+   "Reject",
+   "President",
+   "Bill",
+   "No",
+   "Power",
+   "Block"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Inflation",
+  "banned": [
+   "Prices",
+   "Money",
+   "Rise",
+   "Economy",
+   "Balloon",
+   "Cost"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Bankruptcy",
+  "banned": [
+   "Money",
+   "Broke",
+   "Debt",
+   "Court",
+   "Owe",
+   "Business"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Recession",
+  "banned": [
+   "Economy",
+   "Money",
+   "Jobs",
+   "Depression",
+   "Down",
+   "Crash"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Adrenaline",
+  "banned": [
+   "Rush",
+   "Fear",
+   "Heart",
+   "Hormone",
+   "Excite",
+   "Pump"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Metabolism",
+  "banned": [
+   "Body",
+   "Burn",
+   "Food",
+   "Energy",
+   "Fast",
+   "Slow"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Vertigo",
+  "banned": [
+   "Dizzy",
+   "Spin",
+   "Heights",
+   "Fall",
+   "Balance",
+   "Hitchcock"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Courage",
+  "banned": [
+   "Brave",
+   "Fear",
+   "Lion",
+   "Bold",
+   "Hero",
+   "Guts"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Patience",
+  "banned": [
+   "Wait",
+   "Calm",
+   "Virtue",
+   "Doctor",
+   "Slow",
+   "Tolerate"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Boredom",
+  "banned": [
+   "Bored",
+   "Nothing",
+   "Dull",
+   "Tired",
+   "Yawn",
+   "Interest"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Fame",
+  "banned": [
+   "Celebrity",
+   "Famous",
+   "Known",
+   "Star",
+   "Popular",
+   "Hollywood"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Privacy",
+  "banned": [
+   "Secret",
+   "Alone",
+   "Personal",
+   "Data",
+   "Private",
+   "Hide"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Loyalty",
+  "banned": [
+   "Faithful",
+   "Dog",
+   "Friend",
+   "Trust",
+   "Betray",
+   "Stick"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Betrayal",
+  "banned": [
+   "Trust",
+   "Backstab",
+   "Friend",
+   "Lie",
+   "Cheat",
+   "Judas"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Regret",
+  "banned": [
+   "Sorry",
+   "Wish",
+   "Past",
+   "Mistake",
+   "Should have",
+   "Remorse"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Curiosity",
+  "banned": [
+   "Cat",
+   "Wonder",
+   "Question",
+   "Explore",
+   "Know",
+   "Nosy"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Superstition",
+  "banned": [
+   "Luck",
+   "Black cat",
+   "Belief",
+   "Ladder",
+   "Thirteen",
+   "Myth"
+  ],
+  "difficulty": "Harder",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Burnout",
+  "banned": [
+   "Tired",
+   "Work",
+   "Stress",
+   "Exhausted",
+   "Job",
+   "Overworked"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "Amnesia",
+  "banned": [
+   "Forget",
+   "Memory",
+   "Lose",
+   "Head",
+   "Remember",
+   "Brain"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Midlife crisis",
+  "banned": [
+   "Age",
+   "Forty",
+   "Sports car",
+   "Old",
+   "Panic",
+   "Change"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "FOMO",
+  "banned": [
+   "Miss",
+   "Out",
+   "Fear",
+   "Party",
+   "Social media",
+   "Left"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Withdrawal",
+  "banned": [
+   "Quit",
+   "Addiction",
+   "Drug",
+   "Bank",
+   "Money",
+   "Pull"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Peer pressure",
+  "banned": [
+   "Friends",
+   "Force",
+   "Fit in",
+   "Teen",
+   "Influence",
+   "Push"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Introvert",
+  "banned": [
+   "Shy",
+   "Quiet",
+   "Alone",
+   "Extrovert",
+   "Social",
+   "Energy"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Inheritance",
+  "banned": [
+   "Will",
+   "Money",
+   "Death",
+   "Family",
+   "Pass",
+   "Genes"
+  ],
+  "difficulty": "Harder",
+  "theme": "Society"
+ },
+ {
+  "word": "White lie",
+  "banned": [
+   "Small",
+   "Harmless",
+   "Fib",
+   "Polite",
+   "Truth",
+   "Innocent"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Poker face",
+  "banned": [
+   "Expression",
+   "Hide",
+   "Cards",
+   "Blank",
+   "Emotion",
+   "Bluff"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Tough love",
+  "banned": [
+   "Strict",
+   "Parent",
+   "Care",
+   "Hard",
+   "Harsh",
+   "Discipline"
+  ],
+  "difficulty": "Harder",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Second wind",
+  "banned": [
+   "Energy",
+   "Tired",
+   "Again",
+   "Run",
+   "Burst",
+   "Breath"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Writer's block",
+  "banned": [
+   "Write",
+   "Stuck",
+   "Author",
+   "Idea",
+   "Blank",
+   "Page"
+  ],
+  "difficulty": "Harder",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Tunnel vision",
+  "banned": [
+   "Focus",
+   "Narrow",
+   "See",
+   "Ignore",
+   "One",
+   "Only"
+  ],
+  "difficulty": "Harder",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Muscle memory",
+  "banned": [
+   "Body",
+   "Remember",
+   "Practice",
+   "Automatic",
+   "Habit",
+   "Repeat"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Momentum",
+  "banned": [
+   "Speed",
+   "Moving",
+   "Force",
+   "Physics",
+   "Roll",
+   "Mass"
+  ],
+  "difficulty": "Harder",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Stalemate",
+  "banned": [
+   "Chess",
+   "Draw",
+   "Stuck",
+   "Tie",
+   "Deadlock",
+   "Neither"
+  ],
+  "difficulty": "Harder",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Gladiator",
+  "banned": [
+   "Rome",
+   "Fight",
+   "Arena",
+   "Sword",
+   "Colosseum",
+   "Russell Crowe"
+  ],
+  "difficulty": "Harder",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Trojan horse",
+  "banned": [
+   "Greek",
+   "Troy",
+   "Wooden",
+   "Gift",
+   "Virus",
+   "Trick"
+  ],
+  "difficulty": "Harder",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Pandora's box",
+  "banned": [
+   "Open",
+   "Greek",
+   "Evil",
+   "Hope",
+   "Curse",
+   "Myth"
+  ],
+  "difficulty": "Harder",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Achilles' heel",
+  "banned": [
+   "Weakness",
+   "Greek",
+   "Foot",
+   "Warrior",
+   "Arrow",
+   "Tendon"
+  ],
+  "difficulty": "Harder",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Deadline",
+  "banned": [
+   "Due",
+   "Date",
+   "Late",
+   "Time",
+   "Finish",
+   "Project"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Hypnosis",
+  "banned": [
+   "Trance",
+   "Sleep",
+   "Swing",
+   "Watch",
+   "Mind",
+   "Control"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Daydream",
+  "banned": [
+   "Sleep",
+   "Awake",
+   "Imagine",
+   "Fantasy",
+   "Zone out",
+   "Mind"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Bribe",
+  "banned": [
+   "Money",
+   "Pay",
+   "Corrupt",
+   "Police",
+   "Illegal",
+   "Favor"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Coincidence",
+  "banned": [
+   "Chance",
+   "Same",
+   "Luck",
+   "Random",
+   "Happen",
+   "Accident"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Grief",
+  "banned": [
+   "Sad",
+   "Loss",
+   "Death",
+   "Mourn",
+   "Cry",
+   "Stages"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Jinx",
+  "banned": [
+   "Curse",
+   "Luck",
+   "Bad",
+   "Say",
+   "Same time",
+   "Knock on wood"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Sabotage",
+  "banned": [
+   "Ruin",
+   "Destroy",
+   "Secret",
+   "Undermine",
+   "Plan",
+   "Enemy"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Nostalgia",
+  "banned": [
+   "Memory",
+   "Past",
+   "Remember",
+   "Longing",
+   "Old",
+   "Childhood"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Karma",
+  "banned": [
+   "Fate",
+   "Deserve",
+   "Good",
+   "Bad",
+   "Return",
+   "Buddhism"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Hindsight",
+  "banned": [
+   "Past",
+   "Look back",
+   "Regret",
+   "20/20",
+   "Clear",
+   "After"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Déjà vu",
+  "banned": [
+   "Before",
+   "French",
+   "Feeling",
+   "Again",
+   "Familiar",
+   "Happened"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Envy",
+  "banned": [
+   "Jealous",
+   "Green",
+   "Want",
+   "Covet",
+   "Others",
+   "Sin"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Optimism",
+  "banned": [
+   "Positive",
+   "Hope",
+   "Glass half full",
+   "Bright",
+   "Future",
+   "Pessimism"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Cynic",
+  "banned": [
+   "Distrust",
+   "Negative",
+   "Doubt",
+   "Selfish",
+   "Bitter",
+   "Skeptic"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Perfectionist",
+  "banned": [
+   "Flawless",
+   "Detail",
+   "Mistake",
+   "High standards",
+   "Obsessive",
+   "Best"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Closure",
+  "banned": [
+   "End",
+   "Move on",
+   "Finish",
+   "Breakup",
+   "Peace",
+   "Resolve"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Temptation",
+  "banned": [
+   "Resist",
+   "Want",
+   "Desire",
+   "Sin",
+   "Urge",
+   "Devil"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Redemption",
+  "banned": [
+   "Forgive",
+   "Save",
+   "Second chance",
+   "Sin",
+   "Make up",
+   "Atone"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Humility",
+  "banned": [
+   "Modest",
+   "Humble",
+   "Pride",
+   "Ego",
+   "Brag",
+   "Down to earth"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Destiny",
+  "banned": [
+   "Fate",
+   "Future",
+   "Meant",
+   "Path",
+   "Written",
+   "Chosen"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Solitude",
+  "banned": [
+   "Alone",
+   "Peace",
+   "Quiet",
+   "Lonely",
+   "Isolation",
+   "By yourself"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Rebellion",
+  "banned": [
+   "Revolt",
+   "Rules",
+   "Fight",
+   "Teenager",
+   "Authority",
+   "Resist"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Intuition",
+  "banned": [
+   "Gut",
+   "Feeling",
+   "Sixth sense",
+   "Know",
+   "Hunch",
+   "Instinct"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Euphoria",
+  "banned": [
+   "Happy",
+   "High",
+   "Joy",
+   "Ecstasy",
+   "Bliss",
+   "Elated"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Anxiety",
+  "banned": [
+   "Worry",
+   "Nervous",
+   "Stress",
+   "Panic",
+   "Fear",
+   "Anxious"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Ego",
+  "banned": [
+   "Self",
+   "Pride",
+   "Big",
+   "Freud",
+   "Arrogant",
+   "Me"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Wisdom",
+  "banned": [
+   "Smart",
+   "Old",
+   "Knowledge",
+   "Teeth",
+   "Wise",
+   "Owl"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Freedom",
+  "banned": [
+   "Free",
+   "Liberty",
+   "Choice",
+   "Prison",
+   "Independence",
+   "Rights"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Tradition",
+  "banned": [
+   "Custom",
+   "Old",
+   "Family",
+   "Culture",
+   "Holiday",
+   "Generations"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Legacy",
+  "banned": [
+   "Leave",
+   "Remember",
+   "Inherit",
+   "Death",
+   "Behind",
+   "History"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Evolution",
+  "banned": [
+   "Darwin",
+   "Monkey",
+   "Change",
+   "Species",
+   "Adapt",
+   "Natural selection"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Hypothesis",
+  "banned": [
+   "Science",
+   "Guess",
+   "Test",
+   "Experiment",
+   "Theory",
+   "Predict"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Capitalism",
+  "banned": [
+   "Money",
+   "Market",
+   "Business",
+   "Profit",
+   "Economy",
+   "Communism"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Democracy",
+  "banned": [
+   "Vote",
+   "People",
+   "Government",
+   "Election",
+   "Freedom",
+   "Rule"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Impeachment",
+  "banned": [
+   "President",
+   "Remove",
+   "Congress",
+   "Trial",
+   "Office",
+   "Charge"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Perjury",
+  "banned": [
+   "Lie",
+   "Court",
+   "Oath",
+   "Testify",
+   "Crime",
+   "Truth"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Protagonist",
+  "banned": [
+   "Main",
+   "Character",
+   "Hero",
+   "Story",
+   "Villain",
+   "Lead"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Foreshadowing",
+  "banned": [
+   "Hint",
+   "Future",
+   "Story",
+   "Clue",
+   "Later",
+   "Predict"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Monologue",
+  "banned": [
+   "Speech",
+   "Alone",
+   "One",
+   "Talk",
+   "Actor",
+   "Long"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Improv",
+  "banned": [
+   "Comedy",
+   "Make up",
+   "Spot",
+   "Scene",
+   "Theater",
+   "Unscripted"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Glass ceiling",
+  "banned": [
+   "Women",
+   "Promotion",
+   "Career",
+   "Barrier",
+   "Work",
+   "Invisible"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Elephant in the room",
+  "banned": [
+   "Obvious",
+   "Ignore",
+   "Problem",
+   "Talk",
+   "Big",
+   "Avoid"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Devil's advocate",
+  "banned": [
+   "Argue",
+   "Opposite",
+   "Side",
+   "Debate",
+   "Pretend",
+   "Disagree"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Butterfly effect",
+  "banned": [
+   "Small",
+   "Change",
+   "Chaos",
+   "Big",
+   "Wings",
+   "Cause"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Imposter syndrome",
+  "banned": [
+   "Fake",
+   "Fraud",
+   "Doubt",
+   "Success",
+   "Deserve",
+   "Feel"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Survivor's guilt",
+  "banned": [
+   "Live",
+   "Die",
+   "Feel",
+   "Bad",
+   "Others",
+   "Tragedy"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Conscience",
+  "banned": [
+   "Guilt",
+   "Right",
+   "Wrong",
+   "Moral",
+   "Voice",
+   "Cricket"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Cliché",
+  "banned": [
+   "Overused",
+   "Phrase",
+   "Common",
+   "Old",
+   "Saying",
+   "Boring"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Propaganda",
+  "banned": [
+   "Government",
+   "Lie",
+   "Spread",
+   "Media",
+   "Poster",
+   "Persuade"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Satire",
+  "banned": [
+   "Mock",
+   "Comedy",
+   "Politics",
+   "Joke",
+   "Onion",
+   "Exaggerate"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Vulnerable",
+  "banned": [
+   "Weak",
+   "Exposed",
+   "Open",
+   "Hurt",
+   "Risk",
+   "Emotion"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Paranoia",
+  "banned": [
+   "Suspicious",
+   "Fear",
+   "Watched",
+   "Conspiracy",
+   "Trust",
+   "Crazy"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Irony",
+  "banned": [
+   "Opposite",
+   "Expect",
+   "Sarcasm",
+   "Funny",
+   "Situation",
+   "Meaning"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Metaphor",
+  "banned": [
+   "Comparison",
+   "Like",
+   "Simile",
+   "Poetry",
+   "Figure",
+   "Symbol"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Bureaucracy",
+  "banned": [
+   "Government",
+   "Paperwork",
+   "Red tape",
+   "Rules",
+   "Office",
+   "Slow"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Anarchy",
+  "banned": [
+   "Chaos",
+   "Government",
+   "No rules",
+   "Rebel",
+   "Disorder",
+   "Punk"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Mortality",
+  "banned": [
+   "Death",
+   "Die",
+   "Life",
+   "Human",
+   "Rate",
+   "End"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Algorithm",
+  "banned": [
+   "Computer",
+   "Steps",
+   "Code",
+   "Social media",
+   "Process",
+   "Math"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Feng shui",
+  "banned": [
+   "Chinese",
+   "Energy",
+   "Furniture",
+   "Arrange",
+   "Harmony",
+   "Room"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Renaissance",
+  "banned": [
+   "Italy",
+   "Art",
+   "Rebirth",
+   "Da Vinci",
+   "Europe",
+   "Period"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Prophecy",
+  "banned": [
+   "Predict",
+   "Future",
+   "Oracle",
+   "Foretell",
+   "Seer",
+   "Fate"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Paparazzi",
+  "banned": [
+   "Photographers",
+   "Celebrity",
+   "Camera",
+   "Chase",
+   "Tabloid",
+   "Italian"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Reality TV",
+  "banned": [
+   "Show",
+   "Kardashians",
+   "Drama",
+   "Unscripted",
+   "Bachelor",
+   "Fake"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Housewarming",
+  "banned": [
+   "Party",
+   "New",
+   "Home",
+   "Move",
+   "Gift",
+   "Guests"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Hand-me-down",
+  "banned": [
+   "Old",
+   "Clothes",
+   "Sibling",
+   "Used",
+   "Pass",
+   "Younger"
+  ],
+  "difficulty": "Expert 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Dilemma",
+  "banned": [
+   "Choice",
+   "Two",
+   "Choose",
+   "Problem",
+   "Hard",
+   "Decision"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Hesitate",
+  "banned": [
+   "Wait",
+   "Pause",
+   "Unsure",
+   "Doubt",
+   "Delay",
+   "Stop"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Ritual",
+  "banned": [
+   "Routine",
+   "Ceremony",
+   "Habit",
+   "Religion",
+   "Repeat",
+   "Tradition"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Contagious",
+  "banned": [
+   "Spread",
+   "Sick",
+   "Catch",
+   "Virus",
+   "Germs",
+   "Yawn"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Precedent",
+  "banned": [
+   "Before",
+   "Example",
+   "Court",
+   "First",
+   "Set",
+   "Rule"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Mediocre",
+  "banned": [
+   "Average",
+   "Okay",
+   "Bad",
+   "Ordinary",
+   "So-so",
+   "Meh"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Resilience",
+  "banned": [
+   "Bounce back",
+   "Strong",
+   "Tough",
+   "Recover",
+   "Overcome",
+   "Hardship"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Integrity",
+  "banned": [
+   "Honest",
+   "Moral",
+   "Principles",
+   "Character",
+   "Trust",
+   "Values"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Skepticism",
+  "banned": [
+   "Doubt",
+   "Believe",
+   "Question",
+   "Proof",
+   "Trust",
+   "Cynical"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Charisma",
+  "banned": [
+   "Charm",
+   "Personality",
+   "Attractive",
+   "Leader",
+   "Magnetic",
+   "Confidence"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Nihilism",
+  "banned": [
+   "Meaning",
+   "Nothing",
+   "Life",
+   "Philosophy",
+   "Pointless",
+   "Nietzsche"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Symbiosis",
+  "banned": [
+   "Together",
+   "Benefit",
+   "Relationship",
+   "Two",
+   "Biology",
+   "Mutual"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Stockholm syndrome",
+  "banned": [
+   "Captor",
+   "Hostage",
+   "Love",
+   "Kidnap",
+   "Sweden",
+   "Bond"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Rite of passage",
+  "banned": [
+   "Tradition",
+   "Growing up",
+   "Ceremony",
+   "Milestone",
+   "Adult",
+   "Teen"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Empathy",
+  "banned": [
+   "Feel",
+   "Understand",
+   "Others",
+   "Shoes",
+   "Sympathy",
+   "Emotion"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Utopia",
+  "banned": [
+   "Perfect",
+   "Society",
+   "World",
+   "Ideal",
+   "Paradise",
+   "Dystopia"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Hypocrite",
+  "banned": [
+   "Fake",
+   "Preach",
+   "Practice",
+   "Say",
+   "Double standard",
+   "Do"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Euphemism",
+  "banned": [
+   "Polite",
+   "Word",
+   "Soft",
+   "Instead",
+   "Phrase",
+   "Say"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Altruism",
+  "banned": [
+   "Selfless",
+   "Help",
+   "Others",
+   "Kind",
+   "Charity",
+   "Give"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Nepotism",
+  "banned": [
+   "Family",
+   "Favor",
+   "Job",
+   "Relatives",
+   "Unfair",
+   "Hire"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Rhetoric",
+  "banned": [
+   "Speech",
+   "Persuade",
+   "Argue",
+   "Words",
+   "Politician",
+   "Question"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Ambiguous",
+  "banned": [
+   "Unclear",
+   "Vague",
+   "Meaning",
+   "Two",
+   "Confusing",
+   "Uncertain"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Gaslighting",
+  "banned": [
+   "Manipulate",
+   "Crazy",
+   "Doubt",
+   "Lie",
+   "Abuse",
+   "Reality"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Wanderlust",
+  "banned": [
+   "Travel",
+   "Desire",
+   "Explore",
+   "Adventure",
+   "Roam",
+   "German"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Melancholy",
+  "banned": [
+   "Sad",
+   "Sorrow",
+   "Gloomy",
+   "Blue",
+   "Depressed",
+   "Wistful"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Oxymoron",
+  "banned": [
+   "Contradiction",
+   "Opposite",
+   "Words",
+   "Phrase",
+   "Jumbo shrimp",
+   "Figure of speech"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Inertia",
+  "banned": [
+   "Motion",
+   "Physics",
+   "Stay",
+   "Rest",
+   "Newton",
+   "Moving"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Paradox",
+  "banned": [
+   "Contradiction",
+   "Logic",
+   "Impossible",
+   "Opposite",
+   "Both",
+   "True"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Cognitive dissonance",
+  "banned": [
+   "Belief",
+   "Conflict",
+   "Mind",
+   "Contradiction",
+   "Psychology",
+   "Uncomfortable"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Limbo",
+  "banned": [
+   "Between",
+   "Stuck",
+   "Waiting",
+   "Dance",
+   "Pole",
+   "Purgatory"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Gentrification",
+  "banned": [
+   "Neighborhood",
+   "Rich",
+   "Rent",
+   "Hipster",
+   "Poor",
+   "Change"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Filibuster",
+  "banned": [
+   "Senate",
+   "Talk",
+   "Delay",
+   "Vote",
+   "Bill",
+   "Politics"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Mindfulness",
+  "banned": [
+   "Meditation",
+   "Present",
+   "Aware",
+   "Breathe",
+   "Calm",
+   "Moment"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Mythology",
+  "banned": [
+   "Gods",
+   "Greek",
+   "Zeus",
+   "Stories",
+   "Legend",
+   "Ancient"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Feudalism",
+  "banned": [
+   "Lord",
+   "Peasant",
+   "King",
+   "Land",
+   "Medieval",
+   "Serf"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Crusade",
+  "banned": [
+   "Holy",
+   "War",
+   "Knight",
+   "Jerusalem",
+   "Religion",
+   "Medieval"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Monarchy",
+  "banned": [
+   "King",
+   "Queen",
+   "Royal",
+   "Crown",
+   "Rule",
+   "Throne"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Censorship",
+  "banned": [
+   "Ban",
+   "Block",
+   "Speech",
+   "Free",
+   "Government",
+   "Bleep"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Hashtag",
+  "banned": [
+   "Twitter",
+   "Pound",
+   "Trend",
+   "Symbol",
+   "Tag",
+   "Post"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Cancel culture",
+  "banned": [
+   "Twitter",
+   "Boycott",
+   "Celebrity",
+   "Offend",
+   "Online",
+   "Canceled"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Parasocial",
+  "banned": [
+   "Celebrity",
+   "Fan",
+   "One-sided",
+   "Relationship",
+   "Stream",
+   "Know"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Doomscrolling",
+  "banned": [
+   "Phone",
+   "News",
+   "Scroll",
+   "Bad",
+   "Night",
+   "Endless"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Gig economy",
+  "banned": [
+   "Uber",
+   "Freelance",
+   "Job",
+   "App",
+   "Work",
+   "DoorDash"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Minimalism",
+  "banned": [
+   "Less",
+   "Simple",
+   "Stuff",
+   "Declutter",
+   "Clean",
+   "Own"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Etiquette",
+  "banned": [
+   "Manners",
+   "Polite",
+   "Rules",
+   "Fork",
+   "Proper",
+   "Rude"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Antibiotic",
+  "banned": [
+   "Medicine",
+   "Bacteria",
+   "Infection",
+   "Penicillin",
+   "Doctor",
+   "Pill"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Erosion",
+  "banned": [
+   "Wear",
+   "Water",
+   "Wind",
+   "Rock",
+   "Soil",
+   "Away"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Pun",
+  "banned": [
+   "Joke",
+   "Word",
+   "Play",
+   "Dad",
+   "Groan",
+   "Double meaning"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Allegory",
+  "banned": [
+   "Story",
+   "Meaning",
+   "Hidden",
+   "Symbol",
+   "Animal Farm",
+   "Moral"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Nemesis",
+  "banned": [
+   "Enemy",
+   "Rival",
+   "Arch",
+   "Villain",
+   "Foe",
+   "Hero"
+  ],
+  "difficulty": "Expert 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Ambivalent",
+  "banned": [
+   "Mixed",
+   "Feelings",
+   "Unsure",
+   "Both",
+   "Torn",
+   "Undecided"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Complacent",
+  "banned": [
+   "Comfortable",
+   "Lazy",
+   "Satisfied",
+   "Settle",
+   "Content",
+   "Smug"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Pretentious",
+  "banned": [
+   "Snob",
+   "Fake",
+   "Show off",
+   "Fancy",
+   "Artsy",
+   "Impress"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Inevitable",
+  "banned": [
+   "Happen",
+   "Unavoidable",
+   "Certain",
+   "Fate",
+   "Bound",
+   "Eventually"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Esoteric",
+  "banned": [
+   "Obscure",
+   "Few",
+   "Niche",
+   "Secret",
+   "Knowledge",
+   "Mystery"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Anachronism",
+  "banned": [
+   "Time",
+   "Wrong",
+   "Era",
+   "Period",
+   "Out of place",
+   "History"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Nuance",
+  "banned": [
+   "Subtle",
+   "Detail",
+   "Difference",
+   "Shade",
+   "Slight",
+   "Meaning"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Placate",
+  "banned": [
+   "Calm",
+   "Soothe",
+   "Appease",
+   "Angry",
+   "Please",
+   "Pacify"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Gerrymander",
+  "banned": [
+   "District",
+   "Vote",
+   "Election",
+   "Map",
+   "Politics",
+   "Boundary"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Dichotomy",
+  "banned": [
+   "Two",
+   "Split",
+   "Opposite",
+   "Contrast",
+   "Divide",
+   "Either"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Ubiquitous",
+  "banned": [
+   "Everywhere",
+   "Common",
+   "Always",
+   "Present",
+   "Widespread",
+   "All"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Catharsis",
+  "banned": [
+   "Release",
+   "Emotion",
+   "Relief",
+   "Cry",
+   "Purge",
+   "Tension"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Hubris",
+  "banned": [
+   "Pride",
+   "Arrogance",
+   "Ego",
+   "Greek",
+   "Fall",
+   "Confidence"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Apathy",
+  "banned": [
+   "Care",
+   "Indifferent",
+   "Lazy",
+   "Interest",
+   "Emotion",
+   "Shrug"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Semantics",
+  "banned": [
+   "Meaning",
+   "Words",
+   "Language",
+   "Argue",
+   "Definition",
+   "Linguistics"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Epiphany",
+  "banned": [
+   "Realize",
+   "Sudden",
+   "Idea",
+   "Lightbulb",
+   "Moment",
+   "Insight"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Stoicism",
+  "banned": [
+   "Calm",
+   "Emotion",
+   "Philosophy",
+   "Greek",
+   "Endure",
+   "Marcus Aurelius"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Narcissist",
+  "banned": [
+   "Self",
+   "Mirror",
+   "Ego",
+   "Vain",
+   "Love",
+   "Selfish"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Resentment",
+  "banned": [
+   "Bitter",
+   "Anger",
+   "Grudge",
+   "Unfair",
+   "Hold",
+   "Hurt"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Pragmatic",
+  "banned": [
+   "Practical",
+   "Realistic",
+   "Sensible",
+   "Useful",
+   "Logical",
+   "Idealist"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Introspection",
+  "banned": [
+   "Look",
+   "Inside",
+   "Reflect",
+   "Self",
+   "Think",
+   "Examine"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Hyperbole",
+  "banned": [
+   "Exaggerate",
+   "Over",
+   "Statement",
+   "Million",
+   "Extreme",
+   "Figure of speech"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Alliteration",
+  "banned": [
+   "Same",
+   "Letter",
+   "Sound",
+   "Start",
+   "Words",
+   "Repeat"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Onomatopoeia",
+  "banned": [
+   "Sound",
+   "Word",
+   "Boom",
+   "Buzz",
+   "Noise",
+   "Comic"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Soliloquy",
+  "banned": [
+   "Speech",
+   "Alone",
+   "Shakespeare",
+   "Stage",
+   "Hamlet",
+   "Actor"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Palindrome",
+  "banned": [
+   "Backward",
+   "Forward",
+   "Same",
+   "Racecar",
+   "Word",
+   "Read"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Tragic flaw",
+  "banned": [
+   "Hero",
+   "Weakness",
+   "Shakespeare",
+   "Downfall",
+   "Character",
+   "Greek"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Mockumentary",
+  "banned": [
+   "Office",
+   "Fake",
+   "Documentary",
+   "Camera",
+   "Comedy",
+   "Interview"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Fandom",
+  "banned": [
+   "Fans",
+   "Group",
+   "Obsessed",
+   "Community",
+   "Show",
+   "Stan"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Echo chamber",
+  "banned": [
+   "Same",
+   "Opinion",
+   "Social media",
+   "Agree",
+   "Bubble",
+   "Hear"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Virtue signaling",
+  "banned": [
+   "Moral",
+   "Show",
+   "Post",
+   "Fake",
+   "Good",
+   "Online"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Osmosis",
+  "banned": [
+   "Water",
+   "Cell",
+   "Membrane",
+   "Learn",
+   "Absorb",
+   "Diffuse"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Circadian rhythm",
+  "banned": [
+   "Sleep",
+   "Body",
+   "Clock",
+   "Day",
+   "Night",
+   "Cycle"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Half-life",
+  "banned": [
+   "Decay",
+   "Radioactive",
+   "Time",
+   "Atom",
+   "Game",
+   "Half"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Natural selection",
+  "banned": [
+   "Survival",
+   "Fittest",
+   "Darwin",
+   "Evolution",
+   "Species",
+   "Adapt"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Biodiversity",
+  "banned": [
+   "Species",
+   "Variety",
+   "Life",
+   "Ecosystem",
+   "Nature",
+   "Many"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Austerity",
+  "banned": [
+   "Cut",
+   "Spending",
+   "Government",
+   "Budget",
+   "Economy",
+   "Save"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Lobbyist",
+  "banned": [
+   "Congress",
+   "Influence",
+   "Money",
+   "Washington",
+   "Pay",
+   "Law"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Bipartisan",
+  "banned": [
+   "Two",
+   "Parties",
+   "Agree",
+   "Democrat",
+   "Republican",
+   "Both"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Embezzle",
+  "banned": [
+   "Steal",
+   "Money",
+   "Company",
+   "Fraud",
+   "Funds",
+   "Crime"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Society"
+ },
+ {
+  "word": "Frugal",
+  "banned": [
+   "Cheap",
+   "Save",
+   "Money",
+   "Thrifty",
+   "Spend",
+   "Budget"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Hospitality",
+  "banned": [
+   "Guest",
+   "Welcome",
+   "Host",
+   "Hotel",
+   "Kind",
+   "Home"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Nomad",
+  "banned": [
+   "Wander",
+   "Travel",
+   "Home",
+   "Tribe",
+   "Digital",
+   "Move"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Sabbatical",
+  "banned": [
+   "Break",
+   "Work",
+   "Leave",
+   "Year",
+   "Professor",
+   "Rest"
+  ],
+  "difficulty": "Master 1",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Dynasty",
+  "banned": [
+   "Family",
+   "Rule",
+   "China",
+   "Ming",
+   "Power",
+   "Generations"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Odyssey",
+  "banned": [
+   "Journey",
+   "Homer",
+   "Greek",
+   "Ulysses",
+   "Long",
+   "Epic"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Oracle",
+  "banned": [
+   "Delphi",
+   "Predict",
+   "Future",
+   "Greek",
+   "Prophet",
+   "Wise"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Martyr",
+  "banned": [
+   "Die",
+   "Cause",
+   "Belief",
+   "Saint",
+   "Sacrifice",
+   "Religion"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Exodus",
+  "banned": [
+   "Leave",
+   "Moses",
+   "Egypt",
+   "Mass",
+   "Flee",
+   "Bible"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Inquisition",
+  "banned": [
+   "Spanish",
+   "Church",
+   "Torture",
+   "Heresy",
+   "Trial",
+   "Catholic"
+  ],
+  "difficulty": "Master 1",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Ephemeral",
+  "banned": [
+   "Short",
+   "Brief",
+   "Temporary",
+   "Fleeting",
+   "Last",
+   "Moment"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Solipsism",
+  "banned": [
+   "Mind",
+   "Self",
+   "Exist",
+   "Only",
+   "Philosophy",
+   "Reality"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Sisyphean",
+  "banned": [
+   "Boulder",
+   "Hill",
+   "Endless",
+   "Greek",
+   "Push",
+   "Pointless"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Ineffable",
+  "banned": [
+   "Describe",
+   "Words",
+   "Beyond",
+   "Express",
+   "Indescribable",
+   "Unspeakable"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Juxtaposition",
+  "banned": [
+   "Side by side",
+   "Contrast",
+   "Compare",
+   "Two",
+   "Opposite",
+   "Next to"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Kafkaesque",
+  "banned": [
+   "Kafka",
+   "Absurd",
+   "Bureaucracy",
+   "Nightmare",
+   "Trapped",
+   "Surreal"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Quixotic",
+  "banned": [
+   "Don Quixote",
+   "Idealistic",
+   "Dream",
+   "Impractical",
+   "Windmill",
+   "Unrealistic"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Pyrrhic victory",
+  "banned": [
+   "Win",
+   "Cost",
+   "Loss",
+   "Battle",
+   "Hollow",
+   "Price"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Serendipity",
+  "banned": [
+   "Luck",
+   "Chance",
+   "Accident",
+   "Happy",
+   "Coincidence",
+   "Fortunate"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Schadenfreude",
+  "banned": [
+   "German",
+   "Joy",
+   "Pleasure",
+   "Misfortune",
+   "Others",
+   "Happy"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Entropy",
+  "banned": [
+   "Disorder",
+   "Chaos",
+   "Energy",
+   "Physics",
+   "Heat",
+   "Decay"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Zeitgeist",
+  "banned": [
+   "Spirit",
+   "Time",
+   "Era",
+   "German",
+   "Culture",
+   "Trend"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Liminal",
+  "banned": [
+   "Threshold",
+   "Between",
+   "Space",
+   "Transition",
+   "Doorway",
+   "Edge"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Ennui",
+  "banned": [
+   "Bored",
+   "French",
+   "Tired",
+   "Dull",
+   "Listless",
+   "Restless"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Petrichor",
+  "banned": [
+   "Rain",
+   "Smell",
+   "Earth",
+   "Scent",
+   "Wet",
+   "Storm"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Sonder",
+  "banned": [
+   "Strangers",
+   "Lives",
+   "Realize",
+   "Everyone",
+   "Complex",
+   "Story"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Existentialism",
+  "banned": [
+   "Exist",
+   "Meaning",
+   "Sartre",
+   "Philosophy",
+   "Choice",
+   "Absurd"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Confirmation bias",
+  "banned": [
+   "Believe",
+   "Agree",
+   "Evidence",
+   "Ignore",
+   "Already",
+   "Psychology"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Dunning-Kruger",
+  "banned": [
+   "Confident",
+   "Stupid",
+   "Know",
+   "Overestimate",
+   "Effect",
+   "Skill"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Hedonism",
+  "banned": [
+   "Pleasure",
+   "Fun",
+   "Indulge",
+   "Party",
+   "Enjoy",
+   "Philosophy"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Saudade",
+  "banned": [
+   "Portuguese",
+   "Miss",
+   "Longing",
+   "Gone",
+   "Sad",
+   "Nostalgia"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Inner World"
+ },
+ {
+  "word": "Wabi-sabi",
+  "banned": [
+   "Japanese",
+   "Imperfect",
+   "Beauty",
+   "Simple",
+   "Old",
+   "Accept"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Verisimilitude",
+  "banned": [
+   "Real",
+   "True",
+   "Believable",
+   "Seem",
+   "Fiction",
+   "Appearance"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Malapropism",
+  "banned": [
+   "Wrong",
+   "Word",
+   "Mistake",
+   "Sounds like",
+   "Funny",
+   "Mix up"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Deus ex machina",
+  "banned": [
+   "God",
+   "Machine",
+   "Ending",
+   "Rescue",
+   "Plot",
+   "Sudden"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Unreliable narrator",
+  "banned": [
+   "Trust",
+   "Story",
+   "Lie",
+   "Tell",
+   "Book",
+   "Character"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Chekhov's gun",
+  "banned": [
+   "Story",
+   "Detail",
+   "Later",
+   "Fire",
+   "Setup",
+   "Play"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Literature and Language"
+ },
+ {
+  "word": "Uncanny valley",
+  "banned": [
+   "Robot",
+   "Creepy",
+   "Human",
+   "Almost",
+   "CGI",
+   "Weird"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Streisand effect",
+  "banned": [
+   "Hide",
+   "Attention",
+   "More",
+   "Censor",
+   "Internet",
+   "Backfire"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Main character syndrome",
+  "banned": [
+   "TikTok",
+   "Self",
+   "Story",
+   "Center",
+   "Movie",
+   "Ego"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Kitsch",
+  "banned": [
+   "Tacky",
+   "Cheap",
+   "Bad taste",
+   "Ironic",
+   "Gaudy",
+   "Art"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Pop Culture"
+ },
+ {
+  "word": "Quantum entanglement",
+  "banned": [
+   "Particle",
+   "Physics",
+   "Linked",
+   "Distance",
+   "Spooky",
+   "Einstein"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Occam's razor",
+  "banned": [
+   "Simple",
+   "Explanation",
+   "Best",
+   "Philosophy",
+   "Assume",
+   "Least"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Synesthesia",
+  "banned": [
+   "Senses",
+   "Color",
+   "Hear",
+   "See",
+   "Mix",
+   "Taste"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Tipping point",
+  "banned": [
+   "Change",
+   "Sudden",
+   "Edge",
+   "Balance",
+   "Over",
+   "Moment"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Science and Nature"
+ },
+ {
+  "word": "Tragedy of the commons",
+  "banned": [
+   "Shared",
+   "Resource",
+   "Selfish",
+   "Use",
+   "Everyone",
+   "Ruin"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Plutocracy",
+  "banned": [
+   "Rich",
+   "Rule",
+   "Money",
+   "Wealthy",
+   "Power",
+   "Government"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Moral hazard",
+  "banned": [
+   "Risk",
+   "Insurance",
+   "Bailout",
+   "Consequence",
+   "Protected",
+   "Reckless"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Catch-22",
+  "banned": [
+   "Impossible",
+   "Situation",
+   "Trap",
+   "Heller",
+   "Book",
+   "Both"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Sunk cost",
+  "banned": [
+   "Money",
+   "Already",
+   "Spent",
+   "Quit",
+   "Invest",
+   "Fallacy"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Society"
+ },
+ {
+  "word": "Hygge",
+  "banned": [
+   "Danish",
+   "Cozy",
+   "Candle",
+   "Warm",
+   "Comfort",
+   "Blanket"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Mise en place",
+  "banned": [
+   "Cooking",
+   "Prepare",
+   "French",
+   "Kitchen",
+   "Ingredients",
+   "Ready"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Flâneur",
+  "banned": [
+   "Stroll",
+   "Walk",
+   "French",
+   "City",
+   "Wander",
+   "Observe"
+  ],
+  "difficulty": "Master 2",
+  "theme": "Everyday Life"
+ },
+ {
+  "word": "Hegemony",
+  "banned": [
+   "Dominance",
+   "Power",
+   "Control",
+   "Empire",
+   "Influence",
+   "Rule"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Diaspora",
+  "banned": [
+   "Scattered",
+   "People",
+   "Homeland",
+   "Spread",
+   "Jewish",
+   "Abroad"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Machiavellian",
+  "banned": [
+   "Cunning",
+   "Prince",
+   "Power",
+   "Manipulate",
+   "Scheme",
+   "Ruthless"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Iconoclast",
+  "banned": [
+   "Rebel",
+   "Break",
+   "Tradition",
+   "Image",
+   "Challenge",
+   "Belief"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Hydra",
+  "banned": [
+   "Heads",
+   "Monster",
+   "Greek",
+   "Cut",
+   "Two",
+   "Hercules"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ },
+ {
+  "word": "Ouroboros",
+  "banned": [
+   "Snake",
+   "Tail",
+   "Eat",
+   "Circle",
+   "Infinity",
+   "Symbol"
+  ],
+  "difficulty": "Master 2",
+  "theme": "History and Myth"
+ }
+]

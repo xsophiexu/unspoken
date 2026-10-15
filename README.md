@@ -8,8 +8,8 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 
 - Swipe the card right for Correct, left for Skip, with a timer ring around the card
 - ··· menu to restart, change mode or change theme (Teal, Heather, Sage, Rose)
-- New game setup: difficulty, round timer and skips per round
-- Decks: Hard (100 cards) and Even harder (84)
+- New game setup: difficulty, theme, round timer and skips per round
+- 340 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and seven themes, plus All cards. Defaults: Expert 1, All cards.
 - Modes: Classic, Endless, Time attack and Zen. Teams, Escalate, Hot potato and Reverse are listed as coming soon.
 
 ## Run it
@@ -26,6 +26,6 @@ Scan the QR code with Expo Go on your phone, or press `i` or `a` for a simulator
 - `App.tsx` loads the font and switches between the play, setup and modes screens
 - `src/screens/` holds those three screens
 - `src/components/` has the timer ring and the ··· menu
-- `src/data/cards.ts` holds the card decks. Add cards there.
+- `src/data/word-banks.json` holds every card with its difficulty and theme. Add cards there.
 - `src/game.ts` lists the difficulties and modes, and the default settings
 - `src/theme.ts` has the four color themes
