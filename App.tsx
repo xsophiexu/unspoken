@@ -20,7 +20,7 @@ import type { GameSettings } from './src/types';
 type Screen = 'play' | 'setup' | 'modes';
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     Manrope_400Regular,
     Manrope_500Medium,
     Manrope_600SemiBold,
@@ -42,7 +42,8 @@ export default function App() {
     setScreen('play');
   };
 
-  if (!fontsLoaded) return null;
+  // If the font fails to load, carry on with the system font rather than a blank screen.
+  if (!fontsLoaded && !fontError) return null;
 
   return (
     <SafeAreaProvider>
