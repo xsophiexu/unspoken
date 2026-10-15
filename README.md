@@ -14,7 +14,7 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - Change settings: tap a mode, then set difficulty, themes (pick several, or All cards), round timer and skips
 - Cards show 5 banned words at Normal and Harder, 6 at the other levels
 - The round timer defaults to 2:30 at Expert 1 and scales with difficulty, from 1:30 at Normal to 4:00 at Master 2. Type a time to override it.
-- 2,289 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and seven themes, plus All cards. Defaults: Expert 1, All cards.
+- 3,753 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and 13 themes, plus All cards. Every card has 10 banned words, strongest first, and some cards sit in two themes. Defaults: Expert 1, All cards.
 - Modes: Classic, Endless, Time attack, Hot potato, Zen and Reverse. Endless is the default. Teams is coming soon.
   - **Escalate:** starts with 4 banned words and adds one for every correct answer. Get 3 correct with all 10 showing to win.
   - **Endless:** no clock and no skip limit; the header counts correct and skipped words.
