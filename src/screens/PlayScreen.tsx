@@ -33,6 +33,7 @@ type Props = {
 const MAX_W = 350;
 const MAX_H = 580;
 const SWIPE_AT = 100;
+const HINT_IDLE_MS = 30_000;
 
 // The Current Version screen from the design canvas: a swipeable card inside a timer ring.
 // Hot potato reuses it with the clock hidden and a pass screen after every word.
@@ -66,7 +67,10 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
   const fade = useState(() => new Animated.Value(1))[0];
   const hint = useState(() => new Animated.Value(0))[0];
   const flying = useRef(false);
-  const swiped = useRef(false);
+  // Set once the opening hint has played; after that the hint waits for 30 idle seconds.
+  const shownHint = useRef(false);
+  // Bumped by every swipe or tap, which restarts the 30-second hint wait.
+  const [idleTick, setIdleTick] = useState(0);
   const nudge = useRef<Animated.CompositeAnimation | null>(null);
 
   // Clock.
@@ -76,32 +80,42 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
     return () => clearInterval(id);
   }, [running]);
 
-  // Until the first swipe, nudge the card right every few seconds to show it moves.
+  // Nudge the card right to show it swipes: once when the game opens, then after 30 seconds without a swipe or tap.
   useEffect(() => {
-    if (swiped.current || halted || over) return;
-    const loop = Animated.loop(
-      Animated.sequence([
-        Animated.delay(600),
-        Animated.parallel([
-          Animated.timing(dx, { toValue: 70, duration: 320, easing: Easing.out(Easing.quad), useNativeDriver: false }),
-          Animated.timing(hint, { toValue: 1, duration: 200, useNativeDriver: false }),
-        ]),
-        Animated.delay(780),
-        Animated.parallel([
-          Animated.spring(dx, { toValue: 0, friction: 7, tension: 60, useNativeDriver: false }),
-          Animated.timing(hint, { toValue: 0, duration: 200, useNativeDriver: false }),
-        ]),
-        Animated.delay(1600),
-      ]),
+    if (halted || over) return;
+    const id = setTimeout(
+      () => {
+        shownHint.current = true;
+        const seq = Animated.sequence([
+          Animated.parallel([
+            Animated.timing(dx, { toValue: 70, duration: 320, easing: Easing.out(Easing.quad), useNativeDriver: false }),
+            Animated.timing(hint, { toValue: 1, duration: 200, useNativeDriver: false }),
+          ]),
+          Animated.delay(780),
+          Animated.parallel([
+            Animated.spring(dx, { toValue: 0, friction: 7, tension: 60, useNativeDriver: false }),
+            Animated.timing(hint, { toValue: 0, duration: 200, useNativeDriver: false }),
+          ]),
+        ]);
+        nudge.current = seq;
+        seq.start(({ finished }) => {
+          if (nudge.current !== seq) return;
+          nudge.current = null;
+          if (finished) setIdleTick((n) => n + 1);
+        });
+      },
+      shownHint.current ? HINT_IDLE_MS : 600,
     );
-    nudge.current = loop;
-    loop.start();
     return () => {
-      loop.stop();
-      nudge.current = null;
+      clearTimeout(id);
+      if (nudge.current) {
+        nudge.current.stop();
+        nudge.current = null;
+        dx.setValue(0);
+      }
       hint.setValue(0);
     };
-  }, [halted, over, dx, hint]);
+  }, [halted, over, idleTick, dx, hint]);
 
   const finish = useCallback(
     (dir: 1 | -1) => {
@@ -111,7 +125,8 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
         return;
       }
       flying.current = true;
-      swiped.current = true;
+      shownHint.current = true;
+      setIdleTick((n) => n + 1);
       Animated.parallel([
         Animated.timing(dx, { toValue: dir * 520, duration: 260, easing: Easing.in(Easing.quad), useNativeDriver: false }),
         Animated.timing(fade, { toValue: 0, duration: 260, useNativeDriver: false }),
@@ -157,9 +172,11 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
       // Keep the gesture if the browser starts selecting text under the pointer.
       onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: () => {
-        // Touching the card shows the player knows it moves, so stop the nudge.
-        swiped.current = true;
+        // Touching the card stops the hint and restarts its 30-second wait.
+        shownHint.current = true;
         nudge.current?.stop();
+        nudge.current = null;
+        setIdleTick((n) => n + 1);
         dx.stopAnimation();
         hint.setValue(0);
       },
@@ -282,16 +299,32 @@ export function PlayScreen({ settings, theme: t, onRestart, onChangeSettings, on
 
       <View style={styles.bars}>
         <Animated.View style={[styles.barCol, { flex: skipFlex }]}>
-          <Animated.Text style={[styles.barLabel, font(700), { color: t.muted, opacity: skipOpacity }]} numberOfLines={1}>
-            ← Skip
-          </Animated.Text>
-          <Animated.View style={[styles.bar, { backgroundColor: skipBar }]} />
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Skip"
+            onPress={() => finish(-1)}
+            hitSlop={{ top: 16, bottom: 12 }}
+            style={styles.barPress}
+          >
+            <Animated.Text style={[styles.barLabel, font(700), { color: t.muted, opacity: skipOpacity }]} numberOfLines={1}>
+              ← Skip
+            </Animated.Text>
+            <Animated.View style={[styles.bar, { backgroundColor: skipBar }]} />
+          </Pressable>
         </Animated.View>
-        <Animated.View style={[styles.barCol, styles.barColRight, { flex: corFlex }]}>
-          <Animated.Text style={[styles.barLabel, font(700), { color: t.correctText, opacity: corOpacity }]} numberOfLines={1}>
-            Correct →
-          </Animated.Text>
-          <View style={[styles.bar, styles.barStretch, { backgroundColor: t.accent }]} />
+        <Animated.View style={[styles.barCol, { flex: corFlex }]}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Correct"
+            onPress={() => finish(1)}
+            hitSlop={{ top: 16, bottom: 12 }}
+            style={[styles.barPress, styles.barColRight]}
+          >
+            <Animated.Text style={[styles.barLabel, font(700), { color: t.correctText, opacity: corOpacity }]} numberOfLines={1}>
+              Correct →
+            </Animated.Text>
+            <View style={[styles.bar, styles.barStretch, { backgroundColor: t.accent }]} />
+          </Pressable>
         </Animated.View>
       </View>
       {hot ? (
@@ -412,7 +445,8 @@ const styles = StyleSheet.create({
   chip: { backgroundColor: '#FFFFFF', borderRadius: 10, paddingVertical: 11, paddingHorizontal: 15 },
   chipText: { fontSize: 18 },
   bars: { flexDirection: 'row', gap: 12, paddingHorizontal: 2 },
-  barCol: { minWidth: 0, gap: 8 },
+  barCol: { minWidth: 0 },
+  barPress: { gap: 8, paddingTop: 8 },
   barColRight: { alignItems: 'flex-end' },
   barLabel: { fontSize: 16 },
   bar: { height: 6, borderRadius: 3 },
