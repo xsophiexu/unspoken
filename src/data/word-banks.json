@@ -101603,8 +101603,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Birthday paradox",
@@ -101649,8 +101649,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "CRISPR",
@@ -101695,8 +101695,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Fermi paradox",
@@ -101764,8 +101764,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Isobar",
@@ -101926,8 +101926,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Redshift",
@@ -101949,8 +101949,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Sublimation",
@@ -102064,8 +102064,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Time dilation",
@@ -102111,8 +102111,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Upwelling",
@@ -102157,8 +102157,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Banana republic",
@@ -103952,8 +103952,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Hypertrophy",
@@ -103975,8 +103975,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Hypervigilance",
@@ -104021,8 +104021,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Kinesiology",
@@ -104044,8 +104044,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Malaise",
@@ -104113,8 +104113,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Progressive overload",
@@ -104136,8 +104136,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Satiety",
@@ -104159,8 +104159,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Sleep inertia",
@@ -104182,8 +104182,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Vicarious trauma",
@@ -104343,8 +104343,8 @@
   "themes": [
    "Law and Diplomacy"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Eminent domain",
@@ -104366,8 +104366,8 @@
   "themes": [
    "Law and Diplomacy"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Entente",
@@ -104389,8 +104389,8 @@
   "themes": [
    "Law and Diplomacy"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Flag of convenience",
@@ -104504,8 +104504,8 @@
   "themes": [
    "Law and Diplomacy"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Sovereign immunity",
@@ -104989,8 +104989,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "ASCII",
@@ -105035,8 +105035,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Backtracking",
@@ -105058,8 +105058,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Big O notation",
@@ -105173,8 +105173,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Concurrency",
@@ -105817,8 +105817,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Arbitrage",
@@ -105840,8 +105840,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Asset stripping",
@@ -105932,8 +105932,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Dogfooding",
@@ -105978,8 +105978,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Externality",
@@ -106001,8 +106001,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Fiat money",
@@ -106047,8 +106047,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Information asymmetry",
@@ -106139,8 +106139,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Mark to market",
@@ -106254,8 +106254,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Sovereign debt",
@@ -106277,8 +106277,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Stagflation",
@@ -106323,8 +106323,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Arpeggio",
@@ -108717,8 +108717,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Derecho",
@@ -108786,8 +108786,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Gaia hypothesis",
@@ -109085,8 +109085,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Pareidolia",
@@ -109131,8 +109131,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Spaghettification",
@@ -109223,8 +109223,8 @@
   "themes": [
    "Science and Nature"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Hysteresis",
@@ -111297,8 +111297,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Convalescence",
@@ -111343,8 +111343,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Nocebo",
@@ -111366,8 +111366,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Orthorexia",
@@ -111389,8 +111389,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Phrenology",
@@ -111435,8 +111435,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Somnambulism",
@@ -111458,8 +111458,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Alexithymia",
@@ -111481,8 +111481,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Hormesis",
@@ -111504,8 +111504,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Hypnagogia",
@@ -111527,8 +111527,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Iatrogenic",
@@ -111573,8 +111573,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Prion",
@@ -111596,8 +111596,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Trepanation",
@@ -111619,8 +111619,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Valetudinarian",
@@ -111642,8 +111642,8 @@
   "themes": [
    "Health and Body"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.04
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Amicus brief",
@@ -111849,8 +111849,8 @@
   "themes": [
    "Law and Diplomacy"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Realpolitik",
@@ -112792,8 +112792,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Kubernetes",
@@ -113505,8 +113505,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Steganography",
@@ -113528,8 +113528,8 @@
   "themes": [
    "Computer Science"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.016
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Trie",
@@ -113689,8 +113689,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Corporate veil",
@@ -113827,8 +113827,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Fungibility",
@@ -113850,8 +113850,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Greater fool theory",
@@ -113896,8 +113896,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Nash equilibrium",
@@ -113919,8 +113919,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Parkinson's law",
@@ -114379,8 +114379,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Satisficing",
@@ -114402,8 +114402,8 @@
   "themes": [
    "Business"
   ],
-  "allCards": true,
-  "allCardsWeight": 0.032
+  "allCards": false,
+  "allCardsWeight": 0
  },
  {
   "word": "Seigniorage",
