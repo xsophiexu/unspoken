@@ -15,7 +15,7 @@ export type Category =
   | 'History and Myth';
 
 // A card as stored in the word bank.
-export type BankCard = Card & { difficulty: Difficulty; theme: Category };
+export type BankCard = Card & { difficulty: Difficulty; theme: Category; score: number };
 
 export type ModeId =
   | 'classic'

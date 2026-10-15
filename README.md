@@ -9,7 +9,7 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - Swipe the card right for Correct, left for Skip, with a timer ring around the card
 - ··· menu to restart, change mode or change theme (Teal, Heather, Sage, Rose)
 - New game setup: difficulty, theme, round timer and skips per round
-- 340 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and seven themes, plus All cards. Defaults: Expert 1, All cards.
+- 2,289 cards across six difficulties (Normal, Harder, Expert 1, Expert 2, Master 1, Master 2) and seven themes, plus All cards. Defaults: Expert 1, All cards.
 - Modes: Classic, Endless, Time attack and Zen. Teams, Escalate, Hot potato and Reverse are listed as coming soon.
 
 ## Run it

@@ -35,6 +35,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const [skips, setSkips] = useState<number | null>(settings.skips);
   const [focused, setFocused] = useState(false);
   const input = useRef<TextInput>(null);
+  const deckSize = cardsFor(difficulty, category).length;
 
   const padded = digits.padStart(3, '0');
   const clock = `${Number(padded.slice(0, -2))}:${padded.slice(-2)}`;
@@ -74,7 +75,11 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
           </View>
         </Section>
 
-        <Section t={t} label="THEME">
+        <Section
+          t={t}
+          label="THEME"
+          aside={deckSize < 20 ? `Only ${deckSize} cards, words will repeat` : undefined}
+        >
           <View style={styles.themeWrap}>
             {([null, ...CATEGORIES] as (Category | null)[]).map((c) => {
               const on = c === category;
