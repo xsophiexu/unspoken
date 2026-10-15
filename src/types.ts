@@ -19,6 +19,9 @@ export type Category =
   | 'Love and Relationships'
   | 'Technology'
   | 'Computer Science'
+  | 'Health and Body'
+  | 'Law and Diplomacy'
+  | 'Culture and Travel'
   | 'Business'
   | 'Arts and Entertainment'
   | 'Fantasy and Sci-Fi';
