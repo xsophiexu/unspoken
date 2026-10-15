@@ -47,7 +47,8 @@ export type ModeId =
   | 'escalate'
   | 'hotPotato'
   | 'zen'
-  | 'reverse';
+  | 'reverse'
+  | 'mindReader';
 
 export type GameSettings = {
   mode: ModeId;

@@ -105,6 +105,7 @@ export const MODES: Mode[] = [
   { id: 'hotPotato', name: 'Hot potato', sub: 'Hidden timer, pass it on', timed: true, scored: false, skips: false, available: true },
   { id: 'zen', name: 'Zen', sub: 'No score, no clock', timed: false, scored: false, skips: false, available: true },
   { id: 'reverse', name: 'Reverse', sub: 'Guess the word from its clues', timed: false, scored: true, skips: false, available: true },
+  { id: 'mindReader', name: 'Mind Reader', sub: 'Predict the clues before they’re said', timed: false, scored: false, skips: false, available: true },
 ];
 
 // Default round length grows with difficulty: 1:30 for Normal up to 5:00 for Grandmaster, 2:30 for Expert 1.

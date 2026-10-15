@@ -13,6 +13,7 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { DEFAULT_SETTINGS, defaultSecondsFor } from './src/game';
 import { ModesScreen } from './src/screens/ModesScreen';
 import { PlayScreen } from './src/screens/PlayScreen';
+import { MindReaderScreen } from './src/screens/MindReaderScreen';
 import { ReverseScreen } from './src/screens/ReverseScreen';
 import { SetupScreen } from './src/screens/SetupScreen';
 import { THEMES } from './src/theme';
@@ -67,6 +68,8 @@ export default function App() {
         {screen === 'play' &&
           (settings.mode === 'reverse' ? (
             <ReverseScreen key={gameKey} {...gameProps} />
+          ) : settings.mode === 'mindReader' ? (
+            <MindReaderScreen key={gameKey} {...gameProps} />
           ) : (
             <PlayScreen key={gameKey} {...gameProps} />
           ))}
