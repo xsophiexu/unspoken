@@ -1,35 +1,18 @@
 {
-  "name": "unspoken",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "dependencies": {
-    "@expo-google-fonts/manrope": "^0.4.2",
-    "@expo/metro-runtime": "~57.0.17",
-    "expo": "~57.0.29",
-    "expo-font": "~57.0.4",
-    "expo-status-bar": "~57.0.1",
-    "react": "19.2.3",
-    "react-dom": "^19.2.3",
-    "react-native": "0.86.3",
-    "react-native-safe-area-context": "~5.7.0",
-    "react-native-svg": "^15.15.4",
-    "react-native-web": "^0.21.4"
-  },
-  "devDependencies": {
-    "@types/react": "~19.2.2",
-    "eslint": "^9.39.5",
-    "eslint-config-expo": "~57.0.2",
-    "typescript": "~6.0.3"
-  },
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
-    "build:web": "expo export --platform web",
-    "lint": "expo lint",
-    "typecheck": "tsc --noEmit"
-  },
+  "name": "unspoken-workspace",
   "private": true,
-  "packageManager": "pnpm@10.28.0"
+  "description": "Unspoken: a Taboo-style word game for iOS, Android and web.",
+  "scripts": {
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "test": "pnpm -r --if-present run test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "mobile": "pnpm --filter @unspoken/mobile start",
+    "mobile:web": "pnpm --filter @unspoken/mobile web",
+    "build:mobile-web": "pnpm --filter @unspoken/mobile build:web"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12"
+  }
 }

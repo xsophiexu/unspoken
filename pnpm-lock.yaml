@@ -6,7 +6,9 @@ settings:
 
 importers:
 
-  .:
+  .: {}
+
+  apps/mobile:
     dependencies:
       '@expo-google-fonts/manrope':
         specifier: ^0.4.2
