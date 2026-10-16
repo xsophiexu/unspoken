@@ -10,6 +10,8 @@
   flex-direction: column;
   gap: var(--un-space-6);
   width: 100%;
+  /* Wide content (the Customize carousel) scrolls inside the column instead of widening it. */
+  min-width: 0;
   min-height: 100dvh;
   padding: calc(var(--un-layout-screen-padding-top) + env(safe-area-inset-top)) var(--un-layout-screen-padding-x)
     calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
@@ -60,6 +62,7 @@
 }
 
 .body {
+  flex: 1 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--un-space-6);

@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, DIFFICULTY_IDS, MODE_IDS, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, type GameSettings } from '@unspoken/core';
+import { CATEGORY_IDS, DIFFICULTY_IDS, MODE_IDS, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, type Category, type GameSettings } from '@unspoken/core';
 import { z } from 'zod';
 
 export const SETTINGS_STORAGE_KEY = 'unspoken.settings';
@@ -25,4 +25,12 @@ export function parseSettings(value: unknown, config = gameConfig): GameSettings
   const parsed = schema.parse(typeof value === 'object' && value !== null ? value : {});
   // A missing or bad timer follows the saved level's default.
   return { ...parsed, roundSeconds: parsed.roundSeconds ?? defaultRoundSeconds(parsed.difficulty, config) };
+}
+
+// Setup's theme chips: All cards (null) clears the chosen themes; a theme toggles, and clearing the
+// last one means All cards again. Themes stay in catalog order.
+export function toggleCategory(categories: readonly Category[], category: Category | null, config = gameConfig): Category[] {
+  if (category === null) return [];
+  const next = categories.includes(category) ? categories.filter((c) => c !== category) : [...categories, category];
+  return config.categories.filter((c) => next.includes(c));
 }

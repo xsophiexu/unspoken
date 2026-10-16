@@ -65,6 +65,13 @@
   border-radius: var(--un-radius-pill);
 }
 
+.cell {
+  align-items: center;
+  justify-content: center;
+  min-height: var(--un-layout-min-touch);
+  border-radius: var(--un-radius-md);
+}
+
 .action {
   font: inherit;
 }

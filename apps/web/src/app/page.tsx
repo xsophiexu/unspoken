@@ -1,8 +1,10 @@
-'use client';
-
+import { ClientOnly } from '@/lib/ClientOnly';
 import { PlayScreen } from '@/screens/PlayScreen';
-import { useHydrated } from '@/lib/hooks';
 
 export default function PlayPage() {
-  return useHydrated() ? <PlayScreen /> : null;
+  return (
+    <ClientOnly>
+      <PlayScreen />
+    </ClientOnly>
+  );
 }

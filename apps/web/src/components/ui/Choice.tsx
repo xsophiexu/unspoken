@@ -6,7 +6,8 @@ import { cx, text } from '@/lib/ui';
 
 import styles from './Choice.module.css';
 
-type Look = 'tile' | 'chip' | 'topic';
+// tile: a level or mode tile. chip: a theme. topic: a feedback topic. cell: a number in a grid (skips).
+type Look = 'tile' | 'chip' | 'topic' | 'cell';
 
 type ChoiceProps = {
   type: 'radio' | 'checkbox';
@@ -17,15 +18,19 @@ type ChoiceProps = {
   children: ReactNode;
   // Small second line (card counts, mode descriptions).
   detail?: ReactNode;
+  // Accessible name when the visible text is not enough (∞ reads as "Unlimited skips").
+  label?: string;
 };
+
+const titleText = { tile: 'optionTitle', chip: 'topicChip', topic: 'topicChip', cell: 'button' } as const;
 
 // A selectable tile or chip: a native radio or checkbox under a styled label, so keyboard and
 // screen readers get the standard behavior.
-export function Choice({ type, name, checked, onChange, look, children, detail }: ChoiceProps) {
+export function Choice({ type, name, checked, onChange, look, children, detail, label }: ChoiceProps) {
   return (
     <label className={cx(styles.choice, styles[look], checked && styles.on)}>
-      <input type={type} name={name} checked={checked} onChange={onChange} className="visually-hidden" />
-      <span className={cx(styles.title, text(look === 'tile' ? 'optionTitle' : look === 'topic' ? 'topicChip' : 'button'))}>{children}</span>
+      <input type={type} name={name} checked={checked} onChange={onChange} className="visually-hidden" aria-label={label} />
+      <span className={cx(styles.title, text(titleText[look]))}>{children}</span>
       {detail !== undefined && <span className={cx(styles.detail, text(look === 'tile' ? 'small' : 'label'))}>{detail}</span>}
     </label>
   );

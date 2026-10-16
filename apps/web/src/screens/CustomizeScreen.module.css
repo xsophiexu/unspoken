@@ -1,0 +1,83 @@
+.pager {
+  min-height: var(--un-layout-min-touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--region-muted);
+}
+
+/* Pages of thumbnails side by side; swipe (or scroll) snaps from one page to the next. */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  /* Room for the selection ring around the thumbnails. */
+  padding-block: var(--un-space-1-5);
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.page {
+  flex: 0 0 100%;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+  align-content: start;
+  justify-items: center;
+  row-gap: var(--un-space-3-5);
+  scroll-snap-align: start;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-2);
+  padding: var(--un-space-1);
+  border-radius: var(--un-layout-thumbnail-radius);
+  color: var(--region-ink);
+  cursor: pointer;
+}
+
+.option:has(:focus-visible) {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+}
+
+/* The current style: a ring with a gap around its thumbnail, like the color swatches. */
+.on > span:first-of-type {
+  box-shadow:
+    0 0 0 var(--un-layout-swatch-gap) var(--region-bg),
+    0 0 0 calc(var(--un-layout-swatch-gap) + var(--un-layout-swatch-ring)) var(--region-ink);
+}
+
+.suggest {
+  display: block;
+  width: calc(var(--un-layout-reference-screen-width) * var(--un-layout-thumbnail-scale));
+  height: calc(var(--un-layout-reference-screen-height) * var(--un-layout-thumbnail-scale));
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--un-space-1-5);
+}
+
+.dot {
+  width: var(--un-space-1-5);
+  height: var(--un-space-1-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-outline);
+  transition: width var(--un-motion-duration-base) ease-out;
+}
+
+.active {
+  width: var(--un-space-4-5);
+  background: var(--region-ink);
+}

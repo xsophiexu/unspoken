@@ -113,14 +113,12 @@ export function Spotlight({ rootRef, onDone }: SpotlightProps) {
 
 type Placement = { align: 'start' | 'center' | 'end'; style: CSSProperties };
 
-// Under the target when there is more room below, over it otherwise; lined up with whichever side
-// of the screen the target is on.
+// Under the target when there is more room below, over it otherwise.
 function captionPlacement(box: Box | null, viewport: { width: number; height: number }): Placement {
   if (!box) return { align: 'center', style: { top: '50%', transform: 'translateY(-50%)' } };
   const gap = spotlight.padding * 2;
-  const centerX = box.left + box.width / 2;
-  const third = viewport.width / 3;
-  const align = centerX < third ? 'start' : centerX > third * 2 ? 'end' : 'center';
+  // Captions read from the left, except beside a target on the right edge (the menu button).
+  const align = box.left + box.width / 2 > (viewport.width * 2) / 3 ? 'end' : 'start';
   const below = viewport.height - (box.top + box.height) > box.top;
   return { align, style: below ? { top: box.top + box.height + gap } : { bottom: viewport.height - box.top + gap } };
 }

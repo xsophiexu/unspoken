@@ -1,6 +1,7 @@
 'use client';
 
 import { headerModel } from '@/components/play/model';
+import { Header } from '@/components/play/Header';
 import { FrameShell, FrameTop } from '@/components/play/PlayFrame';
 import { Stats } from '@/components/play/Stats';
 import { cx, text } from '@/lib/ui';
@@ -55,6 +56,7 @@ export function ModeFrame({ layoutStyle: s, round, onMenu, onHeader, card, swipe
         </>
       }
     >
+      <Header slot={s.header} at="aboveWord" model={model} withSubline={false} onOpen={onHeader} />
       <Stats slot={s.stats} at="aboveWord" stats={model.stats} />
       {card !== null &&
         (swipeable ? (
