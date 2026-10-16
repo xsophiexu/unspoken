@@ -44,13 +44,15 @@ export function parseThemeSelection(value: unknown): ThemeSelection {
 
 // A text style as React Native style props, at its own size or another (the fitted word size).
 // Native fonts register one family per weight, so the weight is in the family name.
+// The line height rounds up to whole points, so the line box never ends up shorter than the style's
+// glyphs need.
 export function nativeTextStyle(name: TextStyleName, size?: number) {
   const t: TextStyleToken = textStyles[name];
   const px = size ?? t.size;
   return {
     fontFamily: fonts.native[t.weight],
     fontSize: px,
-    ...(t.lineHeight !== undefined && { lineHeight: Math.round(px * t.lineHeight) }),
+    ...(t.lineHeight !== undefined && { lineHeight: Math.ceil(px * t.lineHeight - 1e-9) }),
     ...(t.letterSpacing !== undefined && { letterSpacing: px * t.letterSpacing }),
     ...(t.tabular && { fontVariant: ['tabular-nums' as const] }),
     ...(t.uppercase && { textTransform: 'uppercase' as const }),

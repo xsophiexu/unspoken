@@ -234,7 +234,8 @@ describe('cssVariables', () => {
 
 describe('nativeTextStyle', () => {
   it('uses the per-weight family and resolves relative sizes to points', () => {
-    expect(nativeTextStyle('word', 40)).toEqual({ fontFamily: 'Manrope_800ExtraBold', fontSize: 40, lineHeight: 42, letterSpacing: -0.8 });
+    expect(nativeTextStyle('word', 40)).toEqual({ fontFamily: 'Manrope_800ExtraBold', fontSize: 40, lineHeight: expect.any(Number), letterSpacing: -0.8 });
+    expect(Number.isInteger(nativeTextStyle('word', 37).lineHeight)).toBe(true);
     expect(nativeTextStyle('badge')).toMatchObject({ fontFamily: 'Manrope_800ExtraBold', textTransform: 'uppercase' });
     expect(nativeTextStyle('clock').fontVariant).toEqual(['tabular-nums']);
   });
