@@ -24,8 +24,7 @@ type Props = {
   onAnswer?: (kind: Answer) => void;
   // The card's drag, which swipe links stretch with.
   dx?: Animated.Value;
-  // splitBar runs past the screen padding and down through the bottom safe area.
-  bleed?: number;
+  // splitBar runs down through the bottom safe area.
   bottomInset?: number;
 };
 
@@ -207,8 +206,10 @@ function Buttons(p: Parts) {
   );
 }
 
-// Split, Chips: a full-width bar split into Skip and Correct, down to the bottom edge.
-function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect, bleed = 0, bottomInset = 0 }: Parts) {
+// Split, Chips: a full-width bar split into Skip and Correct, down to the bottom edge. A fixed Skip
+// width keeps its share of the reference screen at any width.
+function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect, bottomInset = 0 }: Parts) {
+  const skipShare = slot.skipWidth ?? layout.referenceScreen.width / 2;
   const half = (colors: RegionColors, label: string, can: boolean, onPress: (() => void) | undefined, size: object) => (
     <Press onPress={onPress} disabled={!can} accessibilityLabel={label} style={[styles.half, size, { backgroundColor: colors.bg, paddingBottom: bottomInset }]}>
       <Txt variant="buttonStrong" color={colors.ink} numberOfLines={1}>
@@ -217,9 +218,9 @@ function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect
     </Press>
   );
   return (
-    <View style={[styles.split, { height: slot.height + bottomInset, marginHorizontal: -bleed }]}>
-      {half(halves.skip, labels.skip, canSkip, onSkip, slot.skipWidth ? { width: slot.skipWidth } : styles.grow)}
-      {half(halves.correct, labels.correct, canCorrect, onCorrect, styles.grow)}
+    <View style={[styles.split, { height: slot.height + bottomInset }]}>
+      {half(halves.skip, labels.skip, canSkip, onSkip, { flex: skipShare })}
+      {half(halves.correct, labels.correct, canCorrect, onCorrect, { flex: layout.referenceScreen.width - skipShare })}
     </View>
   );
 }

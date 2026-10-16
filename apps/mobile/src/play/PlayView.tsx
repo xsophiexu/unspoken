@@ -136,14 +136,15 @@ function statsAt(f: Frame, placement: 'belowHeader' | 'aboveWord' | 'underWord' 
   return slot.placement === placement ? <Stats slot={slot} colors={colors} stats={f.model.stats} /> : null;
 }
 
-// Where the clock and its bar go. A bar or big clock without a bar sits under the header.
-function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColors): ReactNode {
+// Where the clock and its bar go. A bar or big clock without a bar sits under the header. A bleeding
+// bar runs past the screen padding (bleed 0 when it is already full width).
+function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColors, bleed: number = PAD): ReactNode {
   const { timer } = f.theme.style;
   const clock = f.model.clock;
   const own = timer.bar?.placement ?? (timer.variant === 'bar' || timer.variant === 'bigClock' ? 'belowHeader' : null);
   if (!clock || own !== place) return null;
   const onPause = f.h?.onPause;
-  const line = timer.bar ? <TimerBar bar={timer.bar} progress={clock.progress} colors={colors} bleed={PAD} /> : null;
+  const line = timer.bar ? <TimerBar bar={timer.bar} progress={clock.progress} colors={colors} bleed={bleed} /> : null;
   const row =
     timer.variant === 'bigClock' ? (
       <BigClock slot={timer} clock={clock} colors={colors} onPause={onPause} />
@@ -279,44 +280,56 @@ function Top({ f, children }: { f: Frame; children: ReactNode }) {
 }
 
 // The footer stats, the note and the controls. A timer line above the controls sits right on them.
+// A split bar spans the whole window, down through the bottom safe area.
 function Footer({ f, separate }: { f: Frame; separate: boolean }) {
-  const { controls } = f.theme.style;
+  const { controls: slot } = f.theme.style;
   const colors = f.footer;
-  const fills = fillsBottom(controls);
+  const fills = fillsBottom(slot);
   const { model } = f;
   const note = model.note ? (
     <Txt variant="small" color={colors.muted}>
       {model.note}
     </Txt>
   ) : null;
-  return (
-    <Band
+  const controls = (
+    <Controls
+      slot={slot}
       colors={colors}
-      f={f}
-      inner={[
-        styles.zone,
-        { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: fills ? 0 : f.insets.bottom + (f.short ? space[3] : layout.screen.paddingBottom) },
-      ]}
-    >
-      {statsAt(f, 'footer', colors)}
-      {fills ? note : null}
-      <View>
-        {clockAt(f, 'aboveControls', colors)}
-        <Controls
-          slot={controls}
-          colors={colors}
-          halves={halvesFor(f.theme, colors)}
-          labels={f.labels}
-          canSkip={model.canSkip}
-          canCorrect={model.canCorrect}
-          onAnswer={f.h?.swipe.answer}
-          dx={f.h?.swipe.dx}
-          bleed={PAD}
-          bottomInset={f.insets.bottom}
-        />
-      </View>
-      {fills ? null : note}
-    </Band>
+      halves={halvesFor(f.theme, colors)}
+      labels={f.labels}
+      canSkip={model.canSkip}
+      canCorrect={model.canCorrect}
+      onAnswer={f.h?.swipe.answer}
+      dx={f.h?.swipe.dx}
+      bottomInset={f.insets.bottom}
+    />
+  );
+  const stats = statsAt(f, 'footer', colors);
+  const line = (bleed?: number) => clockAt(f, 'aboveControls', colors, bleed);
+  const pad = { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: f.insets.bottom + (f.short ? space[3] : layout.screen.paddingBottom) };
+  if (!fills) {
+    return (
+      <Band colors={colors} f={f} inner={[styles.zone, pad]}>
+        {stats}
+        <View>
+          {line()}
+          {controls}
+        </View>
+        {note}
+      </Band>
+    );
+  }
+  return (
+    <View style={{ backgroundColor: colors.bg }}>
+      {stats || note ? (
+        <Band colors={colors} f={f} inner={[styles.zone, { paddingTop: pad.paddingTop, paddingBottom: space[3] }]}>
+          {stats}
+          {note}
+        </Band>
+      ) : null}
+      {line(0)}
+      {controls}
+    </View>
   );
 }
 
