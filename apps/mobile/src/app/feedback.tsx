@@ -107,7 +107,7 @@ export default function FeedbackScreen() {
               {format(f.counter, { n: feedbackLength(message), max: feedbackRules.maxLength })}
             </Txt>
             {failed ? (
-              <View accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[styles.error, { backgroundColor: colors.chip, borderColor: colors.outline }]}>
+              <View accessible accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[styles.error, { backgroundColor: colors.chip, borderColor: colors.outline }]}>
                 <Icon name="cross" size={layout.icon.md} color={colors.chipInk} />
                 <Txt variant="label" color={colors.chipInk} style={styles.errorText}>
                   {f.failed}
