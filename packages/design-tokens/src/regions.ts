@@ -30,7 +30,7 @@ export type RegionColors = {
 export type RegionSlot = keyof RegionColors;
 
 // A palette role, optionally at an opacity.
-export type RoleRef = ColorRole | { role: ColorRole; alpha: number };
+type RoleRef = ColorRole | { role: ColorRole; alpha: number };
 
 const base = {
   ink: 'ink',
@@ -47,7 +47,7 @@ const base = {
 
 // How each tone maps region slots to palette roles. test/contrast.test.ts checks every text slot
 // against its background in every tone, palette and mode.
-export const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
+const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
   canvas: { ...base, bg: 'canvas', chip: 'bg' },
   base: { ...base, bg: 'bg', chip: 'surface' },
   surface: { ...base, bg: 'surface', chip: 'surfaceRaised' },

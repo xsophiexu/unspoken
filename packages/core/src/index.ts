@@ -5,7 +5,6 @@ export * from './types';
 export * from './config';
 export * from './rules';
 export * from './random';
-export * from './deal';
 export * from './bank';
 export * from './text';
 export * from './fit';

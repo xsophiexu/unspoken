@@ -1,13 +1,12 @@
 // Small color helpers for hex tokens (#RGB, #RRGGBB or #RRGGBBAA). Used to derive translucent
 // tones and to check contrast; platforms can use them for the same purposes.
 
-export type Rgba = { r: number; g: number; b: number; a: number };
+type Rgba = { r: number; g: number; b: number; a: number };
 
-// WCAG 2.x minimum contrast for normal text (AA) and for large text (24px, or 18.66px bold).
+// WCAG 2.x minimum contrast for normal text (AA).
 export const AA_TEXT = 4.5;
-export const AA_LARGE_TEXT = 3;
 
-export function parseHex(hex: string): Rgba {
+function parseHex(hex: string): Rgba {
   const h = hex.replace(/^#/, '');
   const full = h.length === 3 || h.length === 4 ? [...h].map((c) => c + c).join('') : h;
   if (!/^[0-9a-f]{6}([0-9a-f]{2})?$/i.test(full)) throw new Error(`Not a hex color: ${hex}`);
@@ -15,7 +14,7 @@ export function parseHex(hex: string): Rgba {
   return { r: byte(0), g: byte(2), b: byte(4), a: full.length === 8 ? byte(6) : 1 };
 }
 
-export function toHex({ r, g, b, a }: Rgba): string {
+function toHex({ r, g, b, a }: Rgba): string {
   const byte = (v: number) =>
     Math.round(Math.max(0, Math.min(1, v)) * 255)
       .toString(16)
@@ -42,7 +41,7 @@ function channel(c: number): number {
 }
 
 // WCAG relative luminance of an opaque color.
-export function relativeLuminance(hex: string): number {
+function relativeLuminance(hex: string): number {
   const { r, g, b } = parseHex(hex);
   return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
 }

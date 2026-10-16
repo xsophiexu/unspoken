@@ -1,6 +1,5 @@
 import { gameConfig, type GameConfig } from './config';
-import { dealDeck } from './deal';
-import { seededRandom } from './random';
+import { dealDeck, seededRandom } from './random';
 import { modeRules } from './rules';
 import type { BankCardInput, BankEntry, Card, Category, Difficulty, ModeId } from './types';
 
@@ -10,7 +9,7 @@ function capitalize(word: string): string {
 }
 
 // A URL-safe id from the word: "Bedtime story" → "bedtime-story", "Café" → "cafe".
-export function cardId(word: string): string {
+function cardId(word: string): string {
   return word
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')

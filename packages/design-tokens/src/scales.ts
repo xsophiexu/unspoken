@@ -24,7 +24,6 @@ export const space = {
   14: 56,
   16: 64,
 } as const;
-export type SpaceKey = keyof typeof space;
 
 export const radius = {
   none: 0,
@@ -72,7 +71,6 @@ export const elevation = {
     card: '0px 18px 40px 0px rgba(0, 0, 0, 0.45), 0px 2px 6px 0px rgba(0, 0, 0, 0.30)',
   },
 } as const;
-export type ElevationName = keyof (typeof elevation)['light'];
 
 export const motion = {
   duration: { fast: 150, base: 200, slow: 320 },
@@ -88,13 +86,6 @@ export const motion = {
 
 // Window widths where layouts change. Below medium is a phone; the game always fits a phone column.
 export const breakpoints = { compact: 0, medium: 600, expanded: 1024 } as const;
-export type Breakpoint = keyof typeof breakpoints;
-
-export function breakpointFor(width: number): Breakpoint {
-  if (width >= breakpoints.expanded) return 'expanded';
-  if (width >= breakpoints.medium) return 'medium';
-  return 'compact';
-}
 
 // Content never stretches across a wide screen.
 export const maxWidth = {

@@ -31,7 +31,7 @@ function charEm(ch: string, metrics: GlyphMetrics): number {
 }
 
 // Width of a piece of text in em, tracking included.
-export function textWidthEm(text: string, metrics: GlyphMetrics): number {
+function textWidthEm(text: string, metrics: GlyphMetrics): number {
   let em = 0;
   for (const ch of text) em += charEm(ch, metrics) + metrics.tracking;
   return em;

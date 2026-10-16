@@ -1,8 +1,10 @@
 import {
   cardsFor,
+  clockLabel,
   createRound,
   defaultSettings,
   menuStatus,
+  pausedStatus,
   roundReducer,
   roundSubline,
   swipeSummary,
@@ -13,7 +15,7 @@ import {
 } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
-import { bank, copyFor, en, roundCopy } from '../src';
+import { bank, roundCopy } from '../src';
 
 const settings = (overrides: Partial<GameSettings>): GameSettings => ({ ...defaultSettings(), ...overrides });
 const start = (s: GameSettings): RoundState =>
@@ -54,6 +56,16 @@ describe('status lines in English', () => {
     expect(roundSubline(start(settings({ mode: 'mindReader' })), roundCopy)).toBe('Round 1 · No timer');
   });
 
+  it('the clock and the Paused overlay line', () => {
+    const classic = play(start(settings({ mode: 'classic', roundSeconds: 150, skips: 3 })), [{ type: 'correct' }, { type: 'skip' }]) as SwipeRoundState;
+    expect(clockLabel(classic, roundCopy)).toBe('2:30');
+    expect(pausedStatus(classic, roundCopy)).toBe('1 pt · 1 of 3 skips');
+    const hot = start(settings({ mode: 'hotPotato' })) as SwipeRoundState;
+    expect(clockLabel(hot, roundCopy)).toBe('Hidden');
+    expect(pausedStatus(hot, roundCopy)).toBe('0 words passed');
+    expect(clockLabel(start(settings({ mode: 'endless' })) as SwipeRoundState, roundCopy)).toBeNull();
+  });
+
   it('a finished Classic round reads singular counts of one', () => {
     const state = play(start(settings({ mode: 'classic', roundSeconds: 30, skips: 3 })), [
       { type: 'correct' },
@@ -64,10 +76,3 @@ describe('status lines in English', () => {
   });
 });
 
-describe('copyFor', () => {
-  it('falls back from a regional tag, or an unknown language, to English', () => {
-    expect(copyFor('en-GB')).toBe(en);
-    expect(copyFor('xx')).toBe(en);
-    expect(copyFor(undefined)).toBe(en);
-  });
-});

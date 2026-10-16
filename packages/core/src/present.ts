@@ -8,64 +8,31 @@ import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, type SwipeRoundState
 import type { ReverseRoundState } from './round/reverse';
 import type { RoundState } from './round';
 
+// The catalog slots these lines read. Placeholders ({points}, {skips}, ...) are filled with format()
+// and plural(); see the English catalog in @unspoken/content for every string.
 export type RoundCopy = {
   modes: Readonly<Record<ModeId, { name: string }>>;
-  units: {
-    // "{n} pt" / "{n} pts"
-    points: Plural;
-    // "point" / "points" (no number; the number is shown big)
-    pointsLabel: Plural;
-    skips: Plural;
-    words: Plural;
-    cardsLabel: Plural;
-    bannedWords: Plural;
-    letters: Plural;
-  };
+  units: Record<'points' | 'pointsLabel' | 'skips' | 'words' | 'cardsLabel' | 'bannedWords', Plural>;
   themes: { all: string; many: Plural };
-  status: {
-    // "{skips} left" where {skips} is a units.skips label
-    skipsLeft: string;
-    // "{correct} correct · {skipped} skipped"
-    tally: string;
-    // "{points} · {skips}"
-    scoreAndSkips: string;
-    // "{banned} · {skips}"
-    escalateClimbing: string;
-    // "{max} banned · {atMax} of {winAt} to win · {skips}"
-    escalateTop: string;
-    hotPotato: string;
-    // "{used} of {limit}" where {limit} is a units.skips label
-    skipsUsedOf: string;
-    // "{words} passed"
-    passed: string;
-    // "Round {round} · No timer"
-    mindReaderRound: string;
-    // "{points} · {words}"
-    reverse: string;
-    // Menu sheet status: "{status} · {themes}"
-    withThemes: string;
-    // "{clock} left · {points}"
-    clockLeft: string;
-    // "{mode} · timer hidden"
-    hiddenTimer: string;
-    // "Round {round}"
-    round: string;
-    // Shown in place of the clock in Hot potato
-    hiddenClock: string;
-  };
-  over: {
-    won: string;
-    timeUp: string;
-    hotPotatoTitle: string;
-    // "{words} guessed this round"
-    hotPotatoSub: string;
-    // "{label} · {skips}" where {label} is units.pointsLabel
-    pointsSub: string;
-    // "{label} played · {correct} correct · {skips}" where {label} is units.cardsLabel
-    escalateWonSub: string;
-    // "banned words reached · {correct} correct"
-    escalateLostSub: string;
-  };
+  status: Record<
+    | 'skipsLeft'
+    | 'tally'
+    | 'scoreAndSkips'
+    | 'escalateClimbing'
+    | 'escalateTop'
+    | 'hotPotato'
+    | 'skipsUsedOf'
+    | 'passed'
+    | 'mindReaderRound'
+    | 'reverse'
+    | 'withThemes'
+    | 'clockLeft'
+    | 'hiddenTimer'
+    | 'round'
+    | 'hiddenClock',
+    string
+  >;
+  over: Record<'won' | 'timeUp' | 'hotPotatoTitle' | 'hotPotatoSub' | 'pointsSub' | 'escalateWonSub' | 'escalateLostSub', string>;
 };
 
 // "All cards", the theme's name, or "3 themes".

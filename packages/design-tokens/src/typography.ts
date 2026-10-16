@@ -1,7 +1,6 @@
 import type { GlyphMetrics } from '@unspoken/core';
 
-export const FONT_WEIGHTS = [400, 500, 600, 700, 800] as const;
-export type FontWeight = (typeof FONT_WEIGHTS)[number];
+export type FontWeight = 400 | 500 | 600 | 700 | 800;
 
 export const fonts = {
   // Web: load Manrope 400–800 from Google Fonts (or next/font) and use this stack.

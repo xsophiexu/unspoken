@@ -173,20 +173,15 @@ describe('Escalate', () => {
 });
 
 describe('Hot potato', () => {
-  it('hides a clock whose length falls in the level’s range', () => {
+  it('hides a clock whose length falls in the level’s range, ignoring the round timer setting', () => {
     for (const difficulty of ['Normal', 'Expert 1', 'Grandmaster'] as const) {
       const { min, max } = hotPotatoRange(difficulty);
       for (let seed = 0; seed < 50; seed++) {
-        const state = start('hotPotato', { difficulty }, seed);
+        const state = start('hotPotato', { difficulty, roundSeconds: 5 }, seed);
         expect(state.clock!.left).toBeGreaterThanOrEqual(min);
         expect(state.clock!.left).toBeLessThanOrEqual(max);
       }
     }
-  });
-
-  it('ignores the round timer setting', () => {
-    const lengths = new Set(Array.from({ length: 20 }, (_, seed) => start('hotPotato', { roundSeconds: 5 }, seed).clock!.left));
-    expect([...lengths].every((s) => s >= 45)).toBe(true);
   });
 
   it('never shows progress on the ring', () => {

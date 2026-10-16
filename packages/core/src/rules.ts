@@ -1,7 +1,7 @@
 import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules } from './config';
 import type { Difficulty, GameSettings, ModeId, Random } from './types';
 
-export function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
+function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
   const found = config.difficulties.find((d) => d.id === id);
   if (!found) throw new Error(`Unknown difficulty: ${id}`);
   return found;

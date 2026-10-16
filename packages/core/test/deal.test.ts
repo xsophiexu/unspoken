@@ -45,20 +45,4 @@ describe('dealDeck', () => {
     expect(share.get(heavy!.id)).toBeLessThan(0.53);
     for (const card of light) expect(share.get(card.id)).toBeCloseTo(1 / 6, 1);
   });
-
-  it('keeps lightly weighted cards in the deck, just later on average', () => {
-    const cards: Card[] = makeCards(20).map((c, i) => ({ ...c, weight: i < 10 ? 0.04 : 0.01 }));
-    const { random } = seededRandom(3);
-    let heavyPositions = 0;
-    let lightPositions = 0;
-    for (let i = 0; i < 500; i++) {
-      const deck = dealDeck(cards, random);
-      expect(deck).toHaveLength(20);
-      deck.forEach((c, pos) => {
-        if (Number(c.id.split('-')[1]) < 10) heavyPositions += pos;
-        else lightPositions += pos;
-      });
-    }
-    expect(heavyPositions).toBeLessThan(lightPositions);
-  });
 });

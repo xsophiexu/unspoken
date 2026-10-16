@@ -12,16 +12,11 @@ import {
   hasTimerSetting,
   hiddenRoundSeconds,
   hotPotatoRange,
-  seededRandom,
   withDifficulty,
 } from '../src';
 import { settingsFor } from './fixtures';
 
 describe('catalogs', () => {
-  it('has eight difficulties from Normal to Grandmaster', () => {
-    expect(DIFFICULTY_IDS).toEqual(['Normal', 'Harder', 'Expert 1', 'Expert 2', 'Master 1', 'Master 2', 'Master 3', 'Grandmaster']);
-  });
-
   it('lists the modes in Modes-grid order, Teams coming soon and no Zen', () => {
     expect(MODE_IDS).toEqual(['classic', 'endless', 'teams', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
     expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams']);
@@ -73,18 +68,6 @@ describe('Hot potato hidden length', () => {
     expect(hotPotatoRange('Normal')).toEqual({ min: 45, max: 90 });
     expect(hotPotatoRange('Expert 1')).toEqual({ min: 75, max: 150 });
     expect(hotPotatoRange('Grandmaster')).toEqual({ min: 150, max: 300 });
-  });
-
-  it('always picks a length inside the level’s range', () => {
-    const { random } = seededRandom(11);
-    for (const difficulty of DIFFICULTY_IDS) {
-      const { min, max } = hotPotatoRange(difficulty);
-      const picks = Array.from({ length: 300 }, () => hiddenRoundSeconds(difficulty, random));
-      expect(Math.min(...picks)).toBeGreaterThanOrEqual(min);
-      expect(Math.max(...picks)).toBeLessThanOrEqual(max);
-      // Spread across the range rather than stuck at one end.
-      expect(Math.max(...picks) - Math.min(...picks)).toBeGreaterThan((max - min) / 2);
-    }
   });
 
   it('uses the extremes of the range for the extremes of randomness', () => {

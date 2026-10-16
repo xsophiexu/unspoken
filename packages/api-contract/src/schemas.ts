@@ -17,11 +17,10 @@ import {
 
 // Every path carries the API version, so a breaking change ships as /v2 beside /v1. Multiplayer
 // will add /v1/rooms.
-export const API_VERSION = 'v1';
 export const paths = {
-  config: `/${API_VERSION}/config`,
-  decks: `/${API_VERSION}/decks`,
-  feedback: `/${API_VERSION}/feedback`,
+  config: '/v1/config',
+  decks: '/v1/decks',
+  feedback: '/v1/feedback',
 } as const;
 
 const difficulty = z.enum(DIFFICULTY_IDS);
@@ -43,7 +42,6 @@ export const gameConfigSchema = z.object({
       bonusSeconds: whole,
       escalates: z.boolean(),
       passAfterEveryWord: z.boolean(),
-      minPlayers: whole,
       available: z.boolean(),
     }),
   ),

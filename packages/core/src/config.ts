@@ -36,8 +36,6 @@ export type ModeRules = {
   escalates: boolean;
   // Whether the phone is handed on after every word (Hot potato).
   passAfterEveryWord: boolean;
-  // Players needed (informational; shown on mode cards).
-  minPlayers: number;
   available: boolean;
 };
 
@@ -67,7 +65,7 @@ export type GameConfig = {
   mindReader: { predictions: number };
 };
 
-const swipe = { play: 'swipe', escalates: false, passAfterEveryWord: false, minPlayers: 2, bonusSeconds: 0 } as const;
+const swipe = { play: 'swipe', escalates: false, passAfterEveryWord: false, bonusSeconds: 0 } as const;
 
 export const gameConfig: GameConfig = {
   // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Grandmaster, 2:30 at Expert 1.
@@ -88,14 +86,14 @@ export const gameConfig: GameConfig = {
     { ...swipe, id: 'classic', clock: 'visible', scored: true, skipLimit: true, available: true },
     // Endless: no clock and no skip limit; the header counts correct and skipped words.
     { ...swipe, id: 'endless', clock: 'none', scored: true, skipLimit: false, available: true },
-    { ...swipe, id: 'teams', clock: 'visible', scored: true, skipLimit: true, minPlayers: 4, available: false },
+    { ...swipe, id: 'teams', clock: 'visible', scored: true, skipLimit: true, available: false },
     { ...swipe, id: 'timeAttack', clock: 'visible', scored: true, skipLimit: true, bonusSeconds: 5, available: true },
     // Escalate has no clock.
     { ...swipe, id: 'escalate', clock: 'none', scored: true, skipLimit: true, escalates: true, available: true },
     // Hot potato: no timer to set; the hidden clock runs a random length.
-    { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterEveryWord: true, minPlayers: 3, available: true },
+    { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterEveryWord: true, available: true },
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
-    { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, minPlayers: 3, available: true },
+    { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },
   ],
   // The app opens straight into an Endless game at Expert 1 with All cards.
   defaults: { mode: 'endless', difficulty: 'Expert 1', categories: [], skips: 3 },

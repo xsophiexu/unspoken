@@ -1,5 +1,4 @@
-import { dealDeck } from '../deal';
-import { seededRandom } from '../random';
+import { dealDeck, seededRandom } from '../random';
 import type { Card } from '../types';
 
 // The deck part of every round: the cards it draws from, the dealt order, the current position and

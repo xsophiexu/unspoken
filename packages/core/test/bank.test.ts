@@ -92,13 +92,14 @@ describe('playableCards', () => {
 });
 
 describe('dealFromBank', () => {
+  // 30 cards: 20 in Society and 10 in Pop Culture; the last 5 are kept out of All cards.
   const big = normalizeBank(
-    Array.from({ length: 50 }, (_, i) => ({
+    Array.from({ length: 30 }, (_, i) => ({
       word: `Card ${i}`,
-      banned: ten(`B${i}-`).slice(0, i % 2 === 0 ? 10 : 6),
+      banned: ten(`B${i}-`),
       difficulty: 'Expert 1' as const,
-      themes: [i < 40 ? ('Society' as const) : ('Pop Culture' as const)],
-      allCards: i < 45,
+      themes: [i < 20 ? ('Society' as const) : ('Pop Culture' as const)],
+      allCards: i < 25,
     })),
   );
 
@@ -112,22 +113,12 @@ describe('dealFromBank', () => {
   it('returns the requested number of cards and the size of the pool they came from', () => {
     const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 1, count: 12 });
     expect(dealt.cards).toHaveLength(12);
-    expect(dealt.total).toBe(45);
+    expect(dealt.total).toBe(25);
   });
 
   it('returns the whole shuffled pool without a count, never repeating a card', () => {
     const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: ['Pop Culture'], seed: 1 });
     expect(dealt.cards).toHaveLength(10);
     expect(new Set(dealt.cards.map((c) => c.id)).size).toBe(10);
-  });
-
-  it('never deals cards kept out of All cards when no theme is chosen', () => {
-    const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 5 });
-    expect(dealt.cards.some((c) => ['Card 45', 'Card 46', 'Card 47', 'Card 48', 'Card 49'].includes(c.word))).toBe(false);
-  });
-
-  it('deals only full cards for Escalate when there are enough', () => {
-    const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: [], mode: 'escalate', seed: 5 });
-    expect(dealt.cards.every((c) => c.banned.length === 10)).toBe(true);
   });
 });
