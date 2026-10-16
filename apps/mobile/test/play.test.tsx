@@ -65,3 +65,33 @@ describe('picking a difficulty', () => {
     expect(await screen.findByText(new RegExp(`^${formatClock(defaultRoundSeconds('Expert 1'))}`))).toBeOnTheScreen();
   });
 });
+
+describe('closing the ··· menu', () => {
+  const closeAfterSlide = async () => {
+    await act(async () => {
+      jest.advanceTimersByTime(motion.duration.slow);
+    });
+  };
+
+  it('closes on a tap on the dimmed backdrop', async () => {
+    await openApp('/', { theme: { style: 'card' } });
+    fireEvent.press(await screen.findByLabelText(en.a11y.menu));
+    expect(await screen.findByText(en.menu.title)).toBeOnTheScreen();
+
+    // The sheet is the modal view for screen readers, so the backdrop counts as hidden to queries.
+    fireEvent.press(screen.getByLabelText(en.a11y.closeSheet, { includeHiddenElements: true }));
+    await closeAfterSlide();
+    expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
+  });
+
+  it('closes on the Android back button', async () => {
+    await openApp('/', { theme: { style: 'card' } });
+    fireEvent.press(await screen.findByLabelText(en.a11y.menu));
+    const title = await screen.findByText(en.menu.title);
+
+    // The system back press reaches the sheet's Modal as a close request.
+    fireEvent(title, 'requestClose');
+    await closeAfterSlide();
+    expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
+  });
+});

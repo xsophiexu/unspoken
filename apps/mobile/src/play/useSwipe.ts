@@ -1,6 +1,8 @@
 import { motion } from '@unspoken/design-tokens';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, Animated, Easing, PanResponder, type GestureResponderHandlers } from 'react-native';
+import { Animated, Easing, PanResponder, type GestureResponderHandlers } from 'react-native';
+
+import { useReduceMotion } from '../ui/useReduceMotion';
 
 export type Answer = 'correct' | 'skip';
 
@@ -23,20 +25,6 @@ type Options = {
   // Paused, a sheet open, round over: no hint, no drag.
   active: boolean;
 };
-
-export function useReduceMotion(): boolean {
-  const [reduce, setReduce] = useState(false);
-  useEffect(() => {
-    let live = true;
-    AccessibilityInfo.isReduceMotionEnabled().then((on) => live && setReduce(on));
-    const sub = AccessibilityInfo.addEventListener('reduceMotionChanged', setReduce);
-    return () => {
-      live = false;
-      sub.remove();
-    };
-  }, []);
-  return reduce;
-}
 
 const { swipe, enter: enterSpring, hint: hintTiming } = motion;
 const native = { useNativeDriver: false } as const;
