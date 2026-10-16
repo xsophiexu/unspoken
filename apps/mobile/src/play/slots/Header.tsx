@@ -111,7 +111,7 @@ export function MenuButton({ slot, colors, onPress, pageColor }: { slot: HeaderS
 
 const styles = StyleSheet.create({
   label: { flexDirection: 'row', alignItems: 'center', gap: space[1], alignSelf: 'flex-start', maxWidth: '100%' },
-  pill: { height: layout.header.pillHeight, borderRadius: radius.pill, paddingLeft: space[4], paddingRight: space[3.5] },
+  pill: { minHeight: layout.header.pillHeight, borderRadius: radius.pill, paddingLeft: space[4], paddingRight: space[3.5] },
   titleBlock: { alignSelf: 'stretch', gap: space[0.5] },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   shrink: { flexShrink: 1 },

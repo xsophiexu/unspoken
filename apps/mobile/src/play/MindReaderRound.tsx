@@ -165,7 +165,7 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
 const styles = StyleSheet.create({
   label: { gap: space[0.5], marginTop: space[4] },
   input: {
-    height: layout.control.input.height,
+    minHeight: layout.control.input.height,
     borderRadius: radius.md,
     borderWidth: layout.stroke.outline,
     paddingHorizontal: space[4],

@@ -20,7 +20,7 @@ export function Word({ slot, colors, word, short = false }: { slot: WordSlot; co
             {en.play.yourWord}
           </Txt>
         ) : null}
-        <Txt variant="word" size={size} color={slot.color === 'accentText' ? colors.accentText : colors.ink} accessibilityRole="header">
+        <Txt variant="word" size={size} color={colors[slot.color]} accessibilityRole="header">
           {word}
         </Txt>
       </View>

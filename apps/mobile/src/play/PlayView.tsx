@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { layout, maxWidth, radius, space, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
+import { layout, maxWidth, playMargins, radius, ringCardSize, space, type PlayMargins, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
 import { useState, type ReactNode } from 'react';
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -45,7 +45,6 @@ type Props = {
   height?: number;
 };
 
-const PAD = layout.screen.paddingX;
 const NO_INSETS: Insets = { top: 0, bottom: 0, left: 0, right: 0 };
 
 type Frame = {
@@ -54,8 +53,12 @@ type Frame = {
   h?: PlayHandlers;
   insets: Insets;
   labels?: ControlLabels;
-  // A short screen (small phones): a smaller word and compact banned lists.
+  // A short screen (small phones): a smaller word, compact banned lists and less room under the
+  // controls.
   short: boolean;
+  // The play screen margins in this style. Panels, bands and bars that run edge to edge bleed out by
+  // the side margin.
+  margins: PlayMargins;
   page: RegionColors;
   word: RegionColors;
   lower: RegionColors;
@@ -75,6 +78,7 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, h
     insets,
     labels,
     short: (height ?? window.height) < layout.shortScreen.height,
+    margins: playMargins(style),
     page,
     word: style.regions.word ? r[style.regions.word] : page,
     lower,
@@ -137,14 +141,14 @@ function statsAt(f: Frame, placement: 'belowHeader' | 'aboveWord' | 'underWord' 
 }
 
 // Where the clock and its bar go. A bar or big clock without a bar sits under the header. A bleeding
-// bar runs past the screen padding (bleed 0 when it is already full width).
-function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColors, bleed: number = PAD): ReactNode {
+// bar runs out past the side margins (bleed 0 when it is already full width).
+function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColors, bleed = f.margins.paddingX): ReactNode {
   const { timer } = f.theme.style;
   const clock = f.model.clock;
   const own = timer.bar?.placement ?? (timer.variant === 'bar' || timer.variant === 'bigClock' ? 'belowHeader' : null);
   if (!clock || own !== place) return null;
   const onPause = f.h?.onPause;
-  const line = timer.bar ? <TimerBar bar={timer.bar} progress={clock.progress} colors={colors} bleed={bleed} /> : null;
+  const line = <TimerBar slot={timer} progress={clock.progress} colors={colors} bleed={bleed} />;
   const row =
     timer.variant === 'bigClock' ? (
       <BigClock slot={timer} clock={clock} colors={colors} onPause={onPause} />
@@ -178,15 +182,15 @@ function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColor
 
 // The line along the top edge of the lower panel, in the page's timer colors.
 function panelLine(f: Frame) {
-  const { bar } = f.theme.style.timer;
+  const { timer } = f.theme.style;
   const clock = f.model.clock;
-  return clock && bar?.placement === 'panelTop' ? <TimerBar bar={bar} progress={clock.progress} colors={f.page} /> : null;
+  return clock && timer.bar?.placement === 'panelTop' ? <TimerBar slot={timer} progress={clock.progress} colors={f.page} /> : null;
 }
 
 function banned(f: Frame, colors: RegionColors) {
   const card = f.model.card;
   if (!card) return null;
-  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={PAD} short={f.short} />;
+  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={f.margins.paddingX} short={f.short} />;
 }
 
 // The mode label above the word (when the style puts it there), the word, and what follows it:
@@ -227,11 +231,17 @@ function Gap({ min = 0, max }: { min?: number; max?: number }) {
 }
 
 // A frame's middle: fills the space it is given, takes the swipe, and scrolls when its content is
-// taller than that space. It spans the screen padding (and pads its content instead), so lists
-// that run edge to edge aren't clipped by the scroll view.
+// taller than that space. It spans the side margins (and pads its content by them instead), so
+// lists that run edge to edge aren't clipped by the scroll view.
 function Middle({ f, style, children }: { f: Frame; style?: StyleProp<ViewStyle>; children: ReactNode }) {
   return (
-    <ScrollView style={[styles.fill, styles.bleed]} contentContainerStyle={[styles.grow, styles.padded]} scrollEnabled={!!f.h} bounces={false} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.fill, { marginHorizontal: -f.margins.paddingX }]}
+      contentContainerStyle={[styles.grow, { paddingHorizontal: f.margins.paddingX }]}
+      scrollEnabled={!!f.h}
+      bounces={false}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={[styles.grow, style]} {...f.h?.swipe.panHandlers}>
         {children}
       </View>
@@ -266,21 +276,22 @@ function SwipeHint({ f, colors }: { f: Frame; colors: RegionColors }) {
 function Band({ colors, f, style, inner, children }: { colors: RegionColors; f: Frame; style?: StyleProp<ViewStyle>; inner?: StyleProp<ViewStyle>; children: ReactNode }) {
   return (
     <View style={[{ backgroundColor: colors.bg, paddingLeft: f.insets.left, paddingRight: f.insets.right }, style]}>
-      <View style={[styles.column, inner]}>{children}</View>
+      <View style={[styles.column, { paddingHorizontal: f.margins.paddingX }, inner]}>{children}</View>
     </View>
   );
 }
 
 function Top({ f, children }: { f: Frame; children: ReactNode }) {
   return (
-    <Band colors={f.page} f={f} inner={[styles.zone, { paddingTop: f.insets.top + layout.screen.paddingTop }]}>
+    <Band colors={f.page} f={f} inner={[styles.zone, { paddingTop: f.insets.top + f.margins.paddingTop }]}>
       {children}
     </Band>
   );
 }
 
 // The footer stats, the note and the controls. A timer line above the controls sits right on them.
-// A split bar spans the whole window, down through the bottom safe area.
+// A footer in its own color (Ombre) leaves footerTop above its contents. A split bar spans the whole
+// window, down through the bottom safe area.
 function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   const { controls: slot } = f.theme.style;
   const colors = f.footer;
@@ -306,7 +317,8 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   );
   const stats = statsAt(f, 'footer', colors);
   const line = (bleed?: number) => clockAt(f, 'aboveControls', colors, bleed);
-  const pad = { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: f.insets.bottom + (f.short ? space[3] : layout.screen.paddingBottom) };
+  const under = f.margins.paddingBottom;
+  const pad = { paddingTop: separate ? f.margins.footerTop : space[3], paddingBottom: f.insets.bottom + (f.short ? Math.min(under, space[3]) : under) };
   if (!fills) {
     return (
       <Band colors={colors} f={f} inner={[styles.zone, pad]}>
@@ -339,20 +351,19 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
 function RingCardFrame({ f }: { f: Frame }) {
   const [box, setBox] = useState({ w: 0, h: 0 });
   const clock = f.model.clock;
-  const w = Math.min(box.w, layout.card.maxWidth);
-  const h = Math.min(box.h, layout.card.maxHeight);
+  const { width: w, height: h } = ringCardSize(box.w, box.h);
   const inset = clock ? layout.card.ringInset : 0;
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
       <Top f={f}>{header(f)}</Top>
       <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.middle]}>
-        <View style={styles.measure} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
+        <View style={[styles.measure, { marginHorizontal: f.margins.paddingX }]} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
         {h > 0 ? (
           <Moving f={f} pan style={{ width: w, height: h }}>
             {clock ? (
               <>
                 <TimerRing width={w} height={h} progress={clock.progress} colors={f.page} />
-                <RingClock clock={clock} colors={f.page} onPause={f.h?.onPause} />
+                <RingClock slot={f.theme.style.timer} clock={clock} colors={f.page} onPause={f.h?.onPause} />
               </>
             ) : null}
             <View style={[styles.tile, { top: inset, left: inset, right: inset, bottom: inset, backgroundColor: f.word.bg }]}>
@@ -431,7 +442,7 @@ function PanelFrame({ f }: { f: Frame }) {
   );
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
-      <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: f.insets.top + layout.screen.paddingTop }]}>
+      <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: f.insets.top + f.margins.paddingTop }]}>
         {header(f)}
         {clockAt(f, 'belowHeader', f.page)}
         {clockAt(f, 'belowClock', f.page)}
@@ -471,15 +482,15 @@ const styles = StyleSheet.create({
   page: { flex: 1, overflow: 'hidden' },
   fill: { flex: 1, minHeight: 0 },
   grow: { flexGrow: 1 },
-  bleed: { marginHorizontal: -PAD },
-  padded: { paddingHorizontal: PAD },
-  column: { width: '100%', maxWidth: maxWidth.column, alignSelf: 'center', paddingHorizontal: PAD },
+  column: { width: '100%', maxWidth: maxWidth.column, alignSelf: 'center' },
   zone: { gap: space[3] },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', gap: space[3], minHeight: layout.header.menuButton },
   topLeft: { flexShrink: 1, flexGrow: 1, alignItems: 'flex-start' },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   middle: { alignItems: 'center', justifyContent: 'center', paddingVertical: space[3] },
-  measure: { ...StyleSheet.absoluteFill, margin: space[3] },
+  // The space the ring can take (inside the side margins, which an absolute fill would ignore), with
+  // room above and below for the clock on its top edge.
+  measure: { ...StyleSheet.absoluteFill, marginVertical: space[3] },
   center: { justifyContent: 'center' },
   floating: { gap: space[2.5], paddingVertical: space[4] },
   tile: { position: 'absolute', borderRadius: radius.card, overflow: 'hidden' },

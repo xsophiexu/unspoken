@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   track: { flexDirection: 'row', padding: layout.control.segmented.inset, borderRadius: radius.lg },
   option: {
     flex: 1,
-    height: layout.control.segmented.height,
+    minHeight: layout.control.segmented.height,
     borderRadius: radius.sm,
     flexDirection: 'row',
     alignItems: 'center',

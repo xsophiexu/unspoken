@@ -6,9 +6,9 @@ import { Animated, Easing, Pressable, StyleSheet, useWindowDimensions, View } fr
 import { Icon } from '../ui/Icon';
 import { Press } from '../ui/Press';
 import { Txt } from '../ui/Txt';
+import { useReduceMotion } from '../ui/useReduceMotion';
 import type { Insets } from './PlayView';
 import type { Targets } from './spotlight';
-import { useReduceMotion } from './useSwipe';
 
 type Rect = { x: number; y: number; w: number; h: number };
 
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: spotlight.play.pulse,
   },
   play: {
-    height: spotlight.play.height,
+    minHeight: spotlight.play.height,
     borderRadius: spotlight.play.radius,
     backgroundColor: spotlight.play.background,
     flexDirection: 'row',
