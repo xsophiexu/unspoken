@@ -4,7 +4,9 @@ import {
   count,
   format,
   formatClock,
+  formatParts,
   plural,
+  pluralParts,
   sanitizeTimerDigits,
   secondsToTimerDigits,
   timerDigitsLabel,
@@ -78,5 +80,19 @@ describe('wordShape', () => {
     expect(wordShape('Hangover')).toEqual({ words: 1, letters: 8 });
     expect(wordShape('Rock-paper-scissors')).toEqual({ words: 1, letters: 17 });
     expect(wordShape('Bedtime story')).toEqual({ words: 2, letters: 12 });
+  });
+});
+
+describe('formatParts', () => {
+  it('splits a message into words and filled values, which join back to format()', () => {
+    const parts = formatParts('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Expert 1' });
+    expect(parts).toEqual([{ text: 'Classic', param: 'mode' }, { text: ' · ' }, { text: 'Expert 1', param: 'difficulty' }]);
+    expect(parts.map((p) => p.text).join('')).toBe(format('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Expert 1' }));
+  });
+
+  it('keeps unknown placeholders as words and picks the plural form', () => {
+    expect(formatParts('{x} left', {})).toEqual([{ text: '{x} left' }]);
+    expect(pluralParts(7, { one: '{n} pt', other: '{n} pts' })).toEqual([{ text: '7', param: 'n' }, { text: ' pts' }]);
+    expect(pluralParts(1, { one: '{n} pt', other: '{n} pts' }).map((p) => p.text).join('')).toBe('1 pt');
   });
 });

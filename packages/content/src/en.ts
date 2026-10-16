@@ -146,6 +146,8 @@ export const en = {
     swipeTheCard: 'swipe the card',
     newTag: 'NEW',
     hotPotatoNote: 'Holding it when time runs out loses a point',
+    // The mode and level in a header pill; the platform styles the level lighter.
+    modeAndLevel: '{mode} · {difficulty}',
   },
   paused: {
     label: 'PAUSED',

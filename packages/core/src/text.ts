@@ -14,6 +14,30 @@ export function plural(n: number, forms: Plural, params: Readonly<Record<string,
   return format(n === 1 ? forms.one : forms.other, { n, ...params });
 }
 
+// A filled message as pieces, so a platform can style the filled values apart from the words around
+// them ("7" bold in "7 pts", "Expert 1" lighter in "Classic · Expert 1"). Joining the texts gives
+// what format() returns.
+export type TextPart = { text: string; param?: string };
+
+export function formatParts(template: string, params: Readonly<Record<string, string | number>> = {}): TextPart[] {
+  const parts: TextPart[] = [];
+  let last = 0;
+  for (const match of template.matchAll(/\{(\w+)\}/g)) {
+    const key = match[1] as string;
+    if (!(key in params)) continue;
+    if (match.index > last) parts.push({ text: template.slice(last, match.index) });
+    parts.push({ text: String(params[key]), param: key });
+    last = match.index + match[0].length;
+  }
+  if (last < template.length) parts.push({ text: template.slice(last) });
+  return parts;
+}
+
+// plural() as pieces: the number is the part with param 'n'.
+export function pluralParts(n: number, forms: Plural, params: Readonly<Record<string, string | number>> = {}): TextPart[] {
+  return formatParts(n === 1 ? forms.one : forms.other, { n, ...params });
+}
+
 // "1 skip", "2 skips". Pass the plural when it isn't just the word plus "s".
 export function count(n: number, singular: string, pluralForm = `${singular}s`): string {
   return `${n} ${n === 1 ? singular : pluralForm}`;

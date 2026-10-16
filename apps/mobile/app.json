@@ -3,13 +3,10 @@
     "name": "Unspoken",
     "slug": "unspoken",
     "version": "1.0.0",
+    "scheme": "unspoken",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.rensar.unspoken"
-    },
+    "userInterfaceStyle": "automatic",
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E2E8E7",
@@ -21,7 +18,12 @@
       "package": "com.rensar.unspoken"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }

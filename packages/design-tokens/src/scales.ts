@@ -75,7 +75,9 @@ export const elevation = {
 export const motion = {
   duration: { fast: 150, base: 200, slow: 320 },
   // The card follows the finger; past the threshold it flies off and the answer is dispatched.
-  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6 },
+  // barShrink and barGrow: how far the Skip and Correct bars shrink and grow (as flex factors) at the
+  // threshold, so the side the card is heading to stretches with the drag.
+  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6, barShrink: 0.3, barGrow: 3.2 },
   // The next card springs in.
   enter: { friction: 9, tension: 70, fromY: 40, fromScale: 0.95, fromOpacity: 0.3 },
   // The card nudges right to show it swipes: once at the start, then after 30 idle seconds.
@@ -105,20 +107,47 @@ export const layout = {
   referenceScreen: { width: 390, height: 844 },
   screen: { paddingX: 20, paddingTop: 18, paddingBottom: 24 },
   minTouch: 44,
-  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs },
-  // Card style: the word tile inside the timer ring.
-  card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30 },
+  // caretScale: the ▾ after the mode and level, relative to the header text size.
+  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
+  // Card style: the word tile inside the timer ring. floatingHeight: the Deck card's height, which
+  // shrinks on shorter screens.
+  card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
-  // Banned lists switch to compact sizes from this many words (Escalate climbs to 10).
-  banned: { compactFrom: 7 },
+  // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
+  // the height of a compact tile or band.
+  banned: { compactFrom: 7, compactRow: 38 },
+  // Windows shorter than this (small phones) use compact banned lists and scale the word's largest
+  // size by wordScale, so the word and every banned word fit without scrolling.
+  shortScreen: { height: 700, wordScale: 0.8 },
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
-  grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 3 },
+  grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },
+  // Icon boxes and line weights for the controls the boards draw.
+  icon: { sm: 14, md: 18, lg: 22, xl: 24 },
+  stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },
+  control: {
+    // The round pause button beside a clock (the ring's gap label is the same height).
+    pause: 32,
+    // Swipe bars under "← Skip" and "Correct →".
+    swipeBar: 6,
+    segmented: { height: 36, inset: 4 },
+    // Mode tiles on Modes; level tiles on the mode and difficulty sheet.
+    modeTile: 92,
+    levelTile: 52,
+    input: { height: 48, multilineHeight: 160 },
+    // Round icon holders: the suggest card's bubble, step numbers, the Thanks check.
+    iconBadge: 36,
+    stepNumber: 30,
+    heroBadge: 72,
+  },
 } as const;
+
+// Feedback for pressed and unavailable controls, and the page color behind the Paused overlay.
+export const opacity = { pressed: 0.8, disabled: 0.45, overlay: 0.94 } as const;
 
 // The How to play walkthrough ("Dark spotlight, white captions", option A). Colors are fixed so the
 // overlay reads the same over every style, color and mode. The Play label is the color's light-mode

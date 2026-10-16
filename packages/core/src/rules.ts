@@ -1,5 +1,5 @@
 import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules } from './config';
-import type { Difficulty, GameSettings, ModeId, Random } from './types';
+import type { Category, Difficulty, GameSettings, ModeId, Random } from './types';
 
 function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
   const found = config.difficulties.find((d) => d.id === id);
@@ -61,6 +61,14 @@ export function withDifficulty(settings: GameSettings, difficulty: Difficulty, c
   return { ...settings, difficulty, roundSeconds: onDefault ? defaultRoundSeconds(difficulty, config) : settings.roundSeconds };
 }
 
+// Setup's theme chips: All cards (null) clears the chosen themes; any other theme toggles, and
+// clearing the last one means All cards again. Themes stay in catalog order.
+export function toggleCategory(categories: readonly Category[], category: Category | null, config: GameConfig = gameConfig): Category[] {
+  if (category === null) return [];
+  const next = categories.includes(category) ? categories.filter((c) => c !== category) : [...categories, category];
+  return config.categories.filter((c) => next.includes(c));
+}
+
 // The settings a fresh install starts with.
 export function defaultSettings(config: GameConfig = gameConfig): GameSettings {
   const { defaults } = config;
@@ -72,4 +80,22 @@ export function canStart(settings: GameSettings, config: GameConfig = gameConfig
   if (!modeRules(settings.mode, config).available) return false;
   if (!hasTimerSetting(settings.mode, config)) return true;
   return settings.roundSeconds >= config.minRoundSeconds && settings.roundSeconds <= config.maxRoundSeconds;
+}
+
+// Reads saved settings (from device storage or a request), keeping each valid field and defaulting
+// the rest. A mode that is not available falls back to the default mode.
+export function parseSettings(value: unknown, config: GameConfig = gameConfig): GameSettings {
+  const fallback = defaultSettings(config);
+  const v = (typeof value === 'object' && value !== null ? value : {}) as Partial<Record<keyof GameSettings, unknown>>;
+  const mode = config.modes.find((m) => m.id === v.mode && m.available)?.id ?? fallback.mode;
+  const difficulty = config.difficulties.find((d) => d.id === v.difficulty)?.id ?? fallback.difficulty;
+  const saved = Array.isArray(v.categories) ? (v.categories as unknown[]) : [];
+  const categories = config.categories.filter((c) => saved.includes(c));
+  const seconds = v.roundSeconds;
+  const roundSeconds =
+    typeof seconds === 'number' && Number.isInteger(seconds) && seconds >= config.minRoundSeconds && seconds <= config.maxRoundSeconds
+      ? seconds
+      : defaultRoundSeconds(difficulty, config);
+  const skips = config.skipOptions.find((n) => n === v.skips);
+  return { mode, difficulty, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips };
 }

@@ -155,6 +155,10 @@ export type StyleRegions = {
   correct?: RegionTone;
 };
 
+// How the lower panel of a lowerPanel style sits: 'fill' (the default) takes all the space under
+// the word; 'content' wraps the list and controls at the bottom, with rounded top corners (Bottom).
+export type PanelSlot = { size: 'fill' | 'content'; radius: RadiusName };
+
 export type LayoutStyle = {
   id: StyleId;
   color: ColorPolicy;
@@ -168,6 +172,7 @@ export type LayoutStyle = {
   word: WordSlot;
   banned: BannedSlot;
   controls: ControlsSlot;
+  panel?: PanelSlot;
 };
 
 const follow: ColorPolicy = { kind: 'follow' };
@@ -270,6 +275,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 58, minSize: 24, maxLines: 2, color: 'accentText' },
     banned: { variant: 'tileGrid', size: 18, weight: 500, label: true, chipRadius: 'md', rowHeight: 58 },
     controls: { variant: 'pills', height: 64, radius: 'pill', skip: 'roundIcon', correctIcon: true },
+    panel: { size: 'content', radius: 'ring' },
   },
   // Sheet · word on an accent page, numbered list on a sheet below. Always clay.
   sheet: {

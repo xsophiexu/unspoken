@@ -31,9 +31,9 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 | Just play | [The web version](https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1) | No |
 | Test the app on your own phone while editing code | Expo Go | Yes, to run the dev server |
 | Install the app on an Android phone | An APK from EAS Build | Only to start the build |
-| Test on a virtual phone | Android emulator or iOS simulator | Yes, they run on the computer |
+| Test on a virtual phone | Android emulator | Yes, it runs on the computer |
 
-The Android emulator and iOS simulator are programs on a Mac or PC. They can't run on a phone. On a phone, use the web version, Expo Go, or an installed APK.
+The app targets Android. The Android emulator is a program on a Mac or PC; it can't run on a phone. On a phone, use the web version, Expo Go, or an installed APK.
 
 ### 1. Play in a browser (no setup)
 
@@ -52,15 +52,17 @@ Open https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 on your phone or computer
 
 ### 3. Your own phone with Expo Go (recommended for testing)
 
-1. Install **Expo Go** on your phone from the [App Store](https://apps.apple.com/app/expo-go/id982107779) or [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent).
+1. Install **Expo Go** on your Android phone from [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent).
 2. On the computer, in the `unspoken` folder, run:
    ```bash
    pnpm mobile
    ```
    A QR code appears in the terminal.
-3. Scan it. On iPhone use the Camera app; on Android use the scanner inside Expo Go. The game opens and reloads whenever the code changes.
+3. Scan it with the scanner inside Expo Go. The game opens and reloads whenever the code changes.
 
 If your phone and computer are on different Wi-Fi networks, or the scan times out, run `pnpm start --tunnel` in `apps/mobile` instead.
+
+The game plays offline. To make Send feedback reach the service, copy `apps/mobile/.env.example` to `apps/mobile/.env.local` and set `EXPO_PUBLIC_API_URL`.
 
 ### 4. Install it on an Android phone (APK)
 
@@ -75,15 +77,13 @@ This builds a real app in Expo's cloud, so you don't need Android Studio.
    The first build asks to create the project and an Android signing key; answer yes to both.
 3. When the build finishes (it shows a link and a QR code), open the link on your Android phone, download the APK and install it. Android may ask you to allow installs from your browser.
 
-iPhones can't install apps this way without an Apple Developer account; use the web version or Expo Go instead.
-
 ### 5. Web dev server on the computer
 
 ```bash
 pnpm mobile:web
 ```
 
-Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:mobile-web` makes a static copy in `apps/mobile/dist/` that any web host can serve.
+Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:mobile-web` makes a static copy in `apps/mobile/dist/`, handy for previews.
 
 ### 6. Android emulator (on the computer)
 
@@ -101,10 +101,6 @@ Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:mob
    ```
    Expo installs Expo Go on the emulator and opens the game.
 
-### 7. iOS simulator (Mac only)
-
-Install Xcode from the Mac App Store, open it once to finish setup, then run `pnpm ios` in `apps/mobile`.
-
 ## Checks
 
 Run from the `unspoken` folder; each covers the app and every package.
@@ -112,7 +108,7 @@ Run from the `unspoken` folder; each covers the app and every package.
 ```bash
 pnpm lint        # ESLint (eslint-config-expo)
 pnpm typecheck   # TypeScript
-pnpm test        # Vitest, in the packages and the service
+pnpm test        # Vitest in the packages and the service, Jest in apps/mobile
 pnpm check       # all three
 ```
 
@@ -120,7 +116,7 @@ pnpm check       # all three
 
 A pnpm workspace. [docs/architecture.md](docs/architecture.md) describes the packages, how screens render the layout styles, and the conventions for config and tests.
 
-- `apps/mobile/` is the Expo app (iOS, Android and the current web build): `App.tsx`, `src/screens/`, `src/components/`, `app.json`, `eas.json` and `public/index.html`
+- `apps/mobile/` is the Expo app (Android, plus a web export for previews): routes in `src/app/` (Expo Router), the play screen in `src/play/` (one frame per arrangement and a component per slot), shared primitives in `src/ui/`, saved preferences in `src/state/`, interaction tests in `test/`, and `app.json` and `eas.json`
 - `packages/core/` holds the game rules: difficulties, modes, timers, dealing, round state machines and status lines
 - `packages/content/` holds the word bank (`data/word-banks.json`; add cards there) and the English copy
 - `packages/design-tokens/` holds the palettes, type, sizes and the eleven layout styles
