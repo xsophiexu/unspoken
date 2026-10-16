@@ -1,0 +1,40 @@
+{
+  "name": "@unspoken/web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unspoken on the web: a Next.js static site built from the shared packages.",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "serve": "python3 -m http.server --directory out 4173",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource/manrope": "^5.3.0",
+    "@unspoken/api-contract": "workspace:*",
+    "@unspoken/content": "workspace:*",
+    "@unspoken/core": "workspace:*",
+    "@unspoken/design-tokens": "workspace:*",
+    "next": "16.4.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^26.6.5",
+    "@types/react": "~19.2.2",
+    "@types/react-dom": "~19.2.6",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.2",
+    "jsdom": "^29.1.1",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  }
+}

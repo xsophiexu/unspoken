@@ -15,14 +15,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    defaults:
-      run:
-        working-directory: apps/mobile
+    env:
+      # The site is served from https://<owner>.github.io/unspoken/.
+      NEXT_PUBLIC_BASE_PATH: /unspoken
+      # Google Analytics measurement id. A repository variable of the same name overrides it.
+      NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || 'G-9MFDEM0KXR' }}
+      # services/api base URL, set as a repository variable once the service is deployed.
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -31,12 +33,17 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # The site is served from /unspoken/, so point the bundle and assets there.
-      - run: node -e "const f='app.json',c=require('./'+f);c.expo.experiments={...c.expo.experiments,baseUrl:'/unspoken'};require('fs').writeFileSync(f,JSON.stringify(c,null,2))"
-      - run: pnpm build:web
-      - run: cp dist/index.html dist/404.html
+      - run: pnpm --filter @unspoken/web build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/mobile/dist
+          path: apps/web/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v4
