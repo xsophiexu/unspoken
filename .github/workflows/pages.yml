@@ -27,7 +27,7 @@ jobs:
       NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || 'G-9MFDEM0KXR' }}
       # services/api base URL. Set the repository variable once the service is deployed; until then
       # Send feedback shows its inline error.
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://unspoken-production.up.railway.app' }}
       NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v4
