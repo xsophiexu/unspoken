@@ -24,6 +24,8 @@ const PAGES = [STYLE_IDS.slice(0, COLUMNS * ROWS), STYLE_IDS.slice(COLUMNS * ROW
 // its grid cell at any width.
 const REFERENCE_CELL = (layout.referenceScreen.width - 2 * layout.screen.paddingX - (COLUMNS - 1) * GAP) / COLUMNS;
 const THUMB_SHARE = (layout.thumbnail.scale * layout.referenceScreen.width) / REFERENCE_CELL;
+// The selection ring and its gap around each thumbnail.
+const FRAME = 2 * layout.stroke.focus;
 
 // Customize: the layout style (two pages of live thumbnails), the color and light or dark.
 export default function CustomizeScreen() {
@@ -51,7 +53,7 @@ export default function CustomizeScreen() {
           <View style={styles.section} onLayout={onLayout}>
             <View style={styles.labelRow}>
               <SectionLabel label={c.style} colors={colors} />
-              <LinkButton label={page === 0 ? c.swipeMore : c.swipeBack} colors={colors} onPress={() => show(page === 0 ? 1 : 0)} />
+              <LinkButton quiet label={page === 0 ? c.swipeMore : c.swipeBack} colors={colors} onPress={() => show(page === 0 ? 1 : 0)} />
             </View>
             {width > 0 ? (
               <ScrollView
@@ -76,11 +78,11 @@ export default function CustomizeScreen() {
                             title={c.suggest.title}
                             action={c.suggest.action}
                             colors={colors}
-                            width={thumb}
-                            height={thumb * (layout.referenceScreen.height / layout.referenceScreen.width)}
+                            width={thumb + 2 * FRAME}
+                            height={thumb * (layout.referenceScreen.height / layout.referenceScreen.width) + 2 * FRAME}
                             onPress={() => router.push({ pathname: '/feedback', params: { from: 'customize' } })}
                           />
-                          <Txt variant="label" color={colors.muted}>
+                          <Txt variant="hint" color={colors.muted}>
                             {c.suggest.label}
                           </Txt>
                         </View>
@@ -132,13 +134,12 @@ export default function CustomizeScreen() {
 function StyleCell({ id, thumb, colors, selected, onPress }: { id: StyleId; thumb: number; colors: RegionColors; selected: boolean; onPress: () => void }) {
   const { selection } = usePrefs();
   const look = selected ? selection : { style: id, color: layoutStyles[id].thumbnailColor, mode: selection.mode };
-  const ring = layout.stroke.focus;
   return (
     <Press onPress={onPress} accessibilityRole="radio" accessibilityState={{ selected }} accessibilityLabel={en.customize.styles[id]} style={styles.cell}>
-      <View style={[styles.ring, { borderWidth: ring, borderColor: selected ? colors.ink : 'transparent', padding: ring }]}>
+      <View style={[styles.ring, { borderColor: selected ? colors.ink : 'transparent' }]}>
         <Thumbnail selection={look} width={thumb} />
       </View>
-      <Txt variant={selected ? 'optionTitle' : 'label'} color={selected ? colors.ink : colors.muted} numberOfLines={1}>
+      <Txt variant={selected ? 'topicChip' : 'hint'} color={selected ? colors.ink : colors.muted} numberOfLines={1}>
         {en.customize.styles[id]}
       </Txt>
     </Press>
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   section: { gap: space[3] },
   labelRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   cell: { alignItems: 'center', gap: space[2] },
-  ring: { borderRadius: layout.thumbnail.radius + 2 * layout.stroke.focus },
+  ring: { borderRadius: layout.thumbnail.radius + FRAME, borderWidth: layout.stroke.focus, padding: layout.stroke.focus },
   dots: { flexDirection: 'row', justifyContent: 'center', gap: space[1.5] },
   dot: { height: space[1.5], borderRadius: radius.pill },
   swatches: { flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', rowGap: space[2] },

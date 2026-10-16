@@ -15,8 +15,8 @@ export default function ThanksScreen() {
     <Screen tone="canvas" width="page" scroll={false} footer={(colors) => <Button kind="primary" label={t.done} colors={colors} onPress={goBack} />}>
       {(colors) => (
         <View style={styles.middle}>
-          <View style={[styles.badge, { backgroundColor: colors.accent }]}>
-            <Icon name="check" size={layout.icon.xl + space[2]} color={colors.onAccent} />
+          <View style={[styles.badge, { backgroundColor: colors.chip }]}>
+            <Icon name="check" size={layout.icon.xl + space[2]} color={colors.accentText} />
           </View>
           <Txt variant="modeName" color={colors.ink} accessibilityRole="header" style={styles.center}>
             {t.title}

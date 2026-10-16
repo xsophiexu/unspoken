@@ -285,7 +285,7 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   const fills = fillsBottom(controls);
   const { model } = f;
   const note = model.note ? (
-    <Txt variant="small" color={colors.muted} style={styles.note}>
+    <Txt variant="small" color={colors.muted}>
       {model.note}
     </Txt>
   ) : null;
@@ -485,5 +485,4 @@ const styles = StyleSheet.create({
     marginTop: layout.sheet.paddingTop,
   },
   hint: { position: 'absolute', right: 0, top: '50%', flexDirection: 'row', alignItems: 'center', gap: space[0.5] },
-  note: { textAlign: 'center' },
 });

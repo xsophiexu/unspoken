@@ -23,9 +23,10 @@ type Props = {
 // shrink to stay on one line.
 export function Tile({ title, detail, colors, selected, onPress, disabled, height, centered, accessibilityLabel }: Props) {
   const [width, onLayout] = useWidth();
-  // Centered titles (narrow level tiles) may run nearly to the edges.
-  const padX = centered ? space[1] : space[3.5];
-  const size = fittedSize(title, width - 2 * padX, { variant: 'optionTitle', max: textStyles.optionTitle.size, min: textStyles.small.size, maxLines: 1 });
+  // Centered titles (narrow level tiles) may run nearly to the edges and shrink a little further.
+  const padX = centered ? space[0.5] : space[3.5];
+  const min = centered ? textStyles.badge.size : textStyles.small.size;
+  const size = fittedSize(title, width - 2 * padX, { variant: 'optionTitle', max: textStyles.optionTitle.size, min, maxLines: 1 });
   return (
     <Press
       onPress={onPress}
@@ -54,7 +55,8 @@ export function Tile({ title, detail, colors, selected, onPress, disabled, heigh
 }
 
 const styles = StyleSheet.create({
-  tile: { borderRadius: radius.xl, gap: space[1.5], minHeight: layout.minTouch },
+  // Taller tiles (Modes) keep the title at the top and the detail at the bottom.
+  tile: { borderRadius: radius.xl, gap: space[1.5], minHeight: layout.minTouch, justifyContent: 'space-between' },
   centered: { alignItems: 'center', justifyContent: 'center', paddingVertical: 0 },
   // Measures the tile's width without affecting its layout.
   fill: { ...StyleSheet.absoluteFill },

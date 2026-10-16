@@ -45,10 +45,23 @@ export function Button({ label, colors, onPress, kind = 'secondary', icon, disab
 }
 
 // A text link in the accent color ("‹ Back", "Done", "← Modes").
-export function LinkButton({ label, colors, onPress, accessibilityLabel }: { label: string; colors: RegionColors; onPress: () => void; accessibilityLabel?: string }) {
+// quiet: small ink text instead of the accent link (Customize's "Swipe for more →").
+export function LinkButton({
+  label,
+  colors,
+  onPress,
+  accessibilityLabel,
+  quiet = false,
+}: {
+  label: string;
+  colors: RegionColors;
+  onPress: () => void;
+  accessibilityLabel?: string;
+  quiet?: boolean;
+}) {
   return (
     <Press onPress={onPress} accessibilityLabel={accessibilityLabel} accessibilityRole="link" hitSlop={slopFor(layout.icon.lg)}>
-      <Txt variant="link" color={colors.accentText}>
+      <Txt variant={quiet ? 'subline' : 'link'} color={quiet ? colors.ink : colors.accentText}>
         {label}
       </Txt>
     </Press>
