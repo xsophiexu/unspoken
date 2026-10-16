@@ -102,7 +102,7 @@ export type WordSlot = {
   size: number;
   minSize: number;
   maxLines: number;
-  color: 'ink' | 'accentText';
+  color: 'ink' | 'accentText' | 'muted';
 };
 
 export type BannedSlot = {
@@ -177,7 +177,7 @@ export type StyleRegions = {
 export type PanelSlot = { size: 'fill' | 'content'; radius: RadiusName };
 
 // Play screen margins (px or dp). See layout.play.
-export type PlayMargins = { paddingX: number; paddingTop: number; paddingBottom: number };
+export type PlayMargins = { paddingX: number; paddingTop: number; paddingBottom: number; footerTop: number };
 
 // Slot changes for one mode, merged over the style's own slots one level deep (a timer `bar` given
 // here replaces the whole bar).
@@ -257,6 +257,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     controls: { variant: 'pills', height: 56, radius: 'pill', skip: 'round' },
   },
   // Split · word on the page, list on a tinted lower half, split bar to the bottom edge. Always sage.
+  // In dark the lower half and Skip sink to the track color.
   split: {
     id: 'split',
     color: { kind: 'pinned', color: 'sage' },
@@ -270,6 +271,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'columns', size: 22, weight: 500, label: true },
     controls: { variant: 'splitBar', height: 110, radius: 'none', skip: 'filled', skipWidth: 150, paddingBottom: 14 },
     margins: { paddingBottom: 0 },
+    dark: { regions: { lower: 'sunken', skip: 'sunken' } },
   },
   // Ledger · full color, ring timer.
   ledger: {
@@ -285,7 +287,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'chips', size: 18, weight: 500, label: true, chipRadius: 'pill' },
     controls: { variant: 'pills', height: 60, radius: 'pill', skip: 'outline', skipWidth: 120 },
   },
-  // Ink · dark lower panel.
+  // Ink · dark lower panel. In dark, Correct is a raised stone button with ink text.
   ink: {
     id: 'ink',
     color: follow,
@@ -298,14 +300,15 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 52, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'rows', size: 19, weight: 500, label: true },
     controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'outline', ratio: [1, 2] },
+    dark: { regions: { lower: 'stone' } },
   },
-  // Bottom · band flipped to the bottom.
+  // Bottom · band flipped to the bottom, on an accent-colored panel.
   bottom: {
     id: 'bottom',
     color: follow,
     thumbnailColor: 'slateBlue',
     arrangement: 'lowerPanel',
-    regions: { page: 'canvas', lower: 'panel' },
+    regions: { page: 'canvas', lower: 'accented' },
     header: { variant: 'inline', position: 'aboveWord', container: 'none', size: 14, menu: 'dots', menuContainer: 'filled' },
     timer: { variant: 'dial', size: 56 },
     stats: { placement: 'underWord', emphasis: 'plain' },
@@ -315,7 +318,8 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     panel: { size: 'content', radius: 'ring' },
   },
   // Sheet · word on an accent page, numbered list on a full-width sheet below. Always clay. The page
-  // starts lower (44) and the sheet keeps its buttons low (22 under them).
+  // starts lower (44) and the sheet keeps its buttons low (22 under them). In dark the progress line
+  // and menu button on the accent page are stone-grey tints.
   sheet: {
     id: 'sheet',
     color: { kind: 'pinned', color: 'clay' },
@@ -329,8 +333,10 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'numberedRows', size: 19, weight: 500, label: true, numbering: 'leading' },
     controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'filled', ratio: [1, 2] },
     margins: { paddingTop: 44, paddingBottom: 22 },
+    dark: { regions: { page: 'shadowed' } },
   },
-  // Big timer (Cream on the canvas). In dark the clock and its line are the vivid accent.
+  // Big timer (Cream on the canvas). In dark the clock and its line are the vivid accent and the
+  // word is muted.
   bigTimer: {
     id: 'bigTimer',
     color: follow,
@@ -343,17 +349,17 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 56, minSize: 24, maxLines: 2, color: 'accentText' },
     banned: { variant: 'dashedColumns', size: 21, weight: 500, label: true },
     controls: { variant: 'buttons', height: 60, radius: 'lg', skip: 'outline', ratio: [1, 2] },
-    dark: { timer: { vivid: true } },
+    dark: { timer: { vivid: true }, word: { color: 'muted' } },
   },
   // Chips · small chips, full-width split bar to the bottom edge (Slate on the canvas). In dark the
   // timer pill and Correct are accent, Skip a dark accent shade, the chips accent-tinted and the
-  // DON'T SAY label accentText.
+  // DON'T SAY label accentText. The line above the bar has no visible track (bare page).
   chips: {
     id: 'chips',
     color: follow,
     thumbnailColor: 'slateBlue',
     arrangement: 'stack',
-    regions: { page: 'base', skip: 'surface', correct: 'panel' },
+    regions: { page: 'bare', skip: 'surface', correct: 'panel' },
     header: { variant: 'caps', position: 'aboveWord', container: 'none', size: 12, menu: 'dots', menuContainer: 'filled' },
     timer: { variant: 'chip', fill: 'inverse', bar: { placement: 'aboveControls', thickness: 4, bleed: true } },
     stats: { placement: 'header', emphasis: 'plain' },

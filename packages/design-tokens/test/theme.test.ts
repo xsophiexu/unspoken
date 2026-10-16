@@ -81,8 +81,56 @@ describe('dark mode styles', () => {
     expect(resolveTheme({ style: 'sheet', color: 'teal', mode: 'dark' }).regions.accent.ink).toBe('#FFFFFF');
   });
 
+  it('mutes the Big timer word in dark', () => {
+    expect(resolveTheme({ style: 'bigTimer', color: 'mustard', mode: 'light' }).style.word.color).toBe('accentText');
+    expect(resolveTheme({ style: 'bigTimer', color: 'mustard', mode: 'dark' }).style.word.color).toBe('muted');
+  });
+
+  it('makes the Ink Correct a raised button with ink text in dark', () => {
+    const theme = resolveTheme({ style: 'ink', color: 'lilac', mode: 'dark' });
+    const lower = theme.regions[theme.style.regions.lower ?? 'panel'];
+    expect(lower.bg).toBe(palettes.lilac.dark.panel);
+    expect(lower.accent).toBe(palettes.lilac.dark.surfaceRaised);
+    expect(lower.onAccent).toBe(palettes.lilac.dark.ink);
+  });
+
+  it('sinks the Split lower half and Skip to the track color in dark', () => {
+    const theme = resolveTheme({ style: 'split', color: 'teal', mode: 'dark' });
+    expect(theme.regions[theme.style.regions.lower ?? 'base'].bg).toBe(palettes.sage.dark.track);
+    expect(theme.regions[theme.style.regions.skip ?? 'base'].bg).toBe(palettes.sage.dark.track);
+  });
+
+  it('tints the Sheet progress line and menu button with stone grey in dark', () => {
+    const theme = resolveTheme({ style: 'sheet', color: 'teal', mode: 'dark' });
+    const page = theme.regions[theme.style.regions.page];
+    expect(page.bg).toBe(palettes.clay.dark.accent);
+    expect(page.progress).toBe(palettes.clay.dark.surfaceRaised);
+    expect(page.chip).not.toBe(palettes.clay.dark.surfaceRaised);
+    expect(page.ink).toBe('#FFFFFF');
+  });
+
   it('returns the same style object on every call', () => {
     expect(layoutStyleFor('chips', 'dark')).toBe(layoutStyleFor('chips', 'dark'));
+  });
+});
+
+describe('both modes', () => {
+  it('puts the Bottom list and controls on an accent-colored panel', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const theme = resolveTheme({ style: 'bottom', color: 'slateBlue', mode });
+      const lower = theme.regions[theme.style.regions.lower ?? 'panel'];
+      expect(lower.bg).not.toBe(palettes.slateBlue[mode].panel);
+      expect(lower.accent).toBe(palettes.slateBlue[mode].surfaceRaised);
+      expect(lower.onAccent).toBe(palettes.slateBlue[mode].accentText);
+    }
+    expect(resolveTheme({ style: 'bottom', color: 'slateBlue', mode: 'dark' }).regions.accented.bg).toBe(palettes.slateBlue.dark.accent);
+  });
+
+  it('runs the Chips timer line over the page color, with no visible track', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      const page = resolveTheme({ style: 'chips', color: 'slateBlue', mode }).regions[layoutStyles.chips.regions.page];
+      expect(page.track).toBe(page.bg);
+    }
   });
 });
 
