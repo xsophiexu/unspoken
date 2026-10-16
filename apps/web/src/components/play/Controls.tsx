@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import type { ControlsSlot, StyleRegions } from '@unspoken/design-tokens';
+import { layout, type ControlsSlot, type StyleRegions } from '@unspoken/design-tokens';
 import type { CSSProperties } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
@@ -34,6 +34,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
     '--skip-grow': slot.ratio?.[0] ?? 1,
     '--correct-grow': slot.ratio?.[1] ?? 1,
     '--skip-width': slot.skipWidth ? `${slot.skipWidth}px` : undefined,
+    '--control-padding-bottom': slot.paddingBottom ? `${slot.paddingBottom}px` : undefined,
   } as CSSProperties;
   const skip = { onClick: onSkip, disabled: !canSkip, tabIndex: tab, 'aria-label': labels.skip };
   const correct = { onClick: onCorrect, disabled: !canCorrect, tabIndex: tab, 'aria-label': labels.correct };
@@ -71,16 +72,8 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
       return (
         <div className={cx(styles.row, styles[slot.variant], slot.skipWidth ? styles.fixedSkip : slot.ratio && styles.ratio)} style={sizing}>
           <button type="button" className={cx(styles.skip, styles[`skip-${slot.skip}`], text(slot.skip === 'round' ? 'label' : 'button'))} {...skip}>
-            {slot.skip === 'roundIcon' ? (
-              <>
-                <span className={styles.roundIcon}>
-                  <Icon name="arrowRight" />
-                </span>
-                <span className={text('small')}>{labels.skip}</span>
-              </>
-            ) : (
-              labels.skip
-            )}
+            {slot.skip === 'pillIcon' && <Icon name="arrowRight" size={layout.icon.lg} />}
+            {labels.skip}
           </button>
           <button type="button" className={cx(styles.correct, text(slot.correctIcon ? 'buttonStrong' : 'button'))} {...correct}>
             {slot.correctIcon && <Icon name="check" />}

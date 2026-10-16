@@ -5,8 +5,13 @@
   min-width: 0;
 }
 
-.label {
+/* The DON'T SAY label: the region's muted (the default) or accent text (slot.labelColor). */
+.label-muted {
   color: var(--region-muted);
+}
+
+.label-accentText {
+  color: var(--region-accent-text);
 }
 
 .list {
@@ -15,6 +20,15 @@
   list-style: none;
   --chip-pad-y: var(--un-layout-chip-padding-y);
   --chip-pad-x: var(--un-layout-chip-padding-x);
+}
+
+/* Chip and tile fill: the region's chip (the default) or its accent tint (slot.chipFill). */
+.fill-chip {
+  --item-fill: var(--region-chip);
+}
+
+.fill-tint {
+  --item-fill: var(--region-tint);
 }
 
 .compact {
@@ -63,7 +77,7 @@
   max-width: 100%;
   padding: var(--chip-pad-y) var(--chip-pad-x);
   border-radius: var(--un-radius-sm);
-  background: var(--region-chip);
+  background: var(--item-fill);
   color: var(--region-chip-ink);
 }
 
@@ -94,7 +108,7 @@
   min-height: var(--row-height, auto);
   padding: var(--chip-pad-y) var(--chip-pad-x);
   border-radius: var(--un-radius-md);
-  background: var(--region-chip);
+  background: var(--item-fill);
   color: var(--region-chip-ink);
 }
 

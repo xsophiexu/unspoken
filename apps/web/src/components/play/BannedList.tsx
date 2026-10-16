@@ -39,8 +39,12 @@ export function BannedList({ slot, words, freshIndex }: BannedListProps) {
 
   return (
     <section className={styles.banned} data-spot="banned" aria-label={en.play.dontSay}>
-      {slot.label && <h2 className={cx(styles.label, text('overline'))}>{en.play.dontSay}</h2>}
-      <ul ref={ref} className={cx(styles.list, styles[slot.variant], compact && styles.compact, slot.strike && styles.strike)} style={style}>
+      {slot.label && <h2 className={cx(styles[`label-${slot.labelColor ?? 'muted'}`], text('overline'))}>{en.play.dontSay}</h2>}
+      <ul
+        ref={ref}
+        className={cx(styles.list, styles[slot.variant], styles[`fill-${slot.chipFill ?? 'chip'}`], compact && styles.compact, slot.strike && styles.strike)}
+        style={style}
+      >
         {words.map((word, i) => (
           <li
             key={word}

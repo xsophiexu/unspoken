@@ -29,22 +29,29 @@ type TimerProps = {
   box?: Size;
 };
 
+// The box behind a clock label: none, or one of the region fills (TimerSlot.fill).
+function fillClass(fill: NonNullable<TimerSlot['fill']>): string | undefined {
+  return fill === 'none' ? undefined : styles[`fill-${fill}`];
+}
+
 // The round clock in one of five looks. The frame renders <Timer> at every anchor; each look shows
 // its parts where its config places them and nothing elsewhere.
 export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
   if (!clock) return null;
   const progress = { '--progress': clock.progress } as CSSProperties;
-  const bar = slot.bar && barAnchor[slot.bar.placement] === at ? <Bar bar={slot.bar} progress={progress} /> : null;
+  // slot.vivid: the clock digits and the progress line in the region's vivid color.
+  const vivid = slot.vivid && styles.vivid;
+  const bar = slot.bar && barAnchor[slot.bar.placement] === at ? <Bar bar={slot.bar} progress={progress} className={vivid} /> : null;
   const pause = <Pause onPause={onPause} />;
   const label = <ClockLabel clock={clock} />;
 
   switch (slot.variant) {
     case 'ring':
-      return at === 'ring' && box ? <Ring clock={clock} box={box} pause={pause} /> : null;
+      return at === 'ring' && box ? <Ring clock={clock} box={box} pause={pause} fill={fillClass(slot.fill ?? 'none')} /> : null;
     case 'chip':
       if (at === 'header') {
         return (
-          <span className={cx(styles.chip, styles[`fill-${slot.fill ?? 'outlined'}`], text('clock'))}>
+          <span className={cx(styles.chip, fillClass(slot.fill ?? 'outlined'), text('clock'))}>
             {label}
             {pause}
           </span>
@@ -71,7 +78,7 @@ export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
       if (at !== 'top') return null;
       return (
         <div className={styles.stack}>
-          <div className={styles.bigRow}>
+          <div className={cx(styles.bigRow, vivid)}>
             {pause}
             <span className={text('bigClock')} style={{ fontSize: slot.size }}>
               {label}
@@ -88,7 +95,7 @@ export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
         clockAt === 'none' ? (
           <div className={cx(styles.clockRow, styles.end)}>{pause}</div>
         ) : (
-          <div className={cx(styles.clockRow, styles[clockAt], text(size >= textStyles.clockLight.size ? 'clockLight' : 'clock'))} style={{ fontSize: size }}>
+          <div className={cx(styles.clockRow, styles[clockAt], vivid, text(size >= textStyles.clockLight.size ? 'clockLight' : 'clock'))} style={{ fontSize: size }}>
             {label}
             {pause}
           </div>
@@ -127,17 +134,18 @@ function Pause({ onPause }: { onPause?: () => void }) {
   return <IconButton icon="pause" label={en.a11y.pause} onClick={onPause} tabIndex={onPause ? undefined : -1} className={styles.pause} />;
 }
 
-function Bar({ bar, progress }: { bar: TimerBar; progress: CSSProperties }) {
+function Bar({ bar, progress, className }: { bar: TimerBar; progress: CSSProperties; className?: string | false }) {
   return (
-    <div className={cx(styles.track, bar.bleed && styles.bleed)} style={{ ...progress, height: bar.thickness }} aria-hidden="true">
+    <div className={cx(styles.track, bar.bleed && styles.bleed, className)} style={{ ...progress, height: bar.thickness }} aria-hidden="true">
       <div className={styles.fill} />
     </div>
   );
 }
 
 // The Card timer: progress runs around the word tile from the left of a gap at the top, where the
-// clock and pause button sit. Drawn to the measured box so it fits any screen.
-function Ring({ clock, box, pause }: { clock: ClockModel; box: Size; pause: ReactNode }) {
+// clock and pause button sit (with no box behind them for fill 'none'). Drawn to the measured box so
+// it fits any screen.
+function Ring({ clock, box, pause, fill }: { clock: ClockModel; box: Size; pause: ReactNode; fill?: string }) {
   const { ringStroke: stroke, ringRadius: r, ringGap: gap } = layout.card;
   const { width: w, height: h } = box;
   const [left, top, right, bottom] = [stroke / 2, stroke / 2, w - stroke / 2, h - stroke / 2];
@@ -159,7 +167,7 @@ function Ring({ clock, box, pause }: { clock: ClockModel; box: Size; pause: Reac
         <path d={d} className={styles.ringTrack} strokeWidth={stroke} />
         <path d={d} className={styles.ringFill} strokeWidth={stroke} pathLength={100} strokeDasharray={`${clock.progress * 100} 100`} />
       </svg>
-      <div className={cx(styles.ringClock, text('clock'))}>
+      <div className={cx(styles.ringClock, fill, text('clock'))}>
         <ClockLabel clock={clock} />
         {pause}
       </div>

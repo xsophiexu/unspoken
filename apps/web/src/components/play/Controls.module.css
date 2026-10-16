@@ -143,24 +143,12 @@ button:disabled {
   color: var(--region-chip-ink);
 }
 
-.skip-roundIcon {
-  flex: none;
-  flex-direction: column;
-  gap: var(--un-space-1);
-  height: auto;
-  background: none;
+/* An outlined pill as tall as Correct, with an arrow and the word Skip inside (Bottom). */
+.skip-pillIcon {
+  gap: var(--un-space-2);
+  border: var(--un-layout-stroke-outline) solid var(--region-outline);
+  background: transparent;
   color: var(--region-ink);
-}
-
-.roundIcon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--control-height);
-  height: var(--control-height);
-  border: var(--un-space-0-5) solid var(--region-outline);
-  border-radius: var(--un-radius-pill);
-  font-size: var(--un-space-5-5);
 }
 
 .skip:disabled,
@@ -170,21 +158,19 @@ button:disabled {
   color: var(--region-muted);
 }
 
-.skip-roundIcon:disabled {
-  background: none;
-}
-
-/* splitBar: a full-width bar at the bottom edge (the frame lets it bleed past the padding) */
+/* splitBar: a full-width bar at the bottom edge (the frame lets it bleed past the padding). The
+   labels center above the slot's bottom padding, which keeps them clear of rounded screen corners,
+   and the bottom safe area, which the bar grows by. */
 .splitBar {
   display: flex;
-  min-height: var(--control-height);
+  min-height: calc(var(--control-height) + env(safe-area-inset-bottom));
 }
 
 .half {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-bottom: env(safe-area-inset-bottom);
+  padding-bottom: calc(var(--control-padding-bottom, 0px) + env(safe-area-inset-bottom));
 }
 
 .skipHalf {

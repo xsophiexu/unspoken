@@ -89,6 +89,11 @@
   color: var(--region-bg);
 }
 
+.fill-accent {
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
 .chip .pause {
   width: var(--un-layout-header-pill-height);
   height: var(--un-layout-header-pill-height);
@@ -152,6 +157,7 @@
   transition: stroke-dasharray var(--un-motion-duration-slow) linear;
 }
 
+/* The clock in the ring's gap, in the page's ink. No box behind it unless the slot asks for a fill. */
 .ringClock {
   position: absolute;
   top: 0;
@@ -161,5 +167,15 @@
   align-items: center;
   gap: var(--un-space-0-5);
   padding-inline-start: var(--un-space-2-5);
-  color: var(--region-ink);
+  border-radius: var(--un-radius-pill);
+}
+
+/* slot.vivid: the clock digits and the progress line in the region's vivid color. */
+.bigRow.vivid,
+.clockRow.vivid {
+  color: var(--region-vivid);
+}
+
+.track.vivid > .fill {
+  background: var(--region-vivid);
 }

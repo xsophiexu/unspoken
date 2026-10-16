@@ -1,6 +1,6 @@
 'use client';
 
-import { layout, playMargins, type LayoutStyle } from '@unspoken/design-tokens';
+import { layout, playMargins, ringCardSize, type LayoutStyle } from '@unspoken/design-tokens';
 import { useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 
 import { useElementSize } from '@/lib/hooks';
@@ -229,15 +229,19 @@ export function FrameTop({ layoutStyle: s, model, actions, timer }: FrameTopProp
 
 type RingCardProps = { layoutStyle: LayoutStyle; model: PlayModel; actions?: PlayActions; word: ReactNode; banned: ReactNode };
 
-// Card: the word tile inside the timer ring, as large as the screen allows up to the board's size.
-// The ring is drawn to the measured card box.
+// Card: the word tile inside the timer ring. The ring takes the space between the header and the
+// controls, up to the board's size and keeping its shape (ringCardSize). It is drawn to the measured
+// card box, which grows past that size only when the word and list need more room.
 function RingCard({ layoutStyle: s, model, actions, word, banned }: RingCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const box = useElementSize(ref, { width: layout.card.maxWidth, height: layout.card.maxHeight });
+  const areaRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const area = useElementSize(areaRef, { width: layout.card.maxWidth, height: layout.card.maxHeight });
+  const size = ringCardSize(area.width, area.height);
+  const box = useElementSize(cardRef, size);
   const ringed = model.clock !== null && s.timer.variant === 'ring';
   return (
-    <div className={styles.ringArea}>
-      <div ref={ref} className={styles.swipeCard} data-swipe>
+    <div ref={areaRef} className={styles.ringArea}>
+      <div ref={cardRef} className={styles.swipeCard} style={size} data-swipe>
         {model.card && (
           <div key={model.card.key} className={cx(styles.enter, styles.ringBox)}>
             <Timer slot={s.timer} at="ring" clock={model.clock} onPause={actions?.onPause} box={box} />
