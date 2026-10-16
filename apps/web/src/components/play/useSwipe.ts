@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from '@unspoken/design-tokens';
-import { useCallback, useEffect, useMemo, useRef, type HTMLAttributes, type RefObject } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type HTMLAttributes, type RefObject } from 'react';
 
 import { useReducedMotion } from '@/lib/hooks';
 
@@ -19,13 +19,19 @@ type SwipeOptions = {
 
 type Drag = { id: number; x: number; y: number; dx: number; active: boolean };
 
+// 'hint' slides the card out for the swipe hint, 'hintBack' springs it back; both show "› SWIPE".
+type Phase = 'drag' | 'settle' | 'fly' | 'hint' | 'hintBack';
+
 const { swipe, hint } = motion;
 const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
 
-function setDrag(el: HTMLElement, dx: number, phase: 'drag' | 'settle' | 'fly' | null) {
+// The drag as CSS variables on the frame: --drag-x moves the swipeable parts, --drag-rot tilts the
+// card, --drag-p is the progress toward an answer, and --drag-bar how far the bars have stretched.
+function setDrag(el: HTMLElement, dx: number, phase: Phase | null) {
   el.style.setProperty('--drag-x', `${dx}px`);
   el.style.setProperty('--drag-rot', `${clamp(dx / swipe.tiltAtPx, -1, 1) * swipe.maxTiltDeg}deg`);
   el.style.setProperty('--drag-p', String(clamp(dx / swipe.thresholdPx, -1, 1)));
+  el.style.setProperty('--drag-bar', String(clamp(dx / swipe.barRangePx, -1, 1)));
   if (phase) el.dataset.drag = phase;
   else delete el.dataset.drag;
   if (dx < 0) el.dataset.dragDir = 'skip';
@@ -45,6 +51,14 @@ export function useSwipe({ frameRef, can, onAnswer, cardKey }: SwipeOptions) {
   useEffect(() => {
     latest.current = { can, onAnswer };
   });
+
+  // A swipe or tap ends the opening hint and restarts the idle wait.
+  const firstNudge = useRef(true);
+  const [idle, setIdle] = useState(0);
+  const touched = useCallback(() => {
+    firstNudge.current = false;
+    setIdle((n) => n + 1);
+  }, []);
 
   const later = useCallback((fn: () => void, ms: number) => {
     timers.current.push(window.setTimeout(fn, ms));
@@ -85,6 +99,7 @@ export function useSwipe({ frameRef, can, onAnswer, cardKey }: SwipeOptions) {
     return {
       onPointerDown: (e) => {
         if (flying.current || (e.pointerType === 'mouse' && e.button !== 0)) return;
+        touched();
         drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, active: false };
       },
       onPointerMove: (e) => {
@@ -115,32 +130,32 @@ export function useSwipe({ frameRef, can, onAnswer, cardKey }: SwipeOptions) {
         drag.current = null;
       },
     };
-  }, [enabled, frameRef, answer, settle]);
+  }, [enabled, frameRef, answer, settle, touched]);
 
-  // The card nudges right to show it swipes: soon after the round starts, then after a long idle.
-  const firstNudge = useRef(true);
+  // The swipe hint: the card slides right, tilting and stretching the Correct bar as a drag would,
+  // with "› SWIPE" showing from under it, then springs back. It plays soon after the round opens and
+  // again after a long spell with no swipe or tap. With reduced motion only the label shows.
   useEffect(() => {
     const el = frameRef.current;
-    if (!enabled || reduced || !el || cardKey === null) return;
+    if (!enabled || !el || cardKey === null) return;
+    const steps: number[] = [];
+    const at = (fn: () => void, ms: number) => steps.push(window.setTimeout(fn, ms));
     const wait = firstNudge.current ? hint.firstDelayMs : hint.idleMs;
-    const id = window.setTimeout(() => {
+    at(() => {
+      if (drag.current || flying.current) return;
       firstNudge.current = false;
-      const total = hint.outMs * 2 + hint.holdMs;
-      const out = `translateX(${hint.nudgePx}px)`;
-      el.querySelectorAll<HTMLElement>('[data-swipe]').forEach((part) =>
-        part.animate?.(
-          [
-            { transform: 'translateX(0px)' },
-            { transform: out, offset: hint.outMs / total },
-            { transform: out, offset: (hint.outMs + hint.holdMs) / total },
-            { transform: 'translateX(0px)' },
-          ],
-          { duration: total, easing: 'ease-in-out' },
-        ),
-      );
+      setDrag(el, reduced ? 0 : hint.nudgePx, 'hint');
+      at(() => setDrag(el, 0, 'hintBack'), hint.outMs + hint.holdMs);
+      at(() => {
+        if (el.dataset.drag === 'hintBack') setDrag(el, 0, null);
+        setIdle((n) => n + 1);
+      }, hint.outMs + hint.holdMs + hint.back.ms);
     }, wait);
-    return () => window.clearTimeout(id);
-  }, [enabled, reduced, frameRef, cardKey]);
+    return () => {
+      steps.forEach((id) => window.clearTimeout(id));
+      if (el.dataset.drag === 'hint' || el.dataset.drag === 'hintBack') setDrag(el, 0, null);
+    };
+  }, [enabled, reduced, frameRef, cardKey, idle]);
 
   return { surface, answer };
 }

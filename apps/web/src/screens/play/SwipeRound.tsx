@@ -74,7 +74,6 @@ export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onH
         tone={tone}
         label={en.pass.label}
         title={en.pass.title}
-        sub={en.play.hotPotatoNote}
         corner={round.clock && en.pass.timerPaused}
         actions={
           <Button size="large" onClick={() => dispatch({ type: 'ready' })}>

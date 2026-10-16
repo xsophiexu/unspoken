@@ -1,7 +1,7 @@
 import { en } from '@unspoken/content';
 import { defaultRoundSeconds, format, formatClock } from '@unspoken/core';
 import { motion } from '@unspoken/design-tokens';
-import { act, fireEvent, screen, waitFor } from 'expo-router/testing-library';
+import { act, fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 
 import { openApp, resetDevice, savedPrefs } from './helpers';
 
@@ -93,5 +93,28 @@ describe('closing the ··· menu', () => {
     fireEvent(title, 'requestClose');
     await closeAfterSlide();
     expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
+  });
+});
+
+describe('How to play', () => {
+  const firstStep = en.howToPlay.steps[0]!.text;
+
+  it('opens on the first game and not again once Play dismisses it', async () => {
+    await openApp('/', { tour: {} });
+    expect(await screen.findByText(firstStep)).toBeOnTheScreen();
+    fireEvent.press(screen.getByLabelText(en.howToPlay.play));
+    expect(screen.queryByText(firstStep)).not.toBeOnTheScreen();
+    await waitFor(async () => expect((await savedPrefs()).tourVersion).toBe(en.howToPlay.version));
+
+    // Opening the app again goes straight to the game.
+    screen.unmount();
+    renderRouter('./src/app', { initialUrl: '/' });
+    expect(await screen.findByLabelText(en.play.correct)).toBeOnTheScreen();
+    expect(screen.queryByText(firstStep)).not.toBeOnTheScreen();
+  });
+
+  it('shows the new walkthrough once to a player who saw the older one', async () => {
+    await openApp('/', { tour: { tourSeen: true } });
+    expect(await screen.findByText(firstStep)).toBeOnTheScreen();
   });
 });

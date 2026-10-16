@@ -72,17 +72,30 @@ export type SpotlightStep = {
   // 'logo' shows the wordmark above the text; 'mic' shows the speaking icon.
   art?: 'logo' | 'mic';
   text: string;
+  // Short rules listed under the text.
+  rules?: string[];
 };
 
+// The walkthrough as drawn on the design canvas ("How to play · animated walkthrough").
 const howToPlaySteps: SpotlightStep[] = [
-  { id: 'intro', target: null, art: 'logo', text: 'Describe the word so your team guesses it, without saying any of the banned words.' },
-  { id: 'word', target: 'word', text: 'This is the word you want them to guess.' },
-  { id: 'speak', target: null, art: 'mic', text: 'Describe it out loud, without saying it.' },
-  { id: 'banned', target: 'banned', text: 'These are the words you can’t say.' },
-  { id: 'difficulty', target: 'difficulty', text: 'Tap here to switch difficulty.' },
-  { id: 'menu', target: 'menu', text: 'Tap here to switch game modes or customize.' },
-  { id: 'play', target: 'play', text: 'Press here to play.' },
+  { id: 'intro', target: null, art: 'logo', text: 'Get someone to guess a given word without saying any of the banned words.' },
+  { id: 'word', target: 'word', text: 'This is the word they need to guess.' },
+  { id: 'banned', target: 'banned', text: 'These are the banned words. Don’t say any of them.' },
+  {
+    id: 'speak',
+    target: null,
+    art: 'mic',
+    text: 'Describe it out loud.',
+    rules: ['No saying part of the word, like “hang” or “over”', 'No rhymes or “sounds like”', 'No pointing or acting it out'],
+  },
+  { id: 'difficulty', target: 'difficulty', text: 'Tap here to change difficulty.' },
+  { id: 'menu', target: 'menu', text: 'Tap here to change the game mode or the look.' },
+  { id: 'play', target: 'play', text: 'Ready? Tap here to play.' },
 ];
+
+// Raised whenever the walkthrough changes, so players who saw an older one see the new one once.
+// 1: the first rebuild's tour. 2: the canvas's current wording, order and rules.
+const howToPlayVersion = 2;
 
 export const en = {
   app: {
@@ -279,6 +292,7 @@ export const en = {
     play: 'Play',
     skip: 'Skip tour',
     steps: howToPlaySteps,
+    version: howToPlayVersion,
   },
 
   // --- Reverse -------------------------------------------------------------------------------

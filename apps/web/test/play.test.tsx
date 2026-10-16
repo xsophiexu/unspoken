@@ -1,6 +1,7 @@
 import { en } from '@unspoken/content';
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { motion } from '@unspoken/design-tokens';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SETTINGS_STORAGE_KEY } from '@/lib/settings';
@@ -34,7 +35,7 @@ afterEach(() => {
 describe('Play', () => {
   it('re-renders with the slots of the style picked on Customize', async () => {
     const user = userEvent.setup();
-    saved({ [TOUR_STORAGE_KEY]: true, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' } });
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' } });
     const { game } = renderPlay(<CustomizeScreen />);
 
     // Card: the big mode name with a level badge, and swipe links.
@@ -53,7 +54,7 @@ describe('Play', () => {
 
   it('starts a new round when a difficulty is picked on the mode sheet', async () => {
     const user = userEvent.setup();
-    saved({ [TOUR_STORAGE_KEY]: true, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
     const { game } = renderPlay();
 
     await user.click(game.getByRole('button', { name: en.play.skip }));
@@ -72,7 +73,7 @@ describe('Play', () => {
 
   it('runs the clock, stops it while the menu is open, and answers from the keyboard', () => {
     vi.useFakeTimers();
-    saved({ [TOUR_STORAGE_KEY]: true, [SETTINGS_STORAGE_KEY]: classic });
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic });
     const { game } = renderPlay();
 
     expect(game.getByRole('timer')).toHaveAccessibleName('2:30');
@@ -92,13 +93,51 @@ describe('Play', () => {
     expect(game.getByRole('timer')).toHaveAccessibleName('2:26');
   });
 
-  it('opens How to play on the first visit only', async () => {
+  it('opens How to play on the first game and not again once it is dismissed', async () => {
     const user = userEvent.setup();
-    renderPlay();
+    const first = renderPlay();
     const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    expect(within(tour).getByText(en.howToPlay.steps[0]!.text)).toBeInTheDocument();
     await user.click(within(tour).getByRole('button', { name: en.howToPlay.play }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(localStorage.getItem(TOUR_STORAGE_KEY)).toBe('true');
+
+    // Coming back (a reload) goes straight to the game.
+    first.unmount();
+    const again = renderPlay();
+    expect(again.game.getByText(en.play.correctLink)).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('shows the new How to play once to a player who saw an older one', async () => {
+    const user = userEvent.setup();
+    // The first rebuild saved true once its tour was closed.
+    saved({ [TOUR_STORAGE_KEY]: true });
+    const first = renderPlay();
+    const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    await user.click(within(tour).getByRole('button', { name: en.howToPlay.play }));
+
+    first.unmount();
+    renderPlay();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('steps through the walkthrough in the canvas order, rules included', () => {
+    vi.useFakeTimers();
+    renderPlay();
+    const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    const shown: string[] = [];
+    for (let i = 0; i < en.howToPlay.steps.length; i++) {
+      shown.push(within(tour).getAllByRole('paragraph').at(-1)!.textContent ?? '');
+      act(() => vi.advanceTimersByTime(motion.spotlight.stepMs));
+    }
+    expect(shown).toEqual(['Get someone to guess a given word without saying any of the banned words.', 'This is the word they need to guess.', 'These are the banned words. Don’t say any of them.', 'Describe it out loud.', 'Tap here to change difficulty.', 'Tap here to change the game mode or the look.', 'Ready? Tap here to play.']);
+  });
+
+  it('keeps Hot potato’s rule under the controls while playing', () => {
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: { ...classic, mode: 'hotPotato' } });
+    const { game } = renderPlay();
+    expect(game.getByText(en.status.hotPotato)).toBeInTheDocument();
+    expect(game.getByText(en.play.hotPotatoNote)).toBeInTheDocument();
   });
 
   it('still plays the default game when site storage is blocked', () => {

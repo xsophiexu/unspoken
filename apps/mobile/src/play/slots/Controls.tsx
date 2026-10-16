@@ -65,7 +65,7 @@ function body(p: Parts) {
 // Card: "← Skip" and "Correct →" over two bars; the side the card heads to stretches.
 function SwipeBars({ slot, colors, labels, canSkip, canCorrect, onSkip, onCorrect, dx }: Parts) {
   const [s, c] = slot.ratio ?? [1, 1];
-  const { thresholdPx: at, barShrink, barGrow, startSlopPx } = motion.swipe;
+  const { barRangePx: at, barShrink, barGrow, startSlopPx } = motion.swipe;
   const clamp = { extrapolate: 'clamp' } as const;
   const skipFlex = dx.interpolate({ inputRange: [-at, 0, at], outputRange: [s * barGrow, s, s * barShrink], ...clamp });
   const correctFlex = dx.interpolate({ inputRange: [-at, 0, at], outputRange: [c * barShrink, c, c * barGrow], ...clamp });

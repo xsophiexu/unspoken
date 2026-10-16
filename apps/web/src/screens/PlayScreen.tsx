@@ -1,5 +1,6 @@
 'use client';
 
+import { en } from '@unspoken/content';
 import { layoutStyleFor } from '@unspoken/design-tokens';
 import { useRef, useState } from 'react';
 
@@ -15,8 +16,11 @@ import { MindReaderRound } from './play/MindReaderRound';
 import { ReverseRound } from './play/ReverseRound';
 import { SwipeRound } from './play/SwipeRound';
 
-// Set once the player has finished or closed How to play, so it opens by itself only on a first visit.
+// The How to play version the player last finished or closed. It opens by itself on the first game,
+// and again once whenever the walkthrough changes (a returning player who saw an older one, saved
+// here as true, gets the new one).
 export const TOUR_STORAGE_KEY = 'unspoken.tourSeen';
+const tourDue = () => readStored(TOUR_STORAGE_KEY) !== en.howToPlay.version;
 
 type SheetKind = 'menu' | 'mode' | 'difficulty';
 
@@ -28,7 +32,7 @@ export function PlayScreen() {
   const layoutStyle = layoutStyleFor(selection.style, selection.mode);
   const rootRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  const [touring, setTouring] = useState(() => readStored(TOUR_STORAGE_KEY) !== true);
+  const [touring, setTouring] = useState(tourDue);
   const swipe = round.kind === 'swipe';
 
   // Sheets pause a swipe round; closing one resumes it unless the player paused it themselves.
@@ -50,7 +54,7 @@ export function PlayScreen() {
     start();
   };
   const finishTour = () => {
-    writeStored(TOUR_STORAGE_KEY, true);
+    writeStored(TOUR_STORAGE_KEY, en.howToPlay.version);
     setTouring(false);
   };
 

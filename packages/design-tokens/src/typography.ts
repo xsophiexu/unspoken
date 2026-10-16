@@ -71,10 +71,12 @@ export const textStyles = {
   modeName: { size: 26, weight: 800, lineHeight: 1.28, letterSpacing: -0.019 },
   // Sheet titles: Game paused, Difficulty, Change colors.
   sheetTitle: { size: 24, weight: 800, lineHeight: 1.28 },
-  // How to play captions over the dark spotlight.
+  // How to play: the wordmark on the first step, the captions over the dark spotlight, the intro
+  // text under the wordmark, and the rules listed under "Describe it out loud."
+  wordmark: { size: 44, weight: 800, lineHeight: 1.28, letterSpacing: -0.03 },
   caption: { size: 21, weight: 800, lineHeight: 1.3 },
-  // How to play intro text under the wordmark.
-  lead: { size: 18, weight: 600, lineHeight: 1.45 },
+  lead: { size: 15.5, weight: 600, lineHeight: 1.42 },
+  rule: { size: 15, weight: 600, lineHeight: 1.3 },
   // Banned-word chips and rows (styles pick their own size; see styles.ts banned.size).
   chip: { size: 18, weight: 500, lineHeight: 1.3 },
   chipSmall: { size: 15, weight: 500, lineHeight: 1.3 },

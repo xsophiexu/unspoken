@@ -58,6 +58,7 @@
 }
 
 .body {
+  position: relative;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
@@ -256,6 +257,13 @@
   border-radius: var(--un-layout-sheet-radius) var(--un-layout-sheet-radius) 0 0;
 }
 
+/* Hot potato's rule under the controls. */
+.note {
+  margin: 0;
+  padding-inline: var(--un-space-0-5);
+  color: var(--region-muted);
+}
+
 /* Swiping. The frame sets --drag-x, --drag-rot and data-drag while the card follows the finger. */
 .swipeItem {
   transform: translateX(var(--drag-x, 0px));
@@ -271,6 +279,42 @@
 
 .frame[data-drag='settle'] [data-swipe] {
   transition: transform var(--un-motion-duration-base) ease-out;
+}
+
+/* The swipe hint slides the card out, holds, and springs it back (motion.hint). */
+.frame[data-drag='hint'] [data-swipe] {
+  transition: transform var(--un-motion-hint-out-ms) var(--un-motion-hint-out-easing);
+}
+
+.frame[data-drag='hintBack'] [data-swipe] {
+  transition: transform var(--un-motion-hint-back-ms) var(--un-motion-hint-back-easing);
+}
+
+/* "› SWIPE" under the card's left edge, shown while the hint plays. It comes before the card in the
+   page, so the card (always transformed) covers it until it slides away. */
+.swipeHint {
+  position: absolute;
+  top: 50%;
+  left: var(--un-motion-hint-label-inset-px);
+  width: var(--un-motion-hint-label-width-px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-motion-hint-label-gap-px);
+  color: var(--region-accent-text);
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity var(--un-motion-hint-fade-ms);
+  pointer-events: none;
+}
+
+.swipeHint svg {
+  width: var(--un-layout-icon-md);
+  height: var(--un-layout-icon-md);
+}
+
+.frame[data-drag='hint'] .swipeHint {
+  opacity: 1;
 }
 
 .frame[data-drag='fly'] [data-swipe] {

@@ -42,7 +42,7 @@ export const radius = {
   // The Card word tile.
   card: 20,
   // The spotlight cut-out.
-  spotlight: 22,
+  spotlight: 14,
   // The Deck card and Reverse/Mind Reader cards.
   cardLarge: 26,
   // Bottom sheets and panels with a rounded top.
@@ -75,13 +75,33 @@ export const elevation = {
 export const motion = {
   duration: { fast: 150, base: 200, slow: 320 },
   // The card follows the finger; past the threshold it flies off and the answer is dispatched.
-  // barShrink and barGrow: how far the Skip and Correct bars shrink and grow (as flex factors) at the
-  // threshold, so the side the card is heading to stretches with the drag.
-  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6, barShrink: 0.3, barGrow: 3.2 },
+  // The card tilts with the drag: maxTiltDeg at tiltAtPx, so the 70px hint nudge leans it about 3.9°.
+  // barShrink and barGrow: how far the Skip and Correct bars shrink and grow (as flex factors), reached
+  // at barRangePx, so the side the card is heading to stretches with the drag. A card let go short of
+  // the threshold springs back with settle.
+  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6, barShrink: 0.3, barGrow: 3.2, barRangePx: 120, settle: { friction: 7, tension: 60 } },
   // The next card springs in.
   enter: { friction: 9, tension: 70, fromY: 40, fromScale: 0.95, fromOpacity: 0.3 },
-  // The card nudges right to show it swipes: once at the start, then after 30 idle seconds.
-  hint: { firstDelayMs: 600, idleMs: 30_000, nudgePx: 70, outMs: 320, holdMs: 780 },
+  // The swipe hint, from the original app and the canvas's Current Version board. The card (and its
+  // timer ring) slides nudgePx right over outMs with outEasing, tilting and stretching the Correct bar
+  // exactly as a drag of that distance would, while "› SWIPE" fades in over fadeMs from under the
+  // card's left edge. It holds for holdMs, then springs back (back: friction and tension on native,
+  // ms and easing on the web) as the label fades out. It plays firstDelayMs after a round opens and
+  // again after idleMs with no swipe or tap. The label sits labelInsetPx in from the card area's
+  // left edge, labelWidthPx wide, with labelGapPx between the chevron and the word.
+  hint: {
+    firstDelayMs: 600,
+    idleMs: 30_000,
+    nudgePx: 70,
+    outMs: 320,
+    outEasing: [0.25, 0.46, 0.45, 0.94] as const,
+    holdMs: 780,
+    fadeMs: 200,
+    back: { friction: 7, tension: 60, ms: 550, easing: [0.3, 1.08, 0.5, 1] as const },
+    labelInsetPx: 4,
+    labelWidthPx: 56,
+    labelGapPx: 4,
+  },
   // How to play: seven steps of three seconds; the spotlight glides between targets.
   spotlight: { stepMs: 3000, moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
 } as const;
@@ -170,9 +190,11 @@ export const spotlight = {
   radius: radius.spotlight,
   caption: '#FFFFFF',
   captionShadow: '0px 1px 8px rgba(0, 0, 0, 0.25)',
-  lead: '#FFFFFFE6',
+  lead: '#FFFFFFEB',
   dot: { size: 6, activeWidth: 18, color: '#FFFFFF59', active: '#FFFFFF' },
   play: { background: '#FFFFFF', height: 60, radius: radius.xxl, pulse: '#FFFFFF80', pulseSpread: 10 },
   // Inset of the cut-out around its target.
   padding: 6,
+  // The rules list under "Describe it out loud."
+  rulesWidth: 236,
 } as const;

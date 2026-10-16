@@ -1,6 +1,6 @@
 import { en } from '@unspoken/content';
 import { layout, maxWidth, motion, palettes, radius, space, spotlight, type Theme } from '@unspoken/design-tokens';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 
 import { Icon } from '../ui/Icon';
@@ -16,9 +16,9 @@ const { stepMs, moveMs, pulseMs, easing } = motion.spotlight;
 const glide = Easing.bezier(...easing);
 const KEYS = ['x', 'y', 'w', 'h'] as const;
 
-// How to play: the play screen under a dark scrim with a cut-out that glides from the word to the
-// banned list, the level, the menu and the controls, one caption per step. Steps advance on
-// their own or on a tap; Play or Skip tour ends it.
+// How to play, as drawn on the canvas: the play screen under a dark scrim with a cut-out that glides
+// from the word to the banned list, the level, the menu and the Play button, one caption per step.
+// Steps advance on their own or on a tap; Play ends it.
 export function HowToPlay({ targets, theme, insets, onClose }: { targets: Targets; theme: Theme; insets: Insets; onClose: () => void }) {
   const steps = en.howToPlay.steps;
   const [index, setIndex] = useState(0);
@@ -27,13 +27,17 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
   const { width, height } = useWindowDimensions();
   const [box] = useState(() => ({ x: new Animated.Value(width / 2), y: new Animated.Value(height / 2), w: new Animated.Value(0), h: new Animated.Value(0) }));
   const [pulse] = useState(() => new Animated.Value(0));
+  // The last step points at the tour's own Play button, as on the canvas.
+  const playRef = useRef<View>(null);
+  // The top of the dots over Play: captions never reach below it.
+  const [floor, setFloor] = useState(Number.POSITIVE_INFINITY);
   const step = steps[index] ?? steps[0];
   const last = index >= steps.length - 1;
 
   // Measure this step's element and move the cut-out onto it (or close it to a point).
   useEffect(() => {
     let live = true;
-    const node = step?.target ? targets.get(step.target) : null;
+    const node = step?.target === 'play' ? playRef.current : step?.target ? targets.get(step.target) : null;
     const go = (r: Rect | null) => {
       if (!live) return;
       setRect(r);
@@ -66,7 +70,7 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
   const spread = Math.max(width, height) * 2;
   const below = rect ? rect.y + rect.h / 2 < height / 2 : false;
   const gap = spotlight.padding + space[4];
-  const captionPlace = rect ? (below ? { top: rect.y + rect.h + gap } : { bottom: height - rect.y + gap }) : null;
+  const captionPlace = rect ? (below ? { top: rect.y + rect.h + gap } : { bottom: height - Math.min(rect.y, floor) + gap }) : null;
   const playInk = palettes[theme.color].light.accentText;
 
   return (
@@ -88,24 +92,45 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
       <Pressable style={StyleSheet.absoluteFill} onPress={() => setIndex((i) => Math.min(steps.length - 1, i + 1))} accessible={false} />
 
       <View pointerEvents="box-none" style={[styles.caption, captionPlace ?? styles.centered]}>
-        {!rect && step?.art === 'logo' ? <Wordmark mark={palettes[theme.color].dark.accentText} /> : null}
+        {!rect && step?.art === 'logo' ? (
+          <Txt variant="wordmark" color={spotlight.caption} accessibilityRole="header">
+            {en.app.name.toLowerCase()}
+          </Txt>
+        ) : null}
         {!rect && step?.art === 'mic' ? (
           <View style={styles.mic}>
-            <Icon name="mic" size={layout.icon.xl} color={spotlight.caption} />
+            <Icon name="mic" size={layout.icon.md} color={spotlight.caption} />
           </View>
         ) : null}
-        <Txt variant={rect ? 'caption' : 'lead'} color={rect ? spotlight.caption : spotlight.lead} style={styles.centerText} accessibilityLiveRegion="polite">
+        <Txt
+          variant={step?.art === 'logo' ? 'lead' : 'caption'}
+          color={step?.art === 'logo' ? spotlight.lead : spotlight.caption}
+          style={rect ? undefined : styles.centerText}
+          accessibilityLiveRegion="polite"
+        >
           {step?.text}
         </Txt>
+        {step?.rules ? (
+          <View style={styles.rules}>
+            {step.rules.map((rule) => (
+              <View key={rule} style={styles.rule}>
+                <Txt variant="rule" color={spotlight.lead}>
+                  {'•'}
+                </Txt>
+                <Txt variant="rule" color={spotlight.lead} style={styles.ruleText}>
+                  {rule}
+                </Txt>
+              </View>
+            ))}
+          </View>
+        ) : null}
       </View>
 
-      <Press onPress={onClose} accessibilityRole="link" style={[styles.skip, { top: insets.top + layout.screen.paddingTop, right: insets.right + layout.screen.paddingX }]}>
-        <Txt variant="link" color={spotlight.lead}>
-          {en.howToPlay.skip}
-        </Txt>
-      </Press>
-
-      <View pointerEvents="box-none" style={[styles.bottom, { paddingBottom: insets.bottom + layout.screen.paddingBottom }]}>
+      <View
+        pointerEvents="box-none"
+        style={[styles.bottom, { paddingBottom: insets.bottom + layout.play.paddingBottom }]}
+        onLayout={(e) => setFloor(e.nativeEvent.layout.y)}
+      >
         <View style={styles.dots} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
           {steps.map((s, i) => (
             <View
@@ -114,7 +139,7 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
             />
           ))}
         </View>
-        <View style={styles.playWrap}>
+        <View ref={playRef} collapsable={false} style={styles.playWrap}>
           <Animated.View pointerEvents="none" style={[styles.pulse, { opacity: pulse }]} />
           <Press onPress={onClose} accessibilityLabel={en.howToPlay.play} style={styles.play}>
             <Icon name="play" size={layout.icon.sm} color={playInk} />
@@ -123,21 +148,6 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
             </Txt>
           </Press>
         </View>
-      </View>
-    </View>
-  );
-}
-
-// The speech bubble and the name with "spoken" struck through.
-function Wordmark({ mark }: { mark: string }) {
-  return (
-    <View style={styles.wordmark} accessibilityRole="header" accessibilityLabel={en.app.name}>
-      <Icon name="bubble" size={layout.icon.xl + space[3]} color={spotlight.caption} />
-      <View>
-        <Txt variant="headline" color={spotlight.caption}>
-          {en.app.name.toLowerCase()}
-        </Txt>
-        <View style={[styles.strike, { backgroundColor: mark }]} />
       </View>
     </View>
   );
@@ -154,9 +164,8 @@ const styles = StyleSheet.create({
   },
   centered: { top: 0, bottom: 0, justifyContent: 'center' },
   centerText: { textAlign: 'center', maxWidth: maxWidth.prose },
-  mic: { width: layout.control.heroBadge, height: layout.control.heroBadge, borderRadius: radius.pill, borderWidth: spotlight.outlineWidth, borderColor: spotlight.outline, alignItems: 'center', justifyContent: 'center' },
-  skip: { position: 'absolute', minHeight: layout.minTouch, justifyContent: 'center' },
-  bottom: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center', gap: space[4], paddingHorizontal: layout.screen.paddingX },
+  mic: { width: layout.control.iconBadge, height: layout.control.iconBadge, borderRadius: radius.pill, borderWidth: spotlight.outlineWidth, borderColor: spotlight.outline, alignItems: 'center', justifyContent: 'center' },
+  bottom: { position: 'absolute', left: 0, right: 0, bottom: 0, alignItems: 'center', gap: space[5], paddingHorizontal: layout.play.paddingX },
   dots: { flexDirection: 'row', gap: space[1.5] },
   dot: { height: spotlight.dot.size, borderRadius: radius.pill },
   playWrap: { width: '100%', maxWidth: maxWidth.column },
@@ -178,6 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: space[2.5],
   },
-  wordmark: { flexDirection: 'row', alignItems: 'center', gap: space[3] },
-  strike: { position: 'absolute', left: '28%', right: 0, top: '52%', height: layout.stroke.heavy, borderRadius: radius.pill },
+  rules: { width: spotlight.rulesWidth, gap: space[0.5] },
+  rule: { flexDirection: 'row', gap: space[2] },
+  ruleText: { flex: 1 },
 });

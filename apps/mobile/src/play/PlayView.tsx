@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { layout, maxWidth, playMargins, radius, ringCardSize, space, type PlayMargins, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
+import { layout, maxWidth, motion, playMargins, radius, ringCardSize, space, type PlayMargins, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
 import { useState, type ReactNode } from 'react';
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -259,11 +259,17 @@ function CardBody({ f, colors }: { f: Frame; colors: RegionColors }) {
   );
 }
 
-// The "› SWIPE" nudge at the right of the card area.
+// "› SWIPE" under the card's left edge, shown while the swipe hint slides the card away. It is drawn
+// before the card so the card covers it until it moves.
 function SwipeHint({ f, colors }: { f: Frame; colors: RegionColors }) {
   if (!f.h) return null;
   return (
-    <Animated.View pointerEvents="none" style={[styles.hint, { opacity: f.h.swipe.hint }]} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+    <Animated.View
+      pointerEvents="none"
+      style={[styles.hint, { left: f.margins.paddingX + motion.hint.labelInsetPx, opacity: f.h.swipe.hint }]}
+      accessibilityElementsHidden
+      importantForAccessibility="no-hide-descendants"
+    >
       <Icon name="chevronRight" size={layout.icon.md} color={colors.accentText} />
       <Txt variant="badge" color={colors.accentText}>
         {en.play.swipeHint}
@@ -358,6 +364,7 @@ function RingCardFrame({ f }: { f: Frame }) {
       <Top f={f}>{header(f)}</Top>
       <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.middle]}>
         <View style={[styles.measure, { marginHorizontal: f.margins.paddingX }]} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
+        <SwipeHint f={f} colors={f.page} />
         {h > 0 ? (
           <Moving f={f} pan style={{ width: w, height: h }}>
             {clock ? (
@@ -371,7 +378,6 @@ function RingCardFrame({ f }: { f: Frame }) {
             </View>
           </Moving>
         ) : null}
-        <SwipeHint f={f} colors={f.page} />
       </Band>
       <Footer f={f} separate={false} />
     </View>
@@ -388,11 +394,11 @@ function FloatingCardFrame({ f }: { f: Frame }) {
         {statsAt(f, 'belowHeader', f.page)}
       </Top>
       <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.center, styles.floating]}>
+        <SwipeHint f={f} colors={f.page} />
         {statsAt(f, 'aboveWord', f.page)}
         <Moving f={f} pan style={[styles.card, { backgroundColor: f.word.bg, boxShadow: f.theme.shadow.card }]}>
           <CardBody f={f} colors={f.word} />
         </Moving>
-        <SwipeHint f={f} colors={f.page} />
       </Band>
       <Footer f={f} separate={false} />
     </View>
@@ -411,6 +417,7 @@ function StackFrame({ f }: { f: Frame }) {
         {statsAt(f, 'belowHeader', f.page)}
       </Top>
       <Band colors={f.page} f={f} style={styles.fill} inner={styles.fill}>
+        <SwipeHint f={f} colors={f.page} />
         <Middle f={f} style={!pins && styles.stack}>
           <Gap min={space[3]} max={space[10]} />
           <WordBlock f={f} colors={f.page} moving />
@@ -418,7 +425,6 @@ function StackFrame({ f }: { f: Frame }) {
           {pins ? <Gap /> : null}
           <Moving f={f}>{banned(f, f.page)}</Moving>
         </Middle>
-        <SwipeHint f={f} colors={f.page} />
       </Band>
       <Footer f={f} separate={f.footer.bg !== f.page.bg} />
     </View>
@@ -443,6 +449,7 @@ function PanelFrame({ f }: { f: Frame }) {
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
       <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: f.insets.top + f.margins.paddingTop }]}>
+        <SwipeHint f={f} colors={f.page} />
         {header(f)}
         {clockAt(f, 'belowHeader', f.page)}
         {clockAt(f, 'belowClock', f.page)}
@@ -456,7 +463,6 @@ function PanelFrame({ f }: { f: Frame }) {
             {upper}
           </View>
         )}
-        <SwipeHint f={f} colors={f.page} />
       </Band>
       <View style={[!fit && styles.fill, styles.panel, { backgroundColor: f.lower.bg, borderTopLeftRadius: corner, borderTopRightRadius: corner }]}>
         {panelLine(f)}
@@ -508,5 +514,5 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     marginTop: layout.sheet.paddingTop,
   },
-  hint: { position: 'absolute', right: 0, top: '50%', flexDirection: 'row', alignItems: 'center', gap: space[0.5] },
+  hint: { position: 'absolute', top: 0, bottom: 0, width: motion.hint.labelWidthPx, alignItems: 'center', justifyContent: 'center', gap: motion.hint.labelGapPx },
 });

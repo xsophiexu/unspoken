@@ -1,10 +1,12 @@
 'use client';
 
+import { en } from '@unspoken/content';
 import { layout, playMargins, ringCardSize, type LayoutStyle } from '@unspoken/design-tokens';
 import { useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 
 import { useElementSize } from '@/lib/hooks';
-import { cx } from '@/lib/ui';
+import { Icon } from '@/components/ui/Icon';
+import { cx, text } from '@/lib/ui';
 
 import { BannedList } from './BannedList';
 import { Controls } from './Controls';
@@ -56,6 +58,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       showHint={model.firstCard}
     />
   );
+  const note = model.note && <p className={cx(styles.note, text('small'))}>{model.note}</p>;
   const aboveControls = (
     <>
       <Stats slot={s.stats} at="footer" stats={model.stats} />
@@ -68,17 +71,20 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
     s.controls.variant === 'splitBar' ? (
       <>
         {aboveControls}
+        {note}
         <div className={styles.edge}>{controls}</div>
       </>
     ) : regions.controls ? (
       <div className={cx(styles.edge, styles.controlsRegion)} data-region={regions.controls}>
         {aboveControls}
         {controls}
+        {note}
       </div>
     ) : (
       <>
         {aboveControls}
         {controls}
+        {note}
       </>
     );
   // The word and list follow the finger while dragging (the swipe surface sets --drag-x).
@@ -147,6 +153,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
                 <div className={styles.pushDown}>
                   <Stats slot={s.stats} at="footer" stats={model.stats} />
                   {s.controls.variant !== 'splitBar' && controls}
+                  {note}
                 </div>
               </div>
               {s.controls.variant === 'splitBar' && controls}
@@ -210,12 +217,23 @@ export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface,
       <div className={styles.column} inert={overlay ? true : undefined}>
         {top}
         <div className={styles.body} {...surface}>
+          {!preview && <SwipeHint />}
           {children}
         </div>
         {footer && <div className={styles.footer}>{footer}</div>}
       </div>
       {overlay}
     </div>
+  );
+}
+
+// "› SWIPE", shown from under the card while the swipe hint plays (useSwipe sets data-drag="hint").
+function SwipeHint() {
+  return (
+    <span className={cx(styles.swipeHint, text('badge'))} aria-hidden="true">
+      <Icon name="chevronRight" />
+      {en.play.swipeHint}
+    </span>
   );
 }
 

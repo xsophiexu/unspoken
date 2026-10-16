@@ -55,15 +55,48 @@ button:disabled {
   border-radius: var(--un-radius-pill);
 }
 
-/* Drag progress --drag-p runs from -1 (fully toward Skip) to 1 (fully toward Correct). */
+/* --drag-bar runs from -1 (dragged barRangePx toward Skip) to 1 (toward Correct). The side the card
+   heads to grows to barGrow times its share and the other shrinks to barShrink, and the label on the
+   shrinking side fades, as in the original app. */
+.withBars {
+  --toward-correct: max(var(--drag-bar, 0), 0);
+  --toward-skip: max(calc(-1 * var(--drag-bar, 0)), 0);
+  --bar-grow: calc(var(--un-motion-swipe-bar-grow) - 1);
+  --bar-shrink: calc(1 - var(--un-motion-swipe-bar-shrink));
+  --label-fade: calc(1 - var(--un-opacity-disabled));
+}
+
 .withBars .skipLink {
-  flex: calc(var(--skip-grow) * (1 - var(--drag-p, 0))) 1 0;
+  flex: calc(var(--skip-grow) * (1 + var(--toward-skip) * var(--bar-grow) - var(--toward-correct) * var(--bar-shrink))) 1 0;
   transition: flex-grow var(--un-motion-duration-fast);
 }
 
 .withBars .correctLink {
-  flex: calc(var(--correct-grow) * (1 + var(--drag-p, 0))) 1 0;
+  flex: calc(var(--correct-grow) * (1 + var(--toward-correct) * var(--bar-grow) - var(--toward-skip) * var(--bar-shrink))) 1 0;
   transition: flex-grow var(--un-motion-duration-fast);
+}
+
+.withBars .skipLink > .label {
+  opacity: calc(1 - var(--toward-correct) * var(--label-fade));
+}
+
+.withBars .correctLink > .label {
+  opacity: calc(1 - var(--toward-skip) * var(--label-fade));
+}
+
+/* The swipe hint moves the bars with the card, on the card's timing. */
+:global([data-drag='hint']) .withBars .link,
+:global([data-drag='hint']) .withBars .label {
+  transition:
+    flex-grow var(--un-motion-hint-out-ms) var(--un-motion-hint-out-easing),
+    opacity var(--un-motion-hint-out-ms) var(--un-motion-hint-out-easing);
+}
+
+:global([data-drag='hintBack']) .withBars .link,
+:global([data-drag='hintBack']) .withBars .label {
+  transition:
+    flex-grow var(--un-motion-hint-back-ms) var(--un-motion-hint-back-easing),
+    opacity var(--un-motion-hint-back-ms) var(--un-motion-hint-back-easing);
 }
 
 .withBars .skipLink::after {
