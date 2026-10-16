@@ -4,8 +4,9 @@ import { cx, text } from '@/lib/ui';
 
 import styles from './sheets.module.css';
 
-// A sheet's title, an optional control beside it, and a note beside or under it.
-export function SheetHead({ id, title, note, action }: { id: string; title: string; note?: string; action?: ReactNode }) {
+// A sheet's title, an optional control beside it, and a note beside or under it. An end control
+// sits at the top right, level with the title, and moves the note under the title.
+export function SheetHead({ id, title, note, action, end }: { id: string; title: string; note?: string; action?: ReactNode; end?: ReactNode }) {
   return (
     <div className={styles.head}>
       <div className={styles.titleGroup}>
@@ -14,7 +15,8 @@ export function SheetHead({ id, title, note, action }: { id: string; title: stri
         </h2>
         {action}
       </div>
-      {note && <p className={cx(styles.note, text('small'))}>{note}</p>}
+      {end}
+      {note && <p className={cx(styles.note, end ? styles.noteBelow : undefined, text('small'))}>{note}</p>}
     </div>
   );
 }

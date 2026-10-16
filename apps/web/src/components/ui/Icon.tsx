@@ -20,7 +20,7 @@ export const iconPaths = {
   eyeOff: 'M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 3.9M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.6 9.6 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2',
   play: 'M7 4.5l12 7.5-12 7.5z',
   close: 'M6 6l12 12M18 6L6 18',
-  question: 'M9 9a3 3 0 1 1 4.2 2.75c-.75.33-1.2 1.07-1.2 1.9v.6M12 18h.01',
+  info: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5.5M12 7.5h.01',
 } as const;
 
 export type IconName = keyof typeof iconPaths;

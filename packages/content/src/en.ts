@@ -178,12 +178,14 @@ export const en = {
   // --- Sheets --------------------------------------------------------------------------------
   menu: {
     title: 'Game paused',
-    // The round ? beside the title: its name and tooltip.
+    // The i beside the title: its name and, on web, its tooltip.
     howToPlay: { title: 'How to play' },
     changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and theme · starts a new game' },
     customize: { title: 'Customize', detail: 'Layout and color · {style} · {color}' },
     feedback: { title: 'Send feedback', detail: 'Ideas for styles, modes or words' },
+    // The Restart button shows restartShort, beside Resume or in the header; restart is its name.
     restart: 'Restart game',
+    restartShort: 'Restart',
     resume: 'Resume',
   },
   // The mode and difficulty sheet that opens from the header pill.

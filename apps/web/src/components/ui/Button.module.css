@@ -21,6 +21,21 @@
   border-radius: var(--un-radius-xxl);
 }
 
+.compact {
+  position: relative;
+  min-height: var(--un-layout-header-menu-button);
+  gap: var(--un-space-1-5);
+  padding: 0 var(--un-space-3);
+  border-radius: var(--un-radius-pill);
+}
+
+/* The touch target stays the full minimum size around the smaller pill. */
+.compact::after {
+  content: '';
+  position: absolute;
+  inset: calc((var(--un-layout-header-menu-button) - var(--un-layout-min-touch)) / 2) 0;
+}
+
 .primary {
   background: var(--region-accent);
   color: var(--region-on-accent);

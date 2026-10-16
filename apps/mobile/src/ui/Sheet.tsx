@@ -91,13 +91,14 @@ export function Sheet({ visible, onClose, children }: Props) {
   );
 }
 
-// The sheet's title with an optional control beside it, a line under it or a note beside it, and
-// an optional close button.
+// The sheet's title with an optional control beside it, a line under it or a note beside it, an
+// optional control at the top right (end), and an optional close button.
 export function SheetHeader({
   title,
   sub,
   note,
   action,
+  end,
   colors,
   onClose,
 }: {
@@ -105,6 +106,7 @@ export function SheetHeader({
   sub?: string;
   note?: string;
   action?: ReactNode;
+  end?: ReactNode;
   colors: RegionColors;
   onClose?: () => void;
 }) {
@@ -130,6 +132,7 @@ export function SheetHeader({
           </Txt>
         ) : null}
       </View>
+      {end}
       {onClose ? (
         <Press onPress={onClose} accessibilityLabel={en.a11y.closeMenu} hitSlop={slopFor(layout.control.iconBadge)} style={[styles.close, { backgroundColor: colors.chip }]}>
           <Icon name="cross" size={layout.icon.sm} color={colors.chipInk} />

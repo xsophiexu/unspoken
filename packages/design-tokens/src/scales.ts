@@ -121,6 +121,17 @@ export const maxWidth = {
   prose: 420,
 } as const;
 
+// A secondary button beside the primary one (Skip and Correct, Restart game and Resume): they
+// share the row in this ratio, so the primary on the right is the larger. A button never shrinks
+// below its label; when both labels no longer fit side by side they stack.
+export const buttonPair = { secondary: 1, primary: 2 } as const;
+
+// The ··· menu ("Game paused"). restartPlacement: 'footer' puts Restart game beside Resume at the
+// bottom (option A); 'header' puts a compact Restart at the top right, level with the title, and
+// leaves Resume alone at the bottom (option B).
+export type RestartPlacement = 'footer' | 'header';
+export const gameMenu: { readonly restartPlacement: RestartPlacement } = { restartPlacement: 'footer' };
+
 // Layout constants measured from the boards.
 export const layout = {
   // The boards are drawn at this size; thumbnails scale a full screen down from it.

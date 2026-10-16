@@ -1,9 +1,17 @@
 import { en } from '@unspoken/content';
 import { defaultRoundSeconds, format, formatClock } from '@unspoken/core';
-import { motion } from '@unspoken/design-tokens';
-import { act, fireEvent, renderRouter, screen, waitFor } from 'expo-router/testing-library';
+import { gameMenu, motion, type RestartPlacement } from '@unspoken/design-tokens';
+import { act, fireEvent, renderRouter, screen, waitFor, within } from 'expo-router/testing-library';
 
 import { openApp, resetDevice, savedPrefs } from './helpers';
+
+// The Game paused layout switch (gameMenu.restartPlacement), made settable so both options can be
+// played.
+jest.mock('@unspoken/design-tokens', () => {
+  const tokens = jest.requireActual('@unspoken/design-tokens');
+  return { ...tokens, gameMenu: { ...tokens.gameMenu } };
+});
+const mockMenuLayout = gameMenu as { restartPlacement: RestartPlacement };
 
 // The round clock ticks on a 1-second interval; fake timers keep it where the test leaves it.
 beforeEach(async () => {
@@ -12,6 +20,7 @@ beforeEach(async () => {
 });
 afterEach(() => {
   jest.useRealTimers();
+  mockMenuLayout.restartPlacement = 'footer';
 });
 
 const levelBadge = (difficulty: string) => format(en.a11y.difficulty, { badge: difficulty });
@@ -126,14 +135,15 @@ describe('Game paused', () => {
     });
   };
 
-  it('opens How to play from the ? beside the title', async () => {
+  it('opens How to play from the i beside the title', async () => {
     await openApp('/', { theme: { style: 'card' } });
     fireEvent.press(await screen.findByLabelText(en.a11y.menu));
     fireEvent.press(await screen.findByLabelText(en.menu.howToPlay.title));
     expect(await screen.findByText(en.howToPlay.steps[0]!.text)).toBeOnTheScreen();
   });
 
-  it('restarts the game from Restart game', async () => {
+  it.each(['footer', 'header'] as const)('restarts the game from Restart with Restart in the %s', async (placement) => {
+    mockMenuLayout.restartPlacement = placement;
     await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic' } });
     fireEvent.press(await screen.findByLabelText(en.play.correct));
     await act(async () => {
@@ -142,13 +152,16 @@ describe('Game paused', () => {
     expect(screen.getByText(/1 pt/)).toBeOnTheScreen();
 
     fireEvent.press(screen.getByLabelText(en.a11y.menu));
-    fireEvent.press(await screen.findByLabelText(en.menu.restart));
+    const restart = await screen.findByLabelText(en.menu.restart);
+    expect(within(restart).getByText(en.menu.restartShort)).toBeOnTheScreen();
+    fireEvent.press(restart);
     await afterSlide();
     expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
     expect(screen.getByText(/0 pts/)).toBeOnTheScreen();
   });
 
-  it('closes on Resume', async () => {
+  it.each(['footer', 'header'] as const)('closes on Resume with Restart in the %s', async (placement) => {
+    mockMenuLayout.restartPlacement = placement;
     await openApp('/', { theme: { style: 'card' } });
     fireEvent.press(await screen.findByLabelText(en.a11y.menu));
     fireEvent.press(await screen.findByLabelText(en.menu.resume));

@@ -1,11 +1,11 @@
 import { bank, en } from '@unspoken/content';
 import { DIFFICULTY_IDS, deckSize, format, plural, type Category, type Difficulty, type ModeId } from '@unspoken/core';
-import { layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
+import { gameMenu, layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { usePrefs } from '../state/prefs';
-import { Button } from '../ui/Button';
+import { Button, ButtonPair } from '../ui/Button';
 import { Grid } from '../ui/Grid';
 import { Icon, type IconName } from '../ui/Icon';
 import { Press, slopFor } from '../ui/Press';
@@ -26,9 +26,10 @@ type MenuProps = {
   onHowToPlay: () => void;
 };
 
-// The ··· menu ("Game paused"): a ? for How to play beside the title, rows for settings, customize
-// and feedback, then Restart game and Resume side by side. Styles with a sliders button list
-// Customize first.
+// The ··· menu ("Game paused"): an i for How to play beside the title, rows for settings, customize
+// and feedback, then Resume. Restart sits beside Resume (the narrower of the pair) or, with
+// gameMenu.restartPlacement 'header', as a compact button at the top right. Styles with a sliders
+// button list Customize first.
 export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCustomize, onFeedback, onHowToPlay }: MenuProps) {
   const { theme } = usePrefs();
   const m = en.menu;
@@ -39,6 +40,7 @@ export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCu
     { key: 'feedback', icon: 'bubble', title: m.feedback.title, detail: m.feedback.detail, onPress: onFeedback },
   ] satisfies { key: string; icon: IconName; title: string; detail: string; onPress: () => void }[];
   const ordered = theme.style.header.menu === 'sliders' ? [customize, ...rows.filter((r) => r !== customize)] : rows;
+  const inHeader = gameMenu.restartPlacement === 'header';
   return (
     <Sheet visible={visible} onClose={onClose}>
       {(colors) => (
@@ -49,18 +51,26 @@ export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCu
             colors={colors}
             onClose={onClose}
             action={
-              <Press onPress={onHowToPlay} accessibilityLabel={m.howToPlay.title} hitSlop={slopFor(layout.control.iconBadge)} style={[styles.help, { backgroundColor: colors.chip }]}>
-                <Icon name="question" size={layout.icon.md} color={colors.chipInk} />
+              <Press onPress={onHowToPlay} accessibilityLabel={m.howToPlay.title} hitSlop={slopFor(layout.icon.md)}>
+                <Icon name="info" size={layout.icon.md} color={colors.muted} />
               </Press>
+            }
+            end={
+              inHeader ? <Button size="compact" icon="restart" label={m.restartShort} accessibilityLabel={m.restart} colors={colors} onPress={onRestart} /> : undefined
             }
           />
           {ordered.map(({ key, ...row }) => (
             <SheetRow key={key} colors={colors} chevron {...row} />
           ))}
-          <View style={[styles.split, styles.gapAbove]}>
-            <Button kind="secondary" icon="restart" label={m.restart} colors={colors} onPress={onRestart} style={[styles.splitButton, styles.fullHeight]} />
-            <Button kind="primary" icon="play" label={m.resume} colors={colors} onPress={onClose} style={styles.splitButton} />
-          </View>
+          {inHeader ? (
+            <Button kind="primary" icon="play" label={m.resume} colors={colors} onPress={onClose} style={styles.gapAbove} />
+          ) : (
+            <ButtonPair
+              secondary={{ icon: 'restart', label: m.restartShort, accessibilityLabel: m.restart, colors, onPress: onRestart }}
+              primary={{ icon: 'play', label: m.resume, colors, onPress: onClose }}
+              style={styles.gapAbove}
+            />
+          )}
         </>
       )}
     </Sheet>
@@ -150,11 +160,7 @@ export function DifficultyPicker({ visible, onClose, difficulty, categories, onP
 
 const styles = StyleSheet.create({
   gapAbove: { marginTop: space[3] },
-  help: { width: layout.control.iconBadge, height: layout.control.iconBadge, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   // Restart game and Resume share the row and stack once their labels no longer fit side by side.
-  split: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2.5] },
-  splitButton: { flexGrow: 1, flexBasis: 'auto', minWidth: '40%', paddingHorizontal: space[3], gap: space[2] },
-  fullHeight: { minHeight: layout.button.primaryHeight },
   actions: { flexDirection: 'row', gap: space[2.5] },
   action: { flex: 1, borderRadius: radius.xl, padding: space[4], gap: space[5], minHeight: layout.control.modeTile },
   actionText: { gap: space[0.5] },

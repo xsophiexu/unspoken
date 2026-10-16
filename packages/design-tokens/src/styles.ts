@@ -1,6 +1,6 @@
 import type { ColorId, ColorMode } from './palettes';
 import type { RegionTone } from './regions';
-import { layout, type RadiusName } from './scales';
+import { buttonPair, layout, type RadiusName } from './scales';
 
 // Layout styles as data. Every platform implements a small set of slot components once (header,
 // timer, stats, word, banned list, controls), each with a few variants, plus one screen frame per
@@ -229,7 +229,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'subline', emphasis: 'plain' },
     word: { container: 'tile', label: true, size: 50, minSize: 22, maxLines: 2, color: 'ink' },
     banned: { variant: 'chips', size: 18, weight: 500, label: true, chipRadius: 'sm' },
-    controls: { variant: 'swipeLinks', height: 46, radius: 'none', skip: 'link', ratio: [1, 2], hint: 'bars' },
+    controls: { variant: 'swipeLinks', height: 46, radius: 'none', skip: 'link', ratio: [buttonPair.secondary, buttonPair.primary], hint: 'bars' },
   },
   // Deck · ruled card.
   deck: {
@@ -303,7 +303,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'footer', emphasis: 'bigNumber' },
     word: { container: 'none', label: false, size: 52, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'rows', size: 19, weight: 500, label: true },
-    controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'outline', ratio: [1, 2] },
+    controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'outline', ratio: [buttonPair.secondary, buttonPair.primary] },
     dark: { regions: { lower: 'stone' } },
   },
   // Bottom · band flipped to the bottom, on an accent-colored panel.
@@ -336,7 +336,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'footer', emphasis: 'bigNumber' },
     word: { container: 'none', label: false, size: 52, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'numberedRows', size: 19, weight: 500, label: true, numbering: 'leading' },
-    controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'filled', ratio: [1, 2] },
+    controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'filled', ratio: [buttonPair.secondary, buttonPair.primary] },
     margins: { paddingTop: 44, paddingBottom: 22 },
     dark: { regions: { page: 'shadowed', header: 'shadowed' } },
   },
@@ -353,7 +353,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'footer', emphasis: 'bigNumber' },
     word: { container: 'none', label: false, size: 56, minSize: 24, maxLines: 2, color: 'accentText' },
     banned: { variant: 'dashedColumns', size: 21, weight: 500, label: true },
-    controls: { variant: 'buttons', height: 60, radius: 'lg', skip: 'outline', ratio: [1, 2] },
+    controls: { variant: 'buttons', height: 60, radius: 'lg', skip: 'outline', ratio: [buttonPair.secondary, buttonPair.primary] },
     dark: { timer: { vivid: true }, word: { color: 'muted' } },
   },
   // Chips · small chips, full-width split bar to the bottom edge (Slate on the canvas). In dark the

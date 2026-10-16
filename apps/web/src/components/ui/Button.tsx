@@ -8,8 +8,9 @@ import styles from './Button.module.css';
 
 type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'quiet';
-  // Large is the full-width call to action at the bottom of a screen.
-  size?: 'regular' | 'large';
+  // Large is the full-width call to action at the bottom of a screen. Compact is a small pill for a
+  // sheet's header, with the full touch target around it.
+  size?: 'regular' | 'large' | 'compact';
   icon?: IconName;
   // Renders a link to another screen instead of a button.
   href?: string;

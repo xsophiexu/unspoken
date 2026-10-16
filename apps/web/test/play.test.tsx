@@ -13,6 +13,10 @@ import { renderApp, saved } from './app';
 
 const classic = { mode: 'classic', difficulty: 'Expert 1', categories: [], skips: 3 };
 
+// The Game paused layout switch (gameMenu.restartPlacement), so both options can be played.
+const menuLayout = vi.hoisted(() => ({ restartPlacement: 'footer' as 'footer' | 'header' }));
+vi.mock('@unspoken/design-tokens', async (importOriginal) => ({ ...(await importOriginal<object>()), gameMenu: menuLayout }));
+
 // The play screen in a labeled region, so queries skip anything else on the page (Customize's
 // thumbnails draw the same screen).
 function renderPlay(extra?: React.ReactNode) {
@@ -30,6 +34,7 @@ function renderPlay(extra?: React.ReactNode) {
 afterEach(() => {
   vi.useRealTimers();
   vi.restoreAllMocks();
+  menuLayout.restartPlacement = 'footer';
 });
 
 describe('Play', () => {
@@ -161,7 +166,7 @@ describe('Game paused', () => {
     return { game, menu: screen.getByRole('dialog', { name: en.menu.title }) };
   };
 
-  it('opens How to play from the ? beside the title', async () => {
+  it('opens How to play from the i beside the title', async () => {
     const user = userEvent.setup();
     const { menu } = await openMenu(user);
     await user.click(within(menu).getByRole('button', { name: en.menu.howToPlay.title }));
@@ -171,7 +176,8 @@ describe('Game paused', () => {
     expect(within(tour).getByText(en.howToPlay.steps[0]!.text)).toBeInTheDocument();
   });
 
-  it('restarts the game from Restart game', async () => {
+  it.each(['footer', 'header'] as const)('restarts the game from Restart with Restart in the %s', async (placement) => {
+    menuLayout.restartPlacement = placement;
     const user = userEvent.setup();
     saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
     const { game } = renderPlay();
@@ -180,13 +186,16 @@ describe('Game paused', () => {
 
     // Deck's sliders button opens the same menu.
     await user.click(game.getByRole('button', { name: en.a11y.customize }));
-    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: en.menu.restart }));
+    const restart = within(screen.getByRole('dialog')).getByRole('button', { name: en.menu.restart });
+    expect(restart).toHaveTextContent(en.menu.restartShort);
+    await user.click(restart);
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(game.getByText('3 skips left')).toBeInTheDocument();
   });
 
-  it('closes on Resume', async () => {
+  it.each(['footer', 'header'] as const)('closes on Resume with Restart in the %s', async (placement) => {
+    menuLayout.restartPlacement = placement;
     const user = userEvent.setup();
     const { menu } = await openMenu(user);
     await user.click(within(menu).getByRole('button', { name: en.menu.resume }));

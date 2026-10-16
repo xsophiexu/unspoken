@@ -3,6 +3,7 @@ import {
   COLOR_MODES,
   REGION_TONES,
   STYLE_IDS,
+  buttonPair,
   cssVariables,
   layout,
   layoutStyles,
@@ -63,6 +64,8 @@ function sharedTokens(): Vars {
     ...flatten('motion', motion, motionUnit),
     ...flatten('spotlight', spotlight, (_, n) => px(n)),
     ...flatten('opacity', opacity, (_, n) => String(n)),
+    // Flex-grow shares, so plain numbers.
+    ...flatten('button-pair', buttonPair, (_, n) => String(n)),
   };
 }
 

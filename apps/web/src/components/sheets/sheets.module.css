@@ -34,24 +34,100 @@
   gap: var(--un-space-1);
 }
 
-/* The ? beside a title: keeps its full touch target without making the head taller. */
-.help {
-  margin-block: calc((var(--un-layout-header-menu-button) - var(--un-layout-min-touch)) / 2);
+/* A note under the title when a control sits at the top right. */
+.noteBelow {
+  flex-basis: 100%;
 }
 
-/* Two actions side by side that stack once their labels no longer fit side by side. */
-.split {
+/* The i beside a title: a small muted hint whose touch target is the full minimum size, without
+   making the head taller or pushing the i away from the title. */
+.info {
+  position: relative;
+  display: inline-flex;
+  margin-block: calc((var(--un-layout-icon-md) - var(--un-layout-min-touch)) / 2);
+  margin-inline-start: calc((var(--un-layout-icon-md) - var(--un-layout-min-touch)) / 2 + var(--un-space-1));
+}
+
+.infoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-min-touch);
+  height: var(--un-layout-min-touch);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: none;
+  color: var(--region-muted);
+  font-size: var(--un-layout-icon-md);
+}
+
+.infoButton:hover {
+  color: var(--region-ink);
+}
+
+/* "How to play" in a small bubble under the i, on hover and keyboard focus. */
+.tooltip {
+  position: absolute;
+  top: calc(100% - var(--un-space-1));
+  left: 50%;
+  z-index: 1;
+  padding: var(--un-space-1) var(--un-space-2);
+  border-radius: var(--un-radius-xs);
+  background: var(--region-ink);
+  color: var(--region-bg);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, calc(var(--un-space-1) * -1));
+  transition:
+    opacity var(--un-motion-duration-fast),
+    transform var(--un-motion-duration-fast);
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  border: var(--un-space-1) solid transparent;
+  border-bottom-color: var(--region-ink);
+  transform: translateX(-50%);
+}
+
+.infoButton:hover + .tooltip,
+.infoButton:focus-visible + .tooltip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* Restart game beside Resume: they share the row in the buttonPair ratio, so Resume is the larger.
+   Neither shrinks below its label; when both no longer fit side by side they stack. */
+.buttonPair {
   display: flex;
   flex-wrap: wrap;
   gap: var(--un-space-2-5);
   margin-top: var(--un-space-2);
 }
 
-/* Equal halves while both labels fit; otherwise each keeps its label's width, wrapping if needed. */
-.split > button {
-  flex: 1 1 0;
+.buttonPair > * {
   width: auto;
   min-width: max-content;
   padding-inline: var(--un-space-3);
   gap: var(--un-space-2);
+}
+
+.buttonPair > :first-child {
+  flex: var(--un-button-pair-secondary) 1 0;
+}
+
+.buttonPair > :last-child {
+  flex: var(--un-button-pair-primary) 1 0;
+}
+
+/* Resume alone, full width, when Restart sits in the header. */
+.footer {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--un-space-2);
 }
