@@ -7,7 +7,7 @@ import type { ColorRole, ColorRoles } from './palettes';
 // works on any background.
 
 // Tone names are single lowercase words: web builds CSS custom property names from them.
-export const REGION_TONES = ['canvas', 'base', 'surface', 'raised', 'accent', 'panel', 'deep', 'shade', 'accented', 'shadowed', 'stone', 'bare', 'sunken'] as const;
+export const REGION_TONES = ['canvas', 'base', 'surface', 'raised', 'accent', 'panel', 'deep', 'shade', 'accented', 'shadowed', 'stone', 'bare', 'sunken', 'frosted'] as const;
 export type RegionTone = (typeof REGION_TONES)[number];
 
 export type RegionColors = {
@@ -149,12 +149,21 @@ const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
     track: { role: 'surfaceRaised', alpha: 0.25 },
     progress: 'surfaceRaised',
   },
-  // The grey panel with a raised Correct in ink (Ink's lower panel in dark).
-  stone: { ...panelTone, accent: 'surfaceRaised', onAccent: 'ink' },
+  // The grey panel with a raised Correct in ink and no visible hairlines between rows (Ink's lower
+  // panel in dark).
+  stone: { ...panelTone, accent: 'surfaceRaised', onAccent: 'ink', rule: 'panel' },
   // The page with no visible timer track: the line runs over the page color (Chips).
   bare: { ...base, bg: 'bg', chip: 'surface', track: 'bg' },
   // A recessed fill in the track color (Split's lower half and Skip bar in dark). Surface in light.
   sunken: { ...base, bg: 'sunken', chip: 'surfaceRaised', vivid: 'accentText' },
+  // An accent top row whose menu button is white at 18% with white dots (Sheet's header in light).
+  // The chip reads for icons only (3:1, not 4.5:1): see ICON_CHIP_TONES.
+  frosted: {
+    ...accentTone,
+    chip: { role: 'onAccent', alpha: 0.18 },
+    chipInk: 'onAccentStrong',
+    tint: { role: 'onAccent', alpha: 0.18 },
+  },
 };
 
 function resolveRef(colors: ColorRoles, ref: RoleRef): string {
@@ -167,6 +176,11 @@ export function regionColors(colors: ColorRoles, tone: RegionTone): RegionColors
   for (const slot of Object.keys(map) as RegionSlot[]) out[slot] = resolveRef(colors, map[slot]);
   return out;
 }
+
+// Tones whose chip and tint carry icons only, never text: chipInk on them meets the non-text
+// minimum (AA_NON_TEXT, 3:1) instead of the text one. Use them only for a header row with an
+// unfilled mode label, like Sheet's (test/contrast.test.ts holds every style to that).
+export const ICON_CHIP_TONES: readonly RegionTone[] = ['frosted'];
 
 // Text slots and the backgrounds they sit on, for contrast checks.
 export const REGION_TEXT_PAIRS: readonly (readonly [text: RegionSlot, background: RegionSlot])[] = [
