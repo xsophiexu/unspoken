@@ -1,4 +1,6 @@
 import { gameConfig, type GameConfig } from './config';
+import { dealDeck } from './deal';
+import { seededRandom } from './random';
 import { modeRules } from './rules';
 import type { BankCardInput, BankEntry, Card, Category, Difficulty, ModeId } from './types';
 
@@ -11,16 +13,26 @@ function capitalize(word: string): string {
 export function cardId(word: string): string {
   return word
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
 
 // Turn raw bank cards (as stored in @unspoken/content) into entries the dealing functions use.
+// Ids are unique: a word whose id is taken (the same word with or without accents at another level)
+// gets its difficulty appended, so ids stay stable as long as the bank keeps its order.
 export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
+  const taken = new Set<string>();
+  const uniqueId = (word: string, difficulty: string) => {
+    let id = cardId(word);
+    if (taken.has(id)) id = `${id}-${cardId(difficulty)}`;
+    for (let n = 2; taken.has(id); n++) id = `${cardId(word)}-${n}`;
+    taken.add(id);
+    return id;
+  };
   return raw.map((c) => ({
-    id: cardId(c.word),
+    id: uniqueId(c.word, c.difficulty),
     word: c.word,
     banned: c.banned.map(capitalize),
     difficulty: c.difficulty,
@@ -59,4 +71,31 @@ export function playableCards(mode: ModeId, cards: readonly Card[], config: Game
   if (!modeRules(mode, config).escalates) return cards;
   const full = cards.filter((c) => c.banned.length >= config.escalate.max);
   return full.length >= config.escalate.minFullCards ? full : cards;
+}
+
+export type DealRequest = {
+  difficulty: Difficulty;
+  // Empty means All cards.
+  categories: readonly Category[];
+  // The mode the deck is for; Escalate only plays cards with every banned word. Defaults to Classic.
+  mode?: ModeId;
+  // How many cards to return; the whole shuffled deck when omitted.
+  count?: number;
+  seed: number;
+};
+
+export type DealtDeck = {
+  seed: number;
+  // Cards the choice draws from, before `count` is applied.
+  total: number;
+  cards: Card[];
+};
+
+// Deal a deck straight from the bank: the same seed and request always give the same cards, so the
+// service and offline clients agree. This is what POST /v1/decks runs.
+export function dealFromBank(bank: readonly BankEntry[], request: DealRequest, config: GameConfig = gameConfig): DealtDeck {
+  const pool = playableCards(request.mode ?? 'classic', cardsFor(bank, request.difficulty, request.categories), config);
+  const deck = dealDeck(pool, seededRandom(request.seed).random);
+  const count = request.count === undefined ? deck.length : Math.max(0, Math.floor(request.count));
+  return { seed: request.seed >>> 0, total: pool.length, cards: deck.slice(0, count) };
 }

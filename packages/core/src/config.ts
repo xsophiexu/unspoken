@@ -6,8 +6,6 @@ import { CATEGORY_IDS, type Category, type Difficulty, type GameSettings, type M
 
 export type DifficultyRules = {
   id: Difficulty;
-  // Short uppercase label on the header badge.
-  badge: string;
   // Default round length; the setup timer follows it until the player types a time.
   roundSeconds: number;
   // Banned words shown on each card (and clues in Reverse).
@@ -74,14 +72,14 @@ export const gameConfig: GameConfig = {
   // Cards show 5 banned words at Normal and Harder, 6 at the other levels.
   // Hot potato's shortest round grows from 0:45 at Normal to 2:30 at Grandmaster.
   difficulties: [
-    { id: 'Normal', badge: 'NORMAL', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 },
-    { id: 'Harder', badge: 'HARDER', roundSeconds: 120, bannedCount: 5, hotPotatoMinSeconds: 60 },
-    { id: 'Expert 1', badge: 'EXPERT 1', roundSeconds: 150, bannedCount: 6, hotPotatoMinSeconds: 75 },
-    { id: 'Expert 2', badge: 'EXPERT 2', roundSeconds: 180, bannedCount: 6, hotPotatoMinSeconds: 90 },
-    { id: 'Master 1', badge: 'MASTER 1', roundSeconds: 210, bannedCount: 6, hotPotatoMinSeconds: 105 },
-    { id: 'Master 2', badge: 'MASTER 2', roundSeconds: 240, bannedCount: 6, hotPotatoMinSeconds: 120 },
-    { id: 'Master 3', badge: 'MASTER 3', roundSeconds: 270, bannedCount: 6, hotPotatoMinSeconds: 135 },
-    { id: 'Grandmaster', badge: 'GRANDMASTER', roundSeconds: 300, bannedCount: 6, hotPotatoMinSeconds: 150 },
+    { id: 'Normal', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 },
+    { id: 'Harder', roundSeconds: 120, bannedCount: 5, hotPotatoMinSeconds: 60 },
+    { id: 'Expert 1', roundSeconds: 150, bannedCount: 6, hotPotatoMinSeconds: 75 },
+    { id: 'Expert 2', roundSeconds: 180, bannedCount: 6, hotPotatoMinSeconds: 90 },
+    { id: 'Master 1', roundSeconds: 210, bannedCount: 6, hotPotatoMinSeconds: 105 },
+    { id: 'Master 2', roundSeconds: 240, bannedCount: 6, hotPotatoMinSeconds: 120 },
+    { id: 'Master 3', roundSeconds: 270, bannedCount: 6, hotPotatoMinSeconds: 135 },
+    { id: 'Grandmaster', roundSeconds: 300, bannedCount: 6, hotPotatoMinSeconds: 150 },
   ],
   categories: CATEGORY_IDS,
   modes: [

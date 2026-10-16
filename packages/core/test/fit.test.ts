@@ -35,6 +35,11 @@ describe('fitWordSize', () => {
     expect(linesAt('Abcde-fghij', 50, 250, mono)).toBe(2);
   });
 
+  it('keeps a hyphenated word together without a space where it fits', () => {
+    // "Abcde-fghij" is 5.5em: at 40px that is 220px, which fits 250px on one line.
+    expect(linesAt('Abcde-fghij', 40, 250, mono)).toBe(1);
+  });
+
   it('never goes below the minimum, even when the word cannot fit', () => {
     expect(fitWordSize('A'.repeat(200), mono, { width: 100, min: 22 })).toBe(22);
   });

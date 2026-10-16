@@ -43,16 +43,20 @@ export function linesAt(text: string, size: number, width: number, metrics: Glyp
   const pieces = text.trim().split(/(?<=-)|\s+/).filter(Boolean);
   let lines = 1;
   let used = 0;
+  let afterHyphen = false;
   for (const piece of pieces) {
     const w = textWidthEm(piece, metrics) * size;
     if (w > width) return Infinity;
-    const add = used === 0 ? w : used + metrics.wordGap * size + w;
+    // A piece after a hyphen joins without a space; after a space it needs the word gap.
+    const gap = afterHyphen ? 0 : metrics.wordGap * size;
+    const add = used === 0 ? w : used + gap + w;
     if (used > 0 && add > width) {
       lines += 1;
       used = w;
     } else {
       used = add;
     }
+    afterHyphen = piece.endsWith('-');
   }
   return lines;
 }
