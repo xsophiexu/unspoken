@@ -15,10 +15,12 @@ export type DifficultyRules = {
 };
 
 // How a mode's clock behaves: a visible countdown, a hidden random countdown, or none.
-export type ClockKind = 'visible' | 'hidden' | 'none';
+export const CLOCK_KINDS = ['visible', 'hidden', 'none'] as const;
+export type ClockKind = (typeof CLOCK_KINDS)[number];
 
 // Which round state machine and screen family a mode uses.
-export type PlayKind = 'swipe' | 'reverse' | 'mindReader';
+export const PLAY_KINDS = ['swipe', 'reverse', 'mindReader'] as const;
+export type PlayKind = (typeof PLAY_KINDS)[number];
 
 export type ModeRules = {
   id: ModeId;
