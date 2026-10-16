@@ -19,9 +19,10 @@
   background: var(--region-track);
 }
 
+/* Edge to edge: out by the play frame's side margin. */
 .bleed {
   width: auto;
-  margin-inline: calc(-1 * var(--un-layout-screen-padding-x));
+  margin-inline: calc(-1 * var(--pad-x));
   border-radius: 0;
 }
 

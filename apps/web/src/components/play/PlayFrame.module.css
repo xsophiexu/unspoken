@@ -1,11 +1,13 @@
 /* The play screen frame. The page region fills the window; the game sits in a centered column that
-   never grows past the column max width. Regions that run edge to edge (lower panels, split bars,
-   dark footers) bleed out of the column padding with negative margins. */
+   never grows past the column max width. Regions that run edge to edge (lower panels, sheets, split
+   bars, toned footers, bands, bleeding timer lines) bleed out of the column padding by --pad-x with
+   negative margins, and inset their content by it. */
 
 .frame {
-  --pad-x: var(--un-layout-screen-padding-x);
-  --pad-top: calc(var(--un-layout-screen-padding-top) + env(safe-area-inset-top));
-  --pad-bottom: calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+  /* The style's play margins (--margin-*, set from playMargins) plus the safe areas. */
+  --pad-x: var(--margin-x);
+  --pad-top: calc(var(--margin-top) + env(safe-area-inset-top));
+  --pad-bottom: calc(var(--margin-bottom) + env(safe-area-inset-bottom));
   position: relative;
   display: flex;
   justify-content: center;
@@ -15,8 +17,8 @@
 
 /* Customize thumbnails draw the screen at the reference size inside a fixed box. */
 .preview {
-  --pad-top: var(--un-layout-screen-padding-top);
-  --pad-bottom: var(--un-layout-screen-padding-bottom);
+  --pad-top: var(--margin-top);
+  --pad-bottom: var(--margin-bottom);
   min-height: 0;
   height: 100%;
 }

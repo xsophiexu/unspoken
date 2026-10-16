@@ -7,7 +7,7 @@ import { useRef, type CSSProperties } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
 import { useElementSize } from '@/lib/hooks';
-import { cx, text } from '@/lib/ui';
+import { cx, referenceContentWidth, text } from '@/lib/ui';
 
 import styles from './BannedList.module.css';
 
@@ -20,7 +20,7 @@ type BannedListProps = { slot: BannedSlot; words: readonly string[]; freshIndex:
 // switch to compact sizes, and every word is sized to fit its cell without breaking.
 export function BannedList({ slot, words, freshIndex }: BannedListProps) {
   const ref = useRef<HTMLUListElement>(null);
-  const width = useElementSize(ref, { width: layout.referenceScreen.width - 2 * layout.screen.paddingX, height: 0 }).width;
+  const width = useElementSize(ref, { width: referenceContentWidth, height: 0 }).width;
   const compact = words.length >= layout.banned.compactFrom;
   const base = compact ? Math.min(slot.size, textStyles.chipSmall.size) : slot.size;
   const twoColumns = slot.variant === 'table' || slot.variant === 'tileGrid' || slot.variant === 'columns' || slot.variant === 'dashedColumns';

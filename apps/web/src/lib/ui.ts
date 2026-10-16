@@ -1,4 +1,8 @@
-import type { TextStyleName } from '@unspoken/design-tokens';
+import { layout, type TextStyleName } from '@unspoken/design-tokens';
+
+// The play column's content width on the reference screen: what words and lists fit to until their
+// box has been measured.
+export const referenceContentWidth = layout.referenceScreen.width - 2 * layout.play.paddingX;
 
 // Joins class names, skipping empty ones.
 export function cx(...names: (string | false | null | undefined)[]): string {

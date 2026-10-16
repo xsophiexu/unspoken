@@ -1,7 +1,7 @@
 'use client';
 
-import { layout, type LayoutStyle } from '@unspoken/design-tokens';
-import { useRef, type HTMLAttributes, type ReactNode, type Ref } from 'react';
+import { layout, playMargins, type LayoutStyle } from '@unspoken/design-tokens';
+import { useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 
 import { useElementSize } from '@/lib/hooks';
 import { cx } from '@/lib/ui';
@@ -175,11 +175,23 @@ type FrameShellProps = {
   overlay?: ReactNode;
 };
 
+// The style's play screen margins (playMargins) for PlayFrame.module.css, which adds the safe areas.
+function marginVars(s: LayoutStyle): CSSProperties {
+  const m = playMargins(s);
+  return { '--margin-x': `${m.paddingX}px`, '--margin-top': `${m.paddingTop}px`, '--margin-bottom': `${m.paddingBottom}px` } as CSSProperties;
+}
+
 // The page region across the window with the game in a centered column: top row, body, footer.
 // Every round screen (swipe, Reverse, Mind Reader) is drawn in it.
 export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface, top, children, footer, overlay }: FrameShellProps) {
   return (
-    <div ref={frameRef} className={cx(styles.frame, preview && styles.preview)} data-region={s.regions.page} data-arrangement={s.arrangement}>
+    <div
+      ref={frameRef}
+      className={cx(styles.frame, preview && styles.preview)}
+      style={marginVars(s)}
+      data-region={s.regions.page}
+      data-arrangement={s.arrangement}
+    >
       <div className={styles.column} inert={overlay ? true : undefined}>
         {top}
         <div className={styles.body} {...surface}>

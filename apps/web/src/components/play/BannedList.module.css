@@ -13,13 +13,13 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  --pad-y: var(--un-layout-chip-padding-y);
-  --pad-x: var(--un-layout-chip-padding-x);
+  --chip-pad-y: var(--un-layout-chip-padding-y);
+  --chip-pad-x: var(--un-layout-chip-padding-x);
 }
 
 .compact {
-  --pad-y: var(--un-layout-chip-compact-padding-y);
-  --pad-x: var(--un-layout-chip-compact-padding-x);
+  --chip-pad-y: var(--un-layout-chip-compact-padding-y);
+  --chip-pad-x: var(--un-layout-chip-compact-padding-x);
 }
 
 .item {
@@ -61,7 +61,7 @@
 
 .chips .item {
   max-width: 100%;
-  padding: var(--pad-y) var(--pad-x);
+  padding: var(--chip-pad-y) var(--chip-pad-x);
   border-radius: var(--un-radius-sm);
   background: var(--region-chip);
   color: var(--region-chip-ink);
@@ -79,7 +79,7 @@
 }
 
 .table .item {
-  padding: var(--pad-y) var(--pad-x);
+  padding: var(--chip-pad-y) var(--chip-pad-x);
   background: var(--region-bg);
 }
 
@@ -92,7 +92,7 @@
 
 .tileGrid .item {
   min-height: var(--row-height, auto);
-  padding: var(--pad-y) var(--pad-x);
+  padding: var(--chip-pad-y) var(--chip-pad-x);
   border-radius: var(--un-radius-md);
   background: var(--region-chip);
   color: var(--region-chip-ink);
@@ -147,15 +147,16 @@
   background: var(--region-muted);
 }
 
-/* bands: full-width bands from light to strong, edge to edge */
+/* bands: full-width bands from light to strong, edge to edge (out by the play frame's side margin,
+   with the words inset by it) */
 .bands {
-  margin-inline: calc(-1 * var(--un-layout-screen-padding-x));
+  margin-inline: calc(-1 * var(--pad-x));
 }
 
 .bands .item {
   justify-content: space-between;
   min-height: var(--row-height, auto);
-  padding: 0 var(--un-space-6);
+  padding: 0 var(--pad-x);
 }
 
 .compact.bands .item {
