@@ -4,7 +4,7 @@ The contract for everyone building on this repo. Read it before adding an app, a
 
 ## Principles
 
-- **One game, three platforms.** iOS and Android (Expo, `apps/mobile`) and web (Next.js, `apps/web`, not built yet) render the same screens from the same packages. Platform code draws pixels and handles input; it never decides rules, wording or colors.
+- **One game, two platforms.** Android (Expo, `apps/mobile`) and web (Next.js, `apps/web`, not built yet) render the same screens from the same packages. Platform code draws pixels and handles input; it never decides rules, wording or colors.
 - **Logic is portable.** Rules, dealing and round state live in `@unspoken/core`: pure TypeScript with no React, platform or network APIs. The same code runs in the apps and in the service (`services/api`, not built yet).
 - **Nothing hard-coded.** Rules are in `gameConfig`, strings in the copy catalog, colors and sizes in design tokens, and URLs and ids in env. A screen that types a color, a size from the boards, a user-facing string or a URL is a bug.
 - **Swap, don't recode.** A layout style, color or mode (light or dark) is a data change. Screens are built from a fixed set of slot components that read the active theme.
@@ -13,7 +13,7 @@ The contract for everyone building on this repo. Read it before adding an app, a
 ## Repository layout
 
 ```
-apps/mobile            Expo app (SDK 57): iOS, Android, and the web build GitHub Pages serves today
+apps/mobile            Expo app (SDK 57): Android, plus a web export for previews
 packages/core          @unspoken/core: game domain
 packages/content       @unspoken/content: word bank and English copy
 packages/design-tokens @unspoken/design-tokens: palettes, type, sizes, motion, layout styles, theme helpers
@@ -55,7 +55,7 @@ Time and randomness are injected. Rounds take a `seed` (apps use `newSeed()`, te
 - **Palettes** (`palettes`, `COLOR_IDS`): teal (default), clay, lilac, sage, mustard, slate blue and rose, each in `light` and `dark`. Each has the same semantic roles (`ColorRoles`: canvas, bg, surface, surfaceRaised, ink, muted, accent, onAccent, onAccentMuted, accentText, outline, rule, track, barIdle, barSkip, panel, onPanel, onPanelMuted, scrim, and a six-band `ramp` for Ombre), plus a `swatch` for Customize. Colors are `#RRGGBB` or `#RRGGBBAA`, which CSS and React Native both accept.
 - **Region tones** (`REGION_TONES`, `regionColors`): canvas, base, surface, raised, accent and panel. A region is a block of screen with its own background. It resolves to `RegionColors` (bg, ink, muted, accentText, accent, onAccent, chip, chipInk, rule, outline, track, progress). Slot components read the colors of the region they sit in, never palette roles, so one component works on the page, on Sheet's accent top and in Ink's dark panel.
 - **Type**: `fonts` (Manrope 400 to 800; `fonts.native[weight]` names the per-weight family registered by `@expo-google-fonts/manrope`; `fonts.webStack` for CSS), `textStyles` (sizes measured from the boards; line height and letter spacing are relative to the size), `wordMetrics` (Manrope ExtraBold advance widths for `fitWordSize`).
-- **Scales**: `space`, `radius`, `elevation` (light and dark box shadows), `motion` (swipe threshold and fly-out, card enter spring, swipe hint, spotlight timing), `breakpoints`, `maxWidth`, `layout` (measured constants: screen padding, touch target, the Card tile and ring, chips, sheets, buttons, grid columns, thumbnail scale, swatches), `spotlight` (How to play overlay).
+- **Scales**: `space`, `radius`, `elevation` (light and dark box shadows), `motion` (swipe threshold and fly-out, card enter spring, swipe hint, spotlight timing), `breakpoints`, `maxWidth`, `layout` (measured constants: screen padding, touch target, the Card tile and ring, the Deck card, chips, compact banned lists, short screens, sheets, buttons, grid columns, thumbnail scale, swatches), `spotlight` (How to play overlay).
 - **Layout styles** (`layoutStyles`, `STYLE_IDS` in Customize order: Card (default), Deck, Lines, Split, Ledger, Ink, Bottom, Sheet, Big timer, Chips, Ombre). See below.
 - **Theme helpers**: `resolveTheme({ style, color, mode })` returns a `Theme`: the style, the effective color (a pinned style overrides the player's pick), the palette roles, every region tone resolved, and shadows. `parseThemeSelection(stored)` reads a saved selection and defaults bad fields. `nativeTextStyle(name, size?)` gives React Native text props. `cssVariables(theme)` and `cssText(theme, selector)` give CSS custom properties (`--un-color-surface-raised`, `--un-ramp-1-bg`, `--un-panel-ink`, `--un-shadow-card`, `--un-space-4`, `--un-radius-card`, `--un-text-word-size`, `--un-font`).
 - **Contrast**: `test/contrast.test.ts` checks every text slot on its background, in every region tone, palette and mode, against WCAG AA (4.5:1), along with Ombre bands, spotlight captions and the Play label. When you change a color, shade the same hue until the test passes.
@@ -72,12 +72,12 @@ The play screen is assembled, not drawn per style. Each platform implements thes
 
 | Slot | Variants (`styles.ts`) | Reads |
 | --- | --- | --- |
-| Frame (`arrangement`) | `ringCard` (Card), `floatingCard` (Deck), `stack`, `lowerPanel` (Split, Ink, Bottom), `sheet` (Sheet) | `style.regions` for which tone each block uses |
+| Frame (`arrangement`) | `ringCard` (Card), `floatingCard` (Deck), `stack`, `lowerPanel` (Split, Ink, Bottom), `sheet` (Sheet); `panel` size `fill` or `content` (Bottom wraps its list) | `style.regions` for which tone each block uses |
 | Header | `titleBadge`, `pill`, `caps`, `inline`; position `top` or `aboveWord`; container; menu `dots` or `sliders` | core `roundSubline`, copy `modes` and `difficulties` |
 | Timer | `ring`, `bar` (placement, thickness, bleed, clock position), `bigClock`, `chip`, `dial` | `clockProgress`, `clockLabel`, `isClockRunning` |
 | Stats | placement `subline`, `header`, `belowHeader`, `aboveWord`, `underWord`, `footer`; emphasis `plain`, `bigNumber`, `pill` | round state, copy `units` |
 | Word | container `tile`, `card`, `none`; label; size, minSize, maxLines; color | `fitWordSize` with `wordMetrics` |
-| Banned list | `chips`, `table`, `tileGrid`, `rows`, `numberedRows`, `columns`, `dashedColumns`, `bands` | `bannedShown`, copy `play.dontSay`; compact sizes from `layout.banned.compactFrom` words |
+| Banned list | `chips`, `table`, `tileGrid`, `rows`, `numberedRows`, `columns`, `dashedColumns`, `bands` | `bannedShown`, copy `play.dontSay`; compact sizes from `layout.banned.compactFrom` words or on short screens |
 | Controls | `swipeLinks` (bars or text hint), `pills`, `buttons`, `splitBar`; skip look; ratio or fixed width | `canAnswer`, swipe `motion` |
 
 A slot component takes its slot config plus the `RegionColors` of the region it sits in. It looks up nothing else about the style. Adding a style means adding an entry to `layoutStyles` (and its name to `en.customize.styles`). A new variant is added to the slot's union type, then implemented on each platform.
@@ -99,8 +99,8 @@ Wording comes from `en`; numbers come from `gameConfig` and `layout`.
 | Mode and difficulty sheet | Difficulty grid (`layout.grid.sheetDifficulty` columns, cards per level), Restart (same mode and level), New game (to Modes), Keep playing | `modeSheet` | Picking a difficulty starts a new round |
 | Modes | ‹ Back, 2-column grid in `MODE_IDS` order (Teams shows Coming soon), then the "Want another mode?" card, which opens Send feedback from `modes` | `modesScreen`, `modes` | |
 | New game setup | Difficulty, themes (multi-select or All cards; warns below `smallDeckCards`), round timer (microwave input, default per level, only for visible clocks), skips (only for modes with a skip limit) | `setup` | `withDifficulty`, `canStart` |
-| Customize page 1 | ‹ Back, Done; style grid of 3 × 3 thumbnails (Card through Big timer), "Swipe for more →"; 7 color swatches; Light / Dark | `customize` | |
-| Customize page 2 | Chips, Ombre and a dashed "Want another style?" tile, which opens Send feedback from `customize`; "← Swipe back" | `customize` | |
+| Customize page 1 | ‹ Back, Done; style grid of 3 × 2 thumbnails (Card through Ink), "Swipe for more →"; 7 color swatches; Light / Dark | `customize` | |
+| Customize page 2 | Bottom, Sheet, Big timer, Chips, Ombre and a dashed "Want another style?" tile, which opens Send feedback from `customize`; "← Swipe back" | `customize` | |
 | Send feedback | "‹ {place}" back link; topic chips (Styles and colors, Game modes, Words and cards, Something else) with the entry point's topic preselected and the "Picked for you" note; a 500-character box with an `n / 500` counter; Send (disabled until `canSendFeedback`) | `feedback` | `sendFeedback` with `entryPoint`, `platform` and `appVersion`; on failure show `feedback.failed` and keep the text |
 | Thanks | Title, body, Done (back to where feedback was opened) | `thanks` | |
 | How to play | The play screen under the dark spotlight: 7 steps of 3 s (`motion.spotlight`), with the cut-out gliding between targets (`word`, `banned`, `difficulty`, `menu`, `play`), white captions, step dots, Skip tour, and a white Play button with the accent label that pulses on the last step | `howToPlay` | `spotlight` tokens are fixed across styles and modes. Each style maps the five targets to its own slots. |
@@ -112,6 +112,7 @@ Wording comes from `en`; numbers come from `gameConfig` and `layout`.
 - From `medium` up, keep the column and add space around it. Do not stretch the card or the controls. From `expanded` (1024), web may show Customize thumbnails or Modes with more columns, but play stays one column.
 - Words never overflow. Size every word, banned list and tile label with `fitWordSize` against the actual box width, using the style's limits. Phrases wrap to `maxLines` before they shrink, and break after hyphens.
 - Banned lists switch to compact chip and row sizes from `layout.banned.compactFrom` words, which matters for Escalate's ten.
+- The header and controls always stay on screen; the space between them flexes and scrolls only as a last resort. Windows shorter than `layout.shortScreen.height` (small phones) scale the word's largest size by `layout.shortScreen.wordScale` and use the compact banned list.
 - Touch targets are at least `layout.minTouch` (44). Respect safe areas on native and `env(safe-area-inset-*)` on web.
 - Honor reduced motion: skip the swipe hint and spotlight glide, and use fades.
 
@@ -124,11 +125,11 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 | API base URL | `EXPO_PUBLIC_API_URL` | `NEXT_PUBLIC_API_URL` | `PORT`, `CORS_ORIGINS` |
 | Google Analytics id | `EXPO_PUBLIC_GA_MEASUREMENT_ID` | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | |
 | Firebase | | | `FIREBASE_PROJECT_ID`; credentials via `GOOGLE_APPLICATION_CREDENTIALS` or the platform's service account |
-| App version | `expo-application` / `app.json` version | `package.json` version at build | |
+| App version | `app.json` version (read with `expo-constants`) | `package.json` version at build | |
 
 - Expo inlines only literal `process.env.EXPO_PUBLIC_*` reads, and Next only `process.env.NEXT_PUBLIC_*`. Read each variable by its full name in one config module per app and pass the values to `clientConfigSchema.parse`. Locally use `.env.local` files (gitignored), with a committed `.env.example` that lists the names. For builds use EAS environment variables or `eas.json` profile `env` on mobile, and repository variables in GitHub Actions for the Pages build.
 - Public env values ship to clients, so they must not be secrets. Firebase credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to Firestore (collection `feedback`: the validated request plus `receivedAt`). Until `services/api` exists, deploy it where it runs closest to Firebase (Cloud Functions or Cloud Run). Clients do not need to change.
-- Known hard-coded values to move: `apps/mobile/public/index.html` carries the GA tag with `G-9MFDEM0KXR` (move it to the env var and inject it at build or runtime). `app.json` holds the bundle id and package `com.rensar.unspoken`, which is fixed per app and stays there. The Pages workflow sets the web `baseUrl` to `/unspoken`.
+- `app.json` holds the Android package `com.rensar.unspoken`, which is fixed per app and stays there. The mobile web export adds the GA tag at runtime from `EXPO_PUBLIC_GA_MEASUREMENT_ID`. The Pages workflow sets the web `baseUrl` to `/unspoken`.
 - Clients play offline from the bundled `bank` and `gameConfig`. A served config or deck (same schemas) can replace them later without changing screens.
 
 ## Testing rules
@@ -138,9 +139,8 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 - Mock only at boundaries: network (inject `fetch`), Firebase, storage, the clock (dispatch `tick`) and randomness (pass a seed or a `Random`). Don't mock packages or modules.
 - Fixtures are small and built in the test file or `test/fixtures.ts`. Content tests may read the real bank to guard the data.
 - Every package keeps `lint`, `typecheck` and `test` green. Run `pnpm check` at the root before pushing. The Expo app must also build with `npx expo export --platform web` and `--platform android` from `apps/mobile`.
-- UI tests (when screens are rebuilt) render screens with test data and assert visible text and roles, not styles or snapshots.
+- UI tests render screens with test data and assert visible text and roles, not styles or snapshots. `apps/mobile/test` renders the real Expo Router app with `renderRouter` and mocks only storage, `fetch`, timers and font loading.
 
 ## What is not built yet
 
 - `apps/web` (Next.js) and `services/api`.
-- The mobile UI rebuild. `apps/mobile` still renders the original Card-style screens with its own four-color `src/theme.ts`, and reads rules, copy and cards through `src/game.ts`, a thin adapter over the packages. The rebuild replaces both with the slot components above, plus Customize, Send feedback, Thanks, the mode and difficulty sheet, and How to play.
