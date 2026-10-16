@@ -73,7 +73,7 @@ function SwipeBars({ slot, colors, labels, canSkip, canCorrect, onSkip, onCorrec
   const correctFade = dx.interpolate({ inputRange: [-at, 0], outputRange: [opacity.disabled, 1], ...clamp });
   const skipBar = dx.interpolate({ inputRange: [-startSlopPx, 0], outputRange: [colors.outline, colors.track], ...clamp });
   return (
-    <View style={[styles.row, { height: slot.height }]}>
+    <View style={[styles.row, styles.stretch, { height: slot.height }]}>
       <Animated.View style={{ flex: skipFlex }}>
         <Press onPress={onSkip} disabled={!canSkip} accessibilityLabel={labels.skip} style={styles.barColumn}>
           <Animated.View style={{ opacity: skipFade }}>
@@ -216,7 +216,9 @@ const styles = StyleSheet.create({
   center: { justifyContent: 'space-between' },
   end: { alignItems: 'flex-end' },
   grow: { flex: 1 },
-  barColumn: { height: '100%', justifyContent: 'space-between', paddingTop: space[1] },
+  // Each link and its bar fill the row's height, so the bars sit on the bottom margin.
+  stretch: { alignItems: 'stretch' },
+  barColumn: { flex: 1, justifyContent: 'space-between', paddingTop: space[1] },
   bar: { height: layout.control.swipeBar, borderRadius: radius.pill, alignSelf: 'stretch' },
   link: { minHeight: layout.minTouch, justifyContent: 'center', flexShrink: 0 },
   hint: { flexShrink: 1, textAlign: 'center' },

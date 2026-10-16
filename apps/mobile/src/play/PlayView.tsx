@@ -357,7 +357,7 @@ function RingCardFrame({ f }: { f: Frame }) {
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
       <Top f={f}>{header(f)}</Top>
       <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.middle]}>
-        <View style={styles.measure} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
+        <View style={[styles.measure, { marginHorizontal: f.margins.paddingX }]} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
         {h > 0 ? (
           <Moving f={f} pan style={{ width: w, height: h }}>
             {clock ? (
@@ -488,8 +488,8 @@ const styles = StyleSheet.create({
   topLeft: { flexShrink: 1, flexGrow: 1, alignItems: 'flex-start' },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   middle: { alignItems: 'center', justifyContent: 'center', paddingVertical: space[3] },
-  // The space the ring can take: the full width inside the side margins, and room above and below
-  // for the clock on its top edge.
+  // The space the ring can take (inside the side margins, which an absolute fill would ignore), with
+  // room above and below for the clock on its top edge.
   measure: { ...StyleSheet.absoluteFill, marginVertical: space[3] },
   center: { justifyContent: 'center' },
   floating: { gap: space[2.5], paddingVertical: space[4] },

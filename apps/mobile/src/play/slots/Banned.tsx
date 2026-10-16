@@ -170,7 +170,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: 
           {words.map((w, i) => {
             const band = ramp[words.length > 1 ? Math.round((i * (ramp.length - 1)) / (words.length - 1)) : 0] ?? { bg: colors.chip, ink: colors.chipInk };
             return (
-              <View key={w} style={[styles.band, { backgroundColor: band.bg, minHeight: height, paddingHorizontal: bleed + space[1] }]}>
+              <View key={w} style={[styles.band, { backgroundColor: band.bg, minHeight: height, paddingHorizontal: bleed }]}>
                 {word(w, width - 2 * space[6], band.ink, styles.grow)}
                 {fresh(i)}
                 <Icon name="cross" size={layout.icon.sm} color={band.ink} />
