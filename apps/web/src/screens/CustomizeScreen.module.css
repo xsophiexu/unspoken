@@ -8,6 +8,8 @@
 
 /* Pages of thumbnails side by side; swipe (or scroll) snaps from one page to the next. */
 .carousel {
+  /* Positioned, so the hidden radios inside stay clipped to the carousel. */
+  position: relative;
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -32,6 +34,7 @@
 }
 
 .option {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;

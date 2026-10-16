@@ -1,6 +1,6 @@
 // Line icons drawn on a 24-unit grid in the current text color. Sizes come from the caller.
 
-const iconPaths = {
+export const iconPaths = {
   dots: 'M6 12h.01M12 12h.01M18 12h.01',
   sliders: 'M3 6h18M3 12h18M3 18h18',
   pause: 'M9 5v14M15 5v14',

@@ -19,6 +19,7 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: en.app.name,
   description: en.app.tagline,
+  icons: { icon: `${config.basePath}/icon.svg` },
 };
 
 export const viewport: Viewport = {
