@@ -17,7 +17,7 @@ if (db) await migrate(db);
 const app = createApp(config, { db });
 
 const server = serve({ fetch: app.fetch, port: config.port }, ({ port }) => {
-  console.log(`Unspoken API listening on port ${port}. Feedback ${db ? 'stored in Postgres' : 'off: DATABASE_URL is not set'}.`);
+  console.log(`Unspoken API listening on port ${port}. Feedback ${db ? 'stored in Postgres' : 'off: DATABASE_URL is not set'}. Browser origins allowed: ${config.corsOrigins.join(', ') || 'none (set CORS_ORIGINS)'}.`);
 });
 
 // Railway sends SIGTERM before stopping a deployment: finish in-flight requests, close the pool, exit.
