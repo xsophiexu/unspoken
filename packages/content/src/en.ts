@@ -95,7 +95,7 @@ const howToPlaySteps: SpotlightStep[] = [
 
 // Raised whenever the walkthrough changes, so players who saw an older one see the new one once.
 // 1: the first rebuild's tour. 2: the canvas's current wording, order and rules.
-const howToPlayVersion = 2;
+const howToPlayVersion = 3;
 
 export const en = {
   app: {
