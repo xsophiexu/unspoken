@@ -9,4 +9,9 @@ module.exports = defineConfig([
   {
     ignores: ['**/dist/**', '**/.expo/**', '**/.next/**', '**/web-build/**', '**/coverage/**'],
   },
+  {
+    // Modules the import plugin doesn't read: Expo's React Native entry, and PGlite (services/api tests),
+    // whose bundled build overflows the plugin's parser.
+    settings: { 'import/ignore': ['node_modules[\\\\/]+@?react-native', 'node_modules[\\\\/]+@electric-sql[\\\\/]+pglite'] },
+  },
 ]);

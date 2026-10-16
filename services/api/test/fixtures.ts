@@ -1,12 +1,13 @@
+import { PGlite } from '@electric-sql/pglite';
 import { createApiClient } from '@unspoken/api-contract';
 
 import { createApp, type Dependencies } from '../src/app';
 import { loadConfig } from '../src/config';
-import type { FeedbackDocument, Firestore } from '../src/routes/feedback';
+import { migrate, type Database } from '../src/db';
 
-// The app built as main.ts builds it, from environment variables, behind one proxy (like Cloud Run) so
-// tests choose the caller's address with X-Forwarded-For. `api` is the typed client apps use; it checks
-// every response against the contract.
+// The app built as main.ts builds it, from environment variables, behind one proxy so tests choose the
+// caller's address with X-Forwarded-For. `api` is the typed client apps use; it checks every response
+// against the contract.
 export function testApp(env: Record<string, string> = {}, dependencies: Dependencies = {}) {
   const app = createApp(loadConfig({ TRUST_PROXY_HOPS: '1', ...env }), dependencies);
   const api = createApiClient({ baseUrl: 'http://api.test', fetch: async (input, init) => app.request(input, init) });
@@ -19,20 +20,24 @@ export function testApp(env: Record<string, string> = {}, dependencies: Dependen
   return { app, api, post };
 }
 
-// Stands in for Firestore: records each document added and where, or fails like an outage.
-export function fakeFirestore({ down = false } = {}) {
-  const added: { collection: string; document: FeedbackDocument }[] = [];
-  const firestore: Firestore = {
-    collection: (collection) => ({
-      add: async (document) => {
-        if (down) throw new Error('14 UNAVAILABLE: Firestore is down');
-        added.push({ collection, document });
-        return { id: `doc-${added.length}` };
-      },
-    }),
+// A real Postgres, in memory and in process (PGlite), migrated as the service does on start. One takes
+// a few seconds to start, so a test file shares one and empties it before each test.
+export async function testDatabase() {
+  const db = new PGlite();
+  await migrate(db);
+  return {
+    db,
+    storedFeedback: async () => (await db.query('select * from feedback order by received_at')).rows,
+    empty: () => db.exec('truncate feedback'),
   };
-  return { firestore, added };
 }
+
+// A database that is down: every query fails as an unreachable server does.
+export const unreachableDatabase: Database = {
+  query: async () => {
+    throw new Error('connect ECONNREFUSED 10.0.0.5:5432');
+  },
+};
 
 // The error body's code and the paths of its issues, for comparing failures at a glance.
 export async function failure(response: Response) {

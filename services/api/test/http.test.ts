@@ -2,7 +2,7 @@ import { gameConfig } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
 import { loadConfig } from '../src/config';
-import { failure, fakeFirestore, testApp } from './fixtures';
+import { failure, testApp } from './fixtures';
 
 describe('GET /v1/config', () => {
   it('serves the rules the apps bundle', async () => {
@@ -23,12 +23,10 @@ describe('the service', () => {
   });
 
   it('refuses a body over the size limit with payload_too_large', async () => {
-    const { firestore, added } = fakeFirestore();
-    const { post } = testApp({ BODY_LIMIT_BYTES: '1024' }, { firestore });
+    const { post } = testApp({ BODY_LIMIT_BYTES: '1024' });
 
-    const response = await post('/v1/feedback', { topic: 'other', message: 'Hi', appVersion: 'x'.repeat(1100) });
+    const response = await post('/v1/decks', { difficulty: 'Normal', categories: [], note: 'x'.repeat(1100) });
     expect(await failure(response)).toMatchObject({ status: 413, code: 'payload_too_large' });
-    expect(added).toEqual([]);
   });
 });
 
@@ -64,18 +62,20 @@ describe('CORS', () => {
 });
 
 describe('environment', () => {
-  const key = { type: 'service_account', project_id: 'unspoken-prod', client_email: 'api@unspoken-prod.iam.gserviceaccount.com', private_key: 'KEY' };
-
-  it('turns feedback on from a service account key alone, using its project', () => {
-    expect(loadConfig({ FIREBASE_SERVICE_ACCOUNT: JSON.stringify(key) }).firebase).toEqual({
-      projectId: 'unspoken-prod',
-      serviceAccount: { projectId: 'unspoken-prod', clientEmail: key.client_email, privateKey: 'KEY' },
-    });
-    expect(loadConfig({ FIREBASE_PROJECT_ID: '' }).firebase).toBeUndefined();
+  it('treats blank variables as unset, so a copied .env.example starts with feedback off', () => {
+    expect(loadConfig({ PORT: '', DATABASE_URL: ' ' })).toMatchObject({ port: 8080, databaseUrl: undefined });
   });
 
-  it('refuses to start with bad values, naming each variable', () => {
-    const bad = { PORT: 'eighty', CORS_ORIGINS: 'https://xsophiexu.github.io/unspoken', FIREBASE_SERVICE_ACCOUNT: '{not json' };
-    for (const name of Object.keys(bad)) expect(() => loadConfig(bad)).toThrow(`at ${name}`);
+  it('refuses to start with bad values, naming each variable without repeating the database password', () => {
+    const bad = { PORT: 'eighty', CORS_ORIGINS: 'https://xsophiexu.github.io/unspoken', DATABASE_URL: 'mysql://api:hunter2@db.example/unspoken' };
+    let message = '';
+    try {
+      loadConfig(bad);
+    } catch (error) {
+      message = String(error);
+    }
+
+    for (const name of Object.keys(bad)) expect(message).toContain(`at ${name}`);
+    expect(message).not.toContain('hunter2');
   });
 });

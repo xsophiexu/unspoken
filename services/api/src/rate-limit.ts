@@ -27,8 +27,9 @@ export function rateLimit({ limit, windowSeconds, key }: RateLimit): MiddlewareH
   };
 }
 
-// The caller's address. Proxies such as Cloud Run's front end append the address they saw to
-// X-Forwarded-For, after anything the caller sent, so the client is `trustedHops` entries from the end.
+// The caller's address. Each trusted proxy appends the address it saw to X-Forwarded-For, after
+// anything the caller sent, so the client is `trustedHops` entries from the end. Railway's edge sends
+// at most two entries, the client then one of its own hops, hence TRUST_PROXY_HOPS=2 there.
 export function clientAddress(c: Context<AppEnv>, trustedHops: number): string {
   const forwarded = (c.req.header('x-forwarded-for') ?? '').split(',').map((a) => a.trim()).filter(Boolean);
   const fromProxy = trustedHops > 0 ? forwarded[Math.max(0, forwarded.length - trustedHops)] : undefined;

@@ -1,32 +1,31 @@
 import { serve } from '@hono/node-server';
+import { Pool } from 'pg';
 
 import { createApp } from './app';
-import { loadConfig, type FirebaseConfig } from './config';
-import type { Firestore } from './routes/feedback';
-
-// Firestore through the Firebase Admin SDK, loaded only when a Firebase project is configured. With no
-// service account key it uses Application Default Credentials (GOOGLE_APPLICATION_CREDENTIALS, or the
-// Cloud Run service account); FIRESTORE_EMULATOR_HOST points it at the local emulator.
-async function connectFirestore({ projectId, serviceAccount }: FirebaseConfig): Promise<Firestore> {
-  const { cert, initializeApp } = await import('firebase-admin/app');
-  const { getFirestore } = await import('firebase-admin/firestore');
-  return getFirestore(initializeApp({ projectId, ...(serviceAccount && { credential: cert(serviceAccount) }) }));
-}
-
-// When a write fails (say, the credentials are wrong) the Firestore client also leaves a rejected
-// promise behind. The request has already answered 500, so log it rather than let Node exit.
-process.on('unhandledRejection', (reason) => console.error('Unhandled rejection:', reason));
+import { loadConfig } from './config';
+import { migrate } from './db';
 
 const config = loadConfig();
-const firestore = config.firebase && (await connectFirestore(config.firebase));
-const app = createApp(config, { firestore });
+
+// Postgres when DATABASE_URL is set. The connect timeout turns an outage into a quick 500 rather than a
+// hanging request. A bad URL or an unreachable database stops the start here, on the migration.
+const db = config.databaseUrl ? new Pool({ connectionString: config.databaseUrl, max: 5, connectionTimeoutMillis: 5000 }) : undefined;
+// An idle connection the server drops (say, Postgres restarting) is reported here, and the pool replaces it.
+db?.on('error', (error) => console.error('Postgres connection lost:', error.message));
+if (db) await migrate(db);
+
+const app = createApp(config, { db });
 
 const server = serve({ fetch: app.fetch, port: config.port }, ({ port }) => {
-  const feedback = config.firebase ? `stored in Firestore (${config.firebase.projectId})` : 'off: no Firebase project configured';
-  console.log(`Unspoken API listening on port ${port}. Feedback ${feedback}.`);
+  console.log(`Unspoken API listening on port ${port}. Feedback ${db ? 'stored in Postgres' : 'off: DATABASE_URL is not set'}.`);
 });
 
-// Cloud Run sends SIGTERM before stopping an instance: finish in-flight requests, then exit.
+// Railway sends SIGTERM before stopping a deployment: finish in-flight requests, close the pool, exit.
 for (const signal of ['SIGTERM', 'SIGINT'] as const) {
-  process.once(signal, () => server.close(() => process.exit(0)));
+  process.once(signal, () =>
+    server.close(async () => {
+      await db?.end();
+      process.exit(0);
+    }),
+  );
 }

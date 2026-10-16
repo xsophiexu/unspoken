@@ -6,23 +6,26 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch --env-file-if-exists=.env.local src/main.ts",
-    "build": "esbuild src/main.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --external:firebase-admin --outfile=dist/main.js",
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --external:pg --outfile=dist/main.js",
     "start": "node --enable-source-maps --env-file-if-exists=.env.local dist/main.js",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p .",
     "test": "vitest run"
   },
   "dependencies": {
-    "firebase-admin": "^14.5.0"
+    "pg": "^8.23.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.10",
     "@hono/node-server": "^2.1.5",
     "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
     "@unspoken/api-contract": "workspace:*",
     "@unspoken/content": "workspace:*",
     "@unspoken/core": "workspace:*",
     "esbuild": "^0.28.2",
     "hono": "^4.13.13",
+    "railway": "~3.16.0",
     "tsx": "^4.23.15",
     "zod": "^4.6.7"
   }
