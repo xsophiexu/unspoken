@@ -13,6 +13,8 @@ body {
 }
 
 html {
+  /* One device pixel line for rules between rows. */
+  --hairline: 1px;
   background: var(--un-color-bg);
   -webkit-text-size-adjust: 100%;
 }

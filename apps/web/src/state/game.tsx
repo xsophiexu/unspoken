@@ -15,7 +15,7 @@ import {
   type RoundAction,
   type RoundState,
 } from '@unspoken/core';
-import { createContext, use, useEffect, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
 import { parseSettings, SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { readStored, writeStored } from '@/lib/storage';
@@ -81,17 +81,21 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
 
   useEffect(() => writeStored(SETTINGS_STORAGE_KEY, state.settings), [state.settings]);
 
-  const value = useMemo((): GameContextValue => {
-    const newGame = (settings: GameSettings) => send({ type: 'newGame', settings, seed: newSeed(random) });
-    return {
+  // Stable across renders, so timers and listeners that dispatch don't restart on every tick.
+  const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
+  const newGame = useCallback((settings: GameSettings) => send({ type: 'newGame', settings, seed: newSeed(random) }), [random]);
+
+  const value = useMemo(
+    (): GameContextValue => ({
       settings: state.settings,
       round: state.round,
-      dispatch: (action) => send({ type: 'play', action }),
+      dispatch,
       newGame,
       restart: () => newGame(state.settings),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty)),
-    };
-  }, [state.settings, state.round, random]);
+    }),
+    [state.settings, state.round, dispatch, newGame],
+  );
 
   return <GameContext value={value}>{children}</GameContext>;
 }

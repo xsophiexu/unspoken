@@ -71,9 +71,9 @@
 .table {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
+  gap: var(--hairline);
   overflow: hidden;
-  border: 1px solid var(--region-rule);
+  border: var(--hairline) solid var(--region-rule);
   border-radius: var(--un-radius-md);
   background: var(--region-rule);
 }
@@ -102,7 +102,7 @@
 .rows .item,
 .numberedRows .item {
   padding: var(--un-space-3) 0;
-  border-bottom: 1px solid var(--region-rule);
+  border-bottom: var(--hairline) solid var(--region-rule);
 }
 
 .compact.rows .item,

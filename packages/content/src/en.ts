@@ -306,6 +306,9 @@ export const en = {
     cluesUsed: 'CLUES USED · {revealed} OF {total}',
     missedLink: '← Missed',
     gotLink: 'Got it →',
+    // The same answers on button and split-bar controls.
+    missed: 'Missed',
+    got: 'Got it',
   },
 
   // --- Mind Reader ---------------------------------------------------------------------------

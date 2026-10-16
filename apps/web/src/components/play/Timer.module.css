@@ -160,6 +160,5 @@
   align-items: center;
   gap: var(--un-space-0-5);
   padding-inline-start: var(--un-space-2-5);
-  background: var(--region-bg);
   color: var(--region-ink);
 }

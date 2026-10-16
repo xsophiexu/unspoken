@@ -144,15 +144,48 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
 
   const panelHoldsFooter = arrangement === 'lowerPanel' || arrangement === 'sheet';
   return (
-    <div ref={frameRef} className={cx(styles.frame, !actions && styles.preview)} data-region={regions.page} data-arrangement={arrangement}>
-      <div className={styles.column}>
-        <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />
-        {timer('top')}
-        <Stats slot={s.stats} at="belowHeader" stats={model.stats} />
+    <FrameShell
+      layoutStyle={s}
+      preview={!actions}
+      frameRef={frameRef}
+      surface={surface}
+      top={
+        <>
+          <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />
+          {timer('top')}
+          <Stats slot={s.stats} at="belowHeader" stats={model.stats} />
+        </>
+      }
+      footer={panelHoldsFooter ? undefined : footer}
+      overlay={overlay}
+    >
+      {body}
+    </FrameShell>
+  );
+}
+
+type FrameShellProps = {
+  layoutStyle: LayoutStyle;
+  preview?: boolean;
+  frameRef?: Ref<HTMLDivElement>;
+  surface?: HTMLAttributes<HTMLDivElement>;
+  top: ReactNode;
+  children: ReactNode;
+  footer?: ReactNode;
+  overlay?: ReactNode;
+};
+
+// The page region across the window with the game in a centered column: top row, body, footer.
+// Every round screen (swipe, Reverse, Mind Reader) is drawn in it.
+export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface, top, children, footer, overlay }: FrameShellProps) {
+  return (
+    <div ref={frameRef} className={cx(styles.frame, preview && styles.preview)} data-region={s.regions.page} data-arrangement={s.arrangement}>
+      <div className={styles.column} inert={overlay ? true : undefined}>
+        {top}
         <div className={styles.body} {...surface}>
-          {body}
+          {children}
         </div>
-        {!panelHoldsFooter && <div className={styles.footer}>{footer}</div>}
+        {footer && <div className={styles.footer}>{footer}</div>}
       </div>
       {overlay}
     </div>

@@ -68,3 +68,8 @@
 .action {
   font: inherit;
 }
+
+.icon {
+  font-size: var(--un-space-5);
+  margin-bottom: var(--un-space-1);
+}

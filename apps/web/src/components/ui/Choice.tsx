@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
+import { Icon, type IconName } from '@/components/ui/Icon';
 import { cx, text } from '@/lib/ui';
 
 import styles from './Choice.module.css';
@@ -33,8 +34,11 @@ export function Choice({ type, name, checked, onChange, look, children, detail }
 type TileProps = {
   title: ReactNode;
   detail?: ReactNode;
+  icon?: IconName;
   // The current choice, shown filled.
   selected?: boolean;
+  // Filled like the current choice without being one (the main action of a pair).
+  accent?: boolean;
   disabled?: boolean;
   href?: string;
   onClick?: () => void;
@@ -42,10 +46,11 @@ type TileProps = {
 };
 
 // A tile that acts (starts a round, opens a screen) and looks like a Choice tile.
-export function Tile({ title, detail, selected = false, disabled = false, href, onClick, label }: TileProps) {
-  const className = cx(styles.choice, styles.tile, styles.action, selected && styles.on, disabled && styles.off);
+export function Tile({ title, detail, icon, selected = false, accent = false, disabled = false, href, onClick, label }: TileProps) {
+  const className = cx(styles.choice, styles.tile, styles.action, (selected || accent) && styles.on, disabled && styles.off);
   const content = (
     <>
+      {icon && <Icon name={icon} className={styles.icon} />}
       <span className={cx(styles.title, text('optionTitle'))}>{title}</span>
       {detail !== undefined && <span className={cx(styles.detail, text('small'))}>{detail}</span>}
     </>

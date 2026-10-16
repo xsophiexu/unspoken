@@ -1,6 +1,6 @@
 // Line icons drawn on a 24-unit grid in the current text color. Sizes come from the caller.
 
-const paths = {
+const iconPaths = {
   dots: 'M6 12h.01M12 12h.01M18 12h.01',
   sliders: 'M3 6h18M3 12h18M3 18h18',
   pause: 'M9 5v14M15 5v14',
@@ -22,7 +22,7 @@ const paths = {
   close: 'M6 6l12 12M18 6L6 18',
 } as const;
 
-export type IconName = keyof typeof paths;
+export type IconName = keyof typeof iconPaths;
 
 // Filled shapes; the rest are strokes.
 const filled: ReadonlySet<IconName> = new Set(['play']);
@@ -45,7 +45,7 @@ export function Icon({ name, size = '1em', className }: IconProps) {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d={paths[name]} />
+      <path d={iconPaths[name]} />
       {name === 'sliders' && (
         <g fill="var(--region-bg, var(--un-color-bg))">
           <circle cx="8" cy="6" r="2.4" />
