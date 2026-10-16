@@ -40,7 +40,7 @@ export function SuggestCard({ title, body, action, colors, onPress, shape, width
         ) : null}
       </View>
       <View style={[styles.action, { backgroundColor: colors.accent }]}>
-        <Txt variant="badge" color={colors.onAccent}>
+        <Txt variant="topicChip" color={colors.onAccent}>
           {action}
         </Txt>
       </View>

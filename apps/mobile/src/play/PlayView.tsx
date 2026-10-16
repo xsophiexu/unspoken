@@ -1,7 +1,7 @@
 import { en } from '@unspoken/content';
 import { layout, maxWidth, radius, space, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
 import { useState, type ReactNode } from 'react';
-import { Animated, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Animated, ScrollView, StyleSheet, useWindowDimensions, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { Icon } from '../ui/Icon';
 import { Txt } from '../ui/Txt';
@@ -17,6 +17,9 @@ import type { Swipe } from './useSwipe';
 // The play screen for any layout style, assembled from the style's data: one frame per
 // arrangement places the zones, and each zone renders the slot variant the style names. Nothing
 // here knows a style by name, so a new style is a new entry in the design-tokens catalog.
+//
+// The header and controls always stay on screen. The middle takes the space between them, with
+// elastic gaps, and scrolls only when its content can't fit (small phones, Escalate's ten words).
 //
 // Without handlers it is a still picture of the model (Customize thumbnails).
 
@@ -38,6 +41,8 @@ type Props = {
   handlers?: PlayHandlers;
   insets?: Insets;
   labels?: ControlLabels;
+  // The height the screen is drawn at, when it isn't the window's (thumbnails).
+  height?: number;
 };
 
 const PAD = layout.screen.paddingX;
@@ -49,13 +54,16 @@ type Frame = {
   h?: PlayHandlers;
   insets: Insets;
   labels?: ControlLabels;
+  // A short screen (small phones): a smaller word and compact banned lists.
+  short: boolean;
   page: RegionColors;
   word: RegionColors;
   lower: RegionColors;
   footer: RegionColors;
 };
 
-export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels }: Props) {
+export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, height }: Props) {
+  const window = useWindowDimensions();
   const { regions: r, style } = theme;
   const page = r[style.regions.page];
   const panel = style.arrangement === 'lowerPanel' || style.arrangement === 'sheet';
@@ -66,6 +74,7 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels }:
     h: handlers,
     insets,
     labels,
+    short: (height ?? window.height) < layout.shortScreen.height,
     page,
     word: style.regions.word ? r[style.regions.word] : page,
     lower,
@@ -85,28 +94,32 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels }:
 }
 
 // The top row: the mode and level (or a timer chip when they sit above the word), and at the
-// right the header stats, the timer chip or dial and the menu. Reverse and Mind Reader share it.
+// right the header stats, the timer chip or dial and the menu. A dial beside the mode label comes
+// before the menu; in a row of buttons alone it sits at the far right. Reverse and Mind Reader
+// share this header.
 export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme; model: HeaderModel; clock: Clock | null; handlers?: HeaderHandlers }) {
   const { header, timer, stats } = theme.style;
   const colors = theme.regions[theme.style.regions.page];
+  const top = header.position === 'top';
   const chip = clock && timer.variant === 'chip' ? <TimerChip slot={timer} clock={clock} colors={colors} onPause={h?.onPause} /> : null;
   const dial = clock && timer.variant === 'dial' ? <TimerDial slot={timer} clock={clock} colors={colors} onPause={h?.onPause} /> : null;
   const left =
     header.variant === 'titleBadge' ? (
       <TitleBadge slot={header} colors={colors} model={model} onBadge={h?.onBadge} />
-    ) : header.position === 'top' ? (
+    ) : top ? (
       <ModeLabel slot={header} colors={colors} model={model} onPress={h?.onModeLabel} />
     ) : (
       chip
     );
   return (
-    <View style={styles.topRow}>
+    <View style={[styles.topRow, { alignItems: header.variant === 'titleBadge' ? 'flex-start' : 'center' }]}>
       <View style={styles.topLeft}>{left}</View>
       <View style={styles.topRight}>
         {stats.placement === 'header' ? <Stats slot={stats} colors={colors} stats={model.stats} /> : null}
-        {header.position === 'top' ? chip : null}
+        {top ? chip : null}
+        {top ? dial : null}
         <MenuButton slot={header} colors={colors} onPress={h?.onMenu} pageColor={colors.bg} />
-        {dial}
+        {top ? null : dial}
       </View>
     </View>
   );
@@ -116,12 +129,6 @@ export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme;
 
 function header(f: Frame) {
   return <PlayHeader theme={f.theme} model={f.model} clock={f.model.clock} handlers={f.h} />;
-}
-
-function labelAboveWord(f: Frame, colors: RegionColors) {
-  const slot = f.theme.style.header;
-  if (slot.position !== 'aboveWord' || slot.variant === 'titleBadge') return null;
-  return <ModeLabel slot={slot} colors={colors} model={f.model} onPress={f.h?.onModeLabel} />;
 }
 
 function statsAt(f: Frame, placement: 'belowHeader' | 'aboveWord' | 'underWord' | 'footer', colors: RegionColors) {
@@ -168,21 +175,37 @@ function clockAt(f: Frame, place: TimerBarSlot['placement'], colors: RegionColor
   }
 }
 
-function panelLine(f: Frame, colors: RegionColors) {
+// The line along the top edge of the lower panel, in the page's timer colors.
+function panelLine(f: Frame) {
   const { bar } = f.theme.style.timer;
   const clock = f.model.clock;
-  return clock && bar?.placement === 'panelTop' ? <TimerBar bar={bar} progress={clock.progress} colors={colors} bleed={PAD} /> : null;
-}
-
-function word(f: Frame, colors: RegionColors) {
-  const card = f.model.card;
-  return card ? <Word slot={f.theme.style.word} colors={colors} word={card.card.word} /> : null;
+  return clock && bar?.placement === 'panelTop' ? <TimerBar bar={bar} progress={clock.progress} colors={f.page} /> : null;
 }
 
 function banned(f: Frame, colors: RegionColors) {
   const card = f.model.card;
   if (!card) return null;
-  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={PAD} />;
+  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={PAD} short={f.short} />;
+}
+
+// The mode label above the word (when the style puts it there), the word, and what follows it:
+// the clock bar under the word and the stats. On a card, stats above the word sit outside it.
+function WordBlock({ f, colors, moving = false, onCard = false }: { f: Frame; colors: RegionColors; moving?: boolean; onCard?: boolean }) {
+  const card = f.model.card;
+  const slot = f.theme.style.header;
+  const label = slot.position === 'aboveWord' && slot.variant !== 'titleBadge' ? <ModeLabel slot={slot} colors={colors} model={f.model} onPress={f.h?.onModeLabel} /> : null;
+  const word = card ? <Word slot={f.theme.style.word} colors={colors} word={card.card.word} short={f.short} /> : null;
+  return (
+    <View style={styles.wordBlock}>
+      {onCard ? null : statsAt(f, 'aboveWord', colors)}
+      <View style={styles.labelled}>
+        {label}
+        {moving ? <Moving f={f}>{word}</Moving> : word}
+      </View>
+      {clockAt(f, 'belowWord', colors)}
+      {statsAt(f, 'underWord', colors)}
+    </View>
+  );
 }
 
 // --- Building blocks -----------------------------------------------------------------------
@@ -194,6 +217,34 @@ function Moving({ f, style, pan = false, children }: { f: Frame; style?: StylePr
     <Animated.View style={[style, f.h.swipe.cardStyle]} {...(pan ? f.h.swipe.panHandlers : undefined)}>
       {children}
     </Animated.View>
+  );
+}
+
+// Space that grows from `min` up to `max` when the screen has room and closes up when it doesn't.
+function Gap({ min = 0, max }: { min?: number; max?: number }) {
+  return <View style={[styles.fill, { minHeight: min }, max !== undefined && { maxHeight: max }]} />;
+}
+
+// A frame's middle: fills the space it is given, takes the swipe, and scrolls when its content is
+// taller than that space. It spans the screen padding (and pads its content instead), so lists
+// that run edge to edge aren't clipped by the scroll view.
+function Middle({ f, style, children }: { f: Frame; style?: StyleProp<ViewStyle>; children: ReactNode }) {
+  return (
+    <ScrollView style={[styles.fill, styles.bleed]} contentContainerStyle={[styles.grow, styles.padded]} scrollEnabled={!!f.h} bounces={false} showsVerticalScrollIndicator={false}>
+      <View style={[styles.grow, style]} {...f.h?.swipe.panHandlers}>
+        {children}
+      </View>
+    </ScrollView>
+  );
+}
+
+// The word above the banned list on a card or tile, scrolling inside when both can't fit.
+function CardBody({ f, colors }: { f: Frame; colors: RegionColors }) {
+  return (
+    <ScrollView style={styles.fill} contentContainerStyle={styles.cardBody} scrollEnabled={!!f.h} bounces={false} showsVerticalScrollIndicator={false}>
+      <WordBlock f={f} colors={colors} onCard />
+      {banned(f, colors)}
+    </ScrollView>
   );
 }
 
@@ -227,14 +278,15 @@ function Top({ f, children }: { f: Frame; children: ReactNode }) {
   );
 }
 
+// The footer stats, the note and the controls. A timer line above the controls sits right on them.
 function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   const { controls } = f.theme.style;
   const colors = f.footer;
   const fills = fillsBottom(controls);
-  const card = f.model;
-  const note = card.note ? (
+  const { model } = f;
+  const note = model.note ? (
     <Txt variant="small" color={colors.muted} style={styles.note}>
-      {card.note}
+      {model.note}
     </Txt>
   ) : null;
   return (
@@ -243,24 +295,26 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
       f={f}
       inner={[
         styles.zone,
-        { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: fills ? 0 : f.insets.bottom + layout.screen.paddingBottom },
+        { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: fills ? 0 : f.insets.bottom + (f.short ? space[3] : layout.screen.paddingBottom) },
       ]}
     >
-      {clockAt(f, 'aboveControls', colors)}
       {statsAt(f, 'footer', colors)}
       {fills ? note : null}
-      <Controls
-        slot={controls}
-        colors={colors}
-        halves={halvesFor(f.theme, colors)}
-        labels={f.labels}
-        canSkip={card.canSkip}
-        canCorrect={card.canCorrect}
-        onAnswer={f.h?.swipe.answer}
-        dx={f.h?.swipe.dx}
-        bleed={PAD}
-        bottomInset={f.insets.bottom}
-      />
+      <View>
+        {clockAt(f, 'aboveControls', colors)}
+        <Controls
+          slot={controls}
+          colors={colors}
+          halves={halvesFor(f.theme, colors)}
+          labels={f.labels}
+          canSkip={model.canSkip}
+          canCorrect={model.canCorrect}
+          onAnswer={f.h?.swipe.answer}
+          dx={f.h?.swipe.dx}
+          bleed={PAD}
+          bottomInset={f.insets.bottom}
+        />
+      </View>
       {fills ? null : note}
     </Band>
   );
@@ -272,26 +326,27 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
 function RingCardFrame({ f }: { f: Frame }) {
   const [box, setBox] = useState({ w: 0, h: 0 });
   const clock = f.model.clock;
-  const w = box.w ? Math.min(box.w, layout.card.maxWidth) : layout.card.maxWidth;
-  const h = box.h ? Math.min(box.h, layout.card.maxHeight) : layout.card.maxHeight;
+  const w = Math.min(box.w, layout.card.maxWidth);
+  const h = Math.min(box.h, layout.card.maxHeight);
   const inset = clock ? layout.card.ringInset : 0;
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
       <Top f={f}>{header(f)}</Top>
-      <Band colors={f.page} f={f} style={styles.grow} inner={[styles.grow, styles.middle]}>
+      <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.middle]}>
         <View style={styles.measure} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })} />
-        <Moving f={f} pan style={{ width: w, height: h }}>
-          {clock ? (
-            <>
-              <TimerRing width={w} height={h} progress={clock.progress} colors={f.page} />
-              <RingClock clock={clock} colors={f.page} onPause={f.h?.onPause} />
-            </>
-          ) : null}
-          <View style={[styles.tile, { top: inset, left: inset, right: inset, bottom: inset, backgroundColor: f.word.bg }]}>
-            {word(f, f.word)}
-            {banned(f, f.word)}
-          </View>
-        </Moving>
+        {h > 0 ? (
+          <Moving f={f} pan style={{ width: w, height: h }}>
+            {clock ? (
+              <>
+                <TimerRing width={w} height={h} progress={clock.progress} colors={f.page} />
+                <RingClock clock={clock} colors={f.page} onPause={f.h?.onPause} />
+              </>
+            ) : null}
+            <View style={[styles.tile, { top: inset, left: inset, right: inset, bottom: inset, backgroundColor: f.word.bg }]}>
+              <CardBody f={f} colors={f.word} />
+            </View>
+          </Moving>
+        ) : null}
         <SwipeHint f={f} colors={f.page} />
       </Band>
       <Footer f={f} separate={false} />
@@ -299,7 +354,7 @@ function RingCardFrame({ f }: { f: Frame }) {
   );
 }
 
-// Deck: a raised card floats between the header and the controls.
+// Deck: a raised card floats between the header and the controls, shrinking on short screens.
 function FloatingCardFrame({ f }: { f: Frame }) {
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
@@ -308,12 +363,10 @@ function FloatingCardFrame({ f }: { f: Frame }) {
         {clockAt(f, 'belowHeader', f.page)}
         {statsAt(f, 'belowHeader', f.page)}
       </Top>
-      <Band colors={f.page} f={f} style={styles.grow} inner={[styles.grow, styles.center, styles.zone]}>
+      <Band colors={f.page} f={f} style={styles.fill} inner={[styles.fill, styles.center, styles.floating]}>
         {statsAt(f, 'aboveWord', f.page)}
         <Moving f={f} pan style={[styles.card, { backgroundColor: f.word.bg, boxShadow: f.theme.shadow.card }]}>
-          {labelAboveWord(f, f.word)}
-          {word(f, f.word)}
-          {banned(f, f.word)}
+          <CardBody f={f} colors={f.word} />
         </Moving>
         <SwipeHint f={f} colors={f.page} />
       </Band>
@@ -333,16 +386,14 @@ function StackFrame({ f }: { f: Frame }) {
         {clockAt(f, 'belowClock', f.page)}
         {statsAt(f, 'belowHeader', f.page)}
       </Top>
-      <Band colors={f.page} f={f} style={styles.grow} inner={styles.grow}>
-        <View style={[styles.grow, styles.content]} {...f.h?.swipe.panHandlers}>
-          {labelAboveWord(f, f.page)}
-          {statsAt(f, 'aboveWord', f.page)}
-          <Moving f={f}>{word(f, f.page)}</Moving>
-          {clockAt(f, 'belowWord', f.page)}
-          {statsAt(f, 'underWord', f.page)}
-          {pins ? <View style={styles.grow} /> : null}
+      <Band colors={f.page} f={f} style={styles.fill} inner={styles.fill}>
+        <Middle f={f} style={!pins && styles.stack}>
+          <Gap min={space[3]} max={space[10]} />
+          <WordBlock f={f} colors={f.page} moving />
+          <Gap min={space[3]} max={space[5]} />
+          {pins ? <Gap /> : null}
           <Moving f={f}>{banned(f, f.page)}</Moving>
-        </View>
+        </Middle>
         <SwipeHint f={f} colors={f.page} />
       </Band>
       <Footer f={f} separate={f.footer.bg !== f.page.bg} />
@@ -351,64 +402,81 @@ function StackFrame({ f }: { f: Frame }) {
 }
 
 // Split, Ink, Bottom (lower panel) and Sheet (rounded sheet): the word on the page above, the
-// banned list and the controls on a panel below.
+// banned list and the controls on a panel below. The panel takes the space under the word, or for
+// a 'content' panel wraps its list and controls at the bottom.
 function PanelFrame({ f }: { f: Frame }) {
-  const sheet = f.theme.style.arrangement === 'sheet';
-  const pins = pinsToFooter(f.theme.style.banned);
+  const { style } = f.theme;
+  const sheet = style.arrangement === 'sheet';
+  const fit = style.panel?.size === 'content';
+  const corner = sheet ? layout.sheet.radius : style.panel ? radius[style.panel.radius] : 0;
+  const upper = (
+    <>
+      <Gap min={space[3]} max={space[8]} />
+      <WordBlock f={f} colors={f.page} moving />
+      {clockAt(f, 'panelTop', f.page)}
+    </>
+  );
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
-      <Band colors={f.page} f={f} style={styles.grow} inner={[styles.grow, styles.zone, { paddingTop: f.insets.top + layout.screen.paddingTop, paddingBottom: space[3] }]}>
+      <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: f.insets.top + layout.screen.paddingTop }]}>
         {header(f)}
         {clockAt(f, 'belowHeader', f.page)}
         {clockAt(f, 'belowClock', f.page)}
         {statsAt(f, 'belowHeader', f.page)}
-        <View style={[styles.grow, styles.center, styles.content]} {...f.h?.swipe.panHandlers}>
-          {labelAboveWord(f, f.page)}
-          {statsAt(f, 'aboveWord', f.page)}
-          <Moving f={f}>{word(f, f.page)}</Moving>
-          {clockAt(f, 'belowWord', f.page)}
-          {statsAt(f, 'underWord', f.page)}
-          <SwipeHint f={f} colors={f.page} />
-        </View>
-        {clockAt(f, 'panelTop', f.page)}
+        {fit ? (
+          <Middle f={f} style={styles.stack}>
+            {upper}
+          </Middle>
+        ) : (
+          <View style={styles.stack} {...f.h?.swipe.panHandlers}>
+            {upper}
+          </View>
+        )}
+        <SwipeHint f={f} colors={f.page} />
       </Band>
-      <Band colors={f.lower} f={f} style={[styles.grow, sheet && styles.sheet]} inner={styles.grow}>
-        {panelLine(f, f.lower)}
+      <View style={[!fit && styles.fill, styles.panel, { backgroundColor: f.lower.bg, borderTopLeftRadius: corner, borderTopRightRadius: corner }]}>
+        {panelLine(f)}
         {sheet ? <View style={[styles.grabber, { backgroundColor: f.lower.rule }]} /> : null}
-        <View style={[styles.grow, styles.panelContent]} {...f.h?.swipe.panHandlers}>
-          {pins ? <View style={styles.grow} /> : null}
-          <Moving f={f}>{banned(f, f.lower)}</Moving>
-        </View>
-      </Band>
-      <Footer f={f} separate={f.footer.bg !== f.lower.bg} />
+        <Band colors={f.lower} f={f} style={!fit && styles.fill} inner={[!fit && styles.fill, styles.panelContent]}>
+          {fit ? (
+            <View {...f.h?.swipe.panHandlers}>
+              <Moving f={f}>{banned(f, f.lower)}</Moving>
+            </View>
+          ) : (
+            <Middle f={f}>
+              <Moving f={f}>{banned(f, f.lower)}</Moving>
+            </Middle>
+          )}
+        </Band>
+        <Footer f={f} separate={f.footer.bg !== f.lower.bg} />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   page: { flex: 1, overflow: 'hidden' },
+  fill: { flex: 1, minHeight: 0 },
   grow: { flexGrow: 1 },
+  bleed: { marginHorizontal: -PAD },
+  padded: { paddingHorizontal: PAD },
   column: { width: '100%', maxWidth: maxWidth.column, alignSelf: 'center', paddingHorizontal: PAD },
   zone: { gap: space[3] },
-  topRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: space[3], minHeight: layout.header.menuButton },
+  topRow: { flexDirection: 'row', justifyContent: 'space-between', gap: space[3], minHeight: layout.header.menuButton },
   topLeft: { flexShrink: 1, flexGrow: 1, alignItems: 'flex-start' },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   middle: { alignItems: 'center', justifyContent: 'center', paddingVertical: space[3] },
   measure: { ...StyleSheet.absoluteFill, margin: space[3] },
   center: { justifyContent: 'center' },
-  tile: {
-    position: 'absolute',
-    borderRadius: radius.card,
-    paddingHorizontal: layout.card.paddingX,
-    paddingVertical: layout.card.paddingY,
-    justifyContent: 'space-between',
-    gap: space[4],
-    overflow: 'hidden',
-  },
-  card: { borderRadius: radius.cardLarge, paddingHorizontal: layout.card.paddingX, paddingVertical: layout.card.paddingY, gap: space[6] },
-  content: { gap: space[4], paddingTop: space[4] },
+  floating: { gap: space[2.5], paddingVertical: space[4] },
+  tile: { position: 'absolute', borderRadius: radius.card, overflow: 'hidden' },
+  card: { height: layout.card.floatingHeight, flexShrink: 1, borderRadius: radius.cardLarge },
+  cardBody: { flexGrow: 1, justifyContent: 'space-between', gap: space[6], paddingHorizontal: layout.card.paddingX, paddingVertical: layout.card.paddingY },
+  wordBlock: { gap: space[4] },
+  labelled: { gap: space[1] },
+  stack: { paddingBottom: space[3] },
+  panel: { overflow: 'hidden' },
   panelContent: { paddingTop: space[5] },
-  sheet: { borderTopLeftRadius: layout.sheet.radius, borderTopRightRadius: layout.sheet.radius, marginTop: -layout.sheet.radius / 2 },
   grabber: {
     alignSelf: 'center',
     width: layout.sheet.grabberWidth,

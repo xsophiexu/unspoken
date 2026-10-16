@@ -1,6 +1,6 @@
 import type { SpotlightTarget } from '@unspoken/content';
 import { createContext, use, useState, type ReactNode } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 // How to play points at parts of the play screen. Each style puts the word, banned list, level,
 // menu and controls in different places, so the slots mark their own element with <Target> and
@@ -30,6 +30,7 @@ export function Target({ name, children }: { name: SpotlightTarget; children: Re
   return (
     <View
       collapsable={false}
+      style={styles.target}
       ref={
         targets
           ? (node) => {
@@ -42,3 +43,8 @@ export function Target({ name, children }: { name: SpotlightTarget; children: Re
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  // Never wider than its container, so long content inside (the mode label) can shrink.
+  target: { maxWidth: '100%' },
+});

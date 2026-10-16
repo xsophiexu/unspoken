@@ -42,7 +42,7 @@ export function Screen({ tone, width, children, footer, scroll = true }: Props) 
   return (
     <View style={[styles.page, { backgroundColor: colors.bg, paddingTop: insets.top }]}>
       <StatusBar style={barStyle} />
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={[styles.column, { maxWidth: maxWidth[width] }]}>
+      <KeyboardAvoidingView behavior="padding" style={[styles.column, { maxWidth: maxWidth[width] }]}>
         {scroll ? (
           <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
             {body}

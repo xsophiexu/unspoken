@@ -1,6 +1,6 @@
 import { layout, maxWidth, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Txt } from '../ui/Txt';
 import type { Chrome } from './Game';
@@ -13,7 +13,7 @@ export function RoundFrame({ chrome, model, children, footer }: { chrome: Chrome
   const { insets, page } = chrome;
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      behavior="padding"
       style={[styles.page, { backgroundColor: page.bg, paddingTop: insets.top + layout.screen.paddingTop, paddingBottom: insets.bottom + layout.screen.paddingBottom }]}
     >
       <View style={styles.column}>

@@ -88,7 +88,7 @@ export default function FeedbackScreen() {
           </View>
 
           <View style={styles.section}>
-            <SectionLabel label={f.ideaLabel} aside={format(f.counter, { n: feedbackLength(message), max: feedbackRules.maxLength })} colors={colors} />
+            <SectionLabel label={f.ideaLabel} colors={colors} />
             <TextInput
               value={message}
               onChangeText={(text) => {
@@ -103,6 +103,9 @@ export default function FeedbackScreen() {
               textAlignVertical="top"
               style={[styles.input, nativeTextStyle('input'), { backgroundColor: field.bg, color: field.ink, borderColor: colors.outline }]}
             />
+            <Txt variant="small" color={colors.muted} style={styles.counter}>
+              {format(f.counter, { n: feedbackLength(message), max: feedbackRules.maxLength })}
+            </Txt>
             {failed ? (
               <View accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[styles.error, { backgroundColor: colors.chip, borderColor: colors.outline }]}>
                 <Icon name="cross" size={layout.icon.md} color={colors.chipInk} />
@@ -129,4 +132,5 @@ const styles = StyleSheet.create({
   },
   error: { flexDirection: 'row', alignItems: 'center', gap: space[2.5], borderRadius: radius.md, borderWidth: layout.stroke.hairline, padding: space[3] },
   errorText: { flex: 1 },
+  counter: { textAlign: 'right', marginTop: -space[1] },
 });

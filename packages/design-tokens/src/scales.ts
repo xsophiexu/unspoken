@@ -109,15 +109,20 @@ export const layout = {
   minTouch: 44,
   // caretScale: the ▾ after the mode and level, relative to the header text size.
   header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
-  // Card style: the word tile inside the timer ring.
-  card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30 },
+  // Card style: the word tile inside the timer ring. floatingHeight: the Deck card's height, which
+  // shrinks on shorter screens.
+  card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
-  // Banned lists switch to compact sizes from this many words (Escalate climbs to 10).
-  banned: { compactFrom: 7 },
+  // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
+  // the height of a compact tile or band.
+  banned: { compactFrom: 7, compactRow: 38 },
+  // Windows shorter than this (small phones) use compact banned lists and scale the word's largest
+  // size by wordScale, so the word and every banned word fit without scrolling.
+  shortScreen: { height: 700, wordScale: 0.8 },
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
-  grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 3 },
+  grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },

@@ -7,10 +7,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.rensar.unspoken"
-    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#E2E8E7",

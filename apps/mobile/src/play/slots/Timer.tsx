@@ -95,7 +95,7 @@ export function TimerDial({ slot, clock, colors, onPause }: ClockProps & { slot:
   const r = (size - stroke) / 2;
   const length = 2 * Math.PI * r;
   const inner = size - 2 * stroke - space[1];
-  const fontSize = fittedSize(clock.label, inner, { max: textStyles.clock.size, min: textStyles.small.size, maxLines: 1 });
+  const fontSize = fittedSize(clock.label, inner, { variant: 'clock', max: textStyles.clock.size, min: textStyles.small.size, maxLines: 1 });
   return (
     <Press onPress={onPause} disabled={!onPause} accessibilityLabel={`${clock.label}. ${en.a11y.pause}`} style={{ width: size, height: size }}>
       <Svg width={size} height={size} style={StyleSheet.absoluteFill}>
@@ -126,7 +126,7 @@ export function TimerDial({ slot, clock, colors, onPause }: ClockProps & { slot:
 export function BigClock({ slot, clock, colors, onPause }: ClockProps & { slot: TimerSlot }) {
   const [width, onLayout] = useWidth();
   const max = slot.size ?? textStyles.bigClock.size;
-  const size = fittedSize(clock.label, width - layout.minTouch - space[3], { max, min: textStyles.title.size, maxLines: 1 });
+  const size = fittedSize(clock.label, width - layout.minTouch - space[3], { variant: 'bigClock', max, min: textStyles.title.size, maxLines: 1 });
   return (
     <View style={styles.bigClock} onLayout={onLayout}>
       <PauseButton colors={colors} onPress={onPause} size={layout.minTouch} filled />

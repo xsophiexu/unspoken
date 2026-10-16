@@ -38,6 +38,7 @@ export function ModeLabel({ slot, colors, model, onPress }: LabelProps) {
           size={slot.size}
           color={colors.muted}
           numberOfLines={1}
+          style={styles.shrink}
           parts={parts}
           params={{
             mode: { variant: caps ? 'badge' : 'optionTitle', color: name, size: slot.size },

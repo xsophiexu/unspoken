@@ -18,21 +18,23 @@ type Props = {
   ramp: readonly RampBand[];
   // Screen padding, for variants that run edge to edge.
   bleed: number;
+  // Short windows (small phones) use the compact sizes for any list.
+  short: boolean;
 };
 
 // Bands run edge to edge down into the footer, so the list sits at the bottom of its area.
 export const pinsToFooter = (slot: BannedSlot) => slot.variant === 'bands';
 
 // The banned words in any of the style catalog's list variants. Lists of
-// layout.banned.compactFrom words or more (Escalate's ten) switch to compact sizes, and every word
-// shrinks to fit its cell.
-export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) {
+// layout.banned.compactFrom words or more (Escalate's ten), and every list on a short window, switch
+// to compact sizes, and every word shrinks to fit its cell.
+export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: Props) {
   const [width, onLayout] = useWidth();
-  const compact = words.length >= layout.banned.compactFrom;
+  const compact = short || words.length >= layout.banned.compactFrom;
   const max = compact ? Math.min(slot.size, textStyles.chipSmall.size) : slot.size;
   const variant: TextStyleName = slot.weight === 600 ? 'label' : 'chip';
   const word = (text: string, room: number, color: string, extra?: object) => (
-    <Txt variant={variant} size={fittedSize(text, room, { max, min: textStyles.small.size, maxLines: 2 })} color={color} style={extra}>
+    <Txt variant={variant} size={fittedSize(text, room, { variant, max, min: textStyles.small.size, maxLines: 2 })} color={color} style={extra}>
       {text}
     </Txt>
   );
@@ -74,6 +76,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
       const tiles = slot.variant === 'tileGrid';
       const pad = tiles ? space[4] : space[3.5];
       const rows = pairs(words);
+      const cellPad = { paddingHorizontal: pad, paddingVertical: tiles ? 0 : compact ? space[2] : space[3] };
       list = (
         <View
           style={
@@ -89,8 +92,8 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
                   key={text}
                   style={[
                     styles.cell,
-                    { paddingHorizontal: pad, paddingVertical: tiles ? 0 : space[3] },
-                    tiles && { backgroundColor: colors.chip, borderRadius: radius[slot.chipRadius ?? 'md'], minHeight: compact ? layout.minTouch : slot.rowHeight },
+                    cellPad,
+                    tiles && { backgroundColor: colors.chip, borderRadius: radius[slot.chipRadius ?? 'md'], minHeight: compact ? layout.banned.compactRow : slot.rowHeight },
                     !tiles && c === 0 && { borderRightWidth: layout.stroke.hairline, borderRightColor: colors.rule },
                   ]}
                 >
@@ -98,7 +101,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
                   {fresh(index)}
                 </View>
               ))}
-              {row.length === 1 ? <View style={styles.cell} /> : null}
+              {row.length === 1 ? <View style={[styles.cell, cellPad]} /> : null}
             </View>
           ))}
         </View>
@@ -113,7 +116,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
       list = (
         <View>
           {words.map((w, i) => (
-            <View key={w} style={[styles.rowItem, { borderBottomColor: colors.rule, paddingVertical: compact ? space[2] : space[3] }]}>
+            <View key={w} style={[styles.rowItem, { borderBottomColor: colors.rule, paddingVertical: compact ? space[1.5] : space[3] }]}>
               {numbered && !trailing ? (
                 <Txt variant="label" color={colors.muted} style={styles.number}>
                   {i + 1}
@@ -159,7 +162,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
       break;
     }
     case 'bands': {
-      const height = compact ? layout.minTouch : slot.rowHeight;
+      const height = compact ? layout.banned.compactRow : slot.rowHeight;
       list = (
         <View style={{ marginHorizontal: -bleed }}>
           {words.map((w, i) => {
@@ -180,7 +183,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed }: Props) 
 
   return (
     <Target name="banned">
-      <View onLayout={onLayout} style={styles.block} accessibilityLabel={`${en.play.dontSay}: ${words.join(', ')}`}>
+      <View onLayout={onLayout} style={[styles.block, compact && styles.compactBlock]} accessibilityLabel={`${en.play.dontSay}: ${words.join(', ')}`}>
         {slot.label ? (
           <Txt variant="overline" color={colors.muted}>
             {en.play.dontSay}
@@ -204,6 +207,7 @@ function pairs(words: readonly string[]) {
 
 const styles = StyleSheet.create({
   block: { gap: space[3] },
+  compactBlock: { gap: space[2] },
   wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: layout.chip.gap },
   chip: { flexDirection: 'row', alignItems: 'center', gap: space[1.5], maxWidth: '100%' },
   table: { overflow: 'hidden' },

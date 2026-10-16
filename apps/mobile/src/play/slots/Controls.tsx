@@ -136,22 +136,24 @@ function CorrectButton({ slot, colors, labels, canCorrect, onCorrect, height, fl
   );
 }
 
-// Lines, Ledger, Bottom: a round or outlined Skip beside a wide pill Correct.
+// Lines, Ledger, Bottom: an outlined circle or button Skip beside a wide pill Correct.
 function Pills(p: Parts) {
   const { slot, colors, labels, canSkip, onSkip } = p;
+  const ring = { borderWidth: layout.stroke.outline, borderColor: colors.outline };
   if (slot.skip === 'roundIcon') {
-    const size = layout.minTouch;
+    // The circle sits a little inside the Correct pill's height, centred on it, with its label below.
+    const size = slot.height - space[1];
     return (
-      <View style={[styles.row, styles.top, { height: slot.height }]}>
+      <View style={[styles.row, styles.top]}>
         <Press onPress={onSkip} disabled={!canSkip} accessibilityLabel={labels.skip} style={styles.iconColumn}>
-          <View style={[styles.button, { width: size, height: size, borderRadius: radius.pill, backgroundColor: colors.chip }]}>
-            <Icon name="arrowLeft" size={layout.icon.md} color={colors.chipInk} />
+          <View style={[styles.button, ring, { width: size, height: size, marginTop: (slot.height - size) / 2, borderRadius: radius.pill }]}>
+            <Icon name="arrowRight" size={layout.icon.md} color={colors.ink} />
           </View>
           <Txt variant="small" color={colors.muted}>
             {labels.skip}
           </Txt>
         </Press>
-        <CorrectButton {...p} height={size} />
+        <CorrectButton {...p} height={slot.height} />
       </View>
     );
   }
@@ -164,11 +166,12 @@ function Pills(p: Parts) {
         accessibilityLabel={labels.skip}
         style={[
           styles.button,
+          ring,
           { height: slot.height, borderRadius: radius[slot.radius] },
-          round ? { width: slot.height, paddingHorizontal: 0, backgroundColor: colors.chip } : { width: slot.skipWidth, borderWidth: layout.stroke.outline, borderColor: colors.outline },
+          round ? { width: slot.height, paddingHorizontal: 0 } : { width: slot.skipWidth },
         ]}
       >
-        <Txt variant="button" color={round ? colors.chipInk : colors.ink} numberOfLines={1}>
+        <Txt variant={round ? 'label' : 'button'} color={colors.ink} numberOfLines={1}>
           {labels.skip}
         </Txt>
       </Press>

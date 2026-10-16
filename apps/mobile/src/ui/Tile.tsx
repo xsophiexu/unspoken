@@ -23,8 +23,9 @@ type Props = {
 // shrink to stay on one line.
 export function Tile({ title, detail, colors, selected, onPress, disabled, height, centered, accessibilityLabel }: Props) {
   const [width, onLayout] = useWidth();
-  const pad = space[3.5];
-  const size = fittedSize(title, width - 2 * pad, { max: textStyles.optionTitle.size, min: textStyles.small.size, maxLines: 1 });
+  // Centered titles (narrow level tiles) may run nearly to the edges.
+  const padX = centered ? space[1] : space[3.5];
+  const size = fittedSize(title, width - 2 * padX, { variant: 'optionTitle', max: textStyles.optionTitle.size, min: textStyles.small.size, maxLines: 1 });
   return (
     <Press
       onPress={onPress}
@@ -34,7 +35,7 @@ export function Tile({ title, detail, colors, selected, onPress, disabled, heigh
       accessibilityLabel={accessibilityLabel ?? (detail ? `${title}, ${detail}` : title)}
       style={[
         styles.tile,
-        { backgroundColor: selected ? colors.accent : colors.chip, padding: pad },
+        { backgroundColor: selected ? colors.accent : colors.chip, padding: space[3.5], paddingHorizontal: padX },
         height !== undefined && { minHeight: height },
         centered && styles.centered,
       ]}
