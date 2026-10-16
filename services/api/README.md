@@ -20,7 +20,7 @@ cp services/api/.env.example services/api/.env.local   # every variable, with it
 pnpm --filter @unspoken/api dev                         # http://localhost:8080, restarts on changes
 ```
 
-Without Firebase settings feedback answers 503 and everything else works. To store feedback locally without a Google account, run the Firestore emulator (needs Java) and point the service at it:
+Without Firebase settings, feedback answers 503 and everything else works. To store feedback locally without a Google account, run the Firestore emulator (needs Java) and point the service at it:
 
 ```bash
 npx firebase-tools emulators:start --only firestore --project demo-unspoken   # listens on 127.0.0.1:8080
