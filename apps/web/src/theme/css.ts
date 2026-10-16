@@ -61,7 +61,7 @@ function sharedTokens(): Vars {
     ...flatten('layout', layout, layoutUnit),
     ...flatten('max-width', maxWidth, (_, n) => px(n)),
     ...flatten('motion', motion, motionUnit),
-    ...flatten('spotlight', spotlight, (_, n) => px(n)),
+    ...flatten('spotlight', spotlight, (path, n) => (path.endsWith('share') ? String(n) : px(n))),
     ...flatten('opacity', opacity, (_, n) => String(n)),
   };
 }

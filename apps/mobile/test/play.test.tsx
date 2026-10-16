@@ -117,6 +117,57 @@ describe('How to play', () => {
     await openApp('/', { tour: { tourSeen: true } });
     expect(await screen.findByText(firstStep)).toBeOnTheScreen();
   });
+
+  // The tour takes every touch over the game: a tap or a swipe left or up moves forward, a swipe
+  // right or down goes back. touch() moves the finger by dx, dy.
+  const touch = (tour: ReturnType<typeof screen.getByRole>, dx: number, dy = 0) => {
+    fireEvent(tour, 'responderGrant', { nativeEvent: { pageX: 150, pageY: 400 } });
+    fireEvent(tour, 'responderRelease', { nativeEvent: { pageX: 150 + dx, pageY: 400 + dy } });
+  };
+  const steps = en.howToPlay.steps.map((s) => s.text);
+
+  it('stays on a step until it is tapped, however long it waits', async () => {
+    await openApp('/', { tour: {} });
+    expect(await screen.findByText(steps[0]!)).toBeOnTheScreen();
+    await act(async () => {
+      jest.advanceTimersByTime(60_000);
+    });
+    expect(screen.getByText(steps[0]!)).toBeOnTheScreen();
+    expect(screen.queryByText(steps[1]!)).not.toBeOnTheScreen();
+  });
+
+  it('moves forward on a tap or a swipe left or up, and back on a swipe right or down, with no Back or Next buttons', async () => {
+    await openApp('/', { tour: {} });
+    const tour = await screen.findByRole('adjustable', { name: en.menu.howToPlay.title });
+    expect(screen.queryByRole('button', { name: /^(Back|Next)$/ })).not.toBeOnTheScreen();
+
+    // Going back on the first step stays there.
+    touch(tour, 160);
+    expect(screen.getByText(steps[0]!)).toBeOnTheScreen();
+
+    touch(tour, 0);
+    expect(screen.getByText(steps[1]!)).toBeOnTheScreen();
+    touch(tour, -160);
+    expect(screen.getByText(steps[2]!)).toBeOnTheScreen();
+    touch(tour, 0, -160);
+    expect(screen.getByText(steps[3]!)).toBeOnTheScreen();
+
+    touch(tour, 160);
+    expect(screen.getByText(steps[2]!)).toBeOnTheScreen();
+    touch(tour, 0, 160);
+    expect(screen.getByText(steps[1]!)).toBeOnTheScreen();
+    // A short drag is neither: nothing moves.
+    touch(tour, 24);
+    expect(screen.getByText(steps[1]!)).toBeOnTheScreen();
+
+    // Every step in order, and the last one stays until Play.
+    for (const text of steps.slice(2)) {
+      touch(tour, 2, 1);
+      expect(screen.getByText(text)).toBeOnTheScreen();
+    }
+    touch(tour, 0);
+    expect(screen.getByText(steps.at(-1)!)).toBeOnTheScreen();
+  });
 });
 
 describe('Game paused', () => {

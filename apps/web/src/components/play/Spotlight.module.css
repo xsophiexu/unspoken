@@ -38,18 +38,39 @@
 
 .caption {
   position: absolute;
-  left: 0;
-  right: 0;
   display: flex;
   flex-direction: column;
   gap: var(--un-space-3);
+  text-shadow: var(--un-spotlight-caption-shadow);
+  /* Each step's caption comes in as its cut-out arrives. */
+  animation: caption-in var(--un-motion-duration-base) ease-out calc(var(--un-motion-spotlight-move-ms) / 2) backwards;
+}
+
+/* Centered over the whole screen (the intro and "Describe it out loud."). */
+.centered {
+  left: 0;
+  right: 0;
   max-width: var(--un-max-width-column);
   margin-inline: auto;
   padding-inline: var(--un-layout-screen-padding-x);
-  text-shadow: var(--un-spotlight-caption-shadow);
-  transition:
-    top var(--un-motion-spotlight-move-ms) var(--un-motion-spotlight-easing),
-    bottom var(--un-motion-spotlight-move-ms) var(--un-motion-spotlight-easing);
+}
+
+/* Beside a cut-out: left and right come from captionPlacement. */
+.beside {
+  margin: 0;
+}
+
+@keyframes caption-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .caption {
+    animation: none;
+  }
 }
 
 .start {

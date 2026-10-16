@@ -1,7 +1,6 @@
 import { en } from '@unspoken/content';
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { motion } from '@unspoken/design-tokens';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { SETTINGS_STORAGE_KEY } from '@/lib/settings';
@@ -121,16 +120,50 @@ describe('Play', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('steps through the walkthrough in the canvas order, rules included', () => {
+  it('stays on a step until it is tapped, however long it waits', () => {
     vi.useFakeTimers();
     renderPlay();
     const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    act(() => vi.advanceTimersByTime(60_000));
+    expect(within(tour).getByText(en.howToPlay.steps[0]!.text)).toBeInTheDocument();
+    expect(within(tour).queryByText(en.howToPlay.steps[1]!.text)).not.toBeInTheDocument();
+  });
+
+  it('moves forward on a tap or a swipe left or up, and back on a swipe right or down, a scroll back or the left arrow, with no Back or Next buttons', () => {
+    renderPlay();
+    const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    const caption = () => within(tour).getAllByRole('paragraph').at(-1)!.textContent;
+    const tap = () => fireEvent.click(tour);
+    const swipe = (dx: number, dy: number) => {
+      fireEvent.pointerDown(tour, { clientX: 150, clientY: 400 });
+      fireEvent.pointerUp(tour, { clientX: 150 + dx, clientY: 400 + dy });
+      fireEvent.click(tour);
+    };
+    expect(within(tour).getAllByRole('button').map((b) => b.textContent)).toEqual([en.howToPlay.play]);
+
+    // Every step in the canvas order, rules included, one tap each; the last stays until Play.
     const shown: string[] = [];
     for (let i = 0; i < en.howToPlay.steps.length; i++) {
-      shown.push(within(tour).getAllByRole('paragraph').at(-1)!.textContent ?? '');
-      act(() => vi.advanceTimersByTime(motion.spotlight.stepMs));
+      shown.push(caption() ?? '');
+      tap();
     }
     expect(shown).toEqual(['Get someone to guess a given word without saying any of the banned words.', 'This is the word they need to guess.', 'These are the banned words. Don’t say any of them.', 'Describe it out loud.', 'Tap here to change difficulty.', 'Tap here to change the game mode or the look.', 'Ready? Tap here to play.']);
+    expect(caption()).toBe('Ready? Tap here to play.');
+
+    swipe(160, 0);
+    expect(caption()).toBe('Tap here to change the game mode or the look.');
+    swipe(0, 160);
+    expect(caption()).toBe('Tap here to change difficulty.');
+    fireEvent.wheel(tour, { deltaY: -80 });
+    expect(caption()).toBe('Describe it out loud.');
+    fireEvent.keyDown(tour, { key: 'ArrowLeft' });
+    expect(caption()).toBe('These are the banned words. Don’t say any of them.');
+    tap();
+    expect(caption()).toBe('Describe it out loud.');
+    swipe(-160, 0);
+    expect(caption()).toBe('Tap here to change difficulty.');
+    swipe(0, -160);
+    expect(caption()).toBe('Tap here to change the game mode or the look.');
   });
 
   it('keeps Hot potato’s rule under the controls while playing', () => {
