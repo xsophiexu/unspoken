@@ -1,3 +1,4 @@
+import { en } from '@unspoken/content';
 import type { GameSettings, PlayKind } from '@unspoken/core';
 import { DEFAULT_THEME, resolveTheme, type Theme, type ThemeSelection } from '@unspoken/design-tokens';
 import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
@@ -53,7 +54,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       if (!live) return;
       const prefs = loaded ?? firstLaunch();
       setSaved(prefs);
-      setTourOpen(!prefs.tourSeen);
+      // The tour opens by itself on the first game, and once more whenever it changes.
+      setTourOpen(prefs.tourVersion !== en.howToPlay.version);
     });
     return () => {
       live = false;
@@ -86,7 +88,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       openTour: () => setTourOpen(true),
       closeTour: () => {
         setTourOpen(false);
-        update((p) => ({ ...p, tourSeen: true }));
+        update((p) => ({ ...p, tourVersion: en.howToPlay.version }));
       },
       introSeen: (kind) => intros.has(kind),
       markIntroSeen: (kind) => {

@@ -71,31 +71,37 @@
   max-width: var(--un-max-width-prose);
 }
 
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--un-space-2);
-}
-
 .wordmark {
-  text-decoration: line-through;
-  text-decoration-color: var(--un-spotlight-mark);
-  text-decoration-thickness: var(--un-space-1);
+  color: var(--un-spotlight-caption);
 }
 
-.logo + p {
+.wordmark + p {
   color: var(--un-spotlight-lead);
+}
+
+/* The rules under "Describe it out loud.", in a narrow centered list. */
+.rules {
+  align-self: center;
+  width: var(--un-spotlight-rules-width);
+  margin: 0;
+  padding-inline-start: var(--un-space-4-5);
+  color: var(--un-spotlight-lead);
+  text-align: start;
+}
+
+.rules li + li {
+  margin-top: var(--un-space-0-5);
 }
 
 .mic {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--un-layout-min-touch);
-  height: var(--un-layout-min-touch);
+  width: var(--un-layout-control-icon-badge);
+  height: var(--un-layout-control-icon-badge);
   border: var(--un-spotlight-outline-width) solid var(--un-spotlight-outline);
   border-radius: var(--un-radius-pill);
-  font-size: var(--un-space-5);
+  font-size: var(--un-layout-icon-md);
 }
 
 .bottom {
@@ -106,10 +112,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--un-space-4);
+  gap: var(--un-space-5);
   max-width: var(--un-max-width-column);
   margin-inline: auto;
-  padding: 0 var(--un-layout-screen-padding-x) calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+  padding: 0 var(--un-layout-play-padding-x) calc(var(--un-layout-play-padding-bottom) + env(safe-area-inset-bottom));
 }
 
 .dots {
