@@ -49,7 +49,6 @@ export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCu
             title={m.title}
             sub={status}
             colors={colors}
-            onClose={onClose}
             action={
               <Press onPress={onHowToPlay} accessibilityLabel={m.howToPlay.title} hitSlop={slopFor(layout.icon.md)}>
                 <Icon name="info" size={layout.icon.md} color={colors.muted} />

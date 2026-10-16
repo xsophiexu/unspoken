@@ -130,7 +130,7 @@ export const buttonPair = { secondary: 1, primary: 2 } as const;
 // bottom (option A); 'header' puts a compact Restart at the top right, level with the title, and
 // leaves Resume alone at the bottom (option B).
 export type RestartPlacement = 'footer' | 'header';
-export const gameMenu: { readonly restartPlacement: RestartPlacement } = { restartPlacement: 'footer' };
+export const gameMenu: { readonly restartPlacement: RestartPlacement } = { restartPlacement: 'header' };
 
 // Layout constants measured from the boards.
 export const layout = {
