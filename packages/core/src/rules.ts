@@ -73,3 +73,21 @@ export function canStart(settings: GameSettings, config: GameConfig = gameConfig
   if (!hasTimerSetting(settings.mode, config)) return true;
   return settings.roundSeconds >= config.minRoundSeconds && settings.roundSeconds <= config.maxRoundSeconds;
 }
+
+// Reads saved settings (from device storage or a request), keeping each valid field and defaulting
+// the rest. A mode that is not available falls back to the default mode.
+export function parseSettings(value: unknown, config: GameConfig = gameConfig): GameSettings {
+  const fallback = defaultSettings(config);
+  const v = (typeof value === 'object' && value !== null ? value : {}) as Partial<Record<keyof GameSettings, unknown>>;
+  const mode = config.modes.find((m) => m.id === v.mode && m.available)?.id ?? fallback.mode;
+  const difficulty = config.difficulties.find((d) => d.id === v.difficulty)?.id ?? fallback.difficulty;
+  const saved = Array.isArray(v.categories) ? (v.categories as unknown[]) : [];
+  const categories = config.categories.filter((c) => saved.includes(c));
+  const seconds = v.roundSeconds;
+  const roundSeconds =
+    typeof seconds === 'number' && Number.isInteger(seconds) && seconds >= config.minRoundSeconds && seconds <= config.maxRoundSeconds
+      ? seconds
+      : defaultRoundSeconds(difficulty, config);
+  const skips = config.skipOptions.find((n) => n === v.skips);
+  return { mode, difficulty, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips };
+}

@@ -146,6 +146,8 @@ export const en = {
     swipeTheCard: 'swipe the card',
     newTag: 'NEW',
     hotPotatoNote: 'Holding it when time runs out loses a point',
+    // The mode and level in a header pill; the platform styles the level lighter.
+    modeAndLevel: '{mode} · {difficulty}',
   },
   paused: {
     label: 'PAUSED',
@@ -306,6 +308,9 @@ export const en = {
     cluesUsed: 'CLUES USED · {revealed} OF {total}',
     missedLink: '← Missed',
     gotLink: 'Got it →',
+    // The same answers on button-style controls.
+    missed: 'Missed',
+    got: 'Got it',
   },
 
   // --- Mind Reader ---------------------------------------------------------------------------

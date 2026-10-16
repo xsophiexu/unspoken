@@ -105,7 +105,8 @@ export const layout = {
   referenceScreen: { width: 390, height: 844 },
   screen: { paddingX: 20, paddingTop: 18, paddingBottom: 24 },
   minTouch: 44,
-  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs },
+  // caretScale: the ▾ after the mode and level, relative to the header text size.
+  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
   // Card style: the word tile inside the timer ring.
   card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
@@ -118,7 +119,28 @@ export const layout = {
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },
+  // Icon boxes and line weights for the controls the boards draw.
+  icon: { sm: 14, md: 18, lg: 22, xl: 24 },
+  stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },
+  control: {
+    // The round pause button beside a clock (the ring's gap label is the same height).
+    pause: 32,
+    // Swipe bars under "← Skip" and "Correct →".
+    swipeBar: 6,
+    segmented: { height: 36, inset: 4 },
+    // Mode tiles on Modes; level tiles on the mode and difficulty sheet.
+    modeTile: 92,
+    levelTile: 52,
+    input: { height: 48, multilineHeight: 160 },
+    // Round icon holders: the suggest card's bubble, step numbers, the Thanks check.
+    iconBadge: 36,
+    stepNumber: 30,
+    heroBadge: 72,
+  },
 } as const;
+
+// Feedback for pressed and unavailable controls.
+export const opacity = { pressed: 0.8, disabled: 0.45 } as const;
 
 // The How to play walkthrough ("Dark spotlight, white captions", option A). Colors are fixed so the
 // overlay reads the same over every style, color and mode. The Play label is the color's light-mode

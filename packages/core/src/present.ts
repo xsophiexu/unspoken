@@ -74,6 +74,22 @@ export function roundSubline(state: RoundState, copy: RoundCopy): string {
   }
 }
 
+export type RoundStats = {
+  // Points scored so far, for styles that show the score on its own ("7 pts" in bold); null when
+  // the mode's status line has no score to pull out.
+  points: number | null;
+  // Everything else the status line says: skips left, the tally, Escalate's climb.
+  detail: string;
+};
+
+// The header status split in two, for styles that place the score apart from the rest. Format the
+// points with copy.units.points.
+export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
+  if (state.kind === 'reverse') return { points: state.score, detail: plural(state.played, copy.units.words) };
+  if (state.kind === 'swipe' && state.rules.skipLimit && !state.rules.escalates) return { points: state.correct, detail: skipsText(state, copy) };
+  return { points: null, detail: roundSubline(state, copy) };
+}
+
 function reverseStatus(state: ReverseRoundState, copy: RoundCopy): string {
   return format(copy.status.reverse, { points: plural(state.score, copy.units.points), words: plural(state.played, copy.units.words) });
 }

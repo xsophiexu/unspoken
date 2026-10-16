@@ -12,6 +12,7 @@ import {
   hasTimerSetting,
   hiddenRoundSeconds,
   hotPotatoRange,
+  parseSettings,
   withDifficulty,
 } from '../src';
 import { settingsFor } from './fixtures';
@@ -89,5 +90,21 @@ describe('canStart', () => {
 
   it('refuses modes that are not available yet', () => {
     expect(canStart(settingsFor('teams'))).toBe(false);
+  });
+});
+
+describe('parseSettings', () => {
+  it('reads back settings that were saved', () => {
+    const saved = { mode: 'classic', difficulty: 'Master 2', categories: ['Society', 'Business'], roundSeconds: 95, skips: null };
+    expect(parseSettings(JSON.parse(JSON.stringify(saved)))).toEqual(saved);
+  });
+
+  it('defaults fields that are missing, unknown or out of range, and never starts an unavailable mode', () => {
+    expect(parseSettings({ mode: 'teams', difficulty: 'Impossible', categories: ['Society', 'Nope', 'Society'], roundSeconds: 5, skips: 99 })).toEqual({
+      ...defaultSettings(),
+      categories: ['Society'],
+    });
+    expect(parseSettings({ difficulty: 'Grandmaster' }).roundSeconds).toBe(defaultRoundSeconds('Grandmaster'));
+    expect(parseSettings('garbage')).toEqual(defaultSettings());
   });
 });
