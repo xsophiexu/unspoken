@@ -111,8 +111,10 @@ export const layout = {
   // root padding, full-bleed rows (header rows, Ombre bands and footer) and the inside of panels that
   // run edge to edge (Ink and Bottom panels, Sheet's sheet, Split and Chips content). Panels and bars
   // themselves still run edge to edge, bleeding out by paddingX. paddingBottom is the space under
-  // the last row of controls. Some styles change top or bottom: read playMargins(style).
-  play: { paddingX: 32, paddingTop: 30, paddingBottom: 38 },
+  // the last row of controls. footerTop is the space above the controls (and footer stats) when
+  // they sit on a footer of their own color (Ombre). Some styles change top or bottom: read
+  // playMargins(style).
+  play: { paddingX: 32, paddingTop: 30, paddingBottom: 38, footerTop: 22 },
   minTouch: 44,
   // caretScale: the ▾ after the mode and level, relative to the header text size.
   header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },

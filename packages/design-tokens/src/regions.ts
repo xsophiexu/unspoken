@@ -6,7 +6,8 @@ import type { ColorRole, ColorRoles } from './palettes';
 // palette roles directly; they read the colors of the region they sit in, so the same component
 // works on any background.
 
-export const REGION_TONES = ['canvas', 'base', 'surface', 'raised', 'accent', 'panel', 'deep', 'shade'] as const;
+// Tone names are single lowercase words: web builds CSS custom property names from them.
+export const REGION_TONES = ['canvas', 'base', 'surface', 'raised', 'accent', 'panel', 'deep', 'shade', 'accented', 'shadowed', 'stone', 'bare', 'sunken'] as const;
 export type RegionTone = (typeof REGION_TONES)[number];
 
 export type RegionColors = {
@@ -52,6 +53,43 @@ const base = {
   vivid: 'accentVivid',
 } as const satisfies Partial<Record<RegionSlot, RoleRef>>;
 
+// An accent page (Sheet's top) or bar (Chips' Correct in dark). Primary controls invert; chips stay
+// solid so their text reads. Headline text is onAccentStrong, pure white in dark.
+const accentTone: Record<RegionSlot, RoleRef> = {
+  bg: 'accent',
+  ink: 'onAccentStrong',
+  muted: 'onAccentMuted',
+  accentText: 'onAccent',
+  accent: 'onAccent',
+  onAccent: 'accent',
+  chip: 'surfaceRaised',
+  chipInk: 'ink',
+  tint: 'surfaceRaised',
+  rule: { role: 'onAccent', alpha: 0.2 },
+  outline: { role: 'onAccent', alpha: 0.45 },
+  track: { role: 'onAccent', alpha: 0.25 },
+  progress: 'onAccent',
+  vivid: 'onAccent',
+};
+
+// The contrasting panel (Ink, Bottom, split-bar Correct, the Ombre footer in light).
+const panelTone: Record<RegionSlot, RoleRef> = {
+  bg: 'panel',
+  ink: 'onPanel',
+  muted: 'onPanelMuted',
+  accentText: 'onPanel',
+  accent: 'onPanel',
+  onAccent: 'panel',
+  chip: { role: 'onPanel', alpha: 0.12 },
+  chipInk: 'onPanel',
+  tint: { role: 'onPanel', alpha: 0.12 },
+  rule: { role: 'onPanel', alpha: 0.14 },
+  outline: { role: 'onPanel', alpha: 0.3 },
+  track: { role: 'onPanel', alpha: 0.2 },
+  progress: 'onPanel',
+  vivid: 'onPanel',
+};
+
 // How each tone maps region slots to palette roles. test/contrast.test.ts checks every text slot
 // against its background in every tone, palette and mode.
 const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
@@ -60,41 +98,8 @@ const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
   // The vivid accent reads on the page colors only; lighter fills keep accentText.
   surface: { ...base, bg: 'surface', chip: 'surfaceRaised', vivid: 'accentText' },
   raised: { ...base, bg: 'surfaceRaised', chip: 'surface', vivid: 'accentText' },
-  // An accent page (Sheet's top) or bar (Chips' Correct in dark). Primary controls invert; chips stay
-  // solid so their text reads. Headline text is onAccentStrong, pure white in dark.
-  accent: {
-    bg: 'accent',
-    ink: 'onAccentStrong',
-    muted: 'onAccentMuted',
-    accentText: 'onAccent',
-    accent: 'onAccent',
-    onAccent: 'accent',
-    chip: 'surfaceRaised',
-    chipInk: 'ink',
-    tint: 'surfaceRaised',
-    rule: { role: 'onAccent', alpha: 0.2 },
-    outline: { role: 'onAccent', alpha: 0.45 },
-    track: { role: 'onAccent', alpha: 0.25 },
-    progress: 'onAccent',
-    vivid: 'onAccent',
-  },
-  // The contrasting panel (Ink, Bottom, split-bar Correct, the Ombre footer in light).
-  panel: {
-    bg: 'panel',
-    ink: 'onPanel',
-    muted: 'onPanelMuted',
-    accentText: 'onPanel',
-    accent: 'onPanel',
-    onAccent: 'panel',
-    chip: { role: 'onPanel', alpha: 0.12 },
-    chipInk: 'onPanel',
-    tint: { role: 'onPanel', alpha: 0.12 },
-    rule: { role: 'onPanel', alpha: 0.14 },
-    outline: { role: 'onPanel', alpha: 0.3 },
-    track: { role: 'onPanel', alpha: 0.2 },
-    progress: 'onPanel',
-    vivid: 'onPanel',
-  },
+  accent: accentTone,
+  panel: panelTone,
   // A deep accent-colored panel (the Ombre footer in dark): a pale accent Correct with dark accent
   // text, light text and an accent outline. In light it matches panel.
   deep: {
@@ -115,6 +120,41 @@ const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
   },
   // A dark, quiet accent fill (Chips' Skip bar in dark). In light it matches surface.
   shade: { ...base, bg: 'accentShade', chip: 'accentTint', vivid: 'accentText' },
+  // An accent-colored lower panel (Bottom): tiles tinted with surfaceRaised, a surfaceRaised
+  // Correct with accent text and a surfaceRaised outline (white in light, stone grey in dark).
+  accented: {
+    bg: 'accentPanel',
+    ink: 'onAccent',
+    muted: 'onAccentMuted',
+    accentText: 'onAccent',
+    accent: 'surfaceRaised',
+    onAccent: 'accentText',
+    chip: { role: 'surfaceRaised', alpha: 0.12 },
+    chipInk: 'onAccent',
+    tint: { role: 'surfaceRaised', alpha: 0.12 },
+    rule: { role: 'onAccent', alpha: 0.2 },
+    outline: { role: 'surfaceRaised', alpha: 0.45 },
+    track: { role: 'onAccent', alpha: 0.25 },
+    progress: 'onAccent',
+    vivid: 'onAccent',
+  },
+  // An accent page whose progress line and menu button are stone-grey tints instead of white
+  // (Sheet's top in dark). The menu tint is panel, which in dark is within a step of surfaceRaised
+  // and keeps the light icon on it at AA in light too.
+  shadowed: {
+    ...accentTone,
+    chip: { role: 'panel', alpha: 0.18 },
+    chipInk: 'onAccentStrong',
+    tint: { role: 'panel', alpha: 0.18 },
+    track: { role: 'surfaceRaised', alpha: 0.25 },
+    progress: 'surfaceRaised',
+  },
+  // The grey panel with a raised Correct in ink (Ink's lower panel in dark).
+  stone: { ...panelTone, accent: 'surfaceRaised', onAccent: 'ink' },
+  // The page with no visible timer track: the line runs over the page color (Chips).
+  bare: { ...base, bg: 'bg', chip: 'surface', track: 'bg' },
+  // A recessed fill in the track color (Split's lower half and Skip bar in dark). Surface in light.
+  sunken: { ...base, bg: 'sunken', chip: 'surfaceRaised', vivid: 'accentText' },
 };
 
 function resolveRef(colors: ColorRoles, ref: RoleRef): string {
