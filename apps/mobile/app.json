@@ -3,9 +3,10 @@
     "name": "Unspoken",
     "slug": "unspoken",
     "version": "1.0.0",
+    "scheme": "unspoken",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.rensar.unspoken"
@@ -21,7 +22,12 @@
       "package": "com.rensar.unspoken"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    }
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
