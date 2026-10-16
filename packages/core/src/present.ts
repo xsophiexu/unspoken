@@ -5,6 +5,7 @@
 import { formatClock, format, plural, type Plural } from './text';
 import type { Category, ModeId } from './types';
 import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, type SwipeRoundState } from './round/swipe';
+import type { ReverseRoundState } from './round/reverse';
 import type { RoundState } from './round';
 
 // The catalog slots these lines read. Placeholders ({points}, {skips}, ...) are filled with format()
@@ -50,41 +51,47 @@ function tally(state: SwipeRoundState, copy: RoundCopy): string {
   return format(copy.status.tally, { correct: state.correct, skipped: state.skipped });
 }
 
-// The status line in two parts, for layouts that show the score on its own (a big number or a pill):
-// the points when the line leads with them, and the rest. roundSubline joins the two.
-export type RoundStats = { points: number | null; detail: string };
-
-export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
+// The line under the mode name in the header.
+export function roundSubline(state: RoundState, copy: RoundCopy): string {
   switch (state.kind) {
     case 'reverse':
-      return { points: state.score, detail: plural(state.played, copy.units.words) };
+      return reverseStatus(state, copy);
     case 'mindReader':
-      return { points: null, detail: format(copy.status.mindReaderRound, { round: state.round }) };
+      return format(copy.status.mindReaderRound, { round: state.round });
     case 'swipe': {
       if (state.rules.escalates) {
         const esc = swipeEscalate(state);
         const skips = skipsText(state, copy);
-        const detail = esc.atTop
+        return esc.atTop
           ? format(copy.status.escalateTop, { max: state.config.escalate.max, atMax: esc.atMax, winAt: state.config.escalate.winAtMax, skips })
           : format(copy.status.escalateClimbing, { banned: plural(esc.level, copy.units.bannedWords), skips });
-        return { points: null, detail };
       }
-      if (state.rules.passAfterEveryWord) return { points: null, detail: copy.status.hotPotato };
-      if (state.rules.skipLimit) return { points: state.correct, detail: skipsText(state, copy) };
+      if (state.rules.passAfterEveryWord) return copy.status.hotPotato;
+      if (state.rules.skipLimit) return format(copy.status.scoreAndSkips, { points: plural(state.correct, copy.units.points), skips: skipsText(state, copy) });
       // Modes without a skip limit just count, like the Endless wireframe.
-      return { points: null, detail: tally(state, copy) };
+      return tally(state, copy);
     }
   }
 }
 
-// The line under the mode name in the header.
-export function roundSubline(state: RoundState, copy: RoundCopy): string {
-  const { points, detail } = roundStats(state, copy);
-  if (points === null) return detail;
-  const shown = plural(points, copy.units.points);
-  return state.kind === 'reverse'
-    ? format(copy.status.reverse, { points: shown, words: detail })
-    : format(copy.status.scoreAndSkips, { points: shown, skips: detail });
+export type RoundStats = {
+  // Points scored so far, for styles that show the score on its own ("7 pts" in bold); null when
+  // the mode's status line has no score to pull out.
+  points: number | null;
+  // Everything else the status line says: skips left, the tally, Escalate's climb.
+  detail: string;
+};
+
+// The header status split in two, for styles that place the score apart from the rest. Format the
+// points with copy.units.points.
+export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
+  if (state.kind === 'reverse') return { points: state.score, detail: plural(state.played, copy.units.words) };
+  if (state.kind === 'swipe' && state.rules.skipLimit && !state.rules.escalates) return { points: state.correct, detail: skipsText(state, copy) };
+  return { points: null, detail: roundSubline(state, copy) };
+}
+
+function reverseStatus(state: ReverseRoundState, copy: RoundCopy): string {
+  return format(copy.status.reverse, { points: plural(state.score, copy.units.points), words: plural(state.played, copy.units.words) });
 }
 
 // The status line on the ··· menu sheet.
@@ -93,7 +100,7 @@ export function menuStatus(state: RoundState, copy: RoundCopy): string {
   const withThemes = (status: string) => format(copy.status.withThemes, { status, themes });
   switch (state.kind) {
     case 'reverse':
-      return withThemes(roundSubline(state, copy));
+      return withThemes(reverseStatus(state, copy));
     case 'mindReader':
       return withThemes(format(copy.status.round, { round: state.round }));
     case 'swipe': {

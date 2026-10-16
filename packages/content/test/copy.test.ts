@@ -52,17 +52,17 @@ describe('status lines in English', () => {
     expect(roundSubline(top, roundCopy)).toBe('10 banned · 1 of 3 to win · 3 skips left');
   });
 
-  it('splits the score from the rest for layouts that show it on its own', () => {
-    const classic = play(start(settings({ mode: 'classic', skips: 3 })), [...times(7, { type: 'correct' }), ...times(2, { type: 'skip' })]);
-    expect(roundStats(classic, roundCopy)).toEqual({ points: 7, detail: '1 skip left' });
-    expect(roundStats(play(start(settings({ mode: 'endless' })), [{ type: 'skip' }]), roundCopy)).toEqual({ points: null, detail: '0 correct · 1 skipped' });
-    expect(roundStats(start(settings({ mode: 'hotPotato' })), roundCopy)).toEqual({ points: null, detail: 'Pass after every word' });
-    expect(roundStats(start(settings({ mode: 'reverse' })), roundCopy)).toEqual({ points: 0, detail: '0 words' });
-  });
-
   it('Reverse and Mind Reader have their own lines', () => {
     expect(roundSubline(start(settings({ mode: 'reverse' })), roundCopy)).toBe('0 pts · 0 words');
     expect(roundSubline(start(settings({ mode: 'mindReader' })), roundCopy)).toBe('Round 1 · No timer');
+  });
+
+  it('splits the score from the rest for styles that show it apart', () => {
+    const classic = play(start(settings({ mode: 'classic', skips: 3 })), [...times(7, { type: 'correct' }), ...times(2, { type: 'skip' })]);
+    expect(roundStats(classic, roundCopy)).toEqual({ points: 7, detail: '1 skip left' });
+    expect(roundStats(start(settings({ mode: 'endless' })), roundCopy)).toEqual({ points: null, detail: '0 correct · 0 skipped' });
+    expect(roundStats(start(settings({ mode: 'escalate', skips: 3 })), roundCopy)).toEqual({ points: null, detail: '4 banned words · 3 skips left' });
+    expect(roundStats(start(settings({ mode: 'reverse' })), roundCopy)).toEqual({ points: 0, detail: '0 words' });
   });
 
   it('the clock and the Paused overlay line', () => {

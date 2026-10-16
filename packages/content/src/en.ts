@@ -306,7 +306,7 @@ export const en = {
     cluesUsed: 'CLUES USED · {revealed} OF {total}',
     missedLink: '← Missed',
     gotLink: 'Got it →',
-    // The same answers on button and split-bar controls.
+    // The same answers on button-style controls.
     missed: 'Missed',
     got: 'Got it',
   },
