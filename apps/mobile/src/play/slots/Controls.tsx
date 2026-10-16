@@ -135,28 +135,12 @@ function CorrectButton({ slot, colors, labels, canCorrect, onCorrect, height, fl
   );
 }
 
-// Lines, Ledger, Bottom: an outlined circle or button Skip beside a wide pill Correct.
+// Lines, Ledger, Bottom: an outlined Skip beside a wide pill Correct, as tall as Correct. Skip is a
+// circle with the word (round), a pill with an arrow and the word (pillIcon) or a button.
 function Pills(p: Parts) {
   const { slot, colors, labels, canSkip, onSkip } = p;
-  const ring = { borderWidth: layout.stroke.outline, borderColor: colors.outline };
-  if (slot.skip === 'roundIcon') {
-    // The circle sits a little inside the Correct pill's height, centred on it, with its label below.
-    const size = slot.height - space[1];
-    return (
-      <View style={[styles.row, styles.top]}>
-        <Press onPress={onSkip} disabled={!canSkip} accessibilityLabel={labels.skip} style={styles.iconColumn}>
-          <View style={[styles.button, ring, { width: size, height: size, marginTop: (slot.height - size) / 2, borderRadius: radius.pill }]}>
-            <Icon name="arrowRight" size={layout.icon.md} color={colors.ink} />
-          </View>
-          <Txt variant="small" color={colors.muted}>
-            {labels.skip}
-          </Txt>
-        </Press>
-        <CorrectButton {...p} height={slot.height} />
-      </View>
-    );
-  }
   const round = slot.skip === 'round';
+  const icon = slot.skip === 'pillIcon';
   return (
     <View style={[styles.row, { height: slot.height }]}>
       <Press
@@ -165,11 +149,11 @@ function Pills(p: Parts) {
         accessibilityLabel={labels.skip}
         style={[
           styles.button,
-          ring,
-          { height: slot.height, borderRadius: radius[slot.radius] },
+          { height: slot.height, borderWidth: layout.stroke.outline, borderColor: colors.outline, borderRadius: icon ? radius.pill : radius[slot.radius] },
           round ? { width: slot.height, paddingHorizontal: 0 } : { width: slot.skipWidth },
         ]}
       >
+        {icon ? <Icon name="arrowRight" size={layout.icon.lg} color={colors.ink} /> : null}
         <Txt variant={round ? 'label' : 'button'} color={colors.ink} numberOfLines={1}>
           {labels.skip}
         </Txt>
@@ -207,11 +191,13 @@ function Buttons(p: Parts) {
 }
 
 // Split, Chips: a full-width bar split into Skip and Correct, down to the bottom edge. A fixed Skip
-// width keeps its share of the reference screen at any width.
+// width keeps its share of the reference screen at any width. The labels center above the slot's
+// bottom padding (clear of rounded screen corners) and the bottom safe area.
 function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect, bottomInset = 0 }: Parts) {
   const skipShare = slot.skipWidth ?? layout.referenceScreen.width / 2;
+  const under = (slot.paddingBottom ?? 0) + bottomInset;
   const half = (colors: RegionColors, label: string, can: boolean, onPress: (() => void) | undefined, size: object) => (
-    <Press onPress={onPress} disabled={!can} accessibilityLabel={label} style={[styles.half, size, { backgroundColor: colors.bg, paddingBottom: bottomInset }]}>
+    <Press onPress={onPress} disabled={!can} accessibilityLabel={label} style={[styles.half, size, { backgroundColor: colors.bg, paddingBottom: under }]}>
       <Txt variant="buttonStrong" color={colors.ink} numberOfLines={1}>
         {label}
       </Txt>
@@ -228,7 +214,6 @@ function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: space[2.5] },
   center: { justifyContent: 'space-between' },
-  top: { alignItems: 'flex-start' },
   end: { alignItems: 'flex-end' },
   grow: { flex: 1 },
   barColumn: { height: '100%', justifyContent: 'space-between', paddingTop: space[1] },
@@ -236,7 +221,6 @@ const styles = StyleSheet.create({
   link: { minHeight: layout.minTouch, justifyContent: 'center', flexShrink: 0 },
   hint: { flexShrink: 1, textAlign: 'center' },
   button: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: space[2], paddingHorizontal: space[3] },
-  iconColumn: { alignItems: 'center', gap: space[0.5] },
   split: { flexDirection: 'row' },
   half: { alignItems: 'center', justifyContent: 'center' },
 });

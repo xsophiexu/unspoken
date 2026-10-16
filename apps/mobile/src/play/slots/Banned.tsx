@@ -16,7 +16,7 @@ type Props = {
   freshIndex: number | null;
   // Ombre's bands, lightest to strongest.
   ramp: readonly RampBand[];
-  // Screen padding, for variants that run edge to edge.
+  // The side margin, which variants that run edge to edge bleed out by.
   bleed: number;
   // Short windows (small phones) use the compact sizes for any list.
   short: boolean;
@@ -45,6 +45,8 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: 
       </Txt>
     ) : null;
   const half = (width - space[4]) / 2;
+  // Chips and tiles in the region's chip color or its accent tint; the text stays chipInk.
+  const chipFill = colors[slot.chipFill ?? 'chip'];
 
   let list: ReactNode;
   switch (slot.variant) {
@@ -59,7 +61,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: 
               key={w}
               style={[
                 styles.chip,
-                { backgroundColor: colors.chip, borderRadius: radius[slot.chipRadius ?? 'sm'], paddingHorizontal: padX, paddingVertical: padY },
+                { backgroundColor: chipFill, borderRadius: radius[slot.chipRadius ?? 'sm'], paddingHorizontal: padX, paddingVertical: padY },
                 i === freshIndex && { borderWidth: ring, borderColor: colors.accentText, paddingHorizontal: padX - ring, paddingVertical: padY - ring },
               ]}
             >
@@ -93,7 +95,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: 
                   style={[
                     styles.cell,
                     cellPad,
-                    tiles && { backgroundColor: colors.chip, borderRadius: radius[slot.chipRadius ?? 'md'], minHeight: compact ? layout.banned.compactRow : slot.rowHeight },
+                    tiles && { backgroundColor: chipFill, borderRadius: radius[slot.chipRadius ?? 'md'], minHeight: compact ? layout.banned.compactRow : slot.rowHeight },
                     !tiles && c === 0 && { borderRightWidth: layout.stroke.hairline, borderRightColor: colors.rule },
                   ]}
                 >
@@ -185,7 +187,7 @@ export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: 
     <Target name="banned">
       <View onLayout={onLayout} style={[styles.block, compact && styles.compactBlock]} accessibilityLabel={`${en.play.dontSay}: ${words.join(', ')}`}>
         {slot.label ? (
-          <Txt variant="overline" color={colors.muted}>
+          <Txt variant="overline" color={colors[slot.labelColor ?? 'muted']}>
             {en.play.dontSay}
           </Txt>
         ) : null}

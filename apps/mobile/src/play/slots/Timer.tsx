@@ -1,6 +1,6 @@
 import { en } from '@unspoken/content';
-import { layout, radius, space, textStyles, type RegionColors, type TimerBar as TimerBarSlot, type TimerSlot } from '@unspoken/design-tokens';
-import { StyleSheet, View } from 'react-native';
+import { layout, radius, space, textStyles, type RegionColors, type TimerSlot } from '@unspoken/design-tokens';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Svg, { Circle, Path } from 'react-native-svg';
 
 import { fittedSize, useWidth } from '../../ui/fit';
@@ -11,6 +11,9 @@ import { Txt } from '../../ui/Txt';
 export type Clock = { label: string; progress: number };
 
 type ClockProps = { clock: Clock; colors: RegionColors; onPause?: () => void };
+
+// Clock digits and progress lines take the region's vivid accent when the slot asks for it.
+const vividOr = (slot: TimerSlot, colors: RegionColors, color: string) => (slot.vivid ? colors.vivid : color);
 
 export function PauseButton({ colors, onPress, size = layout.control.pause, filled = false, ink }: { colors: RegionColors; onPress?: () => void; size?: number; filled?: boolean; ink?: string }) {
   return (
@@ -55,10 +58,11 @@ export function TimerRing({ width, height, progress, colors }: { width: number; 
   );
 }
 
-// The clock in the ring's gap, on the page color so the ring stops either side of it.
-export function RingClock({ clock, colors, onPause }: ClockProps) {
+// The clock in the ring's gap, where the ring stops either side of it. Without fill 'none' it sits
+// on a box of the page color.
+export function RingClock({ slot, clock, colors, onPause }: ClockProps & { slot: TimerSlot }) {
   return (
-    <View style={[styles.ringClock, { backgroundColor: colors.bg, height: layout.control.pause, top: -layout.control.pause / 2 }]}>
+    <View style={[styles.ringClock, { height: layout.control.pause, top: -layout.control.pause / 2 }, slot.fill !== 'none' && { backgroundColor: colors.bg }]}>
       <Txt variant="clock" color={colors.ink} accessibilityLabel={clock.label}>
         {clock.label}
       </Txt>
@@ -67,25 +71,32 @@ export function RingClock({ clock, colors, onPause }: ClockProps) {
   );
 }
 
-// The clock and pause in a pill in the header (Deck, Chips).
+// The clock and pause in a pill in the header (Deck, Chips), in the slot's fill.
 export function TimerChip({ slot, clock, colors, onPause }: ClockProps & { slot: TimerSlot }) {
-  const inverse = slot.fill === 'inverse';
-  const ink = inverse ? colors.bg : slot.fill === 'filled' ? colors.chipInk : colors.ink;
+  const { ink, box } = chipLook(slot, colors);
   return (
-    <View
-      style={[
-        styles.chip,
-        slot.fill === 'outlined' && { borderWidth: layout.stroke.outline, borderColor: colors.outline },
-        slot.fill === 'filled' && { backgroundColor: colors.chip },
-        inverse && { backgroundColor: colors.ink },
-      ]}
-    >
+    <View style={[styles.chip, box]}>
       <Txt variant="clock" color={ink}>
         {clock.label}
       </Txt>
       <PauseButton colors={colors} onPress={onPause} ink={ink} size={layout.control.pause - space[0.5]} />
     </View>
   );
+}
+
+function chipLook(slot: TimerSlot, colors: RegionColors): { ink: string; box?: ViewStyle } {
+  switch (slot.fill ?? 'none') {
+    case 'none':
+      return { ink: colors.ink };
+    case 'outlined':
+      return { ink: colors.ink, box: { borderWidth: layout.stroke.outline, borderColor: colors.outline } };
+    case 'filled':
+      return { ink: colors.chipInk, box: { backgroundColor: colors.chip } };
+    case 'inverse':
+      return { ink: colors.bg, box: { backgroundColor: colors.ink } };
+    case 'accent':
+      return { ink: colors.onAccent, box: { backgroundColor: colors.accent } };
+  }
 }
 
 // A small round progress dial with the clock inside (Ledger, Bottom). Tapping it pauses.
@@ -130,7 +141,7 @@ export function BigClock({ slot, clock, colors, onPause }: ClockProps & { slot: 
   return (
     <View style={styles.bigClock} onLayout={onLayout}>
       <PauseButton colors={colors} onPress={onPause} size={layout.minTouch} filled />
-      <Txt variant="bigClock" size={size} color={colors.accentText} numberOfLines={1}>
+      <Txt variant="bigClock" size={size} color={vividOr(slot, colors, colors.accentText)} numberOfLines={1}>
         {clock.label}
       </Txt>
     </View>
@@ -145,7 +156,7 @@ export function ClockRow({ slot, clock, colors, onPause }: ClockProps & { slot: 
   return (
     <View style={[styles.clockRow, { justifyContent: at === 'start' ? 'flex-start' : 'flex-end' }]}>
       {at === 'none' ? null : (
-        <Txt variant={light ? 'clockLight' : 'clock'} size={size} color={colors.ink}>
+        <Txt variant={light ? 'clockLight' : 'clock'} size={size} color={vividOr(slot, colors, colors.ink)}>
           {clock.label}
         </Txt>
       )}
@@ -154,8 +165,11 @@ export function ClockRow({ slot, clock, colors, onPause }: ClockProps & { slot: 
   );
 }
 
-// A thin progress line. Bleeding bars run edge to edge with square ends.
-export function TimerBar({ bar, progress, colors, bleed = 0 }: { bar: TimerBarSlot; progress: number; colors: RegionColors; bleed?: number }) {
+// A timer slot's progress line, when it has one. Bleeding bars run edge to edge (out by `bleed`)
+// with square ends.
+export function TimerBar({ slot, progress, colors, bleed = 0 }: { slot: TimerSlot; progress: number; colors: RegionColors; bleed?: number }) {
+  const { bar } = slot;
+  if (!bar) return null;
   const round = bar.bleed ? 0 : bar.thickness / 2;
   return (
     <View
@@ -163,18 +177,19 @@ export function TimerBar({ bar, progress, colors, bleed = 0 }: { bar: TimerBarSl
       importantForAccessibility="no-hide-descendants"
       style={[styles.bar, { height: bar.thickness, borderRadius: round, backgroundColor: colors.track }, bar.bleed && { marginHorizontal: -bleed }]}
     >
-      <View style={{ width: `${Math.max(0, Math.min(1, progress)) * 100}%`, height: '100%', borderRadius: round, backgroundColor: colors.progress }} />
+      <View style={{ width: `${Math.max(0, Math.min(1, progress)) * 100}%`, height: '100%', borderRadius: round, backgroundColor: vividOr(slot, colors, colors.progress) }} />
     </View>
   );
 }
 
 // Sheet's bar: the line, then the clock and pause in one row under the word.
 export function InlineBar({ slot, clock, colors, onPause }: ClockProps & { slot: TimerSlot }) {
-  const bar = slot.bar;
   return (
     <View style={styles.inline}>
-      <View style={styles.grow}>{bar ? <TimerBar bar={bar} progress={clock.progress} colors={colors} /> : null}</View>
-      <Txt variant="clock" size={slot.size} color={colors.ink}>
+      <View style={styles.grow}>
+        <TimerBar slot={slot} progress={clock.progress} colors={colors} />
+      </View>
+      <Txt variant="clock" size={slot.size} color={vividOr(slot, colors, colors.ink)}>
         {clock.label}
       </Txt>
       <PauseButton colors={colors} onPress={onPause} filled />
