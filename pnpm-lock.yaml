@@ -81,6 +81,12 @@ importers:
 
   packages/core: {}
 
+  packages/design-tokens:
+    dependencies:
+      '@unspoken/core':
+        specifier: workspace:*
+        version: link:../core
+
 packages:
 
   '@babel/code-frame@7.29.7':
