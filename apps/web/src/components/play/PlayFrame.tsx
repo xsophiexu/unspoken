@@ -227,9 +227,10 @@ type FrameTopProps = {
 };
 
 // The top row: mode and level (when the style puts them at the top), stats or a clock, and the menu.
+// It takes the style's header tone when that differs from the page (Sheet), and the page's otherwise.
 export function FrameTop({ layoutStyle: s, model, actions, timer }: FrameTopProps) {
   return (
-    <div className={styles.top} data-header={s.header.variant}>
+    <div className={styles.top} data-header={s.header.variant} data-region={s.regions.header}>
       <div className={styles.topStart}>
         <Header slot={s.header} at="top" model={model} withSubline={s.stats.placement === 'subline'} onOpen={actions?.onHeader} />
       </div>
