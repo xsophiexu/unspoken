@@ -5,13 +5,13 @@ import { DIFFICULTIES, cardsFor } from '../game';
 import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty } from '../types';
-import { count } from '../plural';
+import { count } from '@unspoken/core';
 
 type Props = {
   visible: boolean;
   theme: Theme;
   current: Difficulty;
-  categories: Category[];
+  categories: readonly Category[];
   onPick: (difficulty: Difficulty) => void;
   onClose: () => void;
 };

@@ -30,7 +30,7 @@ import {
 import { fitWordSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Card, Difficulty, GameSettings } from '../types';
-import { count } from '../plural';
+import { count } from '@unspoken/core';
 
 type Props = {
   settings: GameSettings;

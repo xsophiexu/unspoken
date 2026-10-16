@@ -5,7 +5,7 @@ import { CATEGORIES, DIFFICULTIES, SKIP_OPTIONS, cardsFor, defaultSecondsFor, mo
 import { tileNameSize } from '../fitWord';
 import { font, type Theme } from '../theme';
 import type { Category, Difficulty, GameSettings } from '../types';
-import { count } from '../plural';
+import { count, sanitizeTimerDigits, secondsToTimerDigits, timerDigitsToSeconds } from '@unspoken/core';
 
 type Props = {
   settings: GameSettings;
@@ -14,27 +14,13 @@ type Props = {
   onModes: () => void;
 };
 
-// Typed digits fill the clock from the right, like a microwave: 1, 14, 145 reads 1:45.
-function digitsToSeconds(digits: string): number {
-  const padded = digits.padStart(3, '0');
-  const m = Number(padded.slice(0, -2));
-  const s = Math.min(59, Number(padded.slice(-2)));
-  return m * 60 + s;
-}
-
-function secondsToDigits(seconds: number): string {
-  const m = Math.floor(seconds / 60);
-  const s = seconds % 60;
-  return `${m}${s.toString().padStart(2, '0')}`.replace(/^0+/, '');
-}
-
 // The "New game" setup board from the design canvas.
 export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
   const mode = modeOf(settings.mode);
   const { width } = useWindowDimensions();
   const [difficulty, setDifficulty] = useState<Difficulty>(settings.difficulty);
-  const [categories, setCategories] = useState<Category[]>(settings.categories);
-  const [digits, setDigits] = useState(secondsToDigits(settings.roundSeconds));
+  const [categories, setCategories] = useState<Category[]>([...settings.categories]);
+  const [digits, setDigits] = useState(secondsToTimerDigits(settings.roundSeconds));
   const [skips, setSkips] = useState<number | null>(settings.skips);
   const [focused, setFocused] = useState(false);
   // Until the player types a time, the timer follows the difficulty.
@@ -50,7 +36,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
 
   const padded = digits.padStart(3, '0');
   const clock = `${Number(padded.slice(0, -2))}:${padded.slice(-2)}`;
-  const seconds = digitsToSeconds(digits);
+  const seconds = timerDigitsToSeconds(digits);
   // Hot potato's clock is hidden and random, so it has no timer to set.
   const showTimer = mode.timed && mode.id !== 'hotPotato';
   const canStart = !showTimer || seconds >= 10;
@@ -77,7 +63,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
                   accessibilityState={{ selected: on }}
                   onPress={() => {
                     setDifficulty(d.id);
-                    if (!customTime) setDigits(secondsToDigits(defaultSecondsFor(d.id)));
+                    if (!customTime) setDigits(secondsToTimerDigits(defaultSecondsFor(d.id)));
                   }}
                   style={[styles.diff, { backgroundColor: on ? t.accent : t.tile }]}
                 >
@@ -150,7 +136,7 @@ export function SetupScreen({ settings, theme: t, onStart, onModes }: Props) {
               value={digits}
               onChangeText={(v) => {
                 setCustomTime(true);
-                setDigits(v.replace(/\D/g, '').replace(/^0+/, '').slice(0, 4));
+                setDigits(sanitizeTimerDigits(v));
               }}
               keyboardType="number-pad"
               onFocus={() => setFocused(true)}
