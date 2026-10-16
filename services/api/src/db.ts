@@ -19,8 +19,8 @@ const migrations = [
   )`,
 ];
 
-// Brings the schema up to date, so the service runs it on every start. Each version applies in one
-// statement, so in one transaction, under a lock that makes instances starting together take turns,
+// Brings the schema up to date; the service runs it on every start. Each version applies in one
+// statement (so in one transaction) under a lock that makes instances starting together take turns,
 // and is recorded in schema_migrations so it never applies twice.
 export async function migrate(db: Database) {
   for (const [index, change] of migrations.entries()) {

@@ -35,7 +35,7 @@ Scripts: `dev`, `build` (bundles `src/main.ts` and the workspace packages into `
 Everything deployment-specific comes from environment variables, validated at startup by `src/config.ts`. A bad value stops the service with a message naming the variable (never repeating it, since `DATABASE_URL` holds a password). [`.env.example`](.env.example) lists each one with its default: `PORT`, `CORS_ORIGINS`, `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS` and `DATABASE_URL`.
 
 - **CORS:** list browser origins exactly, such as `https://xsophiexu.github.io` (no `/unspoken` path). Native apps send no Origin and need no entry.
-- **Rate limit:** counted per caller address, in memory, per replica, so N replicas allow N times the limit. The address comes from `X-Forwarded-For`, `TRUST_PROXY_HOPS` entries from the end. The Docker image sets 2 for Railway, whose edge sends the client followed by one hop of its own. Railway's docs don't describe that header, so after the first deploy check that the limit is per caller: send six ideas from one network and the sixth answers 429, while another network (a phone off Wi-Fi) still gets 201.
+- **Rate limit:** counted per caller address, in memory, per replica, so N replicas allow N times the limit. The address comes from `X-Forwarded-For`, `TRUST_PROXY_HOPS` entries from the end. The Docker image sets 2 for Railway, whose edge sends the client followed by one hop of its own. Railway's docs don't spell out that header's entries, so after the first deploy check that the limit is per caller: send six ideas from one network and the sixth answers 429, while another network (a phone off Wi-Fi) still gets 201.
 - **Database:** each `feedback` row holds the validated request (`topic`, `message`, and `entry_point`, `platform`, `app_version`, null when not sent) plus `id` (a UUID, returned as the receipt's `id`) and `received_at`. The schema is a list of numbered migrations in `src/db.ts`, applied on every start: each runs once, in one transaction, under a lock, so restarts and replicas starting together are safe. Change the schema by appending a migration, never by editing one. When the database can't be reached at start, the service exits and Railway restarts it (On Failure, up to 10 times by default). To read feedback, open the Postgres service's **Data** tab in Railway, or run `railway connect Postgres` and `select * from feedback order by received_at desc;`.
 
 ## Deploy on Railway
@@ -44,13 +44,13 @@ Railway builds `services/api/Dockerfile` from the **repository root**, not from 
 
 In the Railway dashboard:
 
-1. **New Project → Deploy from GitHub repo**, and choose `xsophiexu/unspoken` (let Railway's GitHub app see the repository if it asks). Leave **Root Directory** empty. Renaming the service to `api` is optional.
+1. **New Project → Deploy from GitHub repo**, and choose `xsophiexu/unspoken` (let Railway's GitHub app see the repository if it asks). If Railway offers a service for each workspace package, keep only `@unspoken/api`. Its first build may fail until the steps below are done.
 2. On the project canvas, **+ New → Database → PostgreSQL**. Keep its name, `Postgres`.
-3. In the service's **Variables**, add:
+3. In the API service's **Variables**, add:
    - `RAILWAY_DOCKERFILE_PATH` = `services/api/Dockerfile`
    - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`
    - `CORS_ORIGINS` = `https://xsophiexu.github.io`, plus the Next.js site's origin once it has one, comma-separated
-4. In the service's **Settings**, set **Healthcheck Path** to `/health` and **Watch Paths** to `/services/api/**`, `/packages/core/**`, `/packages/content/**`, `/packages/api-contract/**`, `/package.json` and `/pnpm-lock.yaml`. Leave the start command and `PORT` alone: the image runs `node --enable-source-maps dist/main.js`, which listens on the `PORT` Railway sets.
+4. In its **Settings**: leave **Root Directory** empty, and clear any custom build or start command Railway filled in (the image runs `node --enable-source-maps dist/main.js`, which listens on the `PORT` Railway sets). Set **Healthcheck Path** to `/health` and **Watch Paths** to `/services/api/**`, `/packages/core/**`, `/packages/content/**`, `/packages/api-contract/**`, `/package.json` and `/pnpm-lock.yaml`.
 5. **Deploy** the staged changes. When the deploy is green, open **Settings → Networking → Generate Domain**.
 
 The same setup is written as code in [`.railway/railway.ts`](.railway/railway.ts), Railway's infrastructure-as-code file (Railway no longer reads `railway.json` for new services). With the [Railway CLI](https://docs.railway.com/cli), from `services/api`: `railway login`, `railway init`, `railway config plan`, `railway config apply`, then `railway domain --service api` instead of the steps above.
