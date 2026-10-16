@@ -1,7 +1,7 @@
 'use client';
 
 import { en } from '@unspoken/content';
-import { COLOR_MODES, STYLE_IDS, layout, layoutStyles, type StyleId } from '@unspoken/design-tokens';
+import { COLOR_MODES, STYLE_IDS, layout, layoutStyleFor, type StyleId } from '@unspoken/design-tokens';
 import { useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { StyleThumbnail } from '@/components/customize/StyleThumbnail';
@@ -35,7 +35,7 @@ export function CustomizeScreen() {
   const reduced = useReducedMotion();
   const scroller = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(() => pageOf(selection.style));
-  const pinned = layoutStyles[selection.style].color.kind === 'pinned';
+  const pinned = layoutStyleFor(selection.style, selection.mode).color.kind === 'pinned';
 
   const goTo = (index: number, smooth = !reduced) => {
     const el = scroller.current;
