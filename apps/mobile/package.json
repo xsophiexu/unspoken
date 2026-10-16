@@ -6,6 +6,7 @@
     "@expo-google-fonts/manrope": "^0.4.2",
     "@expo/metro-runtime": "~57.0.17",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@unspoken/api-contract": "workspace:*",
     "@unspoken/content": "workspace:*",
     "@unspoken/core": "workspace:*",
     "@unspoken/design-tokens": "workspace:*",

@@ -12,7 +12,7 @@ type Props = {
   selected: boolean;
   onPress: () => void;
   disabled?: boolean;
-  // Fixed tile height (mode tiles, level tiles); otherwise the content sets it.
+  // Smallest tile height (mode tiles, level tiles); longer text makes the tile taller.
   height?: number;
   // Center a one-line title (level tiles on the sheet).
   centered?: boolean;
@@ -35,7 +35,7 @@ export function Tile({ title, detail, colors, selected, onPress, disabled, heigh
       style={[
         styles.tile,
         { backgroundColor: selected ? colors.accent : colors.chip, padding: pad },
-        height !== undefined && { height },
+        height !== undefined && { minHeight: height },
         centered && styles.centered,
       ]}
     >
@@ -56,5 +56,5 @@ const styles = StyleSheet.create({
   tile: { borderRadius: radius.xl, gap: space[1.5], minHeight: layout.minTouch },
   centered: { alignItems: 'center', justifyContent: 'center', paddingVertical: 0 },
   // Measures the tile's width without affecting its layout.
-  fill: { ...StyleSheet.absoluteFillObject },
+  fill: { ...StyleSheet.absoluteFill },
 });

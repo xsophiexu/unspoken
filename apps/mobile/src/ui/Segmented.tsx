@@ -7,13 +7,13 @@ import { Txt } from './Txt';
 
 type Option<T extends string> = { value: T; label: string; icon?: IconName };
 
-// Two or three options in one track, one selected (Light / Dark).
+// Two or three options in one track; the selected one is lifted out in the page color (Light / Dark).
 export function Segmented<T extends string>({ options, value, onChange, colors }: { options: readonly Option<T>[]; value: T; onChange: (value: T) => void; colors: RegionColors }) {
   return (
     <View accessibilityRole="radiogroup" style={[styles.track, { backgroundColor: colors.chip }]}>
       {options.map((o) => {
         const on = o.value === value;
-        const ink = on ? colors.onAccent : colors.chipInk;
+        const ink = on ? colors.ink : colors.chipInk;
         return (
           <Press
             key={o.value}
@@ -21,7 +21,7 @@ export function Segmented<T extends string>({ options, value, onChange, colors }
             accessibilityState={{ selected: on }}
             accessibilityLabel={o.label}
             onPress={() => onChange(o.value)}
-            style={[styles.option, on && { backgroundColor: colors.accent }]}
+            style={[styles.option, on && { backgroundColor: colors.bg }]}
           >
             {o.icon ? <Icon name={o.icon} size={layout.icon.sm} color={ink} /> : null}
             <Txt variant={on ? 'optionTitle' : 'label'} color={ink}>

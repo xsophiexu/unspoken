@@ -13,6 +13,7 @@ import {
   hiddenRoundSeconds,
   hotPotatoRange,
   parseSettings,
+  toggleCategory,
   withDifficulty,
 } from '../src';
 import { settingsFor } from './fixtures';
@@ -90,6 +91,19 @@ describe('canStart', () => {
 
   it('refuses modes that are not available yet', () => {
     expect(canStart(settingsFor('teams'))).toBe(false);
+  });
+});
+
+describe('toggleCategory', () => {
+  it('makes All cards exclusive and falls back to it when the last theme is cleared', () => {
+    const one = toggleCategory([], 'Technology');
+    expect(one).toEqual(['Technology']);
+    expect(toggleCategory(one, null)).toEqual([]);
+    expect(toggleCategory(one, 'Technology')).toEqual([]);
+  });
+
+  it('keeps chosen themes in catalog order', () => {
+    expect(toggleCategory(['Technology'], 'Inner World')).toEqual(['Inner World', 'Technology']);
   });
 });
 

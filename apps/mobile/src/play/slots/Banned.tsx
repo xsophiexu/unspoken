@@ -20,6 +20,9 @@ type Props = {
   bleed: number;
 };
 
+// Bands run edge to edge down into the footer, so the list sits at the bottom of its area.
+export const pinsToFooter = (slot: BannedSlot) => slot.variant === 'bands';
+
 // The banned words in any of the style catalog's list variants. Lists of
 // layout.banned.compactFrom words or more (Escalate's ten) switch to compact sizes, and every word
 // shrinks to fit its cell.

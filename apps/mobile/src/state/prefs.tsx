@@ -1,6 +1,6 @@
 import type { GameSettings, PlayKind } from '@unspoken/core';
 import { DEFAULT_THEME, resolveTheme, type Theme, type ThemeSelection } from '@unspoken/design-tokens';
-import { createContext, use, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Appearance } from 'react-native';
 
 import { loadPrefs, parsePrefs, savePrefs, type SavedPrefs } from './storage';
@@ -44,7 +44,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState<SavedPrefs | null>(null);
   const [gameId, setGameId] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
-  const intros = useRef(new Set<PlayKind>());
+  // Which how-it-works cards were seen this session; kept in memory only.
+  const [intros] = useState(() => new Set<PlayKind>());
 
   useEffect(() => {
     let live = true;
@@ -87,12 +88,12 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         setTourOpen(false);
         update((p) => ({ ...p, tourSeen: true }));
       },
-      introSeen: (kind) => intros.current.has(kind),
+      introSeen: (kind) => intros.has(kind),
       markIntroSeen: (kind) => {
-        intros.current.add(kind);
+        intros.add(kind);
       },
     };
-  }, [saved, gameId, tourOpen, update]);
+  }, [saved, gameId, tourOpen, update, intros]);
 
   // Nothing renders until the saved look is read, so the first frame is already themed.
   if (!value) return null;

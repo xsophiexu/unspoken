@@ -14,7 +14,7 @@ function valid(key: ClientField, value: string | undefined): string | undefined 
   if (!value) return undefined;
   const parsed = clientConfigSchema.shape[key].safeParse(value);
   if (parsed.success) return parsed.data;
-  console.warn(`Ignoring ${key}: ${parsed.error.issues[0]?.message ?? 'invalid'}`);
+  console.warn(`Ignoring ${String(key)}: ${parsed.error.issues[0]?.message ?? 'invalid'}`);
   return undefined;
 }
 

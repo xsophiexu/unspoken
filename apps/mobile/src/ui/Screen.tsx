@@ -72,12 +72,40 @@ export function SectionLabel({ label, aside, colors }: { label: string; aside?: 
   );
 }
 
+// The row above a screen title: a back link at the left and a link or note at the right.
+export function ScreenTop({ left, right }: { left?: ReactNode; right?: ReactNode }) {
+  return (
+    <View style={styles.top}>
+      <View>{left}</View>
+      <View>{right}</View>
+    </View>
+  );
+}
+
+// A screen title with an optional line under it.
+export function ScreenTitle({ title, sub, colors }: { title: string; sub?: string; colors: RegionColors }) {
+  return (
+    <View style={styles.titleBlock}>
+      <Txt variant="title" color={colors.ink} accessibilityRole="header">
+        {title}
+      </Txt>
+      {sub ? (
+        <Txt variant="hint" color={colors.muted}>
+          {sub}
+        </Txt>
+      ) : null}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   page: { flex: 1 },
   column: { flex: 1, width: '100%', alignSelf: 'center' },
-  content: { paddingHorizontal: layout.screen.paddingX, paddingTop: layout.screen.paddingTop, paddingBottom: space[5] },
+  content: { paddingHorizontal: layout.screen.paddingX, paddingTop: layout.screen.paddingTop, paddingBottom: space[5], gap: space[5] },
   fill: { flex: 1 },
   footer: { paddingHorizontal: layout.screen.paddingX },
   section: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: space[3] },
   aside: { flexShrink: 1, textAlign: 'right' },
+  top: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minHeight: layout.minTouch },
+  titleBlock: { gap: space[1], marginBottom: space[2] },
 });

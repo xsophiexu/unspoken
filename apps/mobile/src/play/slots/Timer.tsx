@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     paddingLeft: space[3.5],
     paddingRight: space[1],
   },
-  center: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center' },
+  center: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center' },
   bigClock: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'flex-end', gap: space[3] },
   clockRow: { flexDirection: 'row', alignItems: 'center', gap: space[1] },
   bar: { overflow: 'hidden' },

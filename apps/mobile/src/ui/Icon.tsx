@@ -10,6 +10,7 @@ export type IconName =
   | 'check'
   | 'cross'
   | 'arrowRight'
+  | 'arrowLeft'
   | 'send'
   | 'bubble'
   | 'restart'
@@ -63,6 +64,8 @@ function glyph(name: IconName, color: string, background: string) {
       return <Path d="M5 5l10 10M15 5L5 15" {...stroke} />;
     case 'arrowRight':
       return <Path d="M3.5 10h12M11 4.5l5.5 5.5-5.5 5.5" {...stroke} />;
+    case 'arrowLeft':
+      return <Path d="M16.5 10h-12M9 4.5L3.5 10 9 15.5" {...stroke} />;
     case 'send':
       return <Path d="M3 10l14-7-5 14-2.5-5.5z" {...stroke} />;
     case 'bubble':

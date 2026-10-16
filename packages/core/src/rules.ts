@@ -1,5 +1,5 @@
 import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules } from './config';
-import type { Difficulty, GameSettings, ModeId, Random } from './types';
+import type { Category, Difficulty, GameSettings, ModeId, Random } from './types';
 
 function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
   const found = config.difficulties.find((d) => d.id === id);
@@ -59,6 +59,14 @@ export function escalateProgress(correct: number, config: GameConfig = gameConfi
 export function withDifficulty(settings: GameSettings, difficulty: Difficulty, config: GameConfig = gameConfig): GameSettings {
   const onDefault = settings.roundSeconds === defaultRoundSeconds(settings.difficulty, config);
   return { ...settings, difficulty, roundSeconds: onDefault ? defaultRoundSeconds(difficulty, config) : settings.roundSeconds };
+}
+
+// Setup's theme chips: All cards (null) clears the chosen themes; any other theme toggles, and
+// clearing the last one means All cards again. Themes stay in catalog order.
+export function toggleCategory(categories: readonly Category[], category: Category | null, config: GameConfig = gameConfig): Category[] {
+  if (category === null) return [];
+  const next = categories.includes(category) ? categories.filter((c) => c !== category) : [...categories, category];
+  return config.categories.filter((c) => next.includes(c));
 }
 
 // The settings a fresh install starts with.

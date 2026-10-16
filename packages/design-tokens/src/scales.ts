@@ -75,7 +75,9 @@ export const elevation = {
 export const motion = {
   duration: { fast: 150, base: 200, slow: 320 },
   // The card follows the finger; past the threshold it flies off and the answer is dispatched.
-  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6 },
+  // barShrink and barGrow: how far the Skip and Correct bars shrink and grow (as flex factors) at the
+  // threshold, so the side the card is heading to stretches with the drag.
+  swipe: { thresholdPx: 100, flyOutMs: 260, flyDistancePx: 520, maxTiltDeg: 10, tiltAtPx: 180, startSlopPx: 6, barShrink: 0.3, barGrow: 3.2 },
   // The next card springs in.
   enter: { friction: 9, tension: 70, fromY: 40, fromScale: 0.95, fromOpacity: 0.3 },
   // The card nudges right to show it swipes: once at the start, then after 30 idle seconds.
@@ -139,8 +141,8 @@ export const layout = {
   },
 } as const;
 
-// Feedback for pressed and unavailable controls.
-export const opacity = { pressed: 0.8, disabled: 0.45 } as const;
+// Feedback for pressed and unavailable controls, and the page color behind the Paused overlay.
+export const opacity = { pressed: 0.8, disabled: 0.45, overlay: 0.94 } as const;
 
 // The How to play walkthrough ("Dark spotlight, white captions", option A). Colors are fixed so the
 // overlay reads the same over every style, color and mode. The Play label is the color's light-mode
