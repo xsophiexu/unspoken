@@ -6,6 +6,9 @@ type Rgba = { r: number; g: number; b: number; a: number };
 // WCAG 2.x minimum contrast for normal text (AA).
 export const AA_TEXT = 4.5;
 
+// WCAG 2.x minimum contrast for icons, borders and other non-text graphics (AA).
+export const AA_NON_TEXT = 3;
+
 function parseHex(hex: string): Rgba {
   const h = hex.replace(/^#/, '');
   const full = h.length === 3 || h.length === 4 ? [...h].map((c) => c + c).join('') : h;

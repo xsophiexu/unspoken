@@ -165,6 +165,9 @@ export type StyleRegions = {
   word?: RegionTone;
   // The lower panel or sheet, for lowerPanel and sheet arrangements.
   lower?: RegionTone;
+  // The top row (mode and level, header stats or clock, the menu button), when it differs from the
+  // page. The page tone still holds the word and the overlays.
+  header?: RegionTone;
   // The controls row, when it differs from what surrounds it.
   controls?: RegionTone;
   // splitBar halves.
@@ -257,7 +260,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     controls: { variant: 'pills', height: 56, radius: 'pill', skip: 'round' },
   },
   // Split · word on the page, list on a tinted lower half, split bar to the bottom edge. Always sage.
-  // In dark the lower half and Skip sink to the track color.
+  // In dark the lower half and Skip sink to the track color and the DON'T SAY label is accentText.
   split: {
     id: 'split',
     color: { kind: 'pinned', color: 'sage' },
@@ -271,7 +274,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'columns', size: 22, weight: 500, label: true },
     controls: { variant: 'splitBar', height: 110, radius: 'none', skip: 'filled', skipWidth: 150, paddingBottom: 14 },
     margins: { paddingBottom: 0 },
-    dark: { regions: { lower: 'sunken', skip: 'sunken' } },
+    dark: { regions: { lower: 'sunken', skip: 'sunken' }, banned: { labelColor: 'accentText' } },
   },
   // Ledger · full color, ring timer.
   ledger: {
@@ -287,7 +290,8 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'chips', size: 18, weight: 500, label: true, chipRadius: 'pill' },
     controls: { variant: 'pills', height: 60, radius: 'pill', skip: 'outline', skipWidth: 120 },
   },
-  // Ink · dark lower panel. In dark, Correct is a raised stone button with ink text.
+  // Ink · dark lower panel. In dark, Correct is a raised stone button with ink text and the rows
+  // have no visible hairlines.
   ink: {
     id: 'ink',
     color: follow,
@@ -318,14 +322,15 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     panel: { size: 'content', radius: 'ring' },
   },
   // Sheet · word on an accent page, numbered list on a full-width sheet below. Always clay. The page
-  // starts lower (44) and the sheet keeps its buttons low (22 under them). In dark the progress line
-  // and menu button on the accent page are stone-grey tints.
+  // starts lower (44) and the sheet keeps its buttons low (22 under them). In light the menu button
+  // is white at 18% (frosted header row); in dark the progress line and menu button on the accent
+  // page are stone-grey tints.
   sheet: {
     id: 'sheet',
     color: { kind: 'pinned', color: 'clay' },
     thumbnailColor: 'clay',
     arrangement: 'sheet',
-    regions: { page: 'accent', lower: 'base' },
+    regions: { page: 'accent', header: 'frosted', lower: 'base' },
     header: { variant: 'inline', position: 'top', container: 'none', size: 22, menu: 'dots', menuContainer: 'filled' },
     timer: { variant: 'bar', size: 14, clockAt: 'end', bar: { placement: 'belowWord', thickness: 5, bleed: false } },
     stats: { placement: 'footer', emphasis: 'bigNumber' },
@@ -333,7 +338,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'numberedRows', size: 19, weight: 500, label: true, numbering: 'leading' },
     controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'filled', ratio: [1, 2] },
     margins: { paddingTop: 44, paddingBottom: 22 },
-    dark: { regions: { page: 'shadowed' } },
+    dark: { regions: { page: 'shadowed', header: 'shadowed' } },
   },
   // Big timer (Cream on the canvas). In dark the clock and its line are the vivid accent and the
   // word is muted.

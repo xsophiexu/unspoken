@@ -103,10 +103,27 @@ describe('dark mode styles', () => {
   it('tints the Sheet progress line and menu button with stone grey in dark', () => {
     const theme = resolveTheme({ style: 'sheet', color: 'teal', mode: 'dark' });
     const page = theme.regions[theme.style.regions.page];
+    const header = theme.regions[theme.style.regions.header ?? theme.style.regions.page];
     expect(page.bg).toBe(palettes.clay.dark.accent);
     expect(page.progress).toBe(palettes.clay.dark.surfaceRaised);
-    expect(page.chip).not.toBe(palettes.clay.dark.surfaceRaised);
+    expect(header.bg).toBe(page.bg);
+    expect(header.chip).toBe(page.chip);
+    expect(header.chip).not.toBe(palettes.clay.dark.surfaceRaised);
     expect(page.ink).toBe('#FFFFFF');
+  });
+
+  it('hides the hairlines between Ink rows in dark only', () => {
+    const lowerOf = (mode: 'light' | 'dark') => {
+      const theme = resolveTheme({ style: 'ink', color: 'teal', mode });
+      return theme.regions[theme.style.regions.lower ?? 'panel'];
+    };
+    expect(lowerOf('dark').rule).toBe(lowerOf('dark').bg);
+    expect(lowerOf('light').rule).not.toBe(lowerOf('light').bg);
+  });
+
+  it('labels the Split list in the accent text color in dark only', () => {
+    expect(layoutStyleFor('split', 'light').banned.labelColor ?? 'muted').toBe('muted');
+    expect(layoutStyleFor('split', 'dark').banned.labelColor).toBe('accentText');
   });
 
   it('returns the same style object on every call', () => {
@@ -124,6 +141,20 @@ describe('both modes', () => {
       expect(lower.onAccent).toBe(palettes.slateBlue[mode].accentText);
     }
     expect(resolveTheme({ style: 'bottom', color: 'slateBlue', mode: 'dark' }).regions.accented.bg).toBe(palettes.slateBlue.dark.accent);
+  });
+
+  it('frosts the Sheet menu button in light: white dots on white at 18%, over the accent page', () => {
+    const theme = resolveTheme({ style: 'sheet', color: 'teal', mode: 'light' });
+    const page = theme.regions[theme.style.regions.page];
+    const header = theme.regions[theme.style.regions.header ?? theme.style.regions.page];
+    const roles = palettes.clay.light;
+    expect(page.bg).toBe(roles.accent);
+    expect(header.bg).toBe(page.bg);
+    expect(header.ink).toBe(page.ink);
+    expect(header.chip.toUpperCase()).toMatch(new RegExp(`^${roles.onAccent.toUpperCase()}[0-9A-F]{2}$`));
+    expect(header.chipInk).toBe(roles.onAccentStrong);
+    // The page itself, which also holds the overlays, keeps solid chips for text.
+    expect(page.chip).toBe(roles.surfaceRaised);
   });
 
   it('runs the Chips timer line over the page color, with no visible track', () => {
