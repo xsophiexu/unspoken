@@ -7,7 +7,8 @@
 // dark-palettes-ink-and-stone.json on the design canvas, except where they missed AA here:
 // onAccentMuted is lighter for every color, and the strongest Ombre band is darker for teal, sage
 // and mustard. The dark accent tones (accentVivid, accentTint, accentShade and the deep roles) are
-// the canvas formulas, hsl(accent hue, S, L), worked out for each color.
+// the canvas formulas, hsl(accent hue, S, L), worked out for each color. accentPanel is accent in
+// dark and, in light, the accent darkened until text reads on the panel's translucent tiles.
 
 // Customize lists the colors in this order.
 export const COLOR_IDS = ['teal', 'clay', 'lilac', 'sage', 'mustard', 'slateBlue', 'rose'] as const;
@@ -45,12 +46,16 @@ export type ColorRoles = {
   accentTint: string;
   /** A darker, quieter accent fill (Chips' Skip bar in dark). Same as surface in light. */
   accentShade: string;
+  /** The accent-colored lower panel (Bottom). Accent in dark; in light a shade darker, so text still reads on its translucent tiles. */
+  accentPanel: string;
   /** Borders of secondary buttons and dashed suggestion tiles. */
   outline: string;
   /** Hairlines between rows. */
   rule: string;
   /** The unfilled part of timer rings and bars. */
   track: string;
+  /** Recessed fills: Split's lower half and Skip bar in dark (the track color). Same as surface in light. */
+  sunken: string;
   /** The Skip bar at rest. */
   barIdle: string;
   /** The Skip bar while the card is dragged left. */
@@ -108,9 +113,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#2C5E5A',
       accentTint: '#CCDCDA',
       accentShade: '#CCDCDA',
+      accentPanel: '#3B6C69',
       outline: '#8FA5A3',
       rule: '#CAD6D4',
       track: '#C3D3D1',
+      sunken: '#CCDCDA',
       barIdle: '#D3DEDC',
       barSkip: '#8A9E9C',
       panel: '#273B3C',
@@ -140,9 +147,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#6ECFC8',
       accentTint: '#284846',
       accentShade: '#293D3C',
+      accentPanel: '#487572',
       outline: '#525656',
       rule: '#272828',
       track: '#2C2E2D',
+      sunken: '#2C2E2D',
       barIdle: '#2F3131',
       barSkip: '#707575',
       panel: '#323434',
@@ -175,9 +184,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#7F402A',
       accentTint: '#EBD2CA',
       accentShade: '#EBD2CA',
+      accentPanel: '#94533D',
       outline: '#C9AFA3',
       rule: '#E8DAD2',
       track: '#E2C9C1',
+      sunken: '#EBD2CA',
       barIdle: '#E8D7D1',
       barSkip: '#AF9287',
       panel: '#4A2F26',
@@ -207,9 +218,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#CF866E',
       accentTint: '#483028',
       accentShade: '#3D2E29',
+      accentPanel: '#7E5A4E',
       outline: '#565352',
       rule: '#282727',
       track: '#2E2C2C',
+      sunken: '#2E2C2C',
       barIdle: '#31302F',
       barSkip: '#757270',
       panel: '#343332',
@@ -242,9 +255,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#664F6D',
       accentTint: '#DCCFE0',
       accentShade: '#DCCFE0',
+      accentPanel: '#755B7B',
       outline: '#A597AA',
       rule: '#DCD3DF',
       track: '#D6CCD9',
+      sunken: '#DCCFE0',
       barIdle: '#DDD3E1',
       barSkip: '#9C8EA2',
       panel: '#3D3240',
@@ -274,9 +289,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#BA6ECF',
       accentTint: '#412848',
       accentShade: '#39293D',
+      accentPanel: '#744E7E',
       outline: '#555256',
       rule: '#282728',
       track: '#2D2C2E',
+      sunken: '#2D2C2E',
       barIdle: '#312F31',
       barSkip: '#747075',
       panel: '#343234',
@@ -309,9 +326,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#475E44',
       accentTint: '#D2DCCD',
       accentShade: '#D2DCCD',
+      accentPanel: '#536A4E',
       outline: '#97A693',
       rule: '#CFD5CD',
       track: '#C8D3C3',
+      sunken: '#D2DCCD',
       barIdle: '#D6DED2',
       barSkip: '#8D9C89',
       panel: '#3E5240',
@@ -341,9 +360,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#90B587',
       accentTint: '#2E4828',
       accentShade: '#2D3D29',
+      accentPanel: '#5C7656',
       outline: '#535652',
       rule: '#272827',
       track: '#2C2E2C',
+      sunken: '#2C2E2C',
       barIdle: '#30312F',
       barSkip: '#717570',
       panel: '#323432',
@@ -376,9 +397,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#6D4E02',
       accentTint: '#E2D7C3',
       accentShade: '#E2D7C3',
+      accentPanel: '#7F5F20',
       outline: '#AD9E83',
       rule: '#DAD2C3',
       track: '#D9CEBA',
+      sunken: '#E2D7C3',
       barIdle: '#E2DACD',
       barSkip: '#A5977F',
       panel: '#42351C',
@@ -408,9 +431,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#CFAE6E',
       accentTint: '#483D28',
       accentShade: '#3D3629',
+      accentPanel: '#7B6B4C',
       outline: '#565552',
       rule: '#282827',
       track: '#2E2D2C',
+      sunken: '#2E2D2C',
       barIdle: '#31312F',
       barSkip: '#757470',
       panel: '#343332',
@@ -443,9 +468,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#42576A',
       accentTint: '#D3D9DF',
       accentShade: '#D3D9DF',
+      accentPanel: '#516679',
       outline: '#97A1AB',
       rule: '#CED4D9',
       track: '#C9D1D9',
+      sunken: '#D3D9DF',
       barIdle: '#D7DCE1',
       barSkip: '#919AA3',
       panel: '#22303F',
@@ -475,9 +502,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#6EA0CF',
       accentTint: '#283948',
       accentShade: '#29333D',
+      accentPanel: '#4E677E',
       outline: '#525456',
       rule: '#272828',
       track: '#2C2D2E',
+      sunken: '#2C2D2E',
       barIdle: '#2F3031',
       barSkip: '#707375',
       panel: '#323334',
@@ -510,9 +539,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#854A5F',
       accentTint: '#E5D0D8',
       accentShade: '#E5D0D8',
+      accentPanel: '#8F5268',
       outline: '#BC9DA8',
       rule: '#DFCED3',
       track: '#E0C9D1',
+      sunken: '#E5D0D8',
       barIdle: '#E8D8DE',
       barSkip: '#B0939D',
       panel: '#482E37',
@@ -542,9 +573,11 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       accentVivid: '#CF6E90',
       accentTint: '#482834',
       accentShade: '#3D2930',
+      accentPanel: '#7E4E5F',
       outline: '#565254',
       rule: '#282727',
       track: '#2E2C2C',
+      sunken: '#2E2C2C',
       barIdle: '#312F30',
       barSkip: '#757072',
       panel: '#343233',
