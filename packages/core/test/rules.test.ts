@@ -1,0 +1,110 @@
+import { describe, expect, it } from 'vitest';
+
+import {
+  DIFFICULTY_IDS,
+  MODE_IDS,
+  bannedCountFor,
+  canStart,
+  defaultRoundSeconds,
+  defaultSettings,
+  gameConfig,
+  hasSkipSetting,
+  hasTimerSetting,
+  hiddenRoundSeconds,
+  hotPotatoRange,
+  seededRandom,
+  withDifficulty,
+} from '../src';
+import { settingsFor } from './fixtures';
+
+describe('catalogs', () => {
+  it('has eight difficulties from Normal to Grandmaster', () => {
+    expect(DIFFICULTY_IDS).toEqual(['Normal', 'Harder', 'Expert 1', 'Expert 2', 'Master 1', 'Master 2', 'Master 3', 'Grandmaster']);
+  });
+
+  it('lists the modes in Modes-grid order, Teams coming soon and no Zen', () => {
+    expect(MODE_IDS).toEqual(['classic', 'endless', 'teams', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
+    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams']);
+  });
+
+  it('starts a fresh install on Endless at Expert 1 with All cards, 2:30 and 3 skips', () => {
+    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Expert 1', categories: [], roundSeconds: 150, skips: 3 });
+  });
+});
+
+describe('round timer', () => {
+  it('defaults to 1:30 at Normal, 2:30 at Expert 1 and 5:00 at Grandmaster, growing with each level', () => {
+    expect(defaultRoundSeconds('Normal')).toBe(90);
+    expect(defaultRoundSeconds('Expert 1')).toBe(150);
+    expect(defaultRoundSeconds('Grandmaster')).toBe(300);
+    const all = DIFFICULTY_IDS.map((d) => defaultRoundSeconds(d));
+    expect(all).toEqual([...all].sort((a, b) => a - b));
+  });
+
+  it('follows a new difficulty while it is on the default', () => {
+    const next = withDifficulty(settingsFor('classic', { difficulty: 'Expert 1', roundSeconds: 150 }), 'Grandmaster');
+    expect(next).toMatchObject({ difficulty: 'Grandmaster', roundSeconds: 300 });
+  });
+
+  it('keeps a typed time when the difficulty changes', () => {
+    const next = withDifficulty(settingsFor('classic', { difficulty: 'Expert 1', roundSeconds: 75 }), 'Normal');
+    expect(next).toMatchObject({ difficulty: 'Normal', roundSeconds: 75 });
+  });
+
+  it('is set in setup only for modes with a visible clock', () => {
+    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'teams', 'timeAttack']);
+  });
+});
+
+describe('banned words', () => {
+  it('shows 5 at Normal and Harder and 6 at every other level', () => {
+    expect(DIFFICULTY_IDS.map((d) => bannedCountFor(d))).toEqual([5, 5, 6, 6, 6, 6, 6, 6]);
+  });
+});
+
+describe('skips', () => {
+  it('are limited only in Classic, Teams, Time attack and Escalate', () => {
+    expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'teams', 'timeAttack', 'escalate']);
+  });
+});
+
+describe('Hot potato hidden length', () => {
+  it('runs from 0:45–1:30 at Normal up to 2:30–5:00 at Grandmaster', () => {
+    expect(hotPotatoRange('Normal')).toEqual({ min: 45, max: 90 });
+    expect(hotPotatoRange('Expert 1')).toEqual({ min: 75, max: 150 });
+    expect(hotPotatoRange('Grandmaster')).toEqual({ min: 150, max: 300 });
+  });
+
+  it('always picks a length inside the level’s range', () => {
+    const { random } = seededRandom(11);
+    for (const difficulty of DIFFICULTY_IDS) {
+      const { min, max } = hotPotatoRange(difficulty);
+      const picks = Array.from({ length: 300 }, () => hiddenRoundSeconds(difficulty, random));
+      expect(Math.min(...picks)).toBeGreaterThanOrEqual(min);
+      expect(Math.max(...picks)).toBeLessThanOrEqual(max);
+      // Spread across the range rather than stuck at one end.
+      expect(Math.max(...picks) - Math.min(...picks)).toBeGreaterThan((max - min) / 2);
+    }
+  });
+
+  it('uses the extremes of the range for the extremes of randomness', () => {
+    expect(hiddenRoundSeconds('Harder', () => 0)).toBe(60);
+    expect(hiddenRoundSeconds('Harder', () => 0.999999)).toBe(120);
+  });
+});
+
+describe('canStart', () => {
+  it('needs at least 0:10 on a visible clock', () => {
+    expect(canStart(settingsFor('classic', { roundSeconds: 9 }))).toBe(false);
+    expect(canStart(settingsFor('classic', { roundSeconds: 10 }))).toBe(true);
+  });
+
+  it('ignores the round timer for modes without one', () => {
+    expect(canStart(settingsFor('hotPotato', { roundSeconds: 0 }))).toBe(true);
+    expect(canStart(settingsFor('endless', { roundSeconds: 0 }))).toBe(true);
+  });
+
+  it('refuses modes that are not available yet', () => {
+    expect(canStart(settingsFor('teams'))).toBe(false);
+  });
+});

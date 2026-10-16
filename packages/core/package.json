@@ -1,0 +1,18 @@
+{
+  "name": "@unspoken/core",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unspoken game domain: catalogs, rules, dealing and round state machines. Pure TypeScript, no React or platform APIs.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run"
+  }
+}

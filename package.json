@@ -14,5 +14,11 @@
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=22.12"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~57.0.2",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
   }
 }

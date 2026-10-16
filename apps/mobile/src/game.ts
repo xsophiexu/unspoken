@@ -1,8 +1,8 @@
-import bank from './data/word-banks.json';
+import bank from '@unspoken/content/word-banks.json';
 import type { BankCard, Card, Category, Difficulty, GameSettings, ModeId } from './types';
 
 // The word bank is written in the "Harder difficulty word samples" thread and copied from
-// /mnt/project-files/unspoken/word-banks.json.
+// /mnt/project-files/unspoken/word-banks.json. It lives in packages/content (@unspoken/content).
 type Entry = Card & { difficulty: Difficulty; themes: Category[]; inAll: boolean; allWeight: number };
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
