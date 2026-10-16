@@ -92,7 +92,7 @@ export type FeedbackRequest = z.input<typeof feedbackRequestSchema>;
 export const feedbackReceiptSchema = z.object({ id: z.string(), receivedAt: z.iso.datetime() });
 export type FeedbackReceipt = z.infer<typeof feedbackReceiptSchema>;
 
-// Every error response has this body. Codes: invalid_request (with issues), not_found, internal.
+// Every error response has this body. `code` is one of apiErrorStatus; invalid_request carries issues.
 export const apiErrorSchema = z.object({
   error: z.object({
     code: z.string(),
@@ -102,6 +102,18 @@ export const apiErrorSchema = z.object({
 });
 export type ApiErrorBody = z.infer<typeof apiErrorSchema>;
 export type ApiIssue = NonNullable<ApiErrorBody['error']['issues']>[number];
+
+// Error codes the service sends, with the HTTP status of each. Clients should treat an unknown code like internal.
+export const apiErrorStatus = {
+  invalid_request: 400,
+  not_found: 404,
+  payload_too_large: 413,
+  rate_limited: 429,
+  internal: 500,
+  // A feature the server is not set up for, such as feedback without Firebase.
+  unavailable: 503,
+} as const;
+export type ApiErrorCode = keyof typeof apiErrorStatus;
 
 // What a client needs from its environment. Apps read their own literal public env vars
 // (EXPO_PUBLIC_*, NEXT_PUBLIC_*) and pass the values here; see docs/architecture.md.

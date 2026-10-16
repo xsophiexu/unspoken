@@ -1,0 +1,29 @@
+{
+  "name": "@unspoken/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unspoken HTTP service: serves the rules, deals decks and stores feedback, implementing @unspoken/api-contract.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env.local src/main.ts",
+    "build": "esbuild src/main.ts --bundle --platform=node --target=node22 --format=esm --sourcemap --external:firebase-admin --outfile=dist/main.js",
+    "start": "node --enable-source-maps --env-file-if-exists=.env.local dist/main.js",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  },
+  "devDependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@types/node": "^26.6.5",
+    "@unspoken/api-contract": "workspace:*",
+    "@unspoken/content": "workspace:*",
+    "@unspoken/core": "workspace:*",
+    "esbuild": "^0.28.2",
+    "hono": "^4.13.13",
+    "tsx": "^4.23.15",
+    "zod": "^4.6.7"
+  }
+}

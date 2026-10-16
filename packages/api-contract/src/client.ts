@@ -29,7 +29,8 @@ export class ApiError extends Error {
   }
 }
 
-const issuesOf = (error: z.ZodError): ApiIssue[] =>
+// Zod issues in the shape error bodies carry them (the service sends invalid_request with these).
+export const issuesOf = (error: z.ZodError): ApiIssue[] =>
   error.issues.map((i) => ({ path: i.path.map((p) => (typeof p === 'symbol' ? String(p) : p)), message: i.message }));
 
 export type ApiClientOptions = {
