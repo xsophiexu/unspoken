@@ -55,19 +55,19 @@ Open https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 on your phone or computer
 1. Install **Expo Go** on your phone from the [App Store](https://apps.apple.com/app/expo-go/id982107779) or [Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent).
 2. On the computer, in the `unspoken` folder, run:
    ```bash
-   pnpm start
+   pnpm mobile
    ```
    A QR code appears in the terminal.
 3. Scan it. On iPhone use the Camera app; on Android use the scanner inside Expo Go. The game opens and reloads whenever the code changes.
 
-If your phone and computer are on different Wi-Fi networks, or the scan times out, run `pnpm start --tunnel` instead.
+If your phone and computer are on different Wi-Fi networks, or the scan times out, run `pnpm start --tunnel` in `apps/mobile` instead.
 
 ### 4. Install it on an Android phone (APK)
 
 This builds a real app in Expo's cloud, so you don't need Android Studio.
 
 1. Create a free account at [expo.dev](https://expo.dev/signup).
-2. In the `unspoken` folder:
+2. In the `unspoken/apps/mobile` folder:
    ```bash
    npx eas-cli@latest login
    npx eas-cli@latest build --platform android --profile preview
@@ -80,10 +80,10 @@ iPhones can't install apps this way without an Apple Developer account; use the 
 ### 5. Web dev server on the computer
 
 ```bash
-pnpm web
+pnpm mobile:web
 ```
 
-Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:web` makes a static copy in `dist/` that any web host can serve.
+Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:mobile-web` makes a static copy in `apps/mobile/dist/` that any web host can serve.
 
 ### 6. Android emulator (on the computer)
 
@@ -95,7 +95,7 @@ Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:web
    export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools
    ```
    On Windows the SDK is at `%LOCALAPPDATA%\Android\Sdk`; add its `platform-tools` folder to PATH.
-4. With the emulator running, in the `unspoken` folder:
+4. With the emulator running, in the `unspoken/apps/mobile` folder:
    ```bash
    pnpm android
    ```
@@ -103,20 +103,25 @@ Opens the game at http://localhost:8081 and reloads as you edit. `pnpm build:web
 
 ### 7. iOS simulator (Mac only)
 
-Install Xcode from the Mac App Store, open it once to finish setup, then run `pnpm ios`.
+Install Xcode from the Mac App Store, open it once to finish setup, then run `pnpm ios` in `apps/mobile`.
 
 ## Checks
+
+Run from the `unspoken` folder; each covers the app and every package.
 
 ```bash
 pnpm lint        # ESLint (eslint-config-expo)
 pnpm typecheck   # TypeScript
+pnpm test        # Vitest, in the packages
+pnpm check       # all three
 ```
 
 ## Project layout
 
-- `App.tsx` loads the font and switches between the play, setup and modes screens
-- `src/screens/` holds the play screen (Classic, Endless, Time attack, Hot potato), the Reverse screen, New game setup and Modes
-- `src/components/` has the header, timer ring, ··· menu and difficulty picker
-- `src/data/word-banks.json` holds every card with its difficulty and theme. Add cards there.
-- `src/game.ts` lists the difficulties and modes, the timer defaults and the default settings
-- `src/theme.ts` has the four color themes
+A pnpm workspace. [docs/architecture.md](docs/architecture.md) describes the packages, how screens render the layout styles, and the conventions for config and tests.
+
+- `apps/mobile/` is the Expo app (iOS, Android and the current web build): `App.tsx`, `src/screens/`, `src/components/`, `app.json`, `eas.json` and `public/index.html`
+- `packages/core/` holds the game rules: difficulties, modes, timers, dealing, round state machines and status lines
+- `packages/content/` holds the word bank (`data/word-banks.json`; add cards there) and the English copy
+- `packages/design-tokens/` holds the palettes, type, sizes and the eleven layout styles
+- `packages/api-contract/` describes the HTTP API (`/v1/config`, `/v1/decks`, `/v1/feedback`) and has a typed client
