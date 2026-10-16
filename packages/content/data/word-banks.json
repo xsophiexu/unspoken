@@ -108583,29 +108583,6 @@
   "allCardsWeight": 0.04
  },
  {
-  "word": "Godwin's law",
-  "banned": [
-   "Hitler",
-   "Nazi",
-   "Internet",
-   "Argument",
-   "Comparison",
-   "Online",
-   "Debate",
-   "Forum",
-   "Inevitable",
-   "Thread"
-  ],
-  "difficulty": "Grandmaster",
-  "score": 9,
-  "theme": "Pop Culture",
-  "themes": [
-   "Pop Culture"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
   "word": "Poe's law",
   "banned": [
    "Satire",
