@@ -1,0 +1,111 @@
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-width: 0;
+}
+
+.title {
+  min-width: 0;
+  overflow-wrap: normal;
+}
+
+.badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-0-5);
+  padding: var(--un-space-1) var(--un-space-1-5) var(--un-space-1) var(--un-space-2);
+  border: 0;
+  border-radius: var(--un-layout-header-badge-radius);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+  white-space: nowrap;
+}
+
+.subline {
+  color: var(--region-muted);
+}
+
+/* "Mode · Level ▾" */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  max-width: 100%;
+  min-height: var(--un-layout-min-touch);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--region-ink);
+  font-weight: var(--un-text-option-title-weight);
+  white-space: nowrap;
+  text-align: start;
+}
+
+.mode {
+  flex: none;
+}
+
+.level {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--un-text-stats-weight);
+  color: var(--region-muted);
+}
+
+.separator {
+  flex: none;
+  width: var(--un-space-1);
+  height: var(--un-space-1);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-outline);
+}
+
+.caret {
+  flex: none;
+  margin-inline-start: calc(-1 * var(--un-space-1));
+  color: var(--region-muted);
+}
+
+.pill {
+  height: var(--un-layout-header-pill-height);
+  min-height: var(--un-layout-header-pill-height);
+  padding: 0 var(--un-space-3-5) 0 var(--un-space-4);
+  border-radius: var(--un-radius-pill);
+}
+
+.caps {
+  text-transform: uppercase;
+  letter-spacing: var(--un-text-overline-letter-spacing);
+  color: var(--region-muted);
+}
+
+.caps .level {
+  font-weight: inherit;
+}
+
+.inline {
+  min-height: auto;
+}
+
+.container-filled {
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.container-outlined {
+  border: var(--un-space-0-5) solid var(--region-outline);
+}
+
+.container-tinted {
+  background: var(--region-track);
+}
