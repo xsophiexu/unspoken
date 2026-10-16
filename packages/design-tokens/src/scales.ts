@@ -102,8 +102,8 @@ export const motion = {
     labelWidthPx: 56,
     labelGapPx: 4,
   },
-  // How to play: seven steps of three seconds; the spotlight glides between targets.
-  spotlight: { stepMs: 3000, moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
+  // How to play: the spotlight glides between targets; steps change only on a tap or a swipe.
+  spotlight: { moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
 } as const;
 
 // Window widths where layouts change. Below medium is a phone; the game always fits a phone column.
@@ -208,4 +208,7 @@ export const spotlight = {
   padding: 6,
   // The rules list under "Describe it out loud."
   rulesWidth: 236,
+  // The widest a caption gets beside a small target (the level badge, the menu button), as a share
+  // of the screen width.
+  captionMaxShare: 0.72,
 } as const;

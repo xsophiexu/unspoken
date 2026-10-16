@@ -4,18 +4,34 @@ import { StyleSheet, View } from 'react-native';
 
 // How to play points at parts of the play screen. Each style puts the word, banned list, level,
 // menu and controls in different places, so the slots mark their own element with <Target> and
-// the tour measures whatever is marked.
+// the tour measures whatever is marked. A marked element that lays out again (a fitted word, a
+// style change, a rotation) tells the tour, which measures again.
 
-export type Targets = { set: (name: SpotlightTarget, node: View | null) => unknown; get: (name: SpotlightTarget) => View | null };
+export type Targets = {
+  set: (name: SpotlightTarget, node: View | null) => unknown;
+  get: (name: SpotlightTarget) => View | null;
+  // Called when a marked element lays out again.
+  changed: () => void;
+  // Returns the unsubscribe.
+  listen: (fn: () => void) => () => void;
+};
 
 const TargetsContext = createContext<Targets | null>(null);
 
 export function useTargets(): Targets {
   const [targets] = useState<Targets>(() => {
     const nodes = new Map<SpotlightTarget, View>();
+    const listeners = new Set<() => void>();
     return {
       set: (name, node) => (node ? nodes.set(name, node) : nodes.delete(name)),
       get: (name) => nodes.get(name) ?? null,
+      changed: () => listeners.forEach((fn) => fn()),
+      listen: (fn) => {
+        listeners.add(fn);
+        return () => {
+          listeners.delete(fn);
+        };
+      },
     };
   });
   return targets;
@@ -31,6 +47,7 @@ export function Target({ name, children }: { name: SpotlightTarget; children: Re
     <View
       collapsable={false}
       style={styles.target}
+      onLayout={targets ? () => targets.changed() : undefined}
       ref={
         targets
           ? (node) => {
