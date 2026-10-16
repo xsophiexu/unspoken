@@ -9,10 +9,15 @@
   color: var(--region-muted);
 }
 
-.text {
+/* The word in the region's ink, accent text or muted color (slot.color). */
+.color-ink {
   color: var(--region-ink);
 }
 
-.accent {
+.color-accentText {
   color: var(--region-accent-text);
+}
+
+.color-muted {
+  color: var(--region-muted);
 }

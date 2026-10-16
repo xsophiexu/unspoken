@@ -17,7 +17,7 @@ export function Word({ slot, word }: { slot: WordSlot; word: string }) {
         max={slot.size}
         min={slot.minSize}
         maxLines={slot.maxLines}
-        className={cx(styles.text, text('word'), slot.color === 'accentText' && styles.accent)}
+        className={cx(styles[`color-${slot.color}`], text('word'))}
       />
     </div>
   );

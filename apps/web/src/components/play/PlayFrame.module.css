@@ -80,8 +80,9 @@
   margin: 0 calc(-1 * var(--pad-x)) calc(-1 * var(--pad-bottom));
 }
 
+/* A footer in its own color (Ombre): the play footer space above the controls. */
 .controlsRegion {
-  padding: var(--un-space-4) var(--pad-x) var(--pad-bottom);
+  padding: var(--un-layout-play-footer-top) var(--pad-x) var(--pad-bottom);
 }
 
 .upper {
