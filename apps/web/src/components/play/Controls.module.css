@@ -1,0 +1,200 @@
+button.link,
+.skip,
+.correct,
+.half {
+  border: 0;
+  font-family: inherit;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* swipeLinks: "← Skip" and "Correct →", with bars that grow toward the side being dragged */
+.links {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  padding-inline: var(--un-space-0-5);
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  min-height: var(--un-layout-min-touch);
+  justify-content: center;
+  padding: 0;
+  background: none;
+  white-space: nowrap;
+}
+
+.skipLink {
+  align-items: flex-start;
+  color: var(--region-muted);
+}
+
+.correctLink {
+  align-items: flex-end;
+  color: var(--region-accent-text);
+}
+
+.link:disabled {
+  color: var(--region-muted);
+}
+
+.withBars .link {
+  justify-content: flex-start;
+}
+
+.withBars .link::after {
+  content: '';
+  align-self: stretch;
+  height: var(--un-space-1-5);
+  border-radius: var(--un-radius-pill);
+}
+
+/* Drag progress --drag-p runs from -1 (fully toward Skip) to 1 (fully toward Correct). */
+.withBars .skipLink {
+  flex: calc(var(--skip-grow) * (1 - var(--drag-p, 0))) 1 0;
+  transition: flex-grow var(--un-motion-duration-fast);
+}
+
+.withBars .correctLink {
+  flex: calc(var(--correct-grow) * (1 + var(--drag-p, 0))) 1 0;
+  transition: flex-grow var(--un-motion-duration-fast);
+}
+
+.withBars .skipLink::after {
+  background: var(--un-color-bar-idle);
+}
+
+.withBars .correctLink::after {
+  background: var(--region-progress);
+}
+
+:global([data-drag-dir='skip']) .withBars .skipLink::after {
+  background: var(--un-color-bar-skip);
+}
+
+.hint {
+  align-self: center;
+  color: var(--region-muted);
+  transition: opacity var(--un-motion-duration-slow);
+}
+
+.hidden {
+  opacity: 0;
+}
+
+/* pills and buttons: Skip beside a wider Correct */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+}
+
+.skip,
+.correct {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2-5);
+  min-width: var(--control-height);
+  height: var(--control-height);
+  border-radius: var(--control-radius);
+}
+
+.correct {
+  flex: 1;
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.ratio .skip {
+  flex: var(--skip-grow) 1 0;
+}
+
+.ratio .correct {
+  flex: var(--correct-grow) 1 0;
+}
+
+.fixedSkip .skip {
+  flex: 0 1 var(--skip-width);
+}
+
+.skip-round {
+  flex: none;
+  width: var(--control-height);
+  border: var(--un-space-0-5) solid var(--region-outline);
+  background: transparent;
+  color: var(--region-ink);
+}
+
+.skip-outline {
+  border: var(--un-space-0-5) solid var(--region-outline);
+  background: transparent;
+  color: var(--region-ink);
+}
+
+.skip-filled {
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.skip-roundIcon {
+  flex: none;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  height: auto;
+  background: none;
+  color: var(--region-ink);
+}
+
+.roundIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--control-height);
+  height: var(--control-height);
+  border: var(--un-space-0-5) solid var(--region-outline);
+  border-radius: var(--un-radius-pill);
+  font-size: var(--un-space-5-5);
+}
+
+.skip:disabled,
+.correct:disabled {
+  background: var(--region-chip);
+  border-color: transparent;
+  color: var(--region-muted);
+}
+
+.skip-roundIcon:disabled {
+  background: none;
+}
+
+/* splitBar: a full-width bar at the bottom edge (the frame lets it bleed past the padding) */
+.splitBar {
+  display: flex;
+  min-height: var(--control-height);
+}
+
+.half {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.skipHalf {
+  flex: 0 1 var(--skip-width, 50%);
+}
+
+.correctHalf {
+  flex: 1;
+}
+
+.half:disabled {
+  color: var(--region-muted);
+}

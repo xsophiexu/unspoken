@@ -1,0 +1,21 @@
+.thumb {
+  --scale: var(--un-layout-thumbnail-scale);
+  position: relative;
+  display: block;
+  flex: none;
+  width: calc(var(--un-layout-reference-screen-width) * var(--scale));
+  height: calc(var(--un-layout-reference-screen-height) * var(--scale));
+  overflow: hidden;
+  border-radius: var(--un-layout-thumbnail-radius);
+  box-shadow: var(--un-shadow-thumb);
+}
+
+.screen {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--un-layout-reference-screen-width);
+  height: var(--un-layout-reference-screen-height);
+  transform: scale(var(--scale));
+  transform-origin: 0 0;
+  pointer-events: none;
+}

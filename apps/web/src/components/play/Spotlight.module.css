@@ -1,0 +1,164 @@
+/* How to play over the play screen. Colors are the fixed spotlight tokens, so the tour reads the
+   same over every style, color and mode. */
+
+.tour {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+  color: var(--un-spotlight-caption);
+}
+
+.tour::backdrop {
+  background: transparent;
+}
+
+.hole {
+  position: absolute;
+  border-radius: var(--un-spotlight-radius);
+  /* The scrim is the cut-out's shadow, spread past any screen size. */
+  box-shadow: 0 0 0 100vmax var(--un-spotlight-scrim);
+  outline: var(--un-spotlight-outline-width) solid var(--un-spotlight-outline);
+  transition-property: top, left, width, height, outline-color;
+  transition-duration: var(--un-motion-spotlight-move-ms);
+  transition-timing-function: var(--un-motion-spotlight-easing);
+  pointer-events: none;
+}
+
+.noTarget {
+  outline-color: transparent;
+}
+
+.caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  max-width: var(--un-max-width-column);
+  margin-inline: auto;
+  padding-inline: var(--un-layout-screen-padding-x);
+  text-shadow: var(--un-spotlight-caption-shadow);
+  transition:
+    top var(--un-motion-spotlight-move-ms) var(--un-motion-spotlight-easing),
+    bottom var(--un-motion-spotlight-move-ms) var(--un-motion-spotlight-easing);
+}
+
+.start {
+  align-items: flex-start;
+  text-align: start;
+}
+
+.center {
+  align-items: center;
+  text-align: center;
+}
+
+.end {
+  align-items: flex-end;
+  text-align: end;
+}
+
+.center > p {
+  max-width: var(--un-max-width-prose);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.wordmark {
+  text-decoration: line-through;
+  text-decoration-color: var(--un-spotlight-mark);
+  text-decoration-thickness: var(--un-space-1);
+}
+
+.logo + p {
+  color: var(--un-spotlight-lead);
+}
+
+.mic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-min-touch);
+  height: var(--un-layout-min-touch);
+  border: var(--un-spotlight-outline-width) solid var(--un-spotlight-outline);
+  border-radius: var(--un-radius-pill);
+  font-size: var(--un-space-5);
+}
+
+.bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-4);
+  max-width: var(--un-max-width-column);
+  margin-inline: auto;
+  padding: 0 var(--un-layout-screen-padding-x) calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+}
+
+.dots {
+  display: flex;
+  gap: var(--un-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.dot {
+  width: var(--un-spotlight-dot-size);
+  height: var(--un-spotlight-dot-size);
+  border-radius: var(--un-radius-pill);
+  background: var(--un-spotlight-dot-color);
+  transition: width var(--un-motion-duration-base);
+}
+
+.active {
+  width: var(--un-spotlight-dot-active-width);
+  background: var(--un-spotlight-dot-active);
+}
+
+.play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2);
+  width: 100%;
+  height: var(--un-spotlight-play-height);
+  border: 0;
+  border-radius: var(--un-spotlight-play-radius);
+  background: var(--un-spotlight-play-background);
+  color: var(--un-spotlight-play-ink);
+}
+
+.play:focus-visible {
+  outline-color: var(--un-spotlight-outline);
+}
+
+.pulse {
+  animation: pulse var(--un-motion-spotlight-pulse-ms) ease-out infinite;
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0 0 0 0 var(--un-spotlight-play-pulse);
+  }
+  to {
+    box-shadow: 0 0 0 var(--un-spotlight-play-pulse-spread) transparent;
+  }
+}

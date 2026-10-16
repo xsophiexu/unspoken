@@ -1,0 +1,62 @@
+.stats {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: var(--un-space-4);
+  row-gap: var(--un-space-0-5);
+  color: var(--region-muted);
+}
+
+.points {
+  color: var(--region-muted);
+}
+
+.number {
+  font-size: var(--un-text-button-strong-size);
+  font-weight: var(--un-text-button-strong-weight);
+  color: var(--region-ink);
+}
+
+.pill {
+  padding: var(--un-space-1) var(--un-space-3);
+  border-radius: var(--un-radius-lg);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+/* Score last, at the right edge: above the word card and in the footer. */
+.aboveWord,
+.footer {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.aboveWord {
+  padding-inline: var(--un-space-1);
+}
+
+.footer {
+  justify-content: space-between;
+  padding: 0 var(--un-space-1) var(--un-space-3);
+}
+
+/* Stacked at the right of the header row: score over the rest. */
+.header {
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: end;
+}
+
+.header .points {
+  font-weight: var(--un-text-option-title-weight);
+  color: var(--region-ink);
+}
+
+.belowHeader {
+  padding-inline: var(--un-space-0-5);
+}
+
+.underWord {
+  align-items: center;
+  column-gap: var(--un-space-2-5);
+}

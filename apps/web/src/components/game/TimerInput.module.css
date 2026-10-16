@@ -1,0 +1,33 @@
+.box {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  min-height: var(--un-space-16);
+  padding: 0 var(--un-space-5);
+  border-radius: var(--un-radius-xl);
+  background: var(--un-color-surface-raised);
+  color: var(--un-color-ink);
+  cursor: text;
+}
+
+.box:has(:focus-visible) {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.input:focus {
+  outline: none;
+}
+
+.unit {
+  color: var(--un-color-muted);
+}

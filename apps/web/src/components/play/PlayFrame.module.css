@@ -1,0 +1,258 @@
+/* The play screen frame. The page region fills the window; the game sits in a centered column that
+   never grows past the column max width. Regions that run edge to edge (lower panels, split bars,
+   dark footers) bleed out of the column padding with negative margins. */
+
+.frame {
+  --pad-x: var(--un-layout-screen-padding-x);
+  --pad-top: calc(var(--un-layout-screen-padding-top) + env(safe-area-inset-top));
+  --pad-bottom: calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+  position: relative;
+  display: flex;
+  justify-content: center;
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+
+/* Customize thumbnails draw the screen at the reference size inside a fixed box. */
+.preview {
+  --pad-top: var(--un-layout-screen-padding-top);
+  --pad-bottom: var(--un-layout-screen-padding-bottom);
+  min-height: 0;
+  height: 100%;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: var(--un-max-width-column);
+  gap: var(--un-space-3);
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  min-height: var(--un-layout-min-touch);
+}
+
+.top[data-header='titleBadge'] {
+  align-items: flex-start;
+}
+
+.topStart {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.topEnd {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  min-height: 0;
+  /* Vertical scrolling stays with the browser; horizontal drags swipe the card. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.footer {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+/* Full-width parts at the bottom edge: the split bar and a dark controls footer. */
+.edge {
+  margin: 0 calc(-1 * var(--pad-x)) calc(-1 * var(--pad-bottom));
+}
+
+.controlsRegion {
+  padding: var(--un-space-4) var(--pad-x) var(--pad-bottom);
+}
+
+.upper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding-top: var(--un-space-6);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.listAtBottom {
+  margin-top: auto;
+}
+
+.pushDown {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+/* ringCard: the word tile inside the timer ring, centered and as large as the space allows. */
+.ringArea {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--un-space-4) var(--un-space-2);
+}
+
+.ringArea > .swipeCard {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: var(--un-layout-card-max-width);
+  max-height: var(--un-layout-card-max-height);
+}
+
+.ringBox {
+  position: relative;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.inRing {
+  margin: var(--un-layout-card-ring-inset);
+}
+
+/* floatingCard: a raised card between the header and the controls. */
+.frame[data-arrangement='floatingCard'] .body {
+  justify-content: center;
+}
+
+.frame[data-arrangement='floatingCard'] .swipeCard {
+  flex: 1 1 auto;
+  max-height: var(--un-layout-card-max-height);
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  min-width: 0;
+}
+
+.container-tile,
+.container-card {
+  flex: 1 1 auto;
+  padding: var(--un-layout-card-padding-y) var(--un-layout-card-padding-x);
+}
+
+.container-tile {
+  border-radius: var(--un-radius-card);
+}
+
+.container-card {
+  border-radius: var(--un-radius-card-large);
+  box-shadow: var(--un-shadow-card);
+}
+
+.swipeCard {
+  display: flex;
+  flex-direction: column;
+}
+
+.swipeCard > .enter {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* lowerPanel and sheet: the list and controls fill a panel that runs to the bottom edge. */
+.frame[data-arrangement='lowerPanel'] .body,
+.frame[data-arrangement='sheet'] .body {
+  gap: var(--un-space-3);
+}
+
+.lowerWrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0 calc(-1 * var(--pad-x)) calc(-1 * var(--pad-bottom));
+}
+
+.lower {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  padding: var(--un-space-5) var(--pad-x) var(--un-space-4);
+}
+
+.lower:last-child {
+  padding-bottom: var(--pad-bottom);
+}
+
+.lowerSheet {
+  padding-top: var(--un-layout-sheet-padding-top);
+  border-radius: var(--un-layout-sheet-radius) var(--un-layout-sheet-radius) 0 0;
+}
+
+.grabber {
+  align-self: center;
+  flex: none;
+  width: var(--un-layout-sheet-grabber-width);
+  height: var(--un-layout-sheet-grabber-height);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-rule);
+}
+
+/* Past phone width the panel no longer touches the window's sides, so it gets rounded corners. */
+:global(html:not([data-width='compact'])) .frame:not(.preview) .lowerWrap {
+  overflow: hidden;
+  border-radius: var(--un-layout-sheet-radius) var(--un-layout-sheet-radius) 0 0;
+}
+
+/* Swiping. The frame sets --drag-x, --drag-rot and data-drag while the card follows the finger. */
+.swipeItem {
+  transform: translateX(var(--drag-x, 0px));
+}
+
+.swipeCard {
+  transform: translateX(var(--drag-x, 0px)) rotate(var(--drag-rot, 0deg));
+}
+
+.frame[data-drag] [data-swipe] {
+  will-change: transform;
+}
+
+.frame[data-drag='settle'] [data-swipe] {
+  transition: transform var(--un-motion-duration-base) ease-out;
+}
+
+.frame[data-drag='fly'] [data-swipe] {
+  opacity: 0;
+  transition:
+    transform var(--un-motion-swipe-fly-out-ms) ease-in,
+    opacity var(--un-motion-swipe-fly-out-ms) ease-in;
+}
+
+/* Each new card springs in. */
+.enter {
+  animation: enter var(--un-motion-duration-slow) ease-out both;
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--un-motion-enter-from-opacity);
+    transform: translateY(var(--un-motion-enter-from-y)) scale(var(--un-motion-enter-from-scale));
+  }
+}

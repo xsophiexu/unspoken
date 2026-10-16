@@ -1,0 +1,59 @@
+.card {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  border: var(--un-space-0-5) dashed var(--region-outline);
+  border-radius: var(--un-radius-xl);
+  color: var(--region-ink);
+  text-decoration: none;
+}
+
+.row {
+  padding: var(--un-space-3-5) var(--un-space-3-5) var(--un-space-3-5) var(--un-space-4);
+}
+
+.tile {
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding: var(--un-space-3-5) var(--un-space-2);
+  border-radius: var(--un-layout-thumbnail-radius);
+  text-align: center;
+}
+
+.badge {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-header-menu-button);
+  height: var(--un-layout-header-menu-button);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-accent-text);
+  font-size: var(--un-space-4-5);
+}
+
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  min-width: 0;
+}
+
+.tile .text {
+  flex: none;
+}
+
+.body {
+  color: var(--region-muted);
+}
+
+.action {
+  flex: none;
+  padding: var(--un-space-2) var(--un-space-3-5);
+  border-radius: var(--un-radius-md);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}

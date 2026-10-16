@@ -6,6 +6,7 @@ import {
   menuStatus,
   pausedStatus,
   roundReducer,
+  roundStats,
   roundSubline,
   swipeSummary,
   type GameSettings,
@@ -54,6 +55,14 @@ describe('status lines in English', () => {
   it('Reverse and Mind Reader have their own lines', () => {
     expect(roundSubline(start(settings({ mode: 'reverse' })), roundCopy)).toBe('0 pts · 0 words');
     expect(roundSubline(start(settings({ mode: 'mindReader' })), roundCopy)).toBe('Round 1 · No timer');
+  });
+
+  it('splits the score from the rest for styles that show it apart', () => {
+    const classic = play(start(settings({ mode: 'classic', skips: 3 })), [...times(7, { type: 'correct' }), ...times(2, { type: 'skip' })]);
+    expect(roundStats(classic, roundCopy)).toEqual({ points: 7, detail: '1 skip left' });
+    expect(roundStats(start(settings({ mode: 'endless' })), roundCopy)).toEqual({ points: null, detail: '0 correct · 0 skipped' });
+    expect(roundStats(start(settings({ mode: 'escalate', skips: 3 })), roundCopy)).toEqual({ points: null, detail: '4 banned words · 3 skips left' });
+    expect(roundStats(start(settings({ mode: 'reverse' })), roundCopy)).toEqual({ points: 0, detail: '0 words' });
   });
 
   it('the clock and the Paused overlay line', () => {

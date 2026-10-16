@@ -1,0 +1,78 @@
+.page {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  width: 100%;
+  /* Wide content (the Customize carousel) scrolls inside the column instead of widening it. */
+  min-width: 0;
+  min-height: 100dvh;
+  padding: calc(var(--un-layout-screen-padding-top) + env(safe-area-inset-top)) var(--un-layout-screen-padding-x)
+    calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+}
+
+.w-column {
+  max-width: var(--un-max-width-column);
+}
+
+.w-page {
+  max-width: var(--un-max-width-page);
+}
+
+.w-prose {
+  max-width: var(--un-max-width-prose);
+}
+
+/* From medium widths up the column keeps its size and gains room around it. */
+:global([data-width='medium']) .column,
+:global([data-width='expanded']) .column {
+  padding-top: var(--un-space-12);
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--un-space-4);
+  min-height: var(--un-layout-min-touch);
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--un-layout-min-touch);
+  color: var(--region-accent-text);
+  text-decoration: none;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.sub {
+  color: var(--region-muted);
+}
+
+.body {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  margin-top: auto;
+  padding-top: var(--un-space-3);
+  padding-bottom: env(safe-area-inset-bottom);
+  background: linear-gradient(to bottom, transparent, var(--region-bg) var(--un-space-3));
+}

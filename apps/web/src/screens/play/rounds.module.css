@@ -1,0 +1,236 @@
+/* Reverse and Mind Reader cards. */
+
+.card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  min-width: 0;
+  padding: var(--un-layout-card-padding-y) var(--un-layout-card-padding-x);
+  border-radius: var(--un-radius-card-large);
+}
+
+.swipe {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(var(--drag-x, 0px)) rotate(var(--drag-rot, 0deg));
+}
+
+:global([data-drag='settle']) .swipe {
+  transition: transform var(--un-motion-duration-base) ease-out;
+}
+
+:global([data-drag='fly']) .swipe {
+  opacity: 0;
+  transition:
+    transform var(--un-motion-swipe-fly-out-ms) ease-in,
+    opacity var(--un-motion-swipe-fly-out-ms) ease-in;
+}
+
+.enter {
+  animation: enter var(--un-motion-duration-slow) ease-out both;
+}
+
+@keyframes enter {
+  from {
+    opacity: var(--un-motion-enter-from-opacity);
+    transform: translateY(var(--un-motion-enter-from-y)) scale(var(--un-motion-enter-from-scale));
+  }
+}
+
+.kicker,
+.muted {
+  color: var(--region-muted);
+}
+
+.preLine {
+  white-space: pre-line;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  margin: var(--un-space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  gap: var(--un-space-3);
+  padding-block: var(--un-space-3);
+}
+
+.step + .step {
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+.stepNumber {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-space-6);
+  height: var(--un-space-6);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.stepText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.worth {
+  padding: var(--un-space-1) var(--un-space-2-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-accent-text);
+  white-space: nowrap;
+}
+
+.wordRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  margin-top: var(--un-space-4);
+}
+
+.blanks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+  min-width: 0;
+  padding-block: var(--un-space-4);
+}
+
+.blankWord {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap);
+}
+
+.dash {
+  flex: none;
+  width: var(--cell);
+  height: var(--un-space-1);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+}
+
+.mark {
+  flex: none;
+  line-height: 1;
+  color: var(--region-muted);
+}
+
+.peek {
+  flex: 1;
+  min-width: 0;
+}
+
+.bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-layout-chip-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: var(--un-layout-chip-padding-y) var(--un-layout-chip-padding-x);
+  border-radius: var(--un-radius-sm);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.hiddenChip {
+  min-width: var(--un-layout-min-touch);
+  text-align: center;
+  background: transparent;
+  outline: var(--un-space-0-5) dashed var(--region-outline);
+  outline-offset: calc(-1 * var(--un-space-0-5));
+  color: var(--region-muted);
+}
+
+.unused {
+  background: transparent;
+  color: var(--region-muted);
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.input {
+  width: 100%;
+  min-height: var(--un-layout-min-touch);
+  padding: var(--un-space-2-5) var(--un-space-3-5);
+  border: var(--un-space-0-5) solid var(--region-outline);
+  border-radius: var(--un-radius-md);
+  background: var(--region-bg);
+  color: var(--region-ink);
+}
+
+.input::placeholder {
+  color: var(--region-muted);
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--region-accent);
+}
+
+.predictions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.predictions li {
+  padding-block: var(--un-space-2);
+  border-bottom: var(--hairline) solid var(--region-rule);
+}
+
+.status {
+  align-self: flex-start;
+  padding: var(--un-space-1) var(--un-space-2-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.status[data-passed] {
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--un-space-2-5);
+}
+
+.buttons > * {
+  flex: 1;
+}

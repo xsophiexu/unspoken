@@ -1,0 +1,35 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+}
+
+/* The dot is drawn in currentColor (the palette's swatch); selection adds a ring with a gap. */
+.swatch {
+  display: inline-flex;
+  width: var(--un-layout-min-touch);
+  height: var(--un-layout-min-touch);
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--un-radius-pill);
+  cursor: pointer;
+}
+
+.swatch::before {
+  content: '';
+  width: var(--un-layout-swatch-size);
+  height: var(--un-layout-swatch-size);
+  border-radius: var(--un-radius-pill);
+  background: currentColor;
+}
+
+.on::before {
+  box-shadow:
+    0 0 0 var(--un-layout-swatch-gap) var(--region-bg),
+    0 0 0 calc(var(--un-layout-swatch-gap) + var(--un-layout-swatch-ring)) var(--region-ink);
+}
+
+.swatch:has(:focus-visible) {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+}

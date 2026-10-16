@@ -9,7 +9,9 @@
     "check": "pnpm lint && pnpm typecheck && pnpm test",
     "mobile": "pnpm --filter @unspoken/mobile start",
     "mobile:web": "pnpm --filter @unspoken/mobile web",
-    "build:mobile-web": "pnpm --filter @unspoken/mobile build:web"
+    "build:mobile-web": "pnpm --filter @unspoken/mobile build:web",
+    "web": "pnpm --filter @unspoken/web dev",
+    "build:web": "pnpm --filter @unspoken/web build"
   },
   "packageManager": "pnpm@10.28.0",
   "engines": {

@@ -1,0 +1,164 @@
+.clockText {
+  font-variant-numeric: tabular-nums;
+}
+
+.pause {
+  font-size: var(--un-space-3-5);
+}
+
+.pause > span {
+  width: auto;
+  height: auto;
+}
+
+.track {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-track);
+}
+
+.bleed {
+  width: auto;
+  margin-inline: calc(-1 * var(--un-layout-screen-padding-x));
+  border-radius: 0;
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--region-progress);
+  transform-origin: left center;
+  transform: scaleX(var(--progress));
+  transition: transform var(--un-motion-duration-slow) linear;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.inline .track {
+  flex: 1;
+}
+
+.clockRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-0-5);
+  color: var(--region-ink);
+}
+
+.start {
+  justify-content: flex-start;
+}
+
+.end {
+  justify-content: flex-end;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: var(--un-layout-header-pill-height);
+  padding-inline-start: var(--un-space-3-5);
+  border-radius: var(--un-radius-pill);
+  white-space: nowrap;
+}
+
+.fill-outlined {
+  border: var(--un-space-0-5) solid var(--region-outline);
+}
+
+.fill-filled {
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.fill-inverse {
+  background: var(--region-ink);
+  color: var(--region-bg);
+}
+
+.chip .pause {
+  width: var(--un-layout-header-pill-height);
+  height: var(--un-layout-header-pill-height);
+}
+
+.dial {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  position: relative;
+  color: var(--region-ink);
+  background: conic-gradient(var(--region-progress) calc(var(--progress) * 1turn), var(--region-track) 0);
+}
+
+.dialFace {
+  position: absolute;
+  inset: var(--un-space-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-bg);
+}
+
+.bigRow {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--un-space-3);
+  color: var(--region-accent-text);
+}
+
+.bigRow .pause > span {
+  width: var(--un-layout-min-touch);
+  height: var(--un-layout-min-touch);
+  background: var(--region-chip);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.ringTrack,
+.ringFill {
+  fill: none;
+  stroke-linecap: round;
+}
+
+.ringTrack {
+  stroke: var(--region-track);
+}
+
+.ringFill {
+  stroke: var(--region-progress);
+  transition: stroke-dasharray var(--un-motion-duration-slow) linear;
+}
+
+.ringClock {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-0-5);
+  padding-inline-start: var(--un-space-2-5);
+  color: var(--region-ink);
+}

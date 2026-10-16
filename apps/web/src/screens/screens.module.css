@@ -1,0 +1,67 @@
+/* Shared bits of the full-page screens. */
+
+.muted {
+  color: var(--region-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.end {
+  text-align: end;
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  padding: var(--un-space-3-5) var(--un-space-4);
+  border: var(--un-space-0-5) solid var(--region-outline);
+  border-radius: var(--un-radius-xl);
+  background: var(--un-color-surface-raised);
+  color: var(--un-color-ink);
+  resize: vertical;
+}
+
+.textarea::placeholder {
+  color: var(--un-color-muted);
+}
+
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--region-accent);
+}
+
+/* The inline error after a failed send: ink on a chip, marked with the accent edge. */
+.error {
+  padding: var(--un-space-3) var(--un-space-3-5);
+  border-inline-start: var(--un-space-1) solid var(--region-accent);
+  border-radius: var(--un-radius-md);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.thanks {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2);
+  text-align: center;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-space-16);
+  height: var(--un-space-16);
+  margin-bottom: var(--un-space-3);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-accent-text);
+  font-size: var(--un-space-8);
+}
