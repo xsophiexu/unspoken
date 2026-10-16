@@ -19,7 +19,14 @@ import { Providers } from './providers';
 export const metadata: Metadata = {
   title: en.app.name,
   description: en.app.tagline,
-  icons: { icon: `${config.basePath}/icon.svg` },
+  icons: {
+    icon: [
+      { url: `${config.basePath}/favicon-48.png`, sizes: '48x48', type: 'image/png' },
+      { url: `${config.basePath}/icon-192.png`, sizes: '192x192', type: 'image/png' },
+    ],
+    apple: `${config.basePath}/icon-192.png`,
+  },
+  manifest: `${config.basePath}/manifest.webmanifest`,
 };
 
 export const viewport: Viewport = {
