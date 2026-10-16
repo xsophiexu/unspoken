@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   section: { gap: space[2.5] },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
   timer: {
-    height: layout.control.input.height + space[6],
+    minHeight: layout.control.input.height + space[6],
     borderRadius: radius.lg,
     borderWidth: layout.stroke.focus,
     paddingHorizontal: space[5],

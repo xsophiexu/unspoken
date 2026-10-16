@@ -73,7 +73,7 @@ function SwipeBars({ slot, colors, labels, canSkip, canCorrect, onSkip, onCorrec
   const correctFade = dx.interpolate({ inputRange: [-at, 0], outputRange: [opacity.disabled, 1], ...clamp });
   const skipBar = dx.interpolate({ inputRange: [-startSlopPx, 0], outputRange: [colors.outline, colors.track], ...clamp });
   return (
-    <View style={[styles.row, styles.stretch, { height: slot.height }]}>
+    <View style={[styles.row, styles.stretch, { minHeight: slot.height }]}>
       <Animated.View style={{ flex: skipFlex }}>
         <Press onPress={onSkip} disabled={!canSkip} accessibilityLabel={labels.skip} style={styles.barColumn}>
           <Animated.View style={{ opacity: skipFade }}>
@@ -101,7 +101,7 @@ function SwipeBars({ slot, colors, labels, canSkip, canCorrect, onSkip, onCorrec
 // Deck: the same links with "swipe the card" between them.
 function SwipeLinks({ slot, colors, labels, canSkip, canCorrect, onSkip, onCorrect }: Parts) {
   return (
-    <View style={[styles.row, styles.center, { height: slot.height }]}>
+    <View style={[styles.row, styles.center, { minHeight: slot.height }]}>
       <Press onPress={onSkip} disabled={!canSkip} accessibilityLabel={labels.skip} style={styles.link}>
         <Txt variant="link" color={colors.muted} numberOfLines={1}>
           {labels.skipLink}
@@ -125,7 +125,7 @@ function CorrectButton({ slot, colors, labels, canCorrect, onCorrect, height, fl
       onPress={onCorrect}
       disabled={!canCorrect}
       accessibilityLabel={labels.correct}
-      style={[styles.button, { flex, height, borderRadius: radius[slot.radius], backgroundColor: colors.accent }]}
+      style={[styles.button, { flex, minHeight: height, borderRadius: radius[slot.radius], backgroundColor: colors.accent }]}
     >
       {slot.correctIcon ? <Icon name="check" size={layout.icon.md} color={colors.onAccent} /> : null}
       <Txt variant="buttonStrong" color={colors.onAccent} numberOfLines={1}>
@@ -142,14 +142,14 @@ function Pills(p: Parts) {
   const round = slot.skip === 'round';
   const icon = slot.skip === 'pillIcon';
   return (
-    <View style={[styles.row, { height: slot.height }]}>
+    <View style={[styles.row, { minHeight: slot.height }]}>
       <Press
         onPress={onSkip}
         disabled={!canSkip}
         accessibilityLabel={labels.skip}
         style={[
           styles.button,
-          { height: slot.height, borderWidth: layout.stroke.outline, borderColor: colors.outline, borderRadius: icon ? radius.pill : radius[slot.radius] },
+          { minHeight: slot.height, borderWidth: layout.stroke.outline, borderColor: colors.outline, borderRadius: icon ? radius.pill : radius[slot.radius] },
           round ? { width: slot.height, paddingHorizontal: 0 } : { width: slot.skipWidth },
         ]}
       >
@@ -169,14 +169,14 @@ function Buttons(p: Parts) {
   const [s, c] = slot.ratio ?? [1, 1];
   const filled = slot.skip === 'filled';
   return (
-    <View style={[styles.row, { height: slot.height }]}>
+    <View style={[styles.row, { minHeight: slot.height }]}>
       <Press
         onPress={onSkip}
         disabled={!canSkip}
         accessibilityLabel={labels.skip}
         style={[
           styles.button,
-          { height: slot.height, borderRadius: radius[slot.radius] },
+          { minHeight: slot.height, borderRadius: radius[slot.radius] },
           slot.skipWidth ? { width: slot.skipWidth } : { flex: s },
           filled ? { backgroundColor: colors.chip } : { borderWidth: layout.stroke.outline, borderColor: colors.outline },
         ]}
@@ -204,7 +204,7 @@ function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect
     </Press>
   );
   return (
-    <View style={[styles.split, { height: slot.height + bottomInset }]}>
+    <View style={[styles.split, { minHeight: slot.height + bottomInset }]}>
       {half(halves.skip, labels.skip, canSkip, onSkip, { flex: skipShare })}
       {half(halves.correct, labels.correct, canCorrect, onCorrect, { flex: layout.referenceScreen.width - skipShare })}
     </View>

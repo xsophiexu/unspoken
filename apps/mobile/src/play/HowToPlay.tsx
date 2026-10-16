@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: spotlight.play.pulse,
   },
   play: {
-    height: spotlight.play.height,
+    minHeight: spotlight.play.height,
     borderRadius: spotlight.play.radius,
     backgroundColor: spotlight.play.background,
     flexDirection: 'row',

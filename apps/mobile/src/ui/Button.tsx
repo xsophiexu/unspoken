@@ -29,7 +29,7 @@ export function Button({ label, colors, onPress, kind = 'secondary', icon, disab
       style={[
         styles.button,
         primary
-          ? { backgroundColor: colors.accent, height: layout.button.primaryHeight }
+          ? { backgroundColor: colors.accent, minHeight: layout.button.primaryHeight }
           : kind === 'tonal'
             ? { backgroundColor: colors.chip }
             : { borderWidth: layout.stroke.outline, borderColor: colors.outline },
@@ -75,7 +75,7 @@ export function ButtonRow({ children }: { children: ReactNode }) {
 
 const styles = StyleSheet.create({
   button: {
-    height: layout.button.height,
+    minHeight: layout.button.height,
     borderRadius: layout.button.radius,
     flexDirection: 'row',
     alignItems: 'center',

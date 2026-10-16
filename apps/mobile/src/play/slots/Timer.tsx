@@ -62,7 +62,7 @@ export function TimerRing({ width, height, progress, colors }: { width: number; 
 // on a box of the page color.
 export function RingClock({ slot, clock, colors, onPause }: ClockProps & { slot: TimerSlot }) {
   return (
-    <View style={[styles.ringClock, { height: layout.control.pause, top: -layout.control.pause / 2 }, slot.fill !== 'none' && { backgroundColor: colors.bg }]}>
+    <View style={[styles.ringClock, { minHeight: layout.control.pause, top: -layout.control.pause / 2 }, slot.fill !== 'none' && { backgroundColor: colors.bg }]}>
       <Txt variant="clock" color={colors.ink} accessibilityLabel={clock.label}>
         {clock.label}
       </Txt>
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   chip: {
-    height: layout.header.pillHeight,
+    minHeight: layout.header.pillHeight,
     borderRadius: radius.pill,
     flexDirection: 'row',
     alignItems: 'center',
