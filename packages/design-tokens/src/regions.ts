@@ -1,4 +1,4 @@
-import { withAlpha } from './color';
+import { composite, greyscale, readableGrey, withAlpha } from './color';
 import type { ColorRole, ColorRoles } from './palettes';
 
 // A region is a block of the screen with its own background: the page, the Card word tile, Ink's
@@ -31,9 +31,18 @@ export type RegionColors = {
   progress: string;
   // Big accent numerals and their progress line, for timers that ask for it (timer.vivid).
   vivid: string;
+  // A control that can't be used yet (Coming soon modes): the chip greyed at the same luminance,
+  // and its muted text greyed and kept at AA, so it reads as disabled rather than as a lighter
+  // shade of the accent.
+  disabled: string;
+  disabledInk: string;
 };
 
 export type RegionSlot = keyof RegionColors;
+
+// Slots worked out from the others in regionColors rather than mapped to a palette role.
+type DerivedSlot = 'disabled' | 'disabledInk';
+type MappedSlot = Exclude<RegionSlot, DerivedSlot>;
 
 // A palette role, optionally at an opacity.
 type RoleRef = ColorRole | { role: ColorRole; alpha: number };
@@ -51,11 +60,11 @@ const base = {
   track: 'track',
   progress: 'accent',
   vivid: 'accentVivid',
-} as const satisfies Partial<Record<RegionSlot, RoleRef>>;
+} as const satisfies Partial<Record<MappedSlot, RoleRef>>;
 
 // An accent page (Sheet's top) or bar (Chips' Correct in dark). Primary controls invert; chips stay
 // solid so their text reads. Headline text is onAccentStrong, pure white in dark.
-const accentTone: Record<RegionSlot, RoleRef> = {
+const accentTone: Record<MappedSlot, RoleRef> = {
   bg: 'accent',
   ink: 'onAccentStrong',
   muted: 'onAccentMuted',
@@ -73,7 +82,7 @@ const accentTone: Record<RegionSlot, RoleRef> = {
 };
 
 // The contrasting panel (Ink, Bottom, split-bar Correct, the Ombre footer in light).
-const panelTone: Record<RegionSlot, RoleRef> = {
+const panelTone: Record<MappedSlot, RoleRef> = {
   bg: 'panel',
   ink: 'onPanel',
   muted: 'onPanelMuted',
@@ -92,7 +101,7 @@ const panelTone: Record<RegionSlot, RoleRef> = {
 
 // How each tone maps region slots to palette roles. test/contrast.test.ts checks every text slot
 // against its background in every tone, palette and mode.
-const regionTones: Readonly<Record<RegionTone, Record<RegionSlot, RoleRef>>> = {
+const regionTones: Readonly<Record<RegionTone, Record<MappedSlot, RoleRef>>> = {
   canvas: { ...base, bg: 'canvas', chip: 'bg' },
   base: { ...base, bg: 'bg', chip: 'surface' },
   // The vivid accent reads on the page colors only; lighter fills keep accentText.
@@ -173,7 +182,10 @@ function resolveRef(colors: ColorRoles, ref: RoleRef): string {
 export function regionColors(colors: ColorRoles, tone: RegionTone): RegionColors {
   const map = regionTones[tone];
   const out = {} as RegionColors;
-  for (const slot of Object.keys(map) as RegionSlot[]) out[slot] = resolveRef(colors, map[slot]);
+  for (const slot of Object.keys(map) as MappedSlot[]) out[slot] = resolveRef(colors, map[slot]);
+  // Chips can be translucent (panel tones), so flatten onto the region before greying.
+  out.disabled = greyscale(composite(out.chip, out.bg));
+  out.disabledInk = readableGrey(out.muted, out.disabled);
   return out;
 }
 
@@ -191,4 +203,5 @@ export const REGION_TEXT_PAIRS: readonly (readonly [text: RegionSlot, background
   ['onAccent', 'accent'],
   ['chipInk', 'chip'],
   ['chipInk', 'tint'],
+  ['disabledInk', 'disabled'],
 ];

@@ -12,13 +12,13 @@ import { routes } from '@/lib/routes';
 import { useGame } from '@/state/game';
 
 // Pick a mode to set up a game. Modes that are not ready yet show Coming soon; the card at the
-// bottom asks for ideas.
+// bottom asks for ideas. Every tile is the same size, whatever its detail line says.
 export function ModesScreen() {
   const { settings } = useGame();
   const copy = en.modesScreen;
   return (
     <Screen tone="base" width="column" back={{ href: routes.play, label: copy.back }} title={copy.title} sub={copy.hint}>
-      <Grid columns={layout.grid.modes}>
+      <Grid columns={layout.grid.modes} equalRows={layout.control.modeTile}>
         {MODE_IDS.map((id) => {
           const available = modeRules(id).available;
           return (

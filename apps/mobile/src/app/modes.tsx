@@ -9,11 +9,13 @@ import { LinkButton } from '../ui/Button';
 import { Grid } from '../ui/Grid';
 import { Screen, ScreenTitle, ScreenTop } from '../ui/Screen';
 import { SuggestCard } from '../ui/SuggestCard';
-import { Tile } from '../ui/Tile';
+import { Tile, useEqualHeight } from '../ui/Tile';
 
-// Every mode as a tile; modes that aren't ready show Coming soon. Tapping one sets up a game.
+// Every mode as a tile; modes that aren't ready show Coming soon. Tapping one sets up a game. Every
+// tile is the same size, whatever its detail line says.
 export default function ModesScreen() {
   const { settings } = usePrefs();
+  const [tileHeight, reportHeight] = useEqualHeight(layout.control.modeTile);
   const s = en.modesScreen;
   return (
     <Screen tone="base" width="column">
@@ -32,7 +34,8 @@ export default function ModesScreen() {
                   colors={colors}
                   selected={id === settings.mode}
                   disabled={!available}
-                  height={layout.control.modeTile}
+                  height={tileHeight}
+                  onNaturalHeight={reportHeight(id)}
                   onPress={() => router.push({ pathname: '/setup', params: { mode: id } })}
                 />
               );

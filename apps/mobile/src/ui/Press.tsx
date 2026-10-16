@@ -1,11 +1,15 @@
 import { layout, opacity } from '@unspoken/design-tokens';
 import { Pressable, type PressableProps, type StyleProp, type ViewStyle } from 'react-native';
 
-type Props = Omit<PressableProps, 'style'> & { style?: StyleProp<ViewStyle> };
+type Props = Omit<PressableProps, 'style'> & {
+  style?: StyleProp<ViewStyle>;
+  // Controls that draw their own disabled colors (greyed tiles) skip the disabled fade.
+  fadeDisabled?: boolean;
+};
 
 // A Pressable with the shared pressed and disabled feedback, and a touch area of at least
 // layout.minTouch even when the control is drawn smaller.
-export function Press({ style, disabled, accessibilityState, hitSlop, ...rest }: Props) {
+export function Press({ style, disabled, fadeDisabled = true, accessibilityState, hitSlop, ...rest }: Props) {
   return (
     <Pressable
       accessibilityRole="button"
@@ -14,7 +18,7 @@ export function Press({ style, disabled, accessibilityState, hitSlop, ...rest }:
       accessibilityState={{ ...accessibilityState, disabled: !!disabled }}
       hitSlop={hitSlop ?? { top: 0, bottom: 0, left: 0, right: 0 }}
       pressRetentionOffset={layout.minTouch / 2}
-      style={({ pressed }) => [style, { opacity: disabled ? opacity.disabled : pressed ? opacity.pressed : 1 }]}
+      style={({ pressed }) => [style, { opacity: disabled && fadeDisabled ? opacity.disabled : pressed ? opacity.pressed : 1 }]}
     />
   );
 }

@@ -20,9 +20,15 @@
   color: var(--region-on-accent);
 }
 
+/* Coming soon: greyed (the region's disabled colors) rather than a lighter shade of the color. */
 .off {
   cursor: default;
-  color: var(--region-muted);
+  background: var(--region-disabled);
+  color: var(--region-disabled-ink);
+}
+
+.off .detail {
+  color: var(--region-disabled-ink);
 }
 
 .title {

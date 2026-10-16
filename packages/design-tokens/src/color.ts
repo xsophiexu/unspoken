@@ -56,3 +56,34 @@ export function contrastRatio(text: string, background: string): number {
   const bg = relativeLuminance(background);
   return (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
 }
+
+function unchannel(y: number): number {
+  return y <= 0.0031308 ? y * 12.92 : 1.055 * y ** (1 / 2.4) - 0.055;
+}
+
+// The neutral grey with the same WCAG luminance as an opaque color, so contrast between two colors
+// is unchanged when both are greyed (disabled controls).
+export function greyscale(hex: string): string {
+  const v = unchannel(relativeLuminance(hex));
+  return toHex({ r: v, g: v, b: v, a: 1 });
+}
+
+// text greyed (greyscale), moved only as far toward black or white as it takes to reach `min`
+// contrast on an opaque background: text that reads, while staying as quiet as allowed.
+export function readableGrey(text: string, background: string, min = AA_TEXT): string {
+  const grey = greyscale(composite(text, background));
+  if (contrastRatio(grey, background) >= min) return grey;
+  const start = parseHex(grey).r * 255;
+  let best = grey;
+  let bestDistance = Infinity;
+  for (let byte = 0; byte <= 255; byte++) {
+    const v = byte / 255;
+    const candidate = toHex({ r: v, g: v, b: v, a: 1 });
+    const distance = Math.abs(byte - start);
+    if (distance < bestDistance && contrastRatio(candidate, background) >= min) {
+      best = candidate;
+      bestDistance = distance;
+    }
+  }
+  return best;
+}
