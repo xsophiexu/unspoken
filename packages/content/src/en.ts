@@ -178,11 +178,12 @@ export const en = {
   // --- Sheets --------------------------------------------------------------------------------
   menu: {
     title: 'Game paused',
-    restart: { title: 'Restart game', detail: 'New words, score back to 0' },
-    changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and theme · {mode}' },
-    customize: { title: 'Customize', detail: '{style} · {color}' },
+    // The round ? beside the title: its name and tooltip.
+    howToPlay: { title: 'How to play' },
+    changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and theme · starts a new game' },
+    customize: { title: 'Customize', detail: 'Layout and color · {style} · {color}' },
     feedback: { title: 'Send feedback', detail: 'Ideas for styles, modes or words' },
-    howToPlay: { title: 'How to play', detail: 'A quick tour of the screen' },
+    restart: 'Restart game',
     resume: 'Resume',
   },
   // The mode and difficulty sheet that opens from the header pill.

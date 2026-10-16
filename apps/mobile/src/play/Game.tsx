@@ -110,7 +110,6 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
       <GameMenu
         visible={sheet === 'menu'}
         onClose={close}
-        mode={settings.mode}
         status={menuStatus(state, roundCopy)}
         onRestart={chrome.restart}
         onSettings={changeSettings}

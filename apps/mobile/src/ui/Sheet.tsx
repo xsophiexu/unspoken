@@ -91,15 +91,33 @@ export function Sheet({ visible, onClose, children }: Props) {
   );
 }
 
-// The sheet's title, a line under it or a note beside it, and an optional close button.
-export function SheetHeader({ title, sub, note, colors, onClose }: { title: string; sub?: string; note?: string; colors: RegionColors; onClose?: () => void }) {
+// The sheet's title with an optional control beside it, a line under it or a note beside it, and
+// an optional close button.
+export function SheetHeader({
+  title,
+  sub,
+  note,
+  action,
+  colors,
+  onClose,
+}: {
+  title: string;
+  sub?: string;
+  note?: string;
+  action?: ReactNode;
+  colors: RegionColors;
+  onClose?: () => void;
+}) {
   return (
     <View style={styles.header}>
       <View style={styles.headerText}>
         <View style={styles.titleRow}>
-          <Txt variant="sheetTitle" color={colors.ink} accessibilityRole="header" style={styles.title}>
-            {title}
-          </Txt>
+          <View style={styles.titleGroup}>
+            <Txt variant="sheetTitle" color={colors.ink} accessibilityRole="header" style={styles.title}>
+              {title}
+            </Txt>
+            {action}
+          </View>
           {note ? (
             <Txt variant="subline" color={colors.muted} style={styles.note}>
               {note}
@@ -178,6 +196,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'flex-start', gap: space[3], marginBottom: space[2] },
   headerText: { flex: 1, gap: space[0.5] },
   titleRow: { flexDirection: 'row', alignItems: 'baseline', flexWrap: 'wrap', columnGap: space[3], rowGap: space[0.5] },
+  titleGroup: { flexDirection: 'row', alignItems: 'center', gap: space[2], flexShrink: 1 },
   title: { flexShrink: 1 },
   note: { flexShrink: 1, marginLeft: 'auto' },
   close: { width: layout.control.iconBadge, height: layout.control.iconBadge, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },

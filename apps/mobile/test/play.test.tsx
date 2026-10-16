@@ -118,3 +118,48 @@ describe('How to play', () => {
     expect(await screen.findByText(firstStep)).toBeOnTheScreen();
   });
 });
+
+describe('Game paused', () => {
+  const afterSlide = async () => {
+    await act(async () => {
+      jest.advanceTimersByTime(motion.duration.slow);
+    });
+  };
+
+  it('opens How to play from the ? beside the title', async () => {
+    await openApp('/', { theme: { style: 'card' } });
+    fireEvent.press(await screen.findByLabelText(en.a11y.menu));
+    fireEvent.press(await screen.findByLabelText(en.menu.howToPlay.title));
+    expect(await screen.findByText(en.howToPlay.steps[0]!.text)).toBeOnTheScreen();
+  });
+
+  it('restarts the game from Restart game', async () => {
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic' } });
+    fireEvent.press(await screen.findByLabelText(en.play.correct));
+    await act(async () => {
+      jest.advanceTimersByTime(motion.swipe.flyOutMs);
+    });
+    expect(screen.getByText(/1 pt/)).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByLabelText(en.a11y.menu));
+    fireEvent.press(await screen.findByLabelText(en.menu.restart));
+    await afterSlide();
+    expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
+    expect(screen.getByText(/0 pts/)).toBeOnTheScreen();
+  });
+
+  it('closes on Resume', async () => {
+    await openApp('/', { theme: { style: 'card' } });
+    fireEvent.press(await screen.findByLabelText(en.a11y.menu));
+    fireEvent.press(await screen.findByLabelText(en.menu.resume));
+    await afterSlide();
+    expect(screen.queryByText(en.menu.title)).not.toBeOnTheScreen();
+  });
+
+  it('says Change settings starts a new game', async () => {
+    await openApp('/', { theme: { style: 'card' } });
+    fireEvent.press(await screen.findByLabelText(en.a11y.menu));
+    expect(await screen.findByLabelText(en.menu.changeSettings.title)).toBeOnTheScreen();
+    expect(screen.getByText(/starts a new game/)).toBeOnTheScreen();
+  });
+});

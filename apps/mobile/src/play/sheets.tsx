@@ -8,7 +8,7 @@ import { usePrefs } from '../state/prefs';
 import { Button } from '../ui/Button';
 import { Grid } from '../ui/Grid';
 import { Icon, type IconName } from '../ui/Icon';
-import { Press } from '../ui/Press';
+import { Press, slopFor } from '../ui/Press';
 import { SectionLabel } from '../ui/Screen';
 import { Sheet, SheetHeader, SheetRow } from '../ui/Sheet';
 import { Tile } from '../ui/Tile';
@@ -17,7 +17,6 @@ import { Txt } from '../ui/Txt';
 type MenuProps = {
   visible: boolean;
   onClose: () => void;
-  mode: ModeId;
   // core menuStatus: "1:42 left · 7 pts · All cards"
   status: string;
   onRestart: () => void;
@@ -27,28 +26,41 @@ type MenuProps = {
   onHowToPlay: () => void;
 };
 
-// The ··· menu ("Game paused"). Styles with a sliders button list Customize first.
-export function GameMenu({ visible, onClose, mode, status, onRestart, onSettings, onCustomize, onFeedback, onHowToPlay }: MenuProps) {
+// The ··· menu ("Game paused"): a ? for How to play beside the title, rows for settings, customize
+// and feedback, then Restart game and Resume side by side. Styles with a sliders button list
+// Customize first.
+export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCustomize, onFeedback, onHowToPlay }: MenuProps) {
   const { theme } = usePrefs();
   const m = en.menu;
-  const customize = { key: 'customize', icon: 'sliders', title: m.customize.title, detail: format(m.customize.detail, { style: en.customize.styles[theme.style.id], color: en.customize.colors[theme.color] }), onPress: onCustomize, chevron: true } as const;
+  const customize = { key: 'customize', icon: 'sliders', title: m.customize.title, detail: format(m.customize.detail, { style: en.customize.styles[theme.style.id], color: en.customize.colors[theme.color] }), onPress: onCustomize } as const;
   const rows = [
-    { key: 'restart', icon: 'restart', title: m.restart.title, detail: m.restart.detail, onPress: onRestart, chevron: false },
-    { key: 'settings', icon: 'newGame', title: m.changeSettings.title, detail: format(m.changeSettings.detail, { mode: en.modes[mode].name }), onPress: onSettings, chevron: true },
+    { key: 'settings', icon: 'newGame', title: m.changeSettings.title, detail: m.changeSettings.detail, onPress: onSettings },
     customize,
-    { key: 'feedback', icon: 'bubble', title: m.feedback.title, detail: m.feedback.detail, onPress: onFeedback, chevron: true },
-    { key: 'howToPlay', icon: 'play', title: m.howToPlay.title, detail: m.howToPlay.detail, onPress: onHowToPlay, chevron: false },
-  ] satisfies { key: string; icon: IconName; title: string; detail: string; onPress: () => void; chevron: boolean }[];
+    { key: 'feedback', icon: 'bubble', title: m.feedback.title, detail: m.feedback.detail, onPress: onFeedback },
+  ] satisfies { key: string; icon: IconName; title: string; detail: string; onPress: () => void }[];
   const ordered = theme.style.header.menu === 'sliders' ? [customize, ...rows.filter((r) => r !== customize)] : rows;
   return (
     <Sheet visible={visible} onClose={onClose}>
       {(colors) => (
         <>
-          <SheetHeader title={m.title} sub={status} colors={colors} onClose={onClose} />
+          <SheetHeader
+            title={m.title}
+            sub={status}
+            colors={colors}
+            onClose={onClose}
+            action={
+              <Press onPress={onHowToPlay} accessibilityLabel={m.howToPlay.title} hitSlop={slopFor(layout.control.iconBadge)} style={[styles.help, { backgroundColor: colors.chip }]}>
+                <Icon name="question" size={layout.icon.md} color={colors.chipInk} />
+              </Press>
+            }
+          />
           {ordered.map(({ key, ...row }) => (
-            <SheetRow key={key} colors={colors} {...row} />
+            <SheetRow key={key} colors={colors} chevron {...row} />
           ))}
-          <Button kind="primary" label={m.resume} colors={colors} onPress={onClose} style={styles.gapAbove} />
+          <View style={[styles.split, styles.gapAbove]}>
+            <Button kind="secondary" icon="restart" label={m.restart} colors={colors} onPress={onRestart} style={[styles.splitButton, styles.fullHeight]} />
+            <Button kind="primary" icon="play" label={m.resume} colors={colors} onPress={onClose} style={styles.splitButton} />
+          </View>
         </>
       )}
     </Sheet>
@@ -138,6 +150,11 @@ export function DifficultyPicker({ visible, onClose, difficulty, categories, onP
 
 const styles = StyleSheet.create({
   gapAbove: { marginTop: space[3] },
+  help: { width: layout.control.iconBadge, height: layout.control.iconBadge, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
+  // Restart game and Resume share the row and stack once their labels no longer fit side by side.
+  split: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2.5] },
+  splitButton: { flexGrow: 1, flexBasis: 'auto', minWidth: '40%', paddingHorizontal: space[3], gap: space[2] },
+  fullHeight: { minHeight: layout.button.primaryHeight },
   actions: { flexDirection: 'row', gap: space[2.5] },
   action: { flex: 1, borderRadius: radius.xl, padding: space[4], gap: space[5], minHeight: layout.control.modeTile },
   actionText: { gap: space[0.5] },

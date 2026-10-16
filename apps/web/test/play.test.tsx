@@ -152,3 +152,50 @@ describe('Play', () => {
     expect(game.getByText('0 correct · 0 skipped')).toBeInTheDocument();
   });
 });
+
+describe('Game paused', () => {
+  const openMenu = async (user: ReturnType<typeof userEvent.setup>) => {
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' } });
+    const { game } = renderPlay();
+    await user.click(game.getByRole('button', { name: en.a11y.menu }));
+    return { game, menu: screen.getByRole('dialog', { name: en.menu.title }) };
+  };
+
+  it('opens How to play from the ? beside the title', async () => {
+    const user = userEvent.setup();
+    const { menu } = await openMenu(user);
+    await user.click(within(menu).getByRole('button', { name: en.menu.howToPlay.title }));
+
+    expect(screen.queryByRole('dialog', { name: en.menu.title })).not.toBeInTheDocument();
+    const tour = screen.getByRole('dialog', { name: en.menu.howToPlay.title });
+    expect(within(tour).getByText(en.howToPlay.steps[0]!.text)).toBeInTheDocument();
+  });
+
+  it('restarts the game from Restart game', async () => {
+    const user = userEvent.setup();
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
+    const { game } = renderPlay();
+    await user.click(game.getByRole('button', { name: en.play.skip }));
+    expect(await game.findByText('2 skips left')).toBeInTheDocument();
+
+    // Deck's sliders button opens the same menu.
+    await user.click(game.getByRole('button', { name: en.a11y.customize }));
+    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: en.menu.restart }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(game.getByText('3 skips left')).toBeInTheDocument();
+  });
+
+  it('closes on Resume', async () => {
+    const user = userEvent.setup();
+    const { menu } = await openMenu(user);
+    await user.click(within(menu).getByRole('button', { name: en.menu.resume }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('says Change settings starts a new game', async () => {
+    const user = userEvent.setup();
+    const { menu } = await openMenu(user);
+    expect(within(menu).getByRole('link', { name: new RegExp(en.menu.changeSettings.title) })).toHaveTextContent(/starts a new game/);
+  });
+});
