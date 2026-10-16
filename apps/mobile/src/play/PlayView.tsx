@@ -290,7 +290,8 @@ function Top({ f, children }: { f: Frame; children: ReactNode }) {
 }
 
 // The footer stats, the note and the controls. A timer line above the controls sits right on them.
-// A split bar spans the whole window, down through the bottom safe area.
+// A footer in its own color (Ombre) leaves footerTop above its contents. A split bar spans the whole
+// window, down through the bottom safe area.
 function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   const { controls: slot } = f.theme.style;
   const colors = f.footer;
@@ -317,7 +318,7 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   const stats = statsAt(f, 'footer', colors);
   const line = (bleed?: number) => clockAt(f, 'aboveControls', colors, bleed);
   const under = f.margins.paddingBottom;
-  const pad = { paddingTop: separate ? layout.screen.paddingTop : space[3], paddingBottom: f.insets.bottom + (f.short ? Math.min(under, space[3]) : under) };
+  const pad = { paddingTop: separate ? f.margins.footerTop : space[3], paddingBottom: f.insets.bottom + (f.short ? Math.min(under, space[3]) : under) };
   if (!fills) {
     return (
       <Band colors={colors} f={f} inner={[styles.zone, pad]}>
