@@ -110,7 +110,7 @@ export const apiErrorStatus = {
   payload_too_large: 413,
   rate_limited: 429,
   internal: 500,
-  // A feature the server is not set up for, such as feedback without Firebase.
+  // A feature the server is not set up for, such as feedback without a database.
   unavailable: 503,
 } as const;
 export type ApiErrorCode = keyof typeof apiErrorStatus;

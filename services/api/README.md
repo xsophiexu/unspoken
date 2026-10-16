@@ -1,15 +1,15 @@
 # @unspoken/api
 
-The Unspoken HTTP service. It implements [`@unspoken/api-contract`](../../packages/api-contract) with [Hono](https://hono.dev) on Node: rules and dealing come from `@unspoken/core`, cards from `@unspoken/content`, and feedback goes to Cloud Firestore through the Firebase Admin SDK.
+The Unspoken HTTP service. It implements [`@unspoken/api-contract`](../../packages/api-contract) with [Hono](https://hono.dev) on Node: rules and dealing come from `@unspoken/core`, cards from `@unspoken/content`, and feedback goes to PostgreSQL through [`pg`](https://node-postgres.com). It runs on [Railway](https://railway.com), next to a Railway Postgres database.
 
 | Endpoint | Does |
 | --- | --- |
 | `GET /v1/config` | The rules (`gameConfig`) |
 | `POST /v1/decks` | Deals a deck with `dealFromBank`: difficulty, themes (none means All cards), mode, count, seed |
-| `POST /v1/feedback` | Stores an idea in Firestore and answers 201 with `{ id, receivedAt }`. Answers 503 `unavailable` when no Firebase project is configured. Rate limited per caller. |
-| `GET /health` | `{ "status": "ok" }` for uptime checks. Not `/healthz`: Cloud Run reserves paths ending in `z`. |
+| `POST /v1/feedback` | Stores an idea in the `feedback` table and answers 201 with `{ id, receivedAt }`. Answers 503 `unavailable` when `DATABASE_URL` is not set. Rate limited per caller. |
+| `GET /health` | `{ "status": "ok" }`, Railway's deploy health check |
 
-Requests are validated with the contract's schemas. Every error has the contract's body, `{ error: { code, message, issues? } }`, with the status from `apiErrorStatus`: `invalid_request` 400, `not_found` 404, `payload_too_large` 413, `rate_limited` 429 (with `Retry-After`), `internal` 500, `unavailable` 503.
+Requests are validated with the contract's schemas. Every error has the contract's body, `{ error: { code, message, issues? } }`, with the status from `apiErrorStatus`: `invalid_request` 400, `not_found` 404, `payload_too_large` 413, `rate_limited` 429 (with `Retry-After`), `internal` 500 (database errors included; the details go to the log, never the response), `unavailable` 503.
 
 ## Run it locally
 
@@ -20,81 +20,56 @@ cp services/api/.env.example services/api/.env.local   # every variable, with it
 pnpm --filter @unspoken/api dev                         # http://localhost:8080, restarts on changes
 ```
 
-Without Firebase settings, feedback answers 503 and everything else works. To store feedback locally without a Google account, run the Firestore emulator (needs Java) and point the service at it:
+Without `DATABASE_URL`, feedback answers 503 and everything else works. To store feedback, run a Postgres and point the service at it; it creates its tables on start:
 
 ```bash
-npx firebase-tools emulators:start --only firestore --project demo-unspoken   # listens on 127.0.0.1:8080
+docker run --rm -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=unspoken postgres:18-alpine
+# in .env.local:
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/unspoken
 ```
 
-and in `.env.local`:
-
-```bash
-PORT=8787                                # the emulator has 8080
-FIREBASE_PROJECT_ID=demo-unspoken
-FIRESTORE_EMULATOR_HOST=127.0.0.1:8080
-```
-
-Scripts: `dev`, `build` (bundles `src/main.ts` and the workspace packages into `dist/main.js` with esbuild), `start` (runs the bundle), `lint`, `typecheck`, `test`. Root `pnpm check` covers this package.
-
-Only `firebase-admin` is a runtime dependency; everything else is bundled at build time, so it is listed under `devDependencies`.
+Scripts: `dev`, `build` (bundles `src/main.ts` and the workspace packages into `dist/main.js` with esbuild), `start` (runs the bundle), `lint`, `typecheck`, `test`. Root `pnpm check` covers this package. Only `pg` is a runtime dependency; everything else is bundled at build time, so it is listed under `devDependencies`.
 
 ## Configuration
 
-Everything deployment-specific comes from environment variables, validated at startup by `src/config.ts`. A bad value stops the service with a message naming the variable. [`.env.example`](.env.example) lists each one with its default: `PORT`, `CORS_ORIGINS`, `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS`, `FEEDBACK_COLLECTION`, `FIREBASE_PROJECT_ID` and `FIREBASE_SERVICE_ACCOUNT`.
+Everything deployment-specific comes from environment variables, validated at startup by `src/config.ts`. A bad value stops the service with a message naming the variable (never repeating it, since `DATABASE_URL` holds a password). [`.env.example`](.env.example) lists each one with its default: `PORT`, `CORS_ORIGINS`, `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS` and `DATABASE_URL`.
 
 - **CORS:** list browser origins exactly, such as `https://xsophiexu.github.io` (no `/unspoken` path). Native apps send no Origin and need no entry.
-- **Rate limit:** counted per caller address, in memory, per instance. Behind Cloud Run the caller's address comes from `X-Forwarded-For` (`TRUST_PROXY_HOPS=1`, the Docker image's default). With several instances the effective limit is the limit times the instance count; cap it with `--max-instances`.
-- **Feedback documents** hold the validated request (`topic`, `message`, and `entryPoint`, `platform`, `appVersion` when sent) plus `receivedAt` as a Firestore timestamp.
+- **Rate limit:** counted per caller address, in memory, per replica, so N replicas allow N times the limit. The address comes from `X-Forwarded-For`, `TRUST_PROXY_HOPS` entries from the end. The Docker image sets 2 for Railway, whose edge sends the client followed by one hop of its own. Railway's docs don't describe that header, so after the first deploy check that the limit is per caller: send six ideas from one network and the sixth answers 429, while another network (a phone off Wi-Fi) still gets 201.
+- **Database:** each `feedback` row holds the validated request (`topic`, `message`, and `entry_point`, `platform`, `app_version`, null when not sent) plus `id` (a UUID, returned as the receipt's `id`) and `received_at`. The schema is a list of numbered migrations in `src/db.ts`, applied on every start: each runs once, in one transaction, under a lock, so restarts and replicas starting together are safe. Change the schema by appending a migration, never by editing one. When the database can't be reached at start, the service exits and Railway restarts it (On Failure, up to 10 times by default). To read feedback, open the Postgres service's **Data** tab in Railway, or run `railway connect Postgres` and `select * from feedback order by received_at desc;`.
 
-## Set up Firebase (once)
+## Deploy on Railway
 
-1. Go to [console.firebase.google.com](https://console.firebase.google.com), choose **Create a project**, and name it (for example `unspoken`). Google Analytics is optional. Note the **project ID** under Project settings; it is also the Google Cloud project ID.
-2. In the project, open **Firestore Database** from the left menu and choose **Create database**: Standard edition, database ID `(default)` (the service uses the default database), a location near where the service will run (for example `us-central1` or `europe-west1`; it can't be changed later), and **production mode**. Production rules deny all client access, which is what we want: only this service writes, and the Admin SDK isn't bound by rules.
-3. Give the service credentials, one of:
-   - **On Cloud Run in the same project (recommended):** no key. Create a service account for the service and let it write to Firestore. The deploy below runs as it.
-     ```bash
-     gcloud iam service-accounts create unspoken-api --project <project-id>
-     gcloud projects add-iam-policy-binding <project-id> \
-       --member serviceAccount:unspoken-api@<project-id>.iam.gserviceaccount.com --role roles/datastore.user
-     ```
-   - **Anywhere else:** in the Firebase console, **Project settings → Service accounts → Generate new private key** downloads a JSON key. Put its contents on one line in `FIREBASE_SERVICE_ACCOUNT` (store it as a secret, never in git). The project ID is read from the key, so `FIREBASE_PROJECT_ID` is optional then.
-   - **Locally against the real project:** `gcloud auth application-default login`, then set `FIREBASE_PROJECT_ID`.
+Railway builds `services/api/Dockerfile` from the **repository root**, not from `services/api`: the image bundles the workspace packages `packages/core`, `packages/content` and `packages/api-contract` and installs from the root `pnpm-lock.yaml`, so the build needs the whole repository. Railway deploys the `main` branch, so merge this service into `main` first. After that, every push to `main` that touches the service or those packages redeploys it.
 
-## Deploy to Cloud Run
+In the Railway dashboard:
 
-Run from the repository root, with the [gcloud CLI](https://cloud.google.com/sdk/docs/install) signed in to an account that owns the project. Cloud Run needs billing enabled on the project (the Blaze plan in Firebase terms); a small service like this usually stays inside the free tier.
+1. **New Project → Deploy from GitHub repo**, and choose `xsophiexu/unspoken` (let Railway's GitHub app see the repository if it asks). Leave **Root Directory** empty. Renaming the service to `api` is optional.
+2. On the project canvas, **+ New → Database → PostgreSQL**. Keep its name, `Postgres`.
+3. In the service's **Variables**, add:
+   - `RAILWAY_DOCKERFILE_PATH` = `services/api/Dockerfile`
+   - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`
+   - `CORS_ORIGINS` = `https://xsophiexu.github.io`, plus the Next.js site's origin once it has one, comma-separated
+4. In the service's **Settings**, set **Healthcheck Path** to `/health` and **Watch Paths** to `/services/api/**`, `/packages/core/**`, `/packages/content/**`, `/packages/api-contract/**`, `/package.json` and `/pnpm-lock.yaml`. Leave the start command and `PORT` alone: the image runs `node --enable-source-maps dist/main.js`, which listens on the `PORT` Railway sets.
+5. **Deploy** the staged changes. When the deploy is green, open **Settings → Networking → Generate Domain**.
 
-```bash
-PROJECT=<project-id>
-REGION=us-central1
-IMAGE=$REGION-docker.pkg.dev/$PROJECT/unspoken/api
+The same setup is written as code in [`.railway/railway.ts`](.railway/railway.ts), Railway's infrastructure-as-code file (Railway no longer reads `railway.json` for new services). With the [Railway CLI](https://docs.railway.com/cli), from `services/api`: `railway login`, `railway init`, `railway config plan`, `railway config apply`, then `railway domain --service api` instead of the steps above.
 
-# Once: turn on the services and create an image repository.
-gcloud services enable run.googleapis.com cloudbuild.googleapis.com artifactregistry.googleapis.com --project $PROJECT
-gcloud artifacts repositories create unspoken --repository-format docker --location $REGION --project $PROJECT
-
-# Each release: build the image in Cloud Build (or locally: docker build -f services/api/Dockerfile -t $IMAGE . && docker push $IMAGE)
-gcloud builds submit --config services/api/cloudbuild.yaml --substitutions _IMAGE=$IMAGE --project $PROJECT
-
-gcloud run deploy unspoken-api --image $IMAGE --region $REGION --project $PROJECT \
-  --service-account unspoken-api@$PROJECT.iam.gserviceaccount.com \
-  --allow-unauthenticated --max-instances 3 \
-  --set-env-vars FIREBASE_PROJECT_ID=$PROJECT,CORS_ORIGINS=https://xsophiexu.github.io
-```
-
-The deploy prints the service URL. Check `<url>/health`, then give the URL to the apps as `EXPO_PUBLIC_API_URL` and `NEXT_PUBLIC_API_URL`. To list several CORS origins, change gcloud's separator: `--set-env-vars "^;^FIREBASE_PROJECT_ID=$PROJECT;CORS_ORIGINS=https://a.example,https://b.example"`. On another host, run the same image and set `FIREBASE_SERVICE_ACCOUNT` from a secret (Cloud Run: `--set-secrets`).
+Then open `https://<domain>/health`, which answers `{"status":"ok"}`, and give `https://<domain>` to the apps as `NEXT_PUBLIC_API_URL` (`apps/web`) and `EXPO_PUBLIC_API_URL` (`apps/mobile`). Before replacing a deployment Railway sends SIGTERM, and the service finishes in-flight requests before it exits.
 
 ## Layout
 
 ```
-src/main.ts            reads the config, connects Firestore when configured, serves the app, stops cleanly on SIGTERM
-src/app.ts             createApp(config, { firestore }): middleware, route modules, errors
+.railway/railway.ts    the Railway project as code: Postgres and this service
+src/main.ts            reads the config, connects to Postgres and migrates when DATABASE_URL is set, serves the app, stops cleanly on SIGTERM
+src/app.ts             createApp(config, { db }): middleware, route modules, errors
 src/config.ts          the environment schema
+src/db.ts              the database boundary and the schema migrations
 src/http.ts            error responses, JSON validation with contract schemas
 src/rate-limit.ts      per-caller limit and caller address
 src/routes/game.ts     /v1/config and /v1/decks
 src/routes/feedback.ts /v1/feedback
-test/                  HTTP tests through app.request, with a fake Firestore and a fake clock
+test/                  HTTP tests through app.request, against PGlite (Postgres in process) and a fake clock
 ```
 
-**Multiplayer, later:** add `paths.rooms` to the contract, a `src/routes/rooms.ts` module mounted in `app.ts`, and realtime with `upgradeWebSocket` from `@hono/node-server` (plus `ws`), passed to `serve({ websocket })` in `main.ts`. Rooms can hold core's round state as is, since it is plain serializable data. Across several instances, keep room state in a shared store and turn on Cloud Run session affinity.
+**Multiplayer, later:** add `paths.rooms` to the contract, a `src/routes/rooms.ts` module mounted in `app.ts`, and realtime with `upgradeWebSocket` from `@hono/node-server` (plus `ws`), passed to `serve({ websocket })` in `main.ts`. Rooms can hold core's round state as is, since it is plain serializable data. With several replicas, keep room state in a shared store such as Postgres, since a player's requests can reach any replica.

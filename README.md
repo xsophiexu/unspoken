@@ -125,4 +125,4 @@ A pnpm workspace. [docs/architecture.md](docs/architecture.md) describes the pac
 - `packages/content/` holds the word bank (`data/word-banks.json`; add cards there) and the English copy
 - `packages/design-tokens/` holds the palettes, type, sizes and the eleven layout styles
 - `packages/api-contract/` describes the HTTP API (`/v1/config`, `/v1/decks`, `/v1/feedback`) and has a typed client
-- `services/api/` is the HTTP service behind that contract (Hono on Node, feedback in Firestore); its README covers running and deploying it
+- `services/api/` is the HTTP service behind that contract (Hono on Node, deployed on Railway, feedback in its Postgres); its README covers running and deploying it

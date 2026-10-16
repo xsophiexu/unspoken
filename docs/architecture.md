@@ -19,7 +19,7 @@ packages/content       @unspoken/content: word bank and English copy
 packages/design-tokens @unspoken/design-tokens: palettes, type, sizes, motion, layout styles, theme helpers
 packages/api-contract  @unspoken/api-contract: HTTP paths, zod schemas, typed client
 apps/web               (next) Next.js site
-services/api           @unspoken/api: Hono service implementing api-contract (see its README)
+services/api           @unspoken/api: Hono service implementing api-contract, on Railway with Postgres (see its README)
 ```
 
 pnpm workspace (`pnpm-workspace.yaml` covers `apps/*`, `packages/*`, `services/*`) with `node-linker=hoisted` for React Native. Packages are `"type": "module"`, export `./src/index.ts`, and extend `tsconfig.base.json` (strict, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`). Metro compiles them as source. Next.js must list them in `transpilePackages`. A service can run them with a TypeScript-aware runner (tsx, Bun) or bundle them.
@@ -123,12 +123,12 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 | --- | --- | --- | --- |
 | API base URL | `EXPO_PUBLIC_API_URL` | `NEXT_PUBLIC_API_URL` | `PORT`, `CORS_ORIGINS` |
 | Google Analytics id | `EXPO_PUBLIC_GA_MEASUREMENT_ID` | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | |
-| Firebase | | | `FIREBASE_PROJECT_ID`; `FIREBASE_SERVICE_ACCOUNT` (key JSON), else Application Default Credentials |
-| Limits | | | `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS`, `FEEDBACK_COLLECTION` |
+| Database | | | `DATABASE_URL` (Railway's Postgres, as `${{Postgres.DATABASE_URL}}`) |
+| Limits | | | `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS` |
 | App version | `expo-application` / `app.json` version | `package.json` version at build | |
 
 - Expo inlines only literal `process.env.EXPO_PUBLIC_*` reads, and Next only `process.env.NEXT_PUBLIC_*`. Read each variable by its full name in one config module per app and pass the values to `clientConfigSchema.parse`. Locally use `.env.local` files (gitignored), with a committed `.env.example` that lists the names. For builds use EAS environment variables or `eas.json` profile `env` on mobile, and repository variables in GitHub Actions for the Pages build.
-- Public env values ship to clients, so they must not be secrets. Firebase credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to Firestore (collection `FEEDBACK_COLLECTION`, default `feedback`: the validated request plus `receivedAt`). It answers 503 `unavailable` when no Firebase project is configured. `services/api/README.md` covers Firebase setup and the Cloud Run deploy; the service validates its env once at startup in `src/config.ts` and lists every variable in `.env.example`.
+- Public env values ship to clients, so they must not be secrets. The database credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to the `feedback` table in PostgreSQL (the validated request plus `id` and `received_at`). It answers 503 `unavailable` when `DATABASE_URL` is not set. The service runs on Railway with a Railway Postgres; `services/api/README.md` covers the deploy. The service validates its env once at startup in `src/config.ts` and lists every variable in `.env.example`.
 - Known hard-coded values to move: `apps/mobile/public/index.html` carries the GA tag with `G-9MFDEM0KXR` (move it to the env var and inject it at build or runtime). `app.json` holds the bundle id and package `com.rensar.unspoken`, which is fixed per app and stays there. The Pages workflow sets the web `baseUrl` to `/unspoken`.
 - Clients play offline from the bundled `bank` and `gameConfig`. A served config or deck (same schemas) can replace them later without changing screens.
 
@@ -136,7 +136,7 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 
 - Test behavior through public interfaces: package exports, reducers through actions and selectors, and the API client through `createApiClient`. Never import from `src/` internals in another package.
 - No tautological tests. Don't assert that a constant equals itself or restate a config table. Assert what a player or caller would notice: the status line after three correct answers, the deck for a seed, contrast passing.
-- Mock only at boundaries: network (inject `fetch`), Firebase, storage, the clock (dispatch `tick`) and randomness (pass a seed or a `Random`). Don't mock packages or modules.
+- Mock only at boundaries: network (inject `fetch`), the database (the service's tests run its SQL on PGlite, an in-process Postgres), storage, the clock (dispatch `tick`) and randomness (pass a seed or a `Random`). Don't mock packages or modules.
 - Fixtures are small and built in the test file or `test/fixtures.ts`. Content tests may read the real bank to guard the data.
 - Every package keeps `lint`, `typecheck` and `test` green. Run `pnpm check` at the root before pushing. The Expo app must also build with `npx expo export --platform web` and `--platform android` from `apps/mobile`.
 - UI tests (when screens are rebuilt) render screens with test data and assert visible text and roles, not styles or snapshots.
