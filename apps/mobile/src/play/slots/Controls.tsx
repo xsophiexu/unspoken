@@ -165,7 +165,7 @@ function Pills(p: Parts) {
         style={[
           styles.button,
           { height: slot.height, borderRadius: radius[slot.radius] },
-          round ? { width: slot.height, backgroundColor: colors.chip } : { width: slot.skipWidth, borderWidth: layout.stroke.outline, borderColor: colors.outline },
+          round ? { width: slot.height, paddingHorizontal: 0, backgroundColor: colors.chip } : { width: slot.skipWidth, borderWidth: layout.stroke.outline, borderColor: colors.outline },
         ]}
       >
         <Txt variant="button" color={round ? colors.chipInk : colors.ink} numberOfLines={1}>

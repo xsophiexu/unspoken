@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
   column: { width: '100%', maxWidth: maxWidth.column, alignSelf: 'center', paddingHorizontal: PAD },
   zone: { gap: space[3] },
   topRow: { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', gap: space[3], minHeight: layout.header.menuButton },
-  topLeft: { flexShrink: 1, flexGrow: 1 },
+  topLeft: { flexShrink: 1, flexGrow: 1, alignItems: 'flex-start' },
   topRight: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   middle: { alignItems: 'center', justifyContent: 'center', paddingVertical: space[3] },
   measure: { ...StyleSheet.absoluteFill, margin: space[3] },

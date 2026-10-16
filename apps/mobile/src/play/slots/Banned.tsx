@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   tileRows: { gap: layout.chip.gap },
   pair: { flexDirection: 'row' },
   tileGap: { gap: layout.chip.gap },
-  cell: { flex: 1, justifyContent: 'center', flexDirection: 'row', alignItems: 'center', gap: space[1.5] },
+  cell: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space[1.5] },
   rowItem: { flexDirection: 'row', alignItems: 'center', gap: space[3.5], borderBottomWidth: layout.stroke.hairline },
   number: { width: space[3.5] },
   rowWord: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: space[2], flexWrap: 'wrap' },
