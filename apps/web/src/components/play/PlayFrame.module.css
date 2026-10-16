@@ -257,6 +257,13 @@
   border-radius: var(--un-layout-sheet-radius) var(--un-layout-sheet-radius) 0 0;
 }
 
+/* Hot potato's rule under the controls. */
+.note {
+  margin: 0;
+  padding-inline: var(--un-space-0-5);
+  color: var(--region-muted);
+}
+
 /* Swiping. The frame sets --drag-x, --drag-rot and data-drag while the card follows the finger. */
 .swipeItem {
   transform: translateX(var(--drag-x, 0px));

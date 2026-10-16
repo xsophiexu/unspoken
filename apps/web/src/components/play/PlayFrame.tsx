@@ -58,6 +58,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       showHint={model.firstCard}
     />
   );
+  const note = model.note && <p className={cx(styles.note, text('small'))}>{model.note}</p>;
   const aboveControls = (
     <>
       <Stats slot={s.stats} at="footer" stats={model.stats} />
@@ -70,17 +71,20 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
     s.controls.variant === 'splitBar' ? (
       <>
         {aboveControls}
+        {note}
         <div className={styles.edge}>{controls}</div>
       </>
     ) : regions.controls ? (
       <div className={cx(styles.edge, styles.controlsRegion)} data-region={regions.controls}>
         {aboveControls}
         {controls}
+        {note}
       </div>
     ) : (
       <>
         {aboveControls}
         {controls}
+        {note}
       </>
     );
   // The word and list follow the finger while dragging (the swipe surface sets --drag-x).
@@ -149,6 +153,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
                 <div className={styles.pushDown}>
                   <Stats slot={s.stats} at="footer" stats={model.stats} />
                   {s.controls.variant !== 'splitBar' && controls}
+                  {note}
                 </div>
               </div>
               {s.controls.variant === 'splitBar' && controls}

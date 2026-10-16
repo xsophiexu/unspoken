@@ -133,6 +133,13 @@ describe('Play', () => {
     expect(shown).toEqual(['Get someone to guess a given word without saying any of the banned words.', 'This is the word they need to guess.', 'These are the banned words. Don’t say any of them.', 'Describe it out loud.', 'Tap here to change difficulty.', 'Tap here to change the game mode or the look.', 'Ready? Tap here to play.']);
   });
 
+  it('keeps Hot potato’s rule under the controls while playing', () => {
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: { ...classic, mode: 'hotPotato' } });
+    const { game } = renderPlay();
+    expect(game.getByText(en.status.hotPotato)).toBeInTheDocument();
+    expect(game.getByText(en.play.hotPotatoNote)).toBeInTheDocument();
+  });
+
   it('still plays the default game when site storage is blocked', () => {
     vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
       throw new DOMException('blocked', 'SecurityError');

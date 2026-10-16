@@ -33,6 +33,8 @@ export type PlayModel = HeaderModel & {
   canSkip: boolean;
   // No answer yet this round (the "swipe the card" hint shows until the first one).
   firstCard: boolean;
+  // A line under the controls (Hot potato's rule), or null.
+  note: string | null;
 };
 
 export function headerModel(state: RoundState): HeaderModel {
@@ -61,5 +63,6 @@ export function swipeModel(state: SwipeRoundState): PlayModel {
     canCorrect: canAnswer(state, 'correct'),
     canSkip: canAnswer(state, 'skip'),
     firstCard: state.correct + state.skipped === 0,
+    note: state.rules.passAfterEveryWord ? en.play.hotPotatoNote : null,
   };
 }
