@@ -152,6 +152,8 @@
 .frame[data-arrangement='floatingCard'] .swipeCard {
   flex: 1 1 auto;
   max-height: var(--un-layout-card-max-height);
+  /* Taller than the cap only if the word and list need it. */
+  min-height: min-content;
 }
 
 .container {

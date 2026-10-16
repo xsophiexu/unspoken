@@ -102,7 +102,7 @@ button:disabled {
   justify-content: center;
   gap: var(--un-space-2-5);
   min-width: var(--control-height);
-  height: var(--control-height);
+  min-height: var(--control-height);
   border-radius: var(--control-radius);
 }
 

@@ -12,12 +12,12 @@
 }
 
 .regular {
-  height: var(--un-layout-button-height);
+  min-height: var(--un-layout-button-height);
 }
 
 .large {
   width: 100%;
-  height: var(--un-layout-button-primary-height);
+  min-height: var(--un-layout-button-primary-height);
   border-radius: var(--un-radius-xxl);
 }
 

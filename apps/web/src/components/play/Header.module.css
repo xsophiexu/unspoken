@@ -78,7 +78,6 @@
 }
 
 .pill {
-  height: var(--un-layout-header-pill-height);
   min-height: var(--un-layout-header-pill-height);
   padding: 0 var(--un-space-3-5) 0 var(--un-space-4);
   border-radius: var(--un-radius-pill);

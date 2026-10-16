@@ -69,7 +69,7 @@
 .chip {
   display: inline-flex;
   align-items: center;
-  height: var(--un-layout-header-pill-height);
+  min-height: var(--un-layout-header-pill-height);
   padding-inline-start: var(--un-space-3-5);
   border-radius: var(--un-radius-pill);
   white-space: nowrap;

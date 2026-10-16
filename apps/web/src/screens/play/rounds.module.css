@@ -131,7 +131,6 @@
 
 .mark {
   flex: none;
-  line-height: 1;
   color: var(--region-muted);
 }
 
