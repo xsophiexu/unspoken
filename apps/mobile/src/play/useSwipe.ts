@@ -28,6 +28,7 @@ type Options = {
 
 const { swipe, enter: enterSpring, hint: hintTiming } = motion;
 const native = { useNativeDriver: false } as const;
+const settle = { friction: swipe.settle.friction, tension: swipe.settle.tension, useNativeDriver: false } as const;
 
 // Swipe right for Correct and left for Skip. The card follows the finger; past the threshold it
 // flies off, then the answer is dispatched and the next card springs in. It also nudges right once
@@ -54,22 +55,25 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
     hint.setValue(0);
   }, [hint]);
 
+  // The swipe hint (motion.hint): the card slides right, tilting and stretching the Correct bar as a
+  // drag would, while "› SWIPE" fades in from under it, then springs back. Once soon after the round
+  // opens, then after an idle spell with no swipe or tap. With reduced motion only the label shows.
   useEffect(() => {
-    if (!active || reduceMotion) return;
+    if (!active) return;
     const id = setTimeout(
       () => {
         hinted.current = true;
-        const seq = Animated.sequence([
-          Animated.parallel([
-            Animated.timing(dx, { toValue: hintTiming.nudgePx, duration: hintTiming.outMs, easing: Easing.out(Easing.quad), ...native }),
-            Animated.timing(hint, { toValue: 1, duration: motion.duration.base, ...native }),
-          ]),
-          Animated.delay(hintTiming.holdMs),
-          Animated.parallel([
-            Animated.spring(dx, { toValue: 0, ...native }),
-            Animated.timing(hint, { toValue: 0, duration: motion.duration.base, ...native }),
-          ]),
-        ]);
+        const fade = (toValue: number) => Animated.timing(hint, { toValue, duration: hintTiming.fadeMs, ...native });
+        const seq = reduceMotion
+          ? Animated.sequence([fade(1), Animated.delay(hintTiming.outMs + hintTiming.holdMs), fade(0)])
+          : Animated.sequence([
+              Animated.parallel([
+                Animated.timing(dx, { toValue: hintTiming.nudgePx, duration: hintTiming.outMs, easing: Easing.bezier(...hintTiming.outEasing), ...native }),
+                fade(1),
+              ]),
+              Animated.delay(hintTiming.holdMs),
+              Animated.parallel([Animated.spring(dx, { toValue: 0, friction: hintTiming.back.friction, tension: hintTiming.back.tension, ...native }), fade(0)]),
+            ]);
         nudge.current = seq;
         seq.start(({ finished }) => {
           if (nudge.current !== seq) return;
@@ -95,7 +99,7 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
       const { can, onAnswer, active, reduceMotion } = latest.current;
       if (flying.current || !active) return;
       if (!can(kind)) {
-        Animated.spring(dx, { toValue: 0, ...native }).start();
+        Animated.spring(dx, { toValue: 0, ...settle }).start();
         return;
       }
       stopHint();
@@ -146,9 +150,9 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
       onPanResponderRelease: (_, g) => {
         if (g.dx > swipe.thresholdPx) answerRef.current('correct');
         else if (g.dx < -swipe.thresholdPx) answerRef.current('skip');
-        else Animated.spring(dx, { toValue: 0, ...native }).start();
+        else Animated.spring(dx, { toValue: 0, ...settle }).start();
       },
-      onPanResponderTerminate: () => Animated.spring(dx, { toValue: 0, ...native }).start(),
+      onPanResponderTerminate: () => Animated.spring(dx, { toValue: 0, ...settle }).start(),
     }),
   );
 

@@ -1,10 +1,12 @@
 'use client';
 
+import { en } from '@unspoken/content';
 import { layout, playMargins, ringCardSize, type LayoutStyle } from '@unspoken/design-tokens';
 import { useRef, type CSSProperties, type HTMLAttributes, type ReactNode, type Ref } from 'react';
 
 import { useElementSize } from '@/lib/hooks';
-import { cx } from '@/lib/ui';
+import { Icon } from '@/components/ui/Icon';
+import { cx, text } from '@/lib/ui';
 
 import { BannedList } from './BannedList';
 import { Controls } from './Controls';
@@ -210,12 +212,23 @@ export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface,
       <div className={styles.column} inert={overlay ? true : undefined}>
         {top}
         <div className={styles.body} {...surface}>
+          {!preview && <SwipeHint />}
           {children}
         </div>
         {footer && <div className={styles.footer}>{footer}</div>}
       </div>
       {overlay}
     </div>
+  );
+}
+
+// "› SWIPE", shown from under the card while the swipe hint plays (useSwipe sets data-drag="hint").
+function SwipeHint() {
+  return (
+    <span className={cx(styles.swipeHint, text('badge'))} aria-hidden="true">
+      <Icon name="chevronRight" />
+      {en.play.swipeHint}
+    </span>
   );
 }
 

@@ -44,7 +44,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
       return (
         <div className={cx(styles.links, slot.hint === 'bars' && styles.withBars)} style={sizing}>
           <button type="button" className={cx(styles.link, styles.skipLink, text('button'))} {...skip}>
-            {labels.skipLink}
+            <span className={styles.label}>{labels.skipLink}</span>
           </button>
           {slot.hint === 'text' && (
             <span className={cx(styles.hint, text('small'), !showHint && styles.hidden)} aria-hidden="true">
@@ -52,7 +52,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
             </span>
           )}
           <button type="button" className={cx(styles.link, styles.correctLink, text('button'))} {...correct}>
-            {labels.correctLink}
+            <span className={styles.label}>{labels.correctLink}</span>
           </button>
         </div>
       );

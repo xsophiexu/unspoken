@@ -8,6 +8,7 @@ import {
   layoutStyles,
   maxWidth,
   motion,
+  opacity,
   palettes,
   resolveTheme,
   spotlight,
@@ -61,6 +62,7 @@ function sharedTokens(): Vars {
     ...flatten('max-width', maxWidth, (_, n) => px(n)),
     ...flatten('motion', motion, motionUnit),
     ...flatten('spotlight', spotlight, (_, n) => px(n)),
+    ...flatten('opacity', opacity, (_, n) => String(n)),
   };
 }
 
@@ -72,8 +74,6 @@ function paletteVars(color: ColorId, mode: ColorMode): Vars {
     ...cssVariables(resolveTheme({ style: followStyle, color, mode })),
     // The How to play Play label: the color's light-mode accent text in both modes (see spotlight tokens).
     '--un-spotlight-play-ink': palettes[color].light.accentText,
-    // The struck line in the wordmark over the dark spotlight: the light accent text of the dark palette.
-    '--un-spotlight-mark': palettes[color].dark.accentText,
   };
 }
 
