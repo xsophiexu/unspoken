@@ -105,12 +105,20 @@ export const maxWidth = {
 export const layout = {
   // The boards are drawn at this size; thumbnails scale a full screen down from it.
   referenceScreen: { width: 390, height: 844 },
+  // Full-page screens: Customize, Modes, Setup, Send feedback, Thanks, and the overlays.
   screen: { paddingX: 20, paddingTop: 18, paddingBottom: 24 },
+  // The play screen in every style, light and dark. paddingX is the side margin of the content: the
+  // root padding, full-bleed rows (header rows, Ombre bands and footer) and the inside of panels that
+  // run edge to edge (Ink and Bottom panels, Sheet's sheet, Split and Chips content). Panels and bars
+  // themselves still run edge to edge, bleeding out by paddingX. paddingBottom is the space under
+  // the last row of controls. Some styles change top or bottom: read playMargins(style).
+  play: { paddingX: 32, paddingTop: 30, paddingBottom: 38 },
   minTouch: 44,
   // caretScale: the ▾ after the mode and level, relative to the header text size.
   header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
-  // Card style: the word tile inside the timer ring. floatingHeight: the Deck card's height, which
-  // shrinks on shorter screens.
+  // Card style: the word tile inside the timer ring. The ring is at most maxWidth × maxHeight and
+  // keeps that shape on narrower screens (ringCardSize). floatingHeight: the Deck card's height,
+  // which shrinks on shorter screens.
   card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
   // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:

@@ -1,6 +1,6 @@
-import type { ColorId } from './palettes';
-import type { RadiusName } from './scales';
+import type { ColorId, ColorMode } from './palettes';
 import type { RegionTone } from './regions';
+import { layout, type RadiusName } from './scales';
 
 // Layout styles as data. Every platform implements a small set of slot components once (header,
 // timer, stats, word, banned list, controls), each with a few variants, plus one screen frame per
@@ -9,7 +9,10 @@ import type { RegionTone } from './regions';
 //
 // Source: "Current interface · Styles · favorites (all on Customize)" on the design canvas. The
 // Card header keeps the current title-and-badge (the "mode button options" row is on hold) and
-// Deck is the single ruled-card version.
+// Deck is the single ruled-card version. Margins and dark mode follow the 2026-10-16 update
+// ("Styles · dark mode (Ink and stone)"): every style takes layout.play margins unless it says
+// otherwise (margins, read with playMargins), and a style's `dark` entry changes slots in dark mode
+// (read the style for a mode with layoutStyleFor, or resolveTheme).
 
 // Customize lists the styles in this order (page 1: first nine, page 2: the rest and a Suggest tile).
 export const STYLE_IDS = ['card', 'deck', 'lines', 'split', 'ledger', 'ink', 'bottom', 'sheet', 'bigTimer', 'chips', 'ombre'] as const;
@@ -65,11 +68,15 @@ export type TimerSlot = {
   variant: 'ring' | 'bar' | 'bigClock' | 'chip' | 'dial';
   // Dial diameter, or the clock's font size for bar and bigClock.
   size?: number;
-  // Chip look: outlined, region chip fill, or inverted (ink fill, bg text).
-  fill?: 'outlined' | 'filled' | 'inverse';
+  // Chip look: outlined, region chip fill, inverted (ink fill, bg text) or accent (accent fill,
+  // onAccent text). For the ring, 'none': the clock in the gap has no box behind it.
+  fill?: 'none' | 'outlined' | 'filled' | 'inverse' | 'accent';
   // Where the clock text sits next to a bar, or hidden (the bar alone shows time).
   clockAt?: 'start' | 'end' | 'none';
   bar?: TimerBar;
+  // The clock digits and the progress line in the region's vivid color (instead of accentText and
+  // progress for bigClock, ink and progress for bar).
+  vivid?: boolean;
 };
 
 export type StatsSlot = {
@@ -117,6 +124,10 @@ export type BannedSlot = {
   strike?: boolean;
   // Row or band height where rows have a fixed height.
   rowHeight?: number;
+  // The DON'T SAY label's color: the region's muted (the default) or accentText.
+  labelColor?: 'muted' | 'accentText';
+  // Chip and tile fill: the region's chip (the default) or its accent tint (text stays chipInk).
+  chipFill?: 'chip' | 'tint';
 };
 
 export type ControlsSlot = {
@@ -129,16 +140,22 @@ export type ControlsSlot = {
   radius: RadiusName;
   //  link       text link (swipeLinks)
   //  round      circle with the word Skip (Lines)
-  //  roundIcon  circle with an arrow and a label below (Bottom)
+  //  pillIcon   outlined pill, skipWidth wide and as tall as Correct, with an arrow and the word
+  //             Skip inside (Bottom)
+  //  roundIcon  circle with an arrow and a label below. No style uses it since 2026-10-16 (Bottom
+  //             moved to pillIcon); remove it once the apps no longer render it.
   //  outline    outlined button
   //  filled     region chip fill
-  skip: 'link' | 'round' | 'roundIcon' | 'outline' | 'filled';
+  skip: 'link' | 'round' | 'pillIcon' | 'roundIcon' | 'outline' | 'filled';
   // Fixed Skip width; otherwise Skip and Correct share the row by ratio.
   skipWidth?: number;
   ratio?: readonly [skip: number, correct: number];
   // swipeLinks: growing bars under the links (Card) or a "swipe the card" hint between them (Deck).
   hint?: 'bars' | 'text';
   correctIcon?: boolean;
+  // splitBar: space under the labels inside the bar (the labels center in what is left), so they
+  // sit clear of the screen's rounded corners. A bottom safe area adds to it.
+  paddingBottom?: number;
 };
 
 export type StyleRegions = {
@@ -159,6 +176,21 @@ export type StyleRegions = {
 // the word; 'content' wraps the list and controls at the bottom, with rounded top corners (Bottom).
 export type PanelSlot = { size: 'fill' | 'content'; radius: RadiusName };
 
+// Play screen margins (px or dp). See layout.play.
+export type PlayMargins = { paddingX: number; paddingTop: number; paddingBottom: number };
+
+// Slot changes for one mode, merged over the style's own slots one level deep (a timer `bar` given
+// here replaces the whole bar).
+export type StyleOverride = {
+  regions?: Partial<StyleRegions>;
+  header?: Partial<HeaderSlot>;
+  timer?: Partial<TimerSlot>;
+  stats?: Partial<StatsSlot>;
+  word?: Partial<WordSlot>;
+  banned?: Partial<BannedSlot>;
+  controls?: Partial<ControlsSlot>;
+};
+
 export type LayoutStyle = {
   id: StyleId;
   color: ColorPolicy;
@@ -173,6 +205,10 @@ export type LayoutStyle = {
   banned: BannedSlot;
   controls: ControlsSlot;
   panel?: PanelSlot;
+  // Top and bottom margins where the style differs from layout.play.
+  margins?: Partial<Pick<PlayMargins, 'paddingTop' | 'paddingBottom'>>;
+  // What changes in dark mode.
+  dark?: StyleOverride;
 };
 
 const follow: ColorPolicy = { kind: 'follow' };
@@ -186,7 +222,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     arrangement: 'ringCard',
     regions: { page: 'base', word: 'surface' },
     header: { variant: 'titleBadge', position: 'top', container: 'none', size: 26, menu: 'dots', menuContainer: 'filled' },
-    timer: { variant: 'ring' },
+    timer: { variant: 'ring', fill: 'none' },
     stats: { placement: 'subline', emphasis: 'plain' },
     word: { container: 'tile', label: true, size: 50, minSize: 22, maxLines: 2, color: 'ink' },
     banned: { variant: 'chips', size: 18, weight: 500, label: true, chipRadius: 'sm' },
@@ -220,7 +256,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     banned: { variant: 'numberedRows', size: 19, weight: 600, label: true, numbering: 'trailing', strike: true },
     controls: { variant: 'pills', height: 56, radius: 'pill', skip: 'round' },
   },
-  // Split · word on the page, list on a tinted lower half, split bar. Always sage.
+  // Split · word on the page, list on a tinted lower half, split bar to the bottom edge. Always sage.
   split: {
     id: 'split',
     color: { kind: 'pinned', color: 'sage' },
@@ -232,7 +268,8 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'belowHeader', emphasis: 'plain' },
     word: { container: 'none', label: false, size: 58, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'columns', size: 22, weight: 500, label: true },
-    controls: { variant: 'splitBar', height: 96, radius: 'none', skip: 'filled', skipWidth: 150 },
+    controls: { variant: 'splitBar', height: 110, radius: 'none', skip: 'filled', skipWidth: 150, paddingBottom: 14 },
+    margins: { paddingBottom: 0 },
   },
   // Ledger · full color, ring timer.
   ledger: {
@@ -274,10 +311,11 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'underWord', emphasis: 'plain' },
     word: { container: 'none', label: false, size: 58, minSize: 24, maxLines: 2, color: 'accentText' },
     banned: { variant: 'tileGrid', size: 18, weight: 500, label: true, chipRadius: 'md', rowHeight: 58 },
-    controls: { variant: 'pills', height: 64, radius: 'pill', skip: 'roundIcon', correctIcon: true },
+    controls: { variant: 'pills', height: 64, radius: 'pill', skip: 'pillIcon', skipWidth: 116, correctIcon: true },
     panel: { size: 'content', radius: 'ring' },
   },
-  // Sheet · word on an accent page, numbered list on a sheet below. Always clay.
+  // Sheet · word on an accent page, numbered list on a full-width sheet below. Always clay. The page
+  // starts lower (44) and the sheet keeps its buttons low (22 under them).
   sheet: {
     id: 'sheet',
     color: { kind: 'pinned', color: 'clay' },
@@ -290,8 +328,9 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 52, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'numberedRows', size: 19, weight: 500, label: true, numbering: 'leading' },
     controls: { variant: 'buttons', height: 56, radius: 'xl', skip: 'filled', ratio: [1, 2] },
+    margins: { paddingTop: 44, paddingBottom: 22 },
   },
-  // Big timer (Cream on the canvas).
+  // Big timer (Cream on the canvas). In dark the clock and its line are the vivid accent.
   bigTimer: {
     id: 'bigTimer',
     color: follow,
@@ -304,8 +343,11 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 56, minSize: 24, maxLines: 2, color: 'accentText' },
     banned: { variant: 'dashedColumns', size: 21, weight: 500, label: true },
     controls: { variant: 'buttons', height: 60, radius: 'lg', skip: 'outline', ratio: [1, 2] },
+    dark: { timer: { vivid: true } },
   },
-  // Chips · small chips, full-width split bar (Slate on the canvas).
+  // Chips · small chips, full-width split bar to the bottom edge (Slate on the canvas). In dark the
+  // timer pill and Correct are accent, Skip a dark accent shade, the chips accent-tinted and the
+  // DON'T SAY label accentText.
   chips: {
     id: 'chips',
     color: follow,
@@ -317,9 +359,15 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'header', emphasis: 'plain' },
     word: { container: 'none', label: false, size: 54, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'chips', size: 17, weight: 500, label: true, chipRadius: 'xs' },
-    controls: { variant: 'splitBar', height: 96, radius: 'none', skip: 'filled', skipWidth: 150 },
+    controls: { variant: 'splitBar', height: 110, radius: 'none', skip: 'filled', skipWidth: 150, paddingBottom: 14 },
+    margins: { paddingBottom: 0 },
+    dark: {
+      regions: { skip: 'shade', correct: 'accent' },
+      timer: { fill: 'accent' },
+      banned: { chipFill: 'tint', labelColor: 'accentText' },
+    },
   },
-  // Ombre · graded bands, dark footer.
+  // Ombre · graded bands, dark footer. In dark the footer is a deep accent tone with a pale Correct.
   ombre: {
     id: 'ombre',
     color: follow,
@@ -332,7 +380,49 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     word: { container: 'none', label: false, size: 60, minSize: 26, maxLines: 2, color: 'ink' },
     banned: { variant: 'bands', size: 20, weight: 500, label: false, rowHeight: 56 },
     controls: { variant: 'buttons', height: 58, radius: 'lg', skip: 'outline', skipWidth: 120 },
+    dark: { regions: { controls: 'deep' } },
   },
 };
 
 export const DEFAULT_STYLE: StyleId = 'card';
+
+function withOverride(style: LayoutStyle, o: StyleOverride | undefined): LayoutStyle {
+  if (!o) return style;
+  return {
+    ...style,
+    regions: { ...style.regions, ...o.regions },
+    header: { ...style.header, ...o.header },
+    timer: { ...style.timer, ...o.timer },
+    stats: { ...style.stats, ...o.stats },
+    word: { ...style.word, ...o.word },
+    banned: { ...style.banned, ...o.banned },
+    controls: { ...style.controls, ...o.controls },
+  };
+}
+
+const stylesByMode: Readonly<Record<ColorMode, Readonly<Record<StyleId, LayoutStyle>>>> = {
+  light: layoutStyles,
+  dark: Object.fromEntries(STYLE_IDS.map((id) => [id, withOverride(layoutStyles[id], layoutStyles[id].dark)])) as Record<StyleId, LayoutStyle>,
+};
+
+// A style as drawn in a mode: the catalog entry, with its `dark` changes merged in for dark. The
+// same object comes back on every call. resolveTheme uses it, so theme.style is already resolved.
+export function layoutStyleFor(id: StyleId, mode: ColorMode): LayoutStyle {
+  return stylesByMode[mode][id];
+}
+
+// The play screen's margins in a style: layout.play with the style's own top and bottom. The side
+// margin is the same everywhere; panels, sheets, bands and bars that run edge to edge bleed out by
+// it, and their content is inset by it.
+export function playMargins(style: LayoutStyle): PlayMargins {
+  return { ...layout.play, ...style.margins };
+}
+
+// The Card timer ring for the space it can take: as wide as that space, up to
+// layout.card.maxWidth, and as tall as the maxWidth × maxHeight shape gives at that width, never
+// taller than the space (326 × 540 on the reference screen with layout.play margins).
+export function ringCardSize(width: number, height: number): { width: number; height: number } {
+  const { maxWidth, maxHeight } = layout.card;
+  const w = Math.max(0, Math.min(width, maxWidth));
+  return { width: w, height: Math.max(0, Math.min(height, (w * maxHeight) / maxWidth)) };
+}

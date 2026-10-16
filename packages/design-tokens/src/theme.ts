@@ -1,7 +1,7 @@
 import { COLOR_IDS, COLOR_MODES, palettes, type ColorId, type ColorMode, type ColorRoles } from './palettes';
 import { REGION_TONES, regionColors, type RegionColors, type RegionTone } from './regions';
 import { elevation, radius, space } from './scales';
-import { DEFAULT_STYLE, STYLE_IDS, layoutStyles, type LayoutStyle, type StyleId } from './styles';
+import { DEFAULT_STYLE, STYLE_IDS, layoutStyleFor, type LayoutStyle, type StyleId } from './styles';
 import { fonts, textStyles, type TextStyleName, type TextStyleToken } from './typography';
 
 // What the player picks on Customize.
@@ -11,6 +11,7 @@ export const DEFAULT_THEME: ThemeSelection = { style: DEFAULT_STYLE, color: 'tea
 
 export type Theme = {
   selection: ThemeSelection;
+  // The style as drawn in the selected mode (layoutStyleFor): dark changes already merged in.
   style: LayoutStyle;
   // The color in use: the player's pick, or the style's pinned color.
   color: ColorId;
@@ -20,7 +21,7 @@ export type Theme = {
 };
 
 export function resolveTheme(selection: ThemeSelection): Theme {
-  const style = layoutStyles[selection.style];
+  const style = layoutStyleFor(selection.style, selection.mode);
   const color = style.color.kind === 'pinned' ? style.color.color : selection.color;
   const colors = palettes[color][selection.mode];
   const regions = Object.fromEntries(REGION_TONES.map((tone) => [tone, regionColors(colors, tone)]));

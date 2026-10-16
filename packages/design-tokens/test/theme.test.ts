@@ -1,5 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import { COLOR_IDS, DEFAULT_THEME, cssText, cssVariables, nativeTextStyle, palettes, parseThemeSelection, resolveTheme } from '../src';
+import {
+  COLOR_IDS,
+  DEFAULT_THEME,
+  STYLE_IDS,
+  cssText,
+  cssVariables,
+  layout,
+  layoutStyleFor,
+  layoutStyles,
+  nativeTextStyle,
+  palettes,
+  parseThemeSelection,
+  playMargins,
+  resolveTheme,
+  ringCardSize,
+} from '../src';
 
 describe('resolveTheme', () => {
   it('starts on Card in teal, light', () => {
@@ -28,6 +43,80 @@ describe('resolveTheme', () => {
   });
 });
 
+describe('dark mode styles', () => {
+  it('leaves every style as cataloged in light', () => {
+    for (const id of STYLE_IDS) expect(resolveTheme({ style: id, color: 'teal', mode: 'light' }).style).toBe(layoutStyles[id]);
+  });
+
+  it('gives Chips an accent timer pill and Correct bar, a shaded Skip and tinted chips in dark', () => {
+    const light = resolveTheme({ style: 'chips', color: 'slateBlue', mode: 'light' });
+    const dark = resolveTheme({ style: 'chips', color: 'slateBlue', mode: 'dark' });
+    expect(light.style.timer.fill).toBe('inverse');
+    expect(dark.style.timer.fill).toBe('accent');
+    expect(dark.regions[dark.style.regions.correct ?? 'base'].bg).toBe(palettes.slateBlue.dark.accent);
+    expect(dark.regions[dark.style.regions.skip ?? 'base'].bg).not.toBe(light.regions[light.style.regions.skip ?? 'base'].bg);
+    expect(dark.style.banned.chipFill).toBe('tint');
+    expect(dark.regions.base.tint).toBe(palettes.slateBlue.dark.accentTint);
+    // The rest of the slot is kept.
+    expect(dark.style.timer.bar).toEqual(light.style.timer.bar);
+    expect(dark.style.banned.variant).toBe('chips');
+  });
+
+  it('puts the Ombre footer on a deep accent tone in dark, not the grey panel', () => {
+    const theme = resolveTheme({ style: 'ombre', color: 'slateBlue', mode: 'dark' });
+    const footer = theme.regions[theme.style.regions.controls ?? 'base'];
+    expect(footer.bg).not.toBe(palettes.slateBlue.dark.panel);
+    expect(footer.accent).toBe(palettes.slateBlue.dark.deepAccent);
+    expect(footer.onAccent).toBe(palettes.slateBlue.dark.onDeepAccent);
+  });
+
+  it('colors the Big timer clock with the vivid accent only in dark', () => {
+    expect(resolveTheme({ style: 'bigTimer', color: 'mustard', mode: 'light' }).style.timer.vivid).toBeUndefined();
+    const dark = resolveTheme({ style: 'bigTimer', color: 'mustard', mode: 'dark' });
+    expect(dark.style.timer.vivid).toBe(true);
+    expect(dark.regions.base.vivid).toBe(palettes.mustard.dark.accentVivid);
+  });
+
+  it('writes pure white headlines on the dark accent page (Sheet)', () => {
+    expect(resolveTheme({ style: 'sheet', color: 'teal', mode: 'dark' }).regions.accent.ink).toBe('#FFFFFF');
+  });
+
+  it('returns the same style object on every call', () => {
+    expect(layoutStyleFor('chips', 'dark')).toBe(layoutStyleFor('chips', 'dark'));
+  });
+});
+
+describe('play screen margins', () => {
+  it('uses one side margin in every style', () => {
+    const sides = new Set(STYLE_IDS.map((id) => playMargins(layoutStyles[id]).paddingX));
+    expect(sides.size).toBe(1);
+  });
+
+  it('runs split bars to the bottom edge and starts Sheet lower than the rest', () => {
+    for (const id of STYLE_IDS) {
+      const m = playMargins(layoutStyles[id]);
+      if (layoutStyles[id].controls.variant === 'splitBar') expect(m.paddingBottom).toBe(0);
+      if (id !== 'sheet') expect(m.paddingTop).toBeLessThan(playMargins(layoutStyles.sheet).paddingTop);
+    }
+  });
+});
+
+describe('ringCardSize', () => {
+  const { maxWidth, maxHeight } = layout.card;
+
+  it('keeps the ring’s shape when the screen is narrower than the ring', () => {
+    const width = layout.referenceScreen.width - 2 * layout.play.paddingX;
+    const ring = ringCardSize(width, layout.referenceScreen.height);
+    expect(ring.width).toBe(width);
+    expect(ring.height / ring.width).toBeCloseTo(maxHeight / maxWidth);
+  });
+
+  it('stops growing at the largest ring and never overflows a short space', () => {
+    expect(ringCardSize(1000, 1000)).toEqual({ width: maxWidth, height: maxHeight });
+    expect(ringCardSize(300, 200)).toEqual({ width: 300, height: 200 });
+  });
+});
+
 describe('parseThemeSelection', () => {
   it('keeps valid fields and defaults the rest', () => {
     expect(parseThemeSelection({ style: 'ombre', color: 'neon', mode: 'dark' })).toEqual({ style: 'ombre', color: 'teal', mode: 'dark' });
@@ -45,6 +134,8 @@ describe('cssVariables', () => {
     expect(vars['--un-space-0-5']).toBe('2px');
     expect(vars['--un-text-big-clock-size']).toBe('92px');
     expect(vars['--un-text-word-letter-spacing']).toBe('-0.02em');
+    expect(vars['--un-deep-accent']).toBe(palettes.clay.light.deepAccent);
+    expect(vars['--un-base-tint']).toBe(palettes.clay.light.accentTint);
   });
 
   it('changes colors and shadows, not sizes, between light and dark', () => {
