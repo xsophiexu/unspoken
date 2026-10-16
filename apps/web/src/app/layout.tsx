@@ -21,10 +21,13 @@ export const metadata: Metadata = {
   description: en.app.tagline,
   icons: {
     icon: [
+      { url: `${config.basePath}/favicon.ico`, sizes: 'any' },
+      { url: `${config.basePath}/favicon-16.png`, sizes: '16x16', type: 'image/png' },
+      { url: `${config.basePath}/favicon-32.png`, sizes: '32x32', type: 'image/png' },
       { url: `${config.basePath}/favicon-48.png`, sizes: '48x48', type: 'image/png' },
       { url: `${config.basePath}/icon-192.png`, sizes: '192x192', type: 'image/png' },
     ],
-    apple: `${config.basePath}/icon-192.png`,
+    apple: `${config.basePath}/apple-touch-icon-180.png`,
   },
   manifest: `${config.basePath}/manifest.webmanifest`,
 };
