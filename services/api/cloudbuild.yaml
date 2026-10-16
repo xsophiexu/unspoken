@@ -1,0 +1,7 @@
+# Builds the API image in Cloud Build, so no local Docker is needed. Run from the repository root:
+#   gcloud builds submit --config services/api/cloudbuild.yaml --substitutions _IMAGE=<image>
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env: [DOCKER_BUILDKIT=1]
+    args: [build, -f, services/api/Dockerfile, -t, $_IMAGE, .]
+images: [$_IMAGE]

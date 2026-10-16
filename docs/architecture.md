@@ -5,7 +5,7 @@ The contract for everyone building on this repo. Read it before adding an app, a
 ## Principles
 
 - **One game, three platforms.** iOS and Android (Expo, `apps/mobile`) and web (Next.js, `apps/web`, not built yet) render the same screens from the same packages. Platform code draws pixels and handles input; it never decides rules, wording or colors.
-- **Logic is portable.** Rules, dealing and round state live in `@unspoken/core`: pure TypeScript with no React, platform or network APIs. The same code runs in the apps and in the service (`services/api`, not built yet).
+- **Logic is portable.** Rules, dealing and round state live in `@unspoken/core`: pure TypeScript with no React, platform or network APIs. The same code runs in the apps and in the service (`services/api`).
 - **Nothing hard-coded.** Rules are in `gameConfig`, strings in the copy catalog, colors and sizes in design tokens, and URLs and ids in env. A screen that types a color, a size from the boards, a user-facing string or a URL is a bug.
 - **Swap, don't recode.** A layout style, color or mode (light or dark) is a data change. Screens are built from a fixed set of slot components that read the active theme.
 - **Small and modern.** Few dependencies, TypeScript source shared directly (no build step for packages), tests through public interfaces only.
@@ -19,7 +19,7 @@ packages/content       @unspoken/content: word bank and English copy
 packages/design-tokens @unspoken/design-tokens: palettes, type, sizes, motion, layout styles, theme helpers
 packages/api-contract  @unspoken/api-contract: HTTP paths, zod schemas, typed client
 apps/web               (next) Next.js site
-services/api           (next) HTTP service implementing api-contract
+services/api           @unspoken/api: Hono service implementing api-contract (see its README)
 ```
 
 pnpm workspace (`pnpm-workspace.yaml` covers `apps/*`, `packages/*`, `services/*`) with `node-linker=hoisted` for React Native. Packages are `"type": "module"`, export `./src/index.ts`, and extend `tsconfig.base.json` (strict, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`). Metro compiles them as source. Next.js must list them in `transpilePackages`. A service can run them with a TypeScript-aware runner (tsx, Bun) or bundle them.
@@ -63,7 +63,7 @@ Time and randomness are injected. Rounds take a `seed` (apps use `newSeed()`, te
 ### @unspoken/api-contract
 
 - `paths`: `/v1/config` (GET, the `GameConfig`), `/v1/decks` (POST `{ difficulty, categories = [], mode?, count?, seed? }` returns `{ seed, total, cards }`), `/v1/feedback` (POST `{ topic, message, entryPoint?, platform?, appVersion? }` returns `{ id, receivedAt }`). Every path is versioned. A breaking change ships as `/v2` beside `/v1`. Multiplayer will add `/v1/rooms`.
-- Schemas (zod 4), built from core ids and rules so they cannot drift: `gameConfigSchema`, `dealRequestSchema`, `dealtDeckSchema`, `feedbackRequestSchema` (trims the message and applies `canSendFeedback`), `feedbackReceiptSchema`, `apiErrorSchema` (`{ error: { code, message, issues? } }`; codes `invalid_request`, `not_found`, `internal`), `clientConfigSchema`. The service validates requests with the same schemas.
+- Schemas (zod 4), built from core ids and rules so they cannot drift: `gameConfigSchema`, `dealRequestSchema`, `dealtDeckSchema`, `feedbackRequestSchema` (trims the message and applies `canSendFeedback`), `feedbackReceiptSchema`, `apiErrorSchema` (`{ error: { code, message, issues? } }`), `apiErrorStatus` (each code with its HTTP status: `invalid_request` 400, `not_found` 404, `payload_too_large` 413, `rate_limited` 429, `internal` 500, `unavailable` 503), `issuesOf` (zod issues in the error body's shape), `clientConfigSchema`. The service validates requests with the same schemas.
 - `createApiClient({ baseUrl, fetch? })` returns `getConfig()`, `dealDeck(request)` and `sendFeedback(request)`. It validates requests before sending and responses before returning. Every failure is an `ApiError` with `status` (0 when nothing came back), `code` and `issues`.
 
 ## Rendering: slots and variants
@@ -123,11 +123,12 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 | --- | --- | --- | --- |
 | API base URL | `EXPO_PUBLIC_API_URL` | `NEXT_PUBLIC_API_URL` | `PORT`, `CORS_ORIGINS` |
 | Google Analytics id | `EXPO_PUBLIC_GA_MEASUREMENT_ID` | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | |
-| Firebase | | | `FIREBASE_PROJECT_ID`; credentials via `GOOGLE_APPLICATION_CREDENTIALS` or the platform's service account |
+| Firebase | | | `FIREBASE_PROJECT_ID`; `FIREBASE_SERVICE_ACCOUNT` (key JSON), else Application Default Credentials |
+| Limits | | | `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS`, `FEEDBACK_COLLECTION` |
 | App version | `expo-application` / `app.json` version | `package.json` version at build | |
 
 - Expo inlines only literal `process.env.EXPO_PUBLIC_*` reads, and Next only `process.env.NEXT_PUBLIC_*`. Read each variable by its full name in one config module per app and pass the values to `clientConfigSchema.parse`. Locally use `.env.local` files (gitignored), with a committed `.env.example` that lists the names. For builds use EAS environment variables or `eas.json` profile `env` on mobile, and repository variables in GitHub Actions for the Pages build.
-- Public env values ship to clients, so they must not be secrets. Firebase credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to Firestore (collection `feedback`: the validated request plus `receivedAt`). Until `services/api` exists, deploy it where it runs closest to Firebase (Cloud Functions or Cloud Run). Clients do not need to change.
+- Public env values ship to clients, so they must not be secrets. Firebase credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to Firestore (collection `FEEDBACK_COLLECTION`, default `feedback`: the validated request plus `receivedAt`). It answers 503 `unavailable` when no Firebase project is configured. `services/api/README.md` covers Firebase setup and the Cloud Run deploy; the service validates its env once at startup in `src/config.ts` and lists every variable in `.env.example`.
 - Known hard-coded values to move: `apps/mobile/public/index.html` carries the GA tag with `G-9MFDEM0KXR` (move it to the env var and inject it at build or runtime). `app.json` holds the bundle id and package `com.rensar.unspoken`, which is fixed per app and stays there. The Pages workflow sets the web `baseUrl` to `/unspoken`.
 - Clients play offline from the bundled `bank` and `gameConfig`. A served config or deck (same schemas) can replace them later without changing screens.
 
@@ -142,5 +143,5 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 
 ## What is not built yet
 
-- `apps/web` (Next.js) and `services/api`.
+- `apps/web` (Next.js).
 - The mobile UI rebuild. `apps/mobile` still renders the original Card-style screens with its own four-color `src/theme.ts`, and reads rules, copy and cards through `src/game.ts`, a thin adapter over the packages. The rebuild replaces both with the slot components above, plus Customize, Send feedback, Thanks, the mode and difficulty sheet, and How to play.

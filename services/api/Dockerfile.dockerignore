@@ -1,0 +1,7 @@
+# Used by BuildKit for builds with -f services/api/Dockerfile (the context is the repository root).
+**/node_modules
+**/dist
+**/.env*
+!**/.env.example
+.git
+apps

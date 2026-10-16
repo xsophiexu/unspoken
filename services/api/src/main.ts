@@ -9,11 +9,13 @@ import type { Firestore } from './routes/feedback';
 // Cloud Run service account); FIRESTORE_EMULATOR_HOST points it at the local emulator.
 async function connectFirestore({ projectId, serviceAccount }: FirebaseConfig): Promise<Firestore> {
   const { cert, initializeApp } = await import('firebase-admin/app');
-  const { initializeFirestore } = await import('firebase-admin/firestore');
-  const app = initializeApp({ projectId, ...(serviceAccount && { credential: cert(serviceAccount) }) });
-  // REST instead of gRPC: quicker cold starts, and the service only writes documents.
-  return initializeFirestore(app, { preferRest: true });
+  const { getFirestore } = await import('firebase-admin/firestore');
+  return getFirestore(initializeApp({ projectId, ...(serviceAccount && { credential: cert(serviceAccount) }) }));
 }
+
+// When a write fails (say, the credentials are wrong) the Firestore client also leaves a rejected
+// promise behind. The request has already answered 500, so log it rather than let Node exit.
+process.on('unhandledRejection', (reason) => console.error('Unhandled rejection:', reason));
 
 const config = loadConfig();
 const firestore = config.firebase && (await connectFirestore(config.firebase));
