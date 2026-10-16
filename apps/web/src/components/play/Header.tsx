@@ -84,6 +84,7 @@ export function MenuButton({ slot, onMenu }: MenuButtonProps) {
       label={slot.menu === 'sliders' ? en.a11y.customize : en.a11y.menu}
       onClick={onMenu}
       tabIndex={onMenu ? undefined : -1}
+      className={styles[`menu-${slot.menuContainer}`]}
       data-spot="menu"
     />
   );

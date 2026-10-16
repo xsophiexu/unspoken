@@ -28,7 +28,8 @@
   flex-direction: column;
   width: 100%;
   max-width: var(--un-max-width-column);
-  gap: var(--un-space-3);
+  --column-gap: var(--un-space-3);
+  gap: var(--column-gap);
   padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
 }
 
@@ -36,7 +37,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--un-space-3);
+  gap: var(--un-space-2);
   min-height: var(--un-layout-min-touch);
 }
 
@@ -80,8 +81,13 @@
   margin: 0 calc(-1 * var(--pad-x)) calc(-1 * var(--pad-bottom));
 }
 
-/* A footer in its own color (Ombre): the play footer space above the controls. */
+/* A footer in its own color (Ombre): its stats and controls, with the play footer space above. It
+   starts right under the body, so Ombre's bands run into it. */
 .controlsRegion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin-top: calc(-1 * var(--column-gap));
   padding: var(--un-layout-play-footer-top) var(--pad-x) var(--pad-bottom);
 }
 
@@ -187,6 +193,13 @@
   gap: var(--un-space-3);
 }
 
+/* The panel with a panelTop timer line on its top edge. */
+.lowerGroup {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .lowerWrap {
   flex: 1 1 auto;
   display: flex;
@@ -204,6 +217,21 @@
 
 .lower:last-child {
   padding-bottom: var(--pad-bottom);
+}
+
+/* panel.size 'content' (Bottom): the panel wraps its list and controls at the bottom, with rounded
+   top corners (--panel-radius), and keeps the controls clear of the list. */
+.lowerContent {
+  flex: none;
+  margin-top: auto;
+}
+
+.lowerContent .lower {
+  border-radius: var(--panel-radius) var(--panel-radius) 0 0;
+}
+
+.lowerContent .pushDown {
+  margin-top: var(--un-space-6);
 }
 
 .lowerSheet {

@@ -1,6 +1,7 @@
 .titleBlock {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--un-space-0-5);
   min-width: 0;
 }
@@ -108,4 +109,16 @@
 
 .container-tinted {
   background: var(--region-track);
+}
+
+/* The menu button's touch target reaches into the side margin, so the visible circle or icon lines
+   up with the content edge. */
+.menu-filled,
+.menu-outlined {
+  margin-inline-end: calc((var(--un-layout-header-menu-button) - var(--un-layout-min-touch)) / 2);
+}
+
+/* IconButton draws a bare icon (look none) at --un-space-6. */
+.menu-none {
+  margin-inline-end: calc((var(--un-space-6) - var(--un-layout-min-touch)) / 2);
 }

@@ -56,24 +56,31 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       showHint={model.firstCard}
     />
   );
-  // The split bar and a toned controls footer run to the window's edges.
-  const edgeControls =
-    s.controls.variant === 'splitBar' ? (
-      <div className={styles.edge}>{controls}</div>
-    ) : regions.controls ? (
-      <div className={cx(styles.edge, styles.controlsRegion)} data-region={regions.controls}>
-        {controls}
-      </div>
-    ) : (
-      controls
-    );
-  const footer = (
+  const aboveControls = (
     <>
       <Stats slot={s.stats} at="footer" stats={model.stats} />
       {timer('aboveControls')}
-      {edgeControls}
     </>
   );
+  // The split bar runs to the window's edges; a footer in its own color (Ombre) does too, and holds
+  // the footer stats with the controls.
+  const footer =
+    s.controls.variant === 'splitBar' ? (
+      <>
+        {aboveControls}
+        <div className={styles.edge}>{controls}</div>
+      </>
+    ) : regions.controls ? (
+      <div className={cx(styles.edge, styles.controlsRegion)} data-region={regions.controls}>
+        {aboveControls}
+        {controls}
+      </div>
+    ) : (
+      <>
+        {aboveControls}
+        {controls}
+      </>
+    );
   // The word and list follow the finger while dragging (the swipe surface sets --drag-x).
   const swipeable = (content: ReactNode, className = styles.swipeItem) =>
     content && (
@@ -122,20 +129,28 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       break;
     case 'lowerPanel':
     case 'sheet':
+      // The panel fills the space under the word, or wraps its content at the bottom with rounded
+      // top corners (panel.size 'content', Bottom). A panelTop timer line sits on its top edge.
       body = (
         <>
           {upper}
-          {timer('panelTop')}
-          <div className={styles.lowerWrap}>
-            <div className={cx(styles.lower, arrangement === 'sheet' && styles.lowerSheet)} data-region={regions.lower ?? 'panel'}>
-              {arrangement === 'sheet' && <span className={styles.grabber} aria-hidden="true" />}
-              {swipeable(banned)}
-              <div className={styles.pushDown}>
-                <Stats slot={s.stats} at="footer" stats={model.stats} />
-                {s.controls.variant !== 'splitBar' && controls}
+          <div className={cx(styles.lowerGroup, s.panel?.size === 'content' && styles.lowerContent)}>
+            {timer('panelTop')}
+            <div className={styles.lowerWrap}>
+              <div
+                className={cx(styles.lower, arrangement === 'sheet' && styles.lowerSheet)}
+                style={s.panel && ({ '--panel-radius': `var(--un-radius-${s.panel.radius})` } as CSSProperties)}
+                data-region={regions.lower ?? 'panel'}
+              >
+                {arrangement === 'sheet' && <span className={styles.grabber} aria-hidden="true" />}
+                {swipeable(banned)}
+                <div className={styles.pushDown}>
+                  <Stats slot={s.stats} at="footer" stats={model.stats} />
+                  {s.controls.variant !== 'splitBar' && controls}
+                </div>
               </div>
+              {s.controls.variant === 'splitBar' && controls}
             </div>
-            {s.controls.variant === 'splitBar' && controls}
           </div>
         </>
       );
