@@ -5,7 +5,7 @@ export type SpotRect = { x: number; y: number; w: number; h: number };
 
 export type CaptionPlacement = {
   // Text alignment inside the caption box.
-  align: 'start' | 'center' | 'end';
+  align: 'start' | 'end';
   left: number;
   right: number;
   // One of these is set: the caption's top edge (under the cut-out) or its bottom edge measured
@@ -28,9 +28,9 @@ type Frame = {
 };
 
 // Under the cut-out when there is more room below it, over it otherwise. A wide cut-out (the word,
-// the banned list, Play) has the caption lined up with its edges. A small one near an edge (the
-// menu button, a level badge) has a narrower caption whose edge lines up with the cut-out's: right-
-// aligned on the right, left-aligned on the left. A small one in the middle has it centered under it.
+// the banned list, Play) has the caption lined up with its edges. A small one (the level badge or
+// mode pill, the menu button: the "Tap here to change…" steps) has a narrow caption right-aligned to
+// its right edge, wherever it sits in the style.
 export function captionPlacement(hole: SpotRect, frame: Frame): CaptionPlacement {
   const { width, height, floor, side, gap, maxShare } = frame;
   const holeRight = hole.x + hole.w;
@@ -40,17 +40,8 @@ export function captionPlacement(hole: SpotRect, frame: Frame): CaptionPlacement
     return { align: 'start', left: Math.max(side, hole.x), right: Math.max(side, width - holeRight), ...vertical };
   }
   const max = Math.min(width * maxShare, width - side * 2);
-  const center = hole.x + hole.w / 2;
-  if (center > width * 0.6) {
-    const right = Math.max(side, width - holeRight);
-    return { align: 'end', left: Math.max(side, width - right - max), right, ...vertical };
-  }
-  if (center < width * 0.4) {
-    const left = Math.max(side, hole.x);
-    return { align: 'start', left, right: Math.max(side, width - left - max), ...vertical };
-  }
-  const left = Math.min(Math.max(side, center - max / 2), width - side - max);
-  return { align: 'center', left, right: width - left - max, ...vertical };
+  const right = Math.max(side, width - holeRight);
+  return { align: 'end', left: Math.max(side, width - right - max), right, ...vertical };
 }
 
 export type TourGesture = 'forward' | 'back' | null;

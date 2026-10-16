@@ -173,7 +173,7 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
         pointerEvents="none"
         style={[
           styles.caption,
-          place ? { left: place.left, right: place.right, top: place.top, bottom: place.bottom, alignItems: place.align === 'end' ? 'flex-end' : place.align === 'center' ? 'center' : 'flex-start' } : styles.centered,
+          place ? { left: place.left, right: place.right, top: place.top, bottom: place.bottom, alignItems: place.align === 'end' ? 'flex-end' : 'flex-start' } : styles.centered,
           { opacity: ready ? shown : 0 },
         ]}
       >
@@ -190,7 +190,7 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
         <Txt
           variant={step.art === 'logo' ? 'lead' : 'caption'}
           color={step.art === 'logo' ? spotlight.lead : spotlight.caption}
-          style={[place ? { textAlign: place.align === 'end' ? 'right' : place.align === 'center' ? 'center' : 'left' } : styles.centerText, styles.shadow]}
+          style={[place ? { textAlign: place.align === 'end' ? 'right' : 'left' } : styles.centerText, styles.shadow]}
           accessibilityLiveRegion="polite"
         >
           {step.text}
