@@ -28,6 +28,8 @@ import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
+import { MindReaderRounds } from '../mindReader/MindReaderRounds';
+import { StepTop } from '../mindReader/ui';
 import { backToGame, goBack } from '../nav';
 import { usePrefs } from '../state/prefs';
 import { Button, LinkButton } from '../ui/Button';
@@ -48,8 +50,10 @@ function modeParam(value: unknown, fallback: ModeId): ModeId {
 // New game: difficulty, themes, and the timer and skips when the mode has them.
 export default function SetupScreen() {
   const prefs = usePrefs();
-  const { mode: param } = useLocalSearchParams<{ mode?: string }>();
+  const { mode: param, custom: customParam } = useLocalSearchParams<{ mode?: string; custom?: string }>();
   const mode = modeParam(param, prefs.settings.mode);
+  // Step 3 of a Custom Mind Reader game: rounds above the time limit and words.
+  const custom = mode === 'mindReader' && customParam === '1';
   const [draft, setDraft] = useState<GameSettings>(() => ({ ...prefs.settings, mode }));
   const settings = { ...draft, mode };
   const s = en.setup;
@@ -61,9 +65,21 @@ export default function SetupScreen() {
 
   const start = () => {
     if (!canStart(settings)) return;
-    prefs.startGame(settings);
+    prefs.startGame(settings, custom ? 'custom' : undefined);
     backToGame();
   };
+
+  // A Custom Mind Reader game has its time limit at the top, above rounds.
+  const timer = (colors: RegionColors) =>
+    hasTimerSetting(mode) ? (
+      <TimerField
+        seconds={draft.roundSeconds}
+        noTimeLimit={draft.noTimeLimit}
+        colors={colors}
+        onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))}
+        onNoTimeLimit={(noTimeLimit) => setDraft((cur) => ({ ...cur, noTimeLimit }))}
+      />
+    ) : null;
 
   return (
     <Screen
@@ -73,15 +89,25 @@ export default function SetupScreen() {
     >
       {(colors) => (
         <>
-          <ScreenTop
-            left={<LinkButton label={s.back} colors={colors} onPress={goBack} />}
-            right={
-              <Txt variant="hint" color={colors.muted}>
-                {en.modes[mode].name}
-              </Txt>
-            }
-          />
-          <ScreenTitle title={s.title} colors={colors} />
+          {custom ? (
+            <>
+              <StepTop step={3} total={3} title={en.mindReader.settings.title} colors={colors} onBack={goBack} />
+              {timer(colors)}
+              <MindReaderRounds colors={colors} />
+            </>
+          ) : (
+            <>
+              <ScreenTop
+                left={<LinkButton label={s.back} colors={colors} onPress={goBack} />}
+                right={
+                  <Txt variant="hint" color={colors.muted}>
+                    {en.modes[mode].name}
+                  </Txt>
+                }
+              />
+              <ScreenTitle title={s.title} colors={colors} />
+            </>
+          )}
 
           <View style={styles.section}>
             <SectionLabel label={s.difficulty} colors={colors} />
@@ -127,15 +153,7 @@ export default function SetupScreen() {
             </View>
           </View>
 
-          {hasTimerSetting(mode) ? (
-            <TimerField
-              seconds={draft.roundSeconds}
-              noTimeLimit={draft.noTimeLimit}
-              colors={colors}
-              onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))}
-              onNoTimeLimit={(noTimeLimit) => setDraft((cur) => ({ ...cur, noTimeLimit }))}
-            />
-          ) : null}
+          {!custom ? timer(colors) : null}
 
           {hasSkipSetting(mode) ? (
             <View style={styles.section}>
