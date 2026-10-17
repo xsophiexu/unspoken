@@ -170,8 +170,8 @@ export const layout = {
   // style's own), padded so no accent or descender leaves the box (tightLeading).
   narrowScreen: { width: 380, wordScale: 0.86, wordLineHeight: 1.08 },
   // Windows at least this wide and this tall (Pixel 8 Pro, 412 × 915) draw the play header's title
-  // titleScale times larger and lift the controls by controlsLift.
-  largeScreen: { width: 410, height: 900, titleScale: 1.12, controlsLift: space[2.5] },
+  // titleScale times larger, lower the header by headerDrop and lift the controls by controlsLift.
+  largeScreen: { width: 410, height: 900, titleScale: 1.24, headerDrop: space[3], controlsLift: space[5.5] },
   // headerRoom: the space above a roomy sheet header (Choose categories); headerGap: the space
   // between that header (title, count and hint) and the content under it.
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },

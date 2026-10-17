@@ -62,7 +62,8 @@ type Frame = {
   short: boolean;
   // A narrow screen (small phones): a smaller word set tighter, and compact banned lists.
   narrow: boolean;
-  // A large screen (big phones): a larger header title and the controls a little higher.
+  // A large screen (big phones): a larger header title set a little lower, and the controls a little
+  // higher.
   large: boolean;
   // The play screen margins in this style. Panels, bands and bars that run edge to edge bleed out by
   // the side margin.
@@ -302,9 +303,14 @@ function Band({ colors, f, style, inner, children }: { colors: RegionColors; f: 
   );
 }
 
+// The space above the header row: the safe area and the style's top margin, more on large screens.
+function topPadding(f: Frame): number {
+  return f.insets.top + f.margins.paddingTop + (f.large ? layout.largeScreen.headerDrop : 0);
+}
+
 function Top({ f, children }: { f: Frame; children: ReactNode }) {
   return (
-    <Band colors={f.page} f={f} inner={[styles.zone, { paddingTop: f.insets.top + f.margins.paddingTop }]}>
+    <Band colors={f.page} f={f} inner={[styles.zone, { paddingTop: topPadding(f) }]}>
       {children}
     </Band>
   );
@@ -463,7 +469,7 @@ function PanelFrame({ f }: { f: Frame }) {
   );
   return (
     <View style={[styles.page, { backgroundColor: f.page.bg }]}>
-      <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: f.insets.top + f.margins.paddingTop }]}>
+      <Band colors={f.page} f={f} style={fit && styles.fill} inner={[styles.zone, fit && styles.fill, { paddingTop: topPadding(f) }]}>
         <SwipeHint f={f} colors={f.page} />
         {header(f)}
         {clockAt(f, 'belowHeader', f.page)}
