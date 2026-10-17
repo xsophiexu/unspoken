@@ -87,7 +87,7 @@ export const gameConfig: GameConfig = {
     // Endless: no clock and no skip limit; the header counts correct and skipped words.
     { ...swipe, id: 'endless', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'teams', clock: 'visible', scored: true, skipLimit: true, available: false },
-    { ...swipe, id: 'timeAttack', clock: 'visible', scored: true, skipLimit: true, bonusSeconds: 5, available: true },
+    { ...swipe, id: 'timeAttack', clock: 'visible', scored: true, skipLimit: true, bonusSeconds: 5, available: false },
     // Escalate has no clock.
     { ...swipe, id: 'escalate', clock: 'none', scored: true, skipLimit: true, escalates: true, available: true },
     // Hot Potato: no timer to set; the hidden clock runs a random length.

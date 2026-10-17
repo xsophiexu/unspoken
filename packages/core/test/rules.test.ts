@@ -19,9 +19,9 @@ import {
 import { settingsFor } from './fixtures';
 
 describe('catalogs', () => {
-  it('lists the modes in Modes-grid order, Teams coming soon and no Zen', () => {
+  it('lists the modes in Modes-grid order, Teams and Time Attack coming soon and no Zen', () => {
     expect(MODE_IDS).toEqual(['classic', 'endless', 'teams', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
-    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams']);
+    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams', 'timeAttack']);
   });
 
   it('starts a fresh install on Endless at Expert 1 with All cards, 2:30 and 3 skips', () => {
