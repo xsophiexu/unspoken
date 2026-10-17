@@ -1,6 +1,7 @@
 import type { ColorId, ColorMode } from './palettes';
 import type { RegionTone } from './regions';
 import { buttonPair, layout, type RadiusName } from './scales';
+import { textStyles } from './typography';
 
 // Layout styles as data. Every platform implements a small set of slot components once (header,
 // timer, stats, word, banned list, controls), each with a few variants, plus one screen frame per
@@ -440,3 +441,17 @@ export function ringCardSize(width: number, height: number): { width: number; he
   return { width: w, height: Math.max(0, Math.min(height, (w * maxHeight) / maxWidth)) };
 }
 
+// splitBar: the space above its labels (they center in the bar's height less its paddingBottom).
+export function splitBarLabelSpace(slot: ControlsSlot): number {
+  const t = textStyles.buttonStrong;
+  return Math.max(0, (slot.height - (slot.paddingBottom ?? 0) - t.size * (t.lineHeight ?? 1)) / 2);
+}
+
+// splitBar: how much taller the bar gets over a bottom safe area (the navigation bar or home
+// indicator). The inset takes the place of the space under the labels instead of adding to it, so
+// a gesture bar fits in that space and the bar stays its own height; a taller inset (three-button
+// navigation) grows it only by the rest. The labels keep the same space above them either way and
+// always stay clear of the inset by the slot's paddingBottom.
+export function splitBarGrowth(slot: ControlsSlot, bottomInset: number): number {
+  return Math.max(0, bottomInset - splitBarLabelSpace(slot));
+}

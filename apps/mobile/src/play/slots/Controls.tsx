@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { layout, motion, opacity, radius, space, type ControlsSlot, type RegionColors, type Theme } from '@unspoken/design-tokens';
+import { layout, motion, opacity, radius, space, splitBarGrowth, type ControlsSlot, type RegionColors, type Theme } from '@unspoken/design-tokens';
 import { Animated, StyleSheet, View } from 'react-native';
 
 import { Icon } from '../../ui/Icon';
@@ -192,10 +192,12 @@ function Buttons(p: Parts) {
 
 // Split, Chips: a full-width bar split into Skip and Correct, down to the bottom edge. A fixed Skip
 // width keeps its share of the reference screen at any width. The labels center above the slot's
-// bottom padding (clear of rounded screen corners) and the bottom safe area.
+// bottom padding (clear of rounded screen corners); the bottom safe area takes the place of the
+// space under them and grows the bar only by what it needs beyond that (splitBarGrowth).
 function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect, bottomInset = 0 }: Parts) {
   const skipShare = slot.skipWidth ?? layout.referenceScreen.width / 2;
-  const under = (slot.paddingBottom ?? 0) + bottomInset;
+  const grow = splitBarGrowth(slot, bottomInset);
+  const under = (slot.paddingBottom ?? 0) + grow;
   const half = (colors: RegionColors, label: string, can: boolean, onPress: (() => void) | undefined, size: object) => (
     <Press onPress={onPress} disabled={!can} accessibilityLabel={label} style={[styles.half, size, { backgroundColor: colors.bg, paddingBottom: under }]}>
       <Txt variant="buttonStrong" color={colors.ink} numberOfLines={1}>
@@ -204,7 +206,7 @@ function SplitBar({ slot, halves, labels, canSkip, canCorrect, onSkip, onCorrect
     </Press>
   );
   return (
-    <View style={[styles.split, { minHeight: slot.height + bottomInset }]}>
+    <View style={[styles.split, { minHeight: slot.height + grow }]}>
       {half(halves.skip, labels.skip, canSkip, onSkip, { flex: skipShare })}
       {half(halves.correct, labels.correct, canCorrect, onCorrect, { flex: layout.referenceScreen.width - skipShare })}
     </View>

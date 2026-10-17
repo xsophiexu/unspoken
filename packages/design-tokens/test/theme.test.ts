@@ -14,6 +14,8 @@ import {
   playMargins,
   resolveTheme,
   ringCardSize,
+  splitBarGrowth,
+  splitBarLabelSpace,
 } from '../src';
 
 describe('resolveTheme', () => {
@@ -248,5 +250,24 @@ describe('nativeTextStyle', () => {
     expect(Number.isInteger(nativeTextStyle('word', 37).lineHeight)).toBe(true);
     expect(nativeTextStyle('badge')).toMatchObject({ fontFamily: 'Manrope_800ExtraBold', textTransform: 'uppercase' });
     expect(nativeTextStyle('clock').fontVariant).toEqual(['tabular-nums']);
+  });
+});
+
+describe('splitBarGrowth', () => {
+  const split = layoutStyleFor('split', 'light').controls;
+  const above = splitBarLabelSpace(split);
+
+  it('keeps the bar its own height with no safe area or a gesture bar that fits under the labels', () => {
+    expect(splitBarGrowth(split, 0)).toBe(0);
+    expect(splitBarGrowth(split, Math.floor(above))).toBe(0);
+  });
+
+  it('grows the bar by less than a tall navigation bar, keeping the labels clear of it', () => {
+    const inset = 48;
+    const grow = splitBarGrowth(split, inset);
+    expect(grow).toBeGreaterThan(0);
+    expect(grow).toBeLessThan(inset);
+    // The labels' bottom edge sits at least paddingBottom above the inset.
+    expect((split.paddingBottom ?? 0) + grow + above).toBeGreaterThanOrEqual(inset + (split.paddingBottom ?? 0));
   });
 });

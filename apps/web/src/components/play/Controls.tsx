@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { layout, type ControlsSlot, type StyleRegions } from '@unspoken/design-tokens';
+import { layout, splitBarLabelSpace, type ControlsSlot, type StyleRegions } from '@unspoken/design-tokens';
 import type { CSSProperties } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
@@ -35,6 +35,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
     '--correct-grow': slot.ratio?.[1] ?? 1,
     '--skip-width': slot.skipWidth ? `${slot.skipWidth}px` : undefined,
     '--control-padding-bottom': slot.paddingBottom ? `${slot.paddingBottom}px` : undefined,
+    '--control-label-space': slot.variant === 'splitBar' ? `${splitBarLabelSpace(slot)}px` : undefined,
   } as CSSProperties;
   const skip = { onClick: onSkip, disabled: !canSkip, tabIndex: tab, 'aria-label': labels.skip };
   const correct = { onClick: onCorrect, disabled: !canCorrect, tabIndex: tab, 'aria-label': labels.correct };
