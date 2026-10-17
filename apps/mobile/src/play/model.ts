@@ -61,7 +61,7 @@ export function playModel(state: SwipeRoundState): PlayModel {
     card: swipeCard(state),
     canCorrect: canAnswer(state, 'correct'),
     canSkip: canAnswer(state, 'skip'),
-    note: state.rules.passAfterEveryWord ? en.play.hotPotatoNote : null,
+    note: state.rules.passAfterCorrect ? en.play.hotPotatoNote : null,
   };
 }
 

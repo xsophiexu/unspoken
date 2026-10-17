@@ -46,7 +46,7 @@ export const gameConfigSchema = z.object({
       skipLimit: z.boolean(),
       bonusSeconds: whole,
       escalates: z.boolean(),
-      passAfterEveryWord: z.boolean(),
+      passAfterCorrect: z.boolean(),
       available: z.boolean(),
     }),
   ),

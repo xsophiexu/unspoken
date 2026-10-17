@@ -124,7 +124,7 @@ export const en = {
     scoreAndSkips: '{points} · {skips}',
     escalateClimbing: '{banned} · {skips}',
     escalateTop: '{max} banned · {atMax} of {winAt} to win · {skips}',
-    hotPotato: 'Pass after every word',
+    hotPotato: 'Pass after each correct word',
     skipsUsedOf: '{used} of {limit}',
     passed: '{words} passed',
     mindReaderRound: 'Round {round} · No timer',

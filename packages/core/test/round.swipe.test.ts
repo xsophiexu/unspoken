@@ -188,7 +188,7 @@ describe('Hot Potato', () => {
     expect(clockProgress(start('hotPotato'))).toBe(0);
   });
 
-  it('asks to pass the phone after every word, holding the clock until the next player is ready', () => {
+  it('asks to pass the phone after a correct answer, holding the clock until the next player is ready', () => {
     const passing = play(start('hotPotato'), [{ type: 'correct' }]);
     expect(passing.passing).toBe(true);
     expect(isClockRunning(passing)).toBe(false);
@@ -196,7 +196,13 @@ describe('Hot Potato', () => {
     const ready = play(passing, [{ type: 'ready' }]);
     expect(ready.passing).toBe(false);
     expect(isClockRunning(ready)).toBe(true);
-    expect(play(start('hotPotato'), [{ type: 'skip' }]).passing).toBe(true);
+  });
+
+  it('lets the same player skip to a new word without passing the phone', () => {
+    const skipped = play(start('hotPotato'), [{ type: 'skip' }]);
+    expect(skipped.passing).toBe(false);
+    expect(isClockRunning(skipped)).toBe(true);
+    expect(skipped.deck).not.toEqual(start('hotPotato').deck);
   });
 
   it('ends when the hidden time runs out', () => {

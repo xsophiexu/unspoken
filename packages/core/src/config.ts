@@ -34,8 +34,8 @@ export type ModeRules = {
   bonusSeconds: number;
   // Whether banned words grow with correct answers (Escalate).
   escalates: boolean;
-  // Whether the phone is handed on after every word (Hot Potato).
-  passAfterEveryWord: boolean;
+  // Whether the phone is handed on after each correct answer (Hot Potato); a skip keeps it with the same player.
+  passAfterCorrect: boolean;
   available: boolean;
 };
 
@@ -65,7 +65,7 @@ export type GameConfig = {
   mindReader: { predictions: number };
 };
 
-const swipe = { play: 'swipe', escalates: false, passAfterEveryWord: false, bonusSeconds: 0 } as const;
+const swipe = { play: 'swipe', escalates: false, passAfterCorrect: false, bonusSeconds: 0 } as const;
 
 export const gameConfig: GameConfig = {
   // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Legend, 2:30 at Hard.
@@ -91,7 +91,7 @@ export const gameConfig: GameConfig = {
     // Escalate has no clock.
     { ...swipe, id: 'escalate', clock: 'none', scored: true, skipLimit: true, escalates: true, available: true },
     // Hot Potato: no timer to set; the hidden clock runs a random length.
-    { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterEveryWord: true, available: true },
+    { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterCorrect: true, available: true },
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },
   ],

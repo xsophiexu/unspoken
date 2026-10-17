@@ -66,7 +66,7 @@ export function roundSubline(state: RoundState, copy: RoundCopy): string {
           ? format(copy.status.escalateTop, { max: state.config.escalate.max, atMax: esc.atMax, winAt: state.config.escalate.winAtMax, skips })
           : format(copy.status.escalateClimbing, { banned: plural(esc.level, copy.units.bannedWords), skips });
       }
-      if (state.rules.passAfterEveryWord) return copy.status.hotPotato;
+      if (state.rules.passAfterCorrect) return copy.status.hotPotato;
       if (state.rules.skipLimit) return format(copy.status.scoreAndSkips, { points: plural(state.correct, copy.units.points), skips: skipsText(state, copy) });
       // Modes without a skip limit just count, like the Endless wireframe.
       return tally(state, copy);
@@ -120,7 +120,7 @@ export function clockLabel(state: SwipeRoundState, copy: RoundCopy): string | nu
 
 // The line under the clock on the Paused overlay.
 export function pausedStatus(state: SwipeRoundState, copy: RoundCopy): string {
-  if (state.rules.passAfterEveryWord) return format(copy.status.passed, { words: plural(state.correct, copy.units.words) });
+  if (state.rules.passAfterCorrect) return format(copy.status.passed, { words: plural(state.correct, copy.units.words) });
   if (!state.rules.skipLimit) return tally(state, copy);
   const points = plural(state.correct, copy.units.points);
   const skips =
@@ -152,7 +152,7 @@ export function swipeSummary(state: SwipeRoundState, copy: RoundCopy): RoundSumm
       ? { label, value: played, title: null, sub: format(copy.over.escalateWonSub, { label: plural(played, copy.units.cardsLabel), correct: state.correct, skips }) }
       : { label, value: swipeEscalate(state).level, title: null, sub: format(copy.over.escalateLostSub, { correct: state.correct }) };
   }
-  if (state.rules.passAfterEveryWord) {
+  if (state.rules.passAfterCorrect) {
     return { label, value: null, title: copy.over.hotPotatoTitle, sub: format(copy.over.hotPotatoSub, { words: plural(state.correct, copy.units.words) }) };
   }
   return { label, value: state.correct, title: null, sub: format(copy.over.pointsSub, { label: plural(state.correct, copy.units.pointsLabel), skips }) };

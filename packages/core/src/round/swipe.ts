@@ -147,7 +147,7 @@ function answer(state: SwipeRoundState, kind: 'correct' | 'skip'): SwipeRoundSta
     correct: state.correct + (kind === 'correct' ? 1 : 0),
     skipped: state.skipped + (kind === 'skip' ? 1 : 0),
     clock,
-    passing: state.rules.passAfterEveryWord,
+    passing: kind === 'correct' && state.rules.passAfterCorrect,
     deck: advance(state.deck),
   };
 }
