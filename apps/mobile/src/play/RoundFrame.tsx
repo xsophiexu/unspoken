@@ -31,14 +31,16 @@ export function cardColors(chrome: Chrome): RegionColors {
   return theme.regions[theme.style.regions.word ?? 'surface'];
 }
 
-export function GameCard({ colors, children, scroll = false }: { colors: RegionColors; children: ReactNode; scroll?: boolean }) {
+// compact: tighter padding, for a full card on a short screen (Mind Reader's predictions).
+export function GameCard({ colors, children, scroll = false, compact = false }: { colors: RegionColors; children: ReactNode; scroll?: boolean; compact?: boolean }) {
   const style = [styles.card, { backgroundColor: colors.bg }];
+  const content = [styles.cardContent, compact && styles.compactContent];
   return scroll ? (
-    <ScrollView style={style} contentContainerStyle={styles.cardContent} keyboardShouldPersistTaps="handled">
+    <ScrollView style={style} contentContainerStyle={content} keyboardShouldPersistTaps="handled">
       {children}
     </ScrollView>
   ) : (
-    <View style={[style, styles.cardContent]}>{children}</View>
+    <View style={[style, ...content]}>{children}</View>
   );
 }
 
@@ -106,6 +108,7 @@ const styles = StyleSheet.create({
   footer: { gap: space[3] },
   card: { flexGrow: 0, flexShrink: 1, maxHeight: layout.card.maxHeight, borderRadius: radius.cardLarge },
   cardContent: { flexGrow: 1, paddingHorizontal: layout.card.paddingX, paddingVertical: layout.card.paddingY, gap: space[2] },
+  compactContent: { paddingVertical: space[5] },
   step: { flexDirection: 'row', gap: space[3.5], paddingVertical: space[3] },
   number: { width: layout.control.stepNumber, height: layout.control.stepNumber, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   stepText: { flex: 1, gap: space[0.5] },

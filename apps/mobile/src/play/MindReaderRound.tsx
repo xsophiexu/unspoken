@@ -2,7 +2,7 @@ import { en } from '@unspoken/content';
 import { filledPredictions, format, mindReaderCard, predictionsNeeded, type MindReaderRoundState, type RoundAction } from '@unspoken/core';
 import { layout, nativeTextStyle, radius, space } from '@unspoken/design-tokens';
 import { useRef, type Dispatch } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
 
 import { usePrefs } from '../state/prefs';
 import { Button } from '../ui/Button';
@@ -20,8 +20,11 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
   const { page, theme } = chrome;
   const m = en.mindReader;
   const card = mindReaderCard(state);
+  // On a short phone (layout.shortScreen) the word is smaller, the card tighter and the five
+  // predictions sit two to a row, so all of them and the button fit without scrolling.
+  const short = useWindowDimensions().height < layout.shortScreen.height;
   const wordSlot = { ...theme.style.word, label: false, color: 'ink' } as const;
-  const word = card ? <Word slot={wordSlot} colors={colors} word={card.word} /> : null;
+  const word = card ? <Word slot={wordSlot} colors={colors} word={card.word} short={short} /> : null;
   const total = state.config.mindReader.predictions;
 
   let body = null;
@@ -44,12 +47,12 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
     case 'predict': {
       const needed = predictionsNeeded(state);
       body = (
-        <GameCard colors={colors} scroll>
+        <GameCard colors={colors} scroll compact={short}>
           <Txt variant="subline" color={colors.muted}>
             {m.predictKicker}
           </Txt>
           {word}
-          <View style={styles.label}>
+          <View style={[styles.label, short && styles.shortLabel]}>
             <Txt variant="overline" color={colors.muted}>
               {format(m.predictionsLabel, { n: total })}
             </Txt>
@@ -57,32 +60,35 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
               {m.predictionsHint}
             </Txt>
           </View>
-          {state.predictions.map((value, i) => {
-            const last = i === state.predictions.length - 1;
-            return (
-              <TextInput
-                key={i}
-                ref={(el) => {
-                  inputs.current[i] = el;
-                }}
-                value={value}
-                onChangeText={(text) => dispatch({ type: 'predict', index: i, text })}
-                placeholder={format(m.placeholder, { n: i + 1 })}
-                placeholderTextColor={colors.muted}
-                accessibilityLabel={format(m.placeholder, { n: i + 1 })}
-                autoCapitalize="words"
-                autoCorrect={false}
-                returnKeyType={last ? 'done' : 'next'}
-                submitBehavior={last ? 'blurAndSubmit' : 'submit'}
-                onSubmitEditing={() => inputs.current[i + 1]?.focus()}
-                style={[
-                  styles.input,
-                  nativeTextStyle('input'),
-                  { color: colors.chipInk, backgroundColor: colors.chip, borderColor: value.trim() ? colors.accent : colors.chip },
-                ]}
-              />
-            );
-          })}
+          <View style={[styles.inputs, short && styles.grid]}>
+            {state.predictions.map((value, i) => {
+              const last = i === state.predictions.length - 1;
+              return (
+                <TextInput
+                  key={i}
+                  ref={(el) => {
+                    inputs.current[i] = el;
+                  }}
+                  value={value}
+                  onChangeText={(text) => dispatch({ type: 'predict', index: i, text })}
+                  placeholder={format(m.placeholder, { n: i + 1 })}
+                  placeholderTextColor={colors.muted}
+                  accessibilityLabel={format(m.placeholder, { n: i + 1 })}
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  returnKeyType={last ? 'done' : 'next'}
+                  submitBehavior={last ? 'blurAndSubmit' : 'submit'}
+                  onSubmitEditing={() => inputs.current[i + 1]?.focus()}
+                  style={[
+                    styles.input,
+                    short && styles.half,
+                    nativeTextStyle('input'),
+                    { color: colors.chipInk, backgroundColor: colors.chip, borderColor: value.trim() ? colors.accent : colors.chip },
+                  ]}
+                />
+              );
+            })}
+          </View>
         </GameCard>
       );
       footer = (
@@ -164,6 +170,11 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
 
 const styles = StyleSheet.create({
   label: { gap: space[0.5], marginTop: space[4] },
+  shortLabel: { marginTop: space[2] },
+  inputs: { gap: space[2] },
+  // Two to a row; the fifth takes the whole last row.
+  grid: { flexDirection: 'row', flexWrap: 'wrap' },
+  half: { flexGrow: 1, flexBasis: '40%', minWidth: 0 },
   input: {
     minHeight: layout.control.input.height,
     borderRadius: radius.md,
