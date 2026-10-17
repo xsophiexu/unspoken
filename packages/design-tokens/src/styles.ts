@@ -32,9 +32,9 @@ export type Arrangement = 'ringCard' | 'floatingCard' | 'stack' | 'lowerPanel' |
 
 export type HeaderSlot = {
   //  titleBadge  big mode name, filled level badge, status line below (Card)
-  //  pill        "Classic · Expert 1 ▾" in a rounded pill
-  //  caps        small caps "CLASSIC · EXPERT 1 ▾"
-  //  inline      "Classic · Expert 1 ▾" as plain text
+  //  pill        "Classic · Hard ▾" in a rounded pill
+  //  caps        small caps "CLASSIC · HARD ▾"
+  //  inline      "Classic · Hard ▾" as plain text
   variant: 'titleBadge' | 'pill' | 'caps' | 'inline';
   // Where the mode and level sit: in the top row, or on their own line just above the word.
   position: 'top' | 'aboveWord';

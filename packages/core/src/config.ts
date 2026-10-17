@@ -68,18 +68,18 @@ export type GameConfig = {
 const swipe = { play: 'swipe', escalates: false, passAfterEveryWord: false, bonusSeconds: 0 } as const;
 
 export const gameConfig: GameConfig = {
-  // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Grandmaster, 2:30 at Expert 1.
-  // Cards show 5 banned words at Normal and Harder, 6 at the other levels.
-  // Hot Potato's shortest round grows from 0:45 at Normal to 2:30 at Grandmaster.
+  // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Legend, 2:30 at Hard.
+  // Cards show 5 banned words at Normal and Tricky, 6 at the other levels.
+  // Hot Potato's shortest round grows from 0:45 at Normal to 2:30 at Legend.
   difficulties: [
     { id: 'Normal', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 },
-    { id: 'Harder', roundSeconds: 120, bannedCount: 5, hotPotatoMinSeconds: 60 },
-    { id: 'Expert 1', roundSeconds: 150, bannedCount: 6, hotPotatoMinSeconds: 75 },
-    { id: 'Expert 2', roundSeconds: 180, bannedCount: 6, hotPotatoMinSeconds: 90 },
-    { id: 'Master 1', roundSeconds: 210, bannedCount: 6, hotPotatoMinSeconds: 105 },
-    { id: 'Master 2', roundSeconds: 240, bannedCount: 6, hotPotatoMinSeconds: 120 },
-    { id: 'Master 3', roundSeconds: 270, bannedCount: 6, hotPotatoMinSeconds: 135 },
-    { id: 'Grandmaster', roundSeconds: 300, bannedCount: 6, hotPotatoMinSeconds: 150 },
+    { id: 'Tricky', roundSeconds: 120, bannedCount: 5, hotPotatoMinSeconds: 60 },
+    { id: 'Hard', roundSeconds: 150, bannedCount: 6, hotPotatoMinSeconds: 75 },
+    { id: 'Tough', roundSeconds: 180, bannedCount: 6, hotPotatoMinSeconds: 90 },
+    { id: 'Expert', roundSeconds: 210, bannedCount: 6, hotPotatoMinSeconds: 105 },
+    { id: 'Elite', roundSeconds: 240, bannedCount: 6, hotPotatoMinSeconds: 120 },
+    { id: 'Master', roundSeconds: 270, bannedCount: 6, hotPotatoMinSeconds: 135 },
+    { id: 'Legend', roundSeconds: 300, bannedCount: 6, hotPotatoMinSeconds: 150 },
   ],
   categories: CATEGORY_IDS,
   modes: [
@@ -95,8 +95,8 @@ export const gameConfig: GameConfig = {
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },
   ],
-  // The app opens straight into an Endless game at Expert 1 with All cards.
-  defaults: { mode: 'endless', difficulty: 'Expert 1', categories: [], skips: 3 },
+  // The app opens straight into an Endless game at Hard with All cards.
+  defaults: { mode: 'endless', difficulty: 'Hard', categories: [], skips: 3 },
   skipOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null],
   minRoundSeconds: 10,
   maxRoundSeconds: 99 * 60 + 59,

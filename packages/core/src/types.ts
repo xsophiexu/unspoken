@@ -3,15 +3,40 @@
 // Easiest to hardest.
 export const DIFFICULTY_IDS = [
   'Normal',
-  'Harder',
-  'Expert 1',
-  'Expert 2',
-  'Master 1',
-  'Master 2',
-  'Master 3',
-  'Grandmaster',
+  'Tricky',
+  'Hard',
+  'Tough',
+  'Expert',
+  'Elite',
+  'Master',
+  'Legend',
 ] as const;
 export type Difficulty = (typeof DIFFICULTY_IDS)[number];
+
+// The lowest familiarity score (2 to 10) at each level; word bank cards are levelled by score.
+export const DIFFICULTY_MIN_SCORES: Readonly<Record<Difficulty, number>> = {
+  Normal: 2,
+  Tricky: 3,
+  Hard: 4,
+  Tough: 5,
+  Expert: 6,
+  Elite: 7,
+  Master: 8,
+  Legend: 9,
+};
+
+// The names the levels had before, in the same order. Saved settings, requests and older word bank
+// files may still carry them.
+export const LEGACY_DIFFICULTIES = {
+  Harder: 'Tricky',
+  'Expert 1': 'Hard',
+  'Expert 2': 'Tough',
+  'Master 1': 'Expert',
+  'Master 2': 'Elite',
+  'Master 3': 'Master',
+  Grandmaster: 'Legend',
+} as const satisfies Record<string, Difficulty>;
+export type LegacyDifficulty = keyof typeof LEGACY_DIFFICULTIES;
 
 // Word themes in the order the setup screen lists them. ("Theme" in the UI; "category" in code so it
 // never collides with the visual theme in @unspoken/design-tokens.)
@@ -51,11 +76,13 @@ export type Card = {
 };
 
 // A card as stored in the word bank file. Newer banks tag each card with one or more themes; older
-// ones have a single theme.
+// ones have a single theme. The level comes from the score; the difficulty name (current or
+// legacy) is only a fallback for cards without one.
 export type BankCardInput = {
   word: string;
   banned: readonly string[];
-  difficulty: Difficulty;
+  difficulty?: Difficulty | LegacyDifficulty;
+  // Familiarity score, 2 (everyone knows it) to 10.
   score?: number;
   themes?: readonly Category[];
   theme?: Category;

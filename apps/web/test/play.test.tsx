@@ -10,7 +10,7 @@ import { THEME_STORAGE_KEY } from '@/theme/boot';
 
 import { renderApp, saved } from './app';
 
-const classic = { mode: 'classic', difficulty: 'Expert 1', categories: [], skips: 3 };
+const classic = { mode: 'classic', difficulty: 'Hard', categories: [], skips: 3 };
 
 // The Game paused layout switch (gameMenu.restartPlacement), so both options can be played.
 const menuLayout = vi.hoisted(() => ({ restartPlacement: 'footer' as 'footer' | 'header' }));
@@ -43,14 +43,14 @@ describe('Play', () => {
     const { game } = renderPlay(<CustomizeScreen />);
 
     // Card: the big mode name with a level badge, and swipe links.
-    expect(game.getByRole('button', { name: 'Difficulty Expert 1. Tap to change.' })).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Difficulty Hard. Tap to change.' })).toBeInTheDocument();
     expect(game.getByText(en.play.correctLink)).toBeInTheDocument();
 
     await user.click(screen.getByRole('radio', { name: en.customize.styles.split }));
 
-    // Split: "Classic · Expert 1" in a pill, and a split bar with plain Skip and Correct.
-    expect(game.queryByRole('button', { name: 'Difficulty Expert 1. Tap to change.' })).not.toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Classic, Expert 1. Tap to change.' })).toBeInTheDocument();
+    // Split: "Classic · Hard" in a pill, and a split bar with plain Skip and Correct.
+    expect(game.queryByRole('button', { name: 'Difficulty Hard. Tap to change.' })).not.toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Classic, Hard. Tap to change.' })).toBeInTheDocument();
     expect(game.queryByText(en.play.correctLink)).not.toBeInTheDocument();
     expect(game.getByRole('button', { name: en.play.correct })).toHaveTextContent(en.play.correct);
     expect(JSON.parse(localStorage.getItem(THEME_STORAGE_KEY) ?? '{}')).toMatchObject({ style: 'split' });
@@ -64,15 +64,15 @@ describe('Play', () => {
     await user.click(game.getByRole('button', { name: en.play.skip }));
     expect(await game.findByText('2 skips left')).toBeInTheDocument();
 
-    await user.click(game.getByRole('button', { name: 'Classic, Expert 1. Tap to change.' }));
+    await user.click(game.getByRole('button', { name: 'Classic, Hard. Tap to change.' }));
     const sheet = screen.getByRole('dialog');
     expect(within(sheet).getByText(en.modeSheet.note)).toBeInTheDocument();
-    await user.click(within(sheet).getByRole('button', { name: 'Master 1' }));
+    await user.click(within(sheet).getByRole('button', { name: 'Expert' }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Classic, Master 1. Tap to change.' })).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Classic, Expert. Tap to change.' })).toBeInTheDocument();
     expect(game.getByText('3 skips left')).toBeInTheDocument();
-    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulty: 'Master 1' });
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulty: 'Expert' });
   });
 
   it('runs the clock, stops it while the menu is open, and answers from the keyboard', () => {

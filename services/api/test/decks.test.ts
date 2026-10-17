@@ -8,31 +8,38 @@ const byId = new Map(bank.map((entry) => [entry.id, entry]));
 const entriesOf = (cards: readonly Card[]) => cards.map((card) => byId.get(card.id)!);
 
 // Cards for names, events and jargon: playable in their themes, never in All cards.
-const keptOut = bank.filter((entry) => entry.difficulty === 'Master 1' && !entry.inAll);
+const keptOut = bank.filter((entry) => entry.difficulty === 'Expert' && !entry.inAll);
 
 describe('POST /v1/decks', () => {
-  const { api } = testApp();
+  const { api, post } = testApp();
 
   it('deals All cards from the requested difficulty without the cards kept out of it', async () => {
     expect(keptOut.length).toBeGreaterThan(0);
-    const deck = await api.dealDeck({ difficulty: 'Master 1', seed: 11 });
+    const deck = await api.dealDeck({ difficulty: 'Expert', seed: 11 });
 
     expect(deck.cards.length).toBeGreaterThan(100);
     expect(deck.cards).toHaveLength(deck.total);
-    expect(new Set(entriesOf(deck.cards).map((e) => e.difficulty))).toEqual(new Set(['Master 1']));
+    expect(new Set(entriesOf(deck.cards).map((e) => e.difficulty))).toEqual(new Set(['Expert']));
     const dealt = new Set(deck.cards.map((c) => c.id));
     expect(keptOut.filter((entry) => dealt.has(entry.id))).toEqual([]);
+  });
+
+  it('accepts an old level name and deals from the level that replaced it', async () => {
+    // Sent raw, as an older client would, without the typed client mapping it first.
+    const response = await post('/v1/decks', { difficulty: 'Master 1', seed: 11 });
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual(await api.dealDeck({ difficulty: 'Expert', seed: 11 }));
   });
 
   it('deals only the chosen themes, without repeats, including cards kept out of All cards', async () => {
     const card = keptOut[0]!;
     const themes = [...card.categories, CATEGORY_IDS.find((t) => !card.categories.includes(t))!];
-    const deck = await api.dealDeck({ difficulty: 'Master 1', categories: themes, seed: 3 });
+    const deck = await api.dealDeck({ difficulty: 'Expert', categories: themes, seed: 3 });
 
     expect(deck.cards.map((c) => c.id)).toContain(card.id);
     expect(new Set(deck.cards.map((c) => c.id)).size).toBe(deck.cards.length);
     for (const entry of entriesOf(deck.cards)) {
-      expect(entry.difficulty).toBe('Master 1');
+      expect(entry.difficulty).toBe('Expert');
       expect(entry.categories.some((t) => themes.includes(t))).toBe(true);
     }
     const themesDealt = new Set(entriesOf(deck.cards).flatMap((e) => e.categories));
@@ -40,8 +47,8 @@ describe('POST /v1/decks', () => {
   });
 
   it('returns the first count cards of the same deal, with the total it was drawn from', async () => {
-    const full = await api.dealDeck({ difficulty: 'Harder', categories: ['Everyday Life'], seed: 5 });
-    const some = await api.dealDeck({ difficulty: 'Harder', categories: ['Everyday Life'], seed: 5, count: 12 });
+    const full = await api.dealDeck({ difficulty: 'Tricky', categories: ['Everyday Life'], seed: 5 });
+    const some = await api.dealDeck({ difficulty: 'Tricky', categories: ['Everyday Life'], seed: 5, count: 12 });
 
     expect(some).toEqual({ seed: 5, total: full.total, cards: full.cards.slice(0, 12) });
     expect(full.total).toBeGreaterThan(12);

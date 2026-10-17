@@ -1,5 +1,5 @@
 import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules } from './config';
-import type { Category, Difficulty, GameSettings, ModeId, Random } from './types';
+import { LEGACY_DIFFICULTIES, type Category, type Difficulty, type GameSettings, type ModeId, type Random } from './types';
 
 function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
   const found = config.difficulties.find((d) => d.id === id);
@@ -82,13 +82,21 @@ export function canStart(settings: GameSettings, config: GameConfig = gameConfig
   return settings.roundSeconds >= config.minRoundSeconds && settings.roundSeconds <= config.maxRoundSeconds;
 }
 
+// A level id from saved data: a current id, or an old name mapped to its level (Expert 1 → Hard).
+// Anything else is undefined.
+export function toDifficulty(value: unknown, config: GameConfig = gameConfig): Difficulty | undefined {
+  if (typeof value !== 'string') return undefined;
+  const id = Object.hasOwn(LEGACY_DIFFICULTIES, value) ? LEGACY_DIFFICULTIES[value as keyof typeof LEGACY_DIFFICULTIES] : value;
+  return config.difficulties.find((d) => d.id === id)?.id;
+}
+
 // Reads saved settings (from device storage or a request), keeping each valid field and defaulting
-// the rest. A mode that is not available falls back to the default mode.
+// the rest. A mode that is not available falls back to the default mode; an old level name maps to its level.
 export function parseSettings(value: unknown, config: GameConfig = gameConfig): GameSettings {
   const fallback = defaultSettings(config);
   const v = (typeof value === 'object' && value !== null ? value : {}) as Partial<Record<keyof GameSettings, unknown>>;
   const mode = config.modes.find((m) => m.id === v.mode && m.available)?.id ?? fallback.mode;
-  const difficulty = config.difficulties.find((d) => d.id === v.difficulty)?.id ?? fallback.difficulty;
+  const difficulty = toDifficulty(v.difficulty, config) ?? fallback.difficulty;
   const saved = Array.isArray(v.categories) ? (v.categories as unknown[]) : [];
   const categories = config.categories.filter((c) => saved.includes(c));
   const seconds = v.roundSeconds;

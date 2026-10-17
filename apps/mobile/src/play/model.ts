@@ -65,7 +65,7 @@ export function playModel(state: SwipeRoundState): PlayModel {
   };
 }
 
-// The sample round on Customize thumbnails, as the designs show it: Classic at Expert 1, 7 points,
+// The sample round on Customize thumbnails, as the designs show it: Classic at Hard, 7 points,
 // one skip left and 1:42 on the clock, with the word Road trip. It is a real round played through
 // the reducer, so thumbnails can never drift from the game.
 const SAMPLE = { cardId: 'road-trip', correct: 7, skipped: 2, elapsedSeconds: 48 } as const;

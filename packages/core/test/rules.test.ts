@@ -13,6 +13,7 @@ import {
   hiddenRoundSeconds,
   hotPotatoRange,
   parseSettings,
+  toDifficulty,
   toggleCategory,
   withDifficulty,
 } from '../src';
@@ -24,27 +25,27 @@ describe('catalogs', () => {
     expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams', 'timeAttack']);
   });
 
-  it('starts a fresh install on Endless at Expert 1 with All cards, 2:30 and 3 skips', () => {
-    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Expert 1', categories: [], roundSeconds: 150, skips: 3 });
+  it('starts a fresh install on Endless at Hard with All cards, 2:30 and 3 skips', () => {
+    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Hard', categories: [], roundSeconds: 150, skips: 3 });
   });
 });
 
 describe('round timer', () => {
-  it('defaults to 1:30 at Normal, 2:30 at Expert 1 and 5:00 at Grandmaster, growing with each level', () => {
+  it('defaults to 1:30 at Normal, 2:30 at Hard and 5:00 at Legend, growing with each level', () => {
     expect(defaultRoundSeconds('Normal')).toBe(90);
-    expect(defaultRoundSeconds('Expert 1')).toBe(150);
-    expect(defaultRoundSeconds('Grandmaster')).toBe(300);
+    expect(defaultRoundSeconds('Hard')).toBe(150);
+    expect(defaultRoundSeconds('Legend')).toBe(300);
     const all = DIFFICULTY_IDS.map((d) => defaultRoundSeconds(d));
     expect(all).toEqual([...all].sort((a, b) => a - b));
   });
 
   it('follows a new difficulty while it is on the default', () => {
-    const next = withDifficulty(settingsFor('classic', { difficulty: 'Expert 1', roundSeconds: 150 }), 'Grandmaster');
-    expect(next).toMatchObject({ difficulty: 'Grandmaster', roundSeconds: 300 });
+    const next = withDifficulty(settingsFor('classic', { difficulty: 'Hard', roundSeconds: 150 }), 'Legend');
+    expect(next).toMatchObject({ difficulty: 'Legend', roundSeconds: 300 });
   });
 
   it('keeps a typed time when the difficulty changes', () => {
-    const next = withDifficulty(settingsFor('classic', { difficulty: 'Expert 1', roundSeconds: 75 }), 'Normal');
+    const next = withDifficulty(settingsFor('classic', { difficulty: 'Hard', roundSeconds: 75 }), 'Normal');
     expect(next).toMatchObject({ difficulty: 'Normal', roundSeconds: 75 });
   });
 
@@ -54,7 +55,7 @@ describe('round timer', () => {
 });
 
 describe('banned words', () => {
-  it('shows 5 at Normal and Harder and 6 at every other level', () => {
+  it('shows 5 at Normal and Tricky and 6 at every other level', () => {
     expect(DIFFICULTY_IDS.map((d) => bannedCountFor(d))).toEqual([5, 5, 6, 6, 6, 6, 6, 6]);
   });
 });
@@ -66,15 +67,15 @@ describe('skips', () => {
 });
 
 describe('Hot Potato hidden length', () => {
-  it('runs from 0:45–1:30 at Normal up to 2:30–5:00 at Grandmaster', () => {
+  it('runs from 0:45–1:30 at Normal up to 2:30–5:00 at Legend', () => {
     expect(hotPotatoRange('Normal')).toEqual({ min: 45, max: 90 });
-    expect(hotPotatoRange('Expert 1')).toEqual({ min: 75, max: 150 });
-    expect(hotPotatoRange('Grandmaster')).toEqual({ min: 150, max: 300 });
+    expect(hotPotatoRange('Hard')).toEqual({ min: 75, max: 150 });
+    expect(hotPotatoRange('Legend')).toEqual({ min: 150, max: 300 });
   });
 
   it('uses the extremes of the range for the extremes of randomness', () => {
-    expect(hiddenRoundSeconds('Harder', () => 0)).toBe(60);
-    expect(hiddenRoundSeconds('Harder', () => 0.999999)).toBe(120);
+    expect(hiddenRoundSeconds('Tricky', () => 0)).toBe(60);
+    expect(hiddenRoundSeconds('Tricky', () => 0.999999)).toBe(120);
   });
 });
 
@@ -109,7 +110,7 @@ describe('toggleCategory', () => {
 
 describe('parseSettings', () => {
   it('reads back settings that were saved', () => {
-    const saved = { mode: 'classic', difficulty: 'Master 2', categories: ['Society', 'Business'], roundSeconds: 95, skips: null };
+    const saved = { mode: 'classic', difficulty: 'Elite', categories: ['Society', 'Business'], roundSeconds: 95, skips: null };
     expect(parseSettings(JSON.parse(JSON.stringify(saved)))).toEqual(saved);
   });
 
@@ -118,7 +119,28 @@ describe('parseSettings', () => {
       ...defaultSettings(),
       categories: ['Society'],
     });
-    expect(parseSettings({ difficulty: 'Grandmaster' }).roundSeconds).toBe(defaultRoundSeconds('Grandmaster'));
+    expect(parseSettings({ difficulty: 'Legend' }).roundSeconds).toBe(defaultRoundSeconds('Legend'));
     expect(parseSettings('garbage')).toEqual(defaultSettings());
+  });
+
+  it('moves a level saved under its old name to the level that replaced it', () => {
+    const saved = { mode: 'classic', difficulty: 'Master 1', categories: [], roundSeconds: 95, skips: 2 };
+    expect(parseSettings(saved)).toEqual({ ...saved, difficulty: 'Expert' });
+    // Without a typed time, the round follows the new level's default.
+    expect(parseSettings({ difficulty: 'Grandmaster' })).toMatchObject({ difficulty: 'Legend', roundSeconds: defaultRoundSeconds('Legend') });
+  });
+});
+
+describe('toDifficulty', () => {
+  it('maps each old level name to the new level in the same place', () => {
+    const old = ['Normal', 'Harder', 'Expert 1', 'Expert 2', 'Master 1', 'Master 2', 'Master 3', 'Grandmaster'];
+    expect(old.map((name) => toDifficulty(name))).toEqual([...DIFFICULTY_IDS]);
+  });
+
+  it('keeps current ids and rejects anything else', () => {
+    for (const id of DIFFICULTY_IDS) expect(toDifficulty(id)).toBe(id);
+    expect(toDifficulty('Expert 4')).toBeUndefined();
+    expect(toDifficulty('toString')).toBeUndefined();
+    expect(toDifficulty(3)).toBeUndefined();
   });
 });

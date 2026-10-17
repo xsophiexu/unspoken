@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { SetupScreen } from '@/screens/SetupScreen';
 
-import { renderApp } from './app';
+import { renderApp, saved } from './app';
 
 const copy = en.setup;
 
@@ -51,10 +51,18 @@ describe('New game setup', () => {
     expect(screen.getByRole('button', { name: copy.start })).toBeEnabled();
   });
 
+  it('picks the renamed level for a player who saved an old level name', () => {
+    saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulty: 'Master 2', categories: [], skips: 3 } });
+    renderApp(<SetupScreen mode="classic" />);
+    expect(screen.getByRole('radio', { name: /^Elite/ })).toBeChecked();
+    // No time was saved, so the timer follows the renamed level's default (4:00).
+    expect(screen.getByRole('textbox', { name: /Round timer 4:00/ })).toBeInTheDocument();
+  });
+
   it('starts the game it was set up for and opens Play', async () => {
     const user = userEvent.setup();
     const { router } = renderApp(<SetupScreen mode="classic" />);
-    await user.click(screen.getByRole('radio', { name: /^Master 2/ }));
+    await user.click(screen.getByRole('radio', { name: /^Elite/ }));
     await user.click(screen.getByRole('checkbox', { name: /^Society/ }));
     await user.click(screen.getByRole('radio', { name: en.a11y.unlimitedSkips }));
     await user.click(screen.getByRole('button', { name: copy.start }));
@@ -62,9 +70,9 @@ describe('New game setup', () => {
     expect(router.push).toHaveBeenCalledWith('/');
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toEqual({
       mode: 'classic',
-      difficulty: 'Master 2',
+      difficulty: 'Elite',
       categories: ['Society'],
-      // The timer was on Expert 1's default, so it follows the new level.
+      // The timer was on Hard's default, so it follows the new level.
       roundSeconds: 240,
       skips: null,
     });

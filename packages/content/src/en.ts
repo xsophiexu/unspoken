@@ -18,13 +18,13 @@ const modes: Record<ModeId, { name: string; sub: string }> = {
 
 const difficulties: Record<Difficulty, { name: string; badge: string }> = {
   Normal: { name: 'Normal', badge: 'NORMAL' },
-  Harder: { name: 'Harder', badge: 'HARDER' },
-  'Expert 1': { name: 'Expert 1', badge: 'EXPERT 1' },
-  'Expert 2': { name: 'Expert 2', badge: 'EXPERT 2' },
-  'Master 1': { name: 'Master 1', badge: 'MASTER 1' },
-  'Master 2': { name: 'Master 2', badge: 'MASTER 2' },
-  'Master 3': { name: 'Master 3', badge: 'MASTER 3' },
-  Grandmaster: { name: 'Grandmaster', badge: 'GRANDMASTER' },
+  Tricky: { name: 'Tricky', badge: 'TRICKY' },
+  Hard: { name: 'Hard', badge: 'HARD' },
+  Tough: { name: 'Tough', badge: 'TOUGH' },
+  Expert: { name: 'Expert', badge: 'EXPERT' },
+  Elite: { name: 'Elite', badge: 'ELITE' },
+  Master: { name: 'Master', badge: 'MASTER' },
+  Legend: { name: 'Legend', badge: 'LEGEND' },
 };
 
 // Theme ids are already English; translations map them here.

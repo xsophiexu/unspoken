@@ -27,8 +27,8 @@ type Props = {
 
 const textHeight = (e: LayoutChangeEvent) => Math.ceil(e.nativeEvent.layout.height);
 
-// A selectable tile: difficulties on Setup and the sheets, modes on Modes. Long names (Grandmaster)
-// shrink to stay on one line.
+// A selectable tile: difficulties on Setup and the sheets, modes on Modes. Long names shrink to
+// stay on one line.
 export function Tile({ title, detail, status, colors, selected, onPress, disabled, height, centered, accessibilityLabel, onNaturalHeight }: Props) {
   const [width, onLayout] = useWidth();
   const [titleHeight, setTitleHeight] = useState(0);

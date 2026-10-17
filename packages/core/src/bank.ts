@@ -1,7 +1,7 @@
 import { gameConfig, type GameConfig } from './config';
 import { dealDeck, seededRandom } from './random';
-import { modeRules } from './rules';
-import type { BankCardInput, BankEntry, Card, Category, Difficulty, ModeId } from './types';
+import { modeRules, toDifficulty } from './rules';
+import { DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type ModeId } from './types';
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
 function capitalize(word: string): string {
@@ -18,9 +18,24 @@ function cardId(word: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
+// The level for a familiarity score: 2 is Normal, 3 Tricky, up to 9 and 10 at Legend.
+export function difficultyForScore(score: number): Difficulty | undefined {
+  if (!Number.isFinite(score)) return undefined;
+  return [...DIFFICULTY_IDS].reverse().find((id) => score >= DIFFICULTY_MIN_SCORES[id]) ?? DIFFICULTY_IDS[0];
+}
+
+// A bank card's level: from its score, or from its difficulty name (current or legacy) when it has
+// no score. The bank file is shared and may still carry the old names.
+function cardDifficulty(card: BankCardInput): Difficulty {
+  const level = (card.score === undefined ? undefined : difficultyForScore(card.score)) ?? toDifficulty(card.difficulty);
+  if (!level) throw new Error(`Word bank card "${card.word}" has no score or known difficulty`);
+  return level;
+}
+
 // Turn raw bank cards (as stored in @unspoken/content) into entries the dealing functions use.
-// Ids are unique: a word whose id is taken (the same word with or without accents at another level)
-// gets its difficulty appended, so ids stay stable as long as the bank keeps its order.
+// Each card's level comes from its score (see cardDifficulty). Ids are unique: a word whose id is
+// taken (the same word with or without accents at another level) gets its level appended, so ids
+// stay stable as long as the bank keeps its order.
 export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
   const taken = new Set<string>();
   const uniqueId = (word: string, difficulty: string) => {
@@ -30,15 +45,18 @@ export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
     taken.add(id);
     return id;
   };
-  return raw.map((c) => ({
-    id: uniqueId(c.word, c.difficulty),
-    word: c.word,
-    banned: c.banned.map(capitalize),
-    difficulty: c.difficulty,
-    categories: c.themes ?? (c.theme ? [c.theme] : []),
-    inAll: c.allCards !== false,
-    allWeight: c.allCardsWeight ?? 1,
-  }));
+  return raw.map((c) => {
+    const difficulty = cardDifficulty(c);
+    return {
+      id: uniqueId(c.word, difficulty),
+      word: c.word,
+      banned: c.banned.map(capitalize),
+      difficulty,
+      categories: c.themes ?? (c.theme ? [c.theme] : []),
+      inAll: c.allCards !== false,
+      allWeight: c.allCardsWeight ?? 1,
+    };
+  });
 }
 
 // The cards a game draws from. All cards (no categories) leaves out names and jargon and weights the

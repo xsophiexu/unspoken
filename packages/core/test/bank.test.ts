@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import { cardsFor, categoriesInBank, dealFromBank, deckSize, normalizeBank, playableCards, type BankCardInput } from '../src';
+import { cardsFor, categoriesInBank, dealFromBank, deckSize, difficultyForScore, normalizeBank, playableCards, type BankCardInput } from '../src';
 import { makeCards } from './fixtures';
 
 const ten = (w: string) => Array.from({ length: 10 }, (_, i) => `${w}${i}`);
 
 const raw: BankCardInput[] = [
-  { word: 'Hangover', banned: ten('Drink'), difficulty: 'Expert 1', themes: ['Everyday Life'], allCards: true, allCardsWeight: 0.04 },
-  { word: 'Freddie Mercury', banned: ten('Queen'), difficulty: 'Expert 1', themes: ['Pop Culture'], allCards: false, allCardsWeight: 0 },
-  { word: 'Placebo', banned: ten('Pill'), difficulty: 'Expert 1', themes: ['Health and Body', 'Science and Nature'], allCards: true, allCardsWeight: 0.01 },
-  { word: 'Unweighted', banned: ten('X'), difficulty: 'Expert 1', theme: 'Society' },
-  { word: 'Zero weight', banned: ten('Y'), difficulty: 'Expert 1', themes: ['Society'], allCardsWeight: 0 },
+  { word: 'Hangover', banned: ten('Drink'), difficulty: 'Hard', themes: ['Everyday Life'], allCards: true, allCardsWeight: 0.04 },
+  { word: 'Freddie Mercury', banned: ten('Queen'), difficulty: 'Hard', themes: ['Pop Culture'], allCards: false, allCardsWeight: 0 },
+  { word: 'Placebo', banned: ten('Pill'), difficulty: 'Hard', themes: ['Health and Body', 'Science and Nature'], allCards: true, allCardsWeight: 0.01 },
+  { word: 'Unweighted', banned: ten('X'), difficulty: 'Hard', theme: 'Society' },
+  { word: 'Zero weight', banned: ten('Y'), difficulty: 'Hard', themes: ['Society'], allCardsWeight: 0 },
   { word: 'Nightmare', banned: ['dream', 'iPhone', 'Scary'], difficulty: 'Normal', themes: ['Inner World'] },
 ];
 const bank = normalizeBank(raw);
@@ -29,40 +29,65 @@ describe('normalizeBank', () => {
 
   it('keeps ids unique when two words differ only by accents', () => {
     const ids = normalizeBank([
-      { word: 'Ragnarok', banned: [], difficulty: 'Expert 2' },
-      { word: 'Ragnarök', banned: [], difficulty: 'Master 1' },
-      { word: 'Ragnarök', banned: [], difficulty: 'Master 1' },
+      { word: 'Ragnarok', banned: [], difficulty: 'Tough' },
+      { word: 'Ragnarök', banned: [], difficulty: 'Expert' },
+      { word: 'Ragnarök', banned: [], difficulty: 'Expert' },
     ]).map((c) => c.id);
     expect(ids[0]).toBe('ragnarok');
     expect(new Set(ids).size).toBe(3);
   });
 });
 
+describe('card levels', () => {
+  it('levels a card by its familiarity score, 2 at Normal up to 9 and 10 at Legend', () => {
+    expect([2, 3, 4, 5, 6, 7, 8, 9, 10].map(difficultyForScore)).toEqual(['Normal', 'Tricky', 'Hard', 'Tough', 'Expert', 'Elite', 'Master', 'Legend', 'Legend']);
+  });
+
+  it('trusts the score over an old difficulty name in the file', () => {
+    const [card] = normalizeBank([{ word: 'Hangover', banned: [], difficulty: 'Expert 1', score: 6 }]);
+    expect(card!.difficulty).toBe('Expert');
+  });
+
+  it('falls back to the difficulty name, old or new, when a card has no score', () => {
+    const levels = normalizeBank([
+      { word: 'A', banned: [], difficulty: 'Expert 1' },
+      { word: 'B', banned: [], difficulty: 'Master 1' },
+      { word: 'C', banned: [], difficulty: 'Grandmaster' },
+      { word: 'D', banned: [], difficulty: 'Elite' },
+    ]).map((c) => c.difficulty);
+    expect(levels).toEqual(['Hard', 'Expert', 'Legend', 'Elite']);
+  });
+
+  it('refuses a card with neither a score nor a known difficulty', () => {
+    expect(() => normalizeBank([{ word: 'Mystery', banned: [], difficulty: 'Impossible' as never }])).toThrow(/Mystery/);
+  });
+});
+
 describe('cardsFor', () => {
   it('All cards leaves out cards kept out of All cards and cards with no weight', () => {
-    expect(words(cardsFor(bank, 'Expert 1', []))).toEqual(['Hangover', 'Placebo', 'Unweighted']);
+    expect(words(cardsFor(bank, 'Hard', []))).toEqual(['Hangover', 'Placebo', 'Unweighted']);
   });
 
   it('All cards carries each card’s balancing weight (1 when the bank gives none)', () => {
-    const weights = Object.fromEntries(cardsFor(bank, 'Expert 1', []).map((c) => [c.word, c.weight]));
+    const weights = Object.fromEntries(cardsFor(bank, 'Hard', []).map((c) => [c.word, c.weight]));
     expect(weights).toEqual({ Hangover: 0.04, Placebo: 0.01, Unweighted: 1 });
   });
 
   it('chosen themes include names and jargon, unweighted', () => {
-    const pop = cardsFor(bank, 'Expert 1', ['Pop Culture']);
+    const pop = cardsFor(bank, 'Hard', ['Pop Culture']);
     expect(words(pop)).toEqual(['Freddie Mercury']);
     expect(pop[0]!.weight).toBeUndefined();
   });
 
   it('matches a card in any of its themes, once, when several themes are chosen', () => {
-    expect(words(cardsFor(bank, 'Expert 1', ['Science and Nature']))).toEqual(['Placebo']);
-    expect(words(cardsFor(bank, 'Expert 1', ['Science and Nature', 'Health and Body']))).toEqual(['Placebo']);
-    expect(words(cardsFor(bank, 'Expert 1', ['Society']))).toEqual(['Unweighted', 'Zero weight']);
+    expect(words(cardsFor(bank, 'Hard', ['Science and Nature']))).toEqual(['Placebo']);
+    expect(words(cardsFor(bank, 'Hard', ['Science and Nature', 'Health and Body']))).toEqual(['Placebo']);
+    expect(words(cardsFor(bank, 'Hard', ['Society']))).toEqual(['Unweighted', 'Zero weight']);
   });
 
   it('only draws from the chosen difficulty', () => {
     expect(words(cardsFor(bank, 'Normal', []))).toEqual(['Nightmare']);
-    expect(deckSize(bank, 'Grandmaster', [])).toBe(0);
+    expect(deckSize(bank, 'Legend', [])).toBe(0);
   });
 });
 
@@ -97,27 +122,27 @@ describe('dealFromBank', () => {
     Array.from({ length: 30 }, (_, i) => ({
       word: `Card ${i}`,
       banned: ten(`B${i}-`),
-      difficulty: 'Expert 1' as const,
+      difficulty: 'Hard' as const,
       themes: [i < 20 ? ('Society' as const) : ('Pop Culture' as const)],
       allCards: i < 25,
     })),
   );
 
   it('deals the same cards for the same seed and request', () => {
-    const a = dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 99, count: 10 });
-    const b = dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 99, count: 10 });
+    const a = dealFromBank(big, { difficulty: 'Hard', categories: [], seed: 99, count: 10 });
+    const b = dealFromBank(big, { difficulty: 'Hard', categories: [], seed: 99, count: 10 });
     expect(a.cards.map((c) => c.id)).toEqual(b.cards.map((c) => c.id));
-    expect(dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 100, count: 10 }).cards).not.toEqual(a.cards);
+    expect(dealFromBank(big, { difficulty: 'Hard', categories: [], seed: 100, count: 10 }).cards).not.toEqual(a.cards);
   });
 
   it('returns the requested number of cards and the size of the pool they came from', () => {
-    const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: [], seed: 1, count: 12 });
+    const dealt = dealFromBank(big, { difficulty: 'Hard', categories: [], seed: 1, count: 12 });
     expect(dealt.cards).toHaveLength(12);
     expect(dealt.total).toBe(25);
   });
 
   it('returns the whole shuffled pool without a count, never repeating a card', () => {
-    const dealt = dealFromBank(big, { difficulty: 'Expert 1', categories: ['Pop Culture'], seed: 1 });
+    const dealt = dealFromBank(big, { difficulty: 'Hard', categories: ['Pop Culture'], seed: 1 });
     expect(dealt.cards).toHaveLength(10);
     expect(new Set(dealt.cards.map((c) => c.id)).size).toBe(10);
   });

@@ -26,12 +26,19 @@ afterEach(() => {
 const levelBadge = (difficulty: string) => format(en.a11y.difficulty, { badge: difficulty });
 const modePill = (mode: string, difficulty: string) => format(en.a11y.modeAndDifficulty, { mode, difficulty });
 
+describe('a returning player', () => {
+  it('plays at the renamed level when their saved settings use an old level name', async () => {
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Master 1' as never, roundSeconds: defaultRoundSeconds('Expert') } });
+    expect(await screen.findByLabelText(levelBadge('Expert'))).toBeOnTheScreen();
+  });
+});
+
 describe('switching the style on Customize', () => {
   it('redraws the play screen with the new style’s slots and keeps the choice', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Harder' } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky' } });
 
     // Card: the mode name with a level badge, and swipe bars without the "swipe the card" hint.
-    expect(await screen.findByLabelText(levelBadge('Harder'))).toBeOnTheScreen();
+    expect(await screen.findByLabelText(levelBadge('Tricky'))).toBeOnTheScreen();
     expect(screen.queryByText(en.play.swipeTheCard)).not.toBeOnTheScreen();
 
     fireEvent.press(screen.getByLabelText(en.a11y.menu));
@@ -43,16 +50,16 @@ describe('switching the style on Customize', () => {
     fireEvent.press(screen.getByText(en.customize.done));
 
     // Deck: a mode pill instead of the badge, and the hint between Skip and Correct.
-    expect(await screen.findByLabelText(modePill(en.modes.classic.name, 'Harder'))).toBeOnTheScreen();
+    expect(await screen.findByLabelText(modePill(en.modes.classic.name, 'Tricky'))).toBeOnTheScreen();
     expect(screen.getByText(en.play.swipeTheCard)).toBeOnTheScreen();
-    expect(screen.queryByLabelText(levelBadge('Harder'))).not.toBeOnTheScreen();
+    expect(screen.queryByLabelText(levelBadge('Tricky'))).not.toBeOnTheScreen();
     await waitFor(async () => expect((await savedPrefs()).theme.style).toBe('deck'));
   });
 });
 
 describe('picking a difficulty', () => {
   it('starts a new round at that level', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Harder', roundSeconds: defaultRoundSeconds('Harder') } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky', roundSeconds: defaultRoundSeconds('Tricky') } });
 
     // Correct flies the card out, then counts.
     fireEvent.press(await screen.findByLabelText(en.play.correct));
@@ -61,17 +68,17 @@ describe('picking a difficulty', () => {
     });
     expect(screen.getByText(/1 pt/)).toBeOnTheScreen();
 
-    fireEvent.press(screen.getByLabelText(levelBadge('Harder')));
-    fireEvent.press(await screen.findByRole('radio', { name: /^Expert 1/ }));
+    fireEvent.press(screen.getByLabelText(levelBadge('Tricky')));
+    fireEvent.press(await screen.findByRole('radio', { name: /^Hard/ }));
 
     // A fresh round: the new level and the score back to zero, saved for next time.
-    expect(await screen.findByLabelText(levelBadge('Expert 1'))).toBeOnTheScreen();
+    expect(await screen.findByLabelText(levelBadge('Hard'))).toBeOnTheScreen();
     expect(screen.getByText(/0 pts/)).toBeOnTheScreen();
-    await waitFor(async () => expect((await savedPrefs()).settings.difficulty).toBe('Expert 1'));
+    await waitFor(async () => expect((await savedPrefs()).settings.difficulty).toBe('Hard'));
 
     // ...with that level's full clock (the menu's status line shows the time left).
     fireEvent.press(screen.getByLabelText(en.a11y.menu));
-    expect(await screen.findByText(new RegExp(`^${formatClock(defaultRoundSeconds('Expert 1'))}`))).toBeOnTheScreen();
+    expect(await screen.findByText(new RegExp(`^${formatClock(defaultRoundSeconds('Hard'))}`))).toBeOnTheScreen();
   });
 });
 

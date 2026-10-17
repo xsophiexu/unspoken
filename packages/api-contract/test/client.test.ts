@@ -48,6 +48,12 @@ describe('dealDeck', () => {
     });
   });
 
+  it('sends an old level name from an older client as the level that replaced it', async () => {
+    const { api, fetch } = clientAnswering(json(200, dealFromBank(bank, { difficulty: 'Normal', categories: [], seed: 7 })));
+    await api.dealDeck({ difficulty: 'Expert 1', seed: 7 });
+    expect(sent(fetch).body).toMatchObject({ difficulty: 'Hard' });
+  });
+
   it('refuses an unknown difficulty without calling the server', async () => {
     const { api, fetch } = clientAnswering(json(200, {}));
     const error = await api.dealDeck({ difficulty: 'Impossible' as never }).catch((e: unknown) => e);

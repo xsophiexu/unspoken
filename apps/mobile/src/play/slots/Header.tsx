@@ -11,7 +11,7 @@ import { Target } from '../spotlight';
 
 type LabelProps = { slot: HeaderSlot; colors: RegionColors; model: HeaderModel; onPress?: () => void };
 
-// The mode and level ("Classic · Expert 1 ▾") as a pill, small caps or plain text. Tapping it opens
+// The mode and level ("Classic · Hard ▾") as a pill, small caps or plain text. Tapping it opens
 // the mode and difficulty sheet.
 export function ModeLabel({ slot, colors, model, onPress }: LabelProps) {
   const caps = slot.variant === 'caps';

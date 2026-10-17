@@ -85,9 +85,9 @@ describe('wordShape', () => {
 
 describe('formatParts', () => {
   it('splits a message into words and filled values, which join back to format()', () => {
-    const parts = formatParts('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Expert 1' });
-    expect(parts).toEqual([{ text: 'Classic', param: 'mode' }, { text: ' · ' }, { text: 'Expert 1', param: 'difficulty' }]);
-    expect(parts.map((p) => p.text).join('')).toBe(format('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Expert 1' }));
+    const parts = formatParts('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Hard' });
+    expect(parts).toEqual([{ text: 'Classic', param: 'mode' }, { text: ' · ' }, { text: 'Hard', param: 'difficulty' }]);
+    expect(parts.map((p) => p.text).join('')).toBe(format('{mode} · {difficulty}', { mode: 'Classic', difficulty: 'Hard' }));
   });
 
   it('keeps unknown placeholders as words and picks the plural form', () => {

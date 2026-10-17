@@ -16,7 +16,7 @@ describe('Reverse', () => {
   });
 
   it('shows three clues to start, worth a point more than the hidden ones', () => {
-    const view = reverseCard(start({ difficulty: 'Expert 1' }))!;
+    const view = reverseCard(start({ difficulty: 'Hard' }))!;
     expect(view.total).toBe(6);
     expect(view.clues.filter((c) => c.revealed)).toHaveLength(3);
     expect(view.worth).toBe(4);
@@ -28,7 +28,7 @@ describe('Reverse', () => {
 
   it('makes the word worth a point less for each extra clue, down to one point with every clue showing', () => {
     const worths = [];
-    let state = start({ difficulty: 'Expert 1' });
+    let state = start({ difficulty: 'Hard' });
     for (let i = 0; i < 5; i++) {
       worths.push(reverseCard(state)!.worth);
       state = play(state, [{ type: 'revealClue' }]);

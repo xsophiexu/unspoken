@@ -26,7 +26,7 @@ const play = (state: SwipeRoundState, actions: SwipeAction[]) => run(swipeReduce
 const word = (state: SwipeRoundState) => swipeCard(state)!.card.word;
 
 describe('Classic', () => {
-  const classic = () => start('classic', { roundSeconds: 60, skips: 2, difficulty: 'Expert 1' });
+  const classic = () => start('classic', { roundSeconds: 60, skips: 2, difficulty: 'Hard' });
 
   it('scores a correct answer and moves to the next card', () => {
     const before = classic();
@@ -174,7 +174,7 @@ describe('Escalate', () => {
 
 describe('Hot Potato', () => {
   it('hides a clock whose length falls in the level’s range, ignoring the round timer setting', () => {
-    for (const difficulty of ['Normal', 'Expert 1', 'Grandmaster'] as const) {
+    for (const difficulty of ['Normal', 'Hard', 'Legend'] as const) {
       const { min, max } = hotPotatoRange(difficulty);
       for (let seed = 0; seed < 50; seed++) {
         const state = start('hotPotato', { difficulty, roundSeconds: 5 }, seed);

@@ -15,7 +15,7 @@ export function plural(n: number, forms: Plural, params: Readonly<Record<string,
 }
 
 // A filled message as pieces, so a platform can style the filled values apart from the words around
-// them ("7" bold in "7 pts", "Expert 1" lighter in "Classic · Expert 1"). Joining the texts gives
+// them ("7" bold in "7 pts", "Hard" lighter in "Classic · Hard"). Joining the texts gives
 // what format() returns.
 export type TextPart = { text: string; param?: string };
 

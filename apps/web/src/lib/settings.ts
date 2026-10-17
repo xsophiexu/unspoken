@@ -1,10 +1,11 @@
-import { CATEGORY_IDS, DIFFICULTY_IDS, MODE_IDS, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, type Category, type GameSettings } from '@unspoken/core';
+import { CATEGORY_IDS, MODE_IDS, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, toDifficulty, type Category, type GameSettings } from '@unspoken/core';
 import { z } from 'zod';
 
 export const SETTINGS_STORAGE_KEY = 'unspoken.settings';
 
 // Reads saved game settings, keeping each valid field and defaulting the rest (like
-// parseThemeSelection does for the theme). A mode that is no longer available falls back too.
+// parseThemeSelection does for the theme). A mode that is no longer available falls back too, and an
+// old level name maps to its level (Expert 1 → Hard).
 export function parseSettings(value: unknown, config = gameConfig): GameSettings {
   const fallback = defaultSettings(config);
   const schema = z.object({
@@ -12,7 +13,7 @@ export function parseSettings(value: unknown, config = gameConfig): GameSettings
       .enum(MODE_IDS)
       .refine((mode) => modeRules(mode, config).available)
       .catch(fallback.mode),
-    difficulty: z.enum(DIFFICULTY_IDS).catch(fallback.difficulty),
+    difficulty: z.unknown().optional().transform((value) => toDifficulty(value, config) ?? fallback.difficulty),
     categories: z.array(z.enum(CATEGORY_IDS)).catch([...fallback.categories]),
     roundSeconds: z.number().int().min(config.minRoundSeconds).max(config.maxRoundSeconds).optional().catch(undefined),
     skips: z

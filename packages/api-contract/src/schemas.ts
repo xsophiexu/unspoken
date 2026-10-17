@@ -6,6 +6,7 @@ import {
   FEEDBACK_ENTRY_POINTS,
   FEEDBACK_PLATFORMS,
   FEEDBACK_TOPIC_IDS,
+  LEGACY_DIFFICULTIES,
   MODE_IDS,
   PLAY_KINDS,
   canSendFeedback,
@@ -13,6 +14,7 @@ import {
   type Card,
   type DealtDeck,
   type GameConfig,
+  type LegacyDifficulty,
 } from '@unspoken/core';
 
 // Every path carries the API version, so a breaking change ships as /v2 beside /v1. Multiplayer
@@ -24,6 +26,9 @@ export const paths = {
 } as const;
 
 const difficulty = z.enum(DIFFICULTY_IDS);
+// Requests from older clients may name a level by its old name (Expert 1); it maps to the new one (Hard).
+const legacyNames = Object.keys(LEGACY_DIFFICULTIES) as [LegacyDifficulty, ...LegacyDifficulty[]];
+const requestDifficulty = z.union([difficulty, z.enum(legacyNames).transform((name) => LEGACY_DIFFICULTIES[name])]);
 const category = z.enum(CATEGORY_IDS);
 const mode = z.enum(MODE_IDS);
 const whole = z.number().int().nonnegative();
@@ -59,7 +64,7 @@ export const gameConfigSchema = z.object({
 // POST /v1/decks: a shuffled deck for a difficulty and themes (none means All cards). The same seed
 // always deals the same deck; without one the server picks a seed and returns it.
 export const dealRequestSchema = z.object({
-  difficulty,
+  difficulty: requestDifficulty,
   categories: z.array(category).default([]),
   mode: mode.optional(),
   count: z.number().int().min(1).max(1000).optional(),
