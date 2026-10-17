@@ -1,11 +1,12 @@
 import { en } from '@unspoken/content';
-import type { RoundSummary } from '@unspoken/core';
+import { format, type RoundSummary } from '@unspoken/core';
 import { layout, maxWidth, opacity, radius, space, withAlpha, type RegionColors } from '@unspoken/design-tokens';
 import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Button } from '../ui/Button';
 import { Icon } from '../ui/Icon';
+import { Press } from '../ui/Press';
 import { Txt } from '../ui/Txt';
 import type { Insets } from './PlayView';
 
@@ -31,9 +32,23 @@ function Overlay({ colors, insets, see = false, children, footer }: { colors: Re
   );
 }
 
-type PausedProps = { colors: RegionColors; insets: Insets; clock: string | null; status: string; onResume: () => void; onSettings: () => void; onNewGame: () => void };
+// The Change time limit row: the next turn's time limit, and whether it differs from this turn's.
+export type TimeLimitRow = { value: string; pending: boolean; onPress: () => void };
 
-export function PausedOverlay({ colors, insets, clock, status, onResume, onSettings, onNewGame }: PausedProps) {
+type PausedProps = {
+  colors: RegionColors;
+  insets: Insets;
+  clock: string | null;
+  status: string;
+  // Modes with a visible clock show a Change time limit row above Resume, and the sheet it opens.
+  timeLimit?: TimeLimitRow;
+  sheet?: ReactNode;
+  onResume: () => void;
+  onSettings: () => void;
+  onNewGame: () => void;
+};
+
+export function PausedOverlay({ colors, insets, clock, status, timeLimit, sheet, onResume, onSettings, onNewGame }: PausedProps) {
   return (
     <Overlay colors={colors} insets={insets} see>
       <Txt variant="overline" color={colors.muted}>
@@ -48,11 +63,43 @@ export function PausedOverlay({ colors, insets, clock, status, onResume, onSetti
         {status}
       </Txt>
       <View style={styles.buttons}>
+        {timeLimit ? <ChangeTimeLimit row={timeLimit} colors={colors} /> : null}
         <Button kind="primary" label={en.paused.resume} colors={colors} onPress={onResume} />
         <Button label={en.paused.changeSettings} colors={colors} onPress={onSettings} />
         <Button label={en.paused.newGame} colors={colors} onPress={onNewGame} />
       </View>
+      {sheet}
     </Overlay>
+  );
+}
+
+// A quiet row: a timer icon, Change time limit (with "Starts next turn" under it once changed), the
+// next turn's time and a chevron.
+function ChangeTimeLimit({ row, colors }: { row: TimeLimitRow; colors: RegionColors }) {
+  const p = en.paused;
+  return (
+    <Press
+      onPress={row.onPress}
+      accessibilityLabel={format(en.a11y.changeTimeLimit, { value: row.value })}
+      accessibilityHint={row.pending ? p.startsNextTurn : undefined}
+      style={[styles.row, { backgroundColor: colors.chip }]}
+    >
+      <Icon name="timer" size={layout.icon.md} color={colors.chipInk} />
+      <View style={styles.rowText}>
+        <Txt variant="optionTitle" color={colors.chipInk}>
+          {p.changeTimeLimit}
+        </Txt>
+        {row.pending ? (
+          <Txt variant="subline" color={colors.muted}>
+            {p.startsNextTurn}
+          </Txt>
+        ) : null}
+      </View>
+      <Txt variant="optionTitle" color={colors.chipInk} style={styles.tabular}>
+        {row.value}
+      </Txt>
+      <Icon name="chevronRight" size={layout.icon.md} color={colors.muted} />
+    </Press>
   );
 }
 
@@ -116,5 +163,8 @@ const styles = StyleSheet.create({
   footer: { width: '100%', maxWidth: maxWidth.column, gap: space[3] },
   buttons: { alignSelf: 'stretch', gap: space[2.5], marginTop: space[6], paddingHorizontal: space[8] },
   centerText: { textAlign: 'center' },
+  row: { minHeight: layout.button.height, borderRadius: radius.xl, paddingHorizontal: space[4], paddingVertical: space[2.5], flexDirection: 'row', alignItems: 'center', gap: space[3], marginBottom: space[2] },
+  rowText: { flex: 1, gap: space[0.5] },
+  tabular: { fontVariant: ['tabular-nums'] },
   hero: { width: layout.control.heroBadge, height: layout.control.heroBadge, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center', marginBottom: space[4] },
 });

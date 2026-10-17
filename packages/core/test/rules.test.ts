@@ -14,6 +14,8 @@ import {
   hotPotatoRange,
   isTimeLimitInRange,
   parseSettings,
+  stepTimeLimit,
+  timeLimitDiffers,
   toDifficulty,
   toggleCategory,
   withDifficulty,
@@ -107,6 +109,35 @@ describe('canStart', () => {
 
   it('refuses modes that are not available yet', () => {
     expect(canStart(settingsFor('teams'))).toBe(false);
+  });
+});
+
+describe('time limit changer', () => {
+  it('moves the time 15 seconds a step and stops at 0:30 and 10:00', () => {
+    expect(stepTimeLimit(150, 1)).toBe(165);
+    expect(stepTimeLimit(150, -2)).toBe(120);
+    expect(stepTimeLimit(40, -1)).toBe(30);
+    expect(stepTimeLimit(595, 1)).toBe(600);
+  });
+
+  it('brings a typed time outside the range back to the nearest limit before stepping', () => {
+    expect(stepTimeLimit(12 * 60, -1)).toBe(585);
+    expect(stepTimeLimit(10, 1)).toBe(45);
+  });
+
+  it('takes its step and limits from the config', () => {
+    const config = { ...gameConfig, timeLimitStepSeconds: 30, maxRoundSeconds: 200 };
+    expect(stepTimeLimit(150, 1, config)).toBe(180);
+    expect(stepTimeLimit(180, 1, config)).toBe(200);
+  });
+
+  it('tells when the next turn plays a different time limit', () => {
+    const now = settingsFor('classic', { roundSeconds: 150 });
+    expect(timeLimitDiffers(now, { ...now })).toBe(false);
+    expect(timeLimitDiffers(now, { ...now, roundSeconds: 195 })).toBe(true);
+    expect(timeLimitDiffers(now, { ...now, noTimeLimit: true })).toBe(true);
+    // With no clock either way, the kept time does not matter.
+    expect(timeLimitDiffers({ ...now, noTimeLimit: true }, { ...now, noTimeLimit: true, roundSeconds: 60 })).toBe(false);
   });
 });
 

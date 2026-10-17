@@ -30,7 +30,10 @@ type GameState = {
   introSeen: Partial<Record<PlayKind, true>>;
 };
 
-type GameAction = { type: 'play'; action: RoundAction } | { type: 'newGame'; settings: GameSettings; seed: number };
+type GameAction =
+  | { type: 'play'; action: RoundAction }
+  | { type: 'newGame'; settings: GameSettings; seed: number }
+  | { type: 'saveSettings'; settings: GameSettings };
 
 function startRound(settings: GameSettings, seed: number, introSeen: GameState['introSeen']): RoundState {
   return createRound(settings, {
@@ -50,6 +53,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'newGame':
       return { ...state, settings: action.settings, round: startRound(action.settings, action.seed, state.introSeen) };
+    // The round in progress keeps the settings it started with; the next one plays these.
+    case 'saveSettings':
+      return { ...state, settings: action.settings };
   }
 }
 
@@ -59,6 +65,8 @@ type GameContextValue = {
   dispatch: (action: RoundAction) => void;
   // A fresh round with these settings (new words, score back to 0).
   newGame: (settings: GameSettings) => void;
+  // Save these settings for the next round, leaving the round in progress as it is.
+  saveSettings: (settings: GameSettings) => void;
   // A fresh round with the same settings.
   restart: () => void;
   // A fresh round at another level; a timer still on its default follows the level.
@@ -84,6 +92,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
   // Stable across renders, so timers and listeners that dispatch don't restart on every tick.
   const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
   const newGame = useCallback((settings: GameSettings) => send({ type: 'newGame', settings, seed: newSeed(random) }), [random]);
+  const saveSettings = useCallback((settings: GameSettings) => send({ type: 'saveSettings', settings }), []);
 
   const value = useMemo(
     (): GameContextValue => ({
@@ -91,10 +100,11 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       round: state.round,
       dispatch,
       newGame,
+      saveSettings,
       restart: () => newGame(state.settings),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty)),
     }),
-    [state.settings, state.round, dispatch, newGame],
+    [state.settings, state.round, dispatch, newGame, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

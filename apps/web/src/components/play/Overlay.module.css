@@ -44,6 +44,12 @@
   overflow-wrap: anywhere;
 }
 
+.extra {
+  width: 100%;
+  max-width: var(--un-max-width-prose);
+  margin: 0 auto var(--un-space-4);
+}
+
 .actions {
   display: flex;
   flex-direction: column;

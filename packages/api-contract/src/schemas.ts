@@ -54,6 +54,7 @@ export const gameConfigSchema = z.object({
   skipOptions: z.array(whole.nullable()),
   minRoundSeconds: whole,
   maxRoundSeconds: whole,
+  timeLimitStepSeconds: whole,
   smallDeckCards: whole,
   escalate: z.object({ start: whole, max: whole, winAtMax: whole, minFullCards: whole }),
   hotPotato: z.object({ maxFactor: z.number().positive() }),

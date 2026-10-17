@@ -52,6 +52,8 @@ export type GameConfig = {
   minRoundSeconds: number;
   // The longest time limit setup accepts.
   maxRoundSeconds: number;
+  // How far the − and + buttons on the Paused screen's time limit changer move the time.
+  timeLimitStepSeconds: number;
   // Setup warns that words will repeat below this many cards.
   smallDeckCards: number;
   escalate: {
@@ -103,6 +105,8 @@ export const gameConfig: GameConfig = {
   // Time limits run from 0:30 to 10:00.
   minRoundSeconds: 30,
   maxRoundSeconds: 10 * 60,
+  // The time limit changer's − and + move it 15 seconds.
+  timeLimitStepSeconds: 15,
   smallDeckCards: 20,
   // Escalate starts with 4 banned words and adds one per correct answer. Three correct at 10 wins.
   escalate: { start: 4, max: 10, winAtMax: 3, minFullCards: 20 },

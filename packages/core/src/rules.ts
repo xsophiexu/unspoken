@@ -85,6 +85,20 @@ export function clampTimeLimit(seconds: number, config: GameConfig = gameConfig)
   return Math.min(config.maxRoundSeconds, Math.max(config.minRoundSeconds, seconds));
 }
 
+// The time limit moved by whole steps of the changer's − and + (−1 is one step shorter), kept in
+// the accepted range. A typed time outside it comes back to the nearest limit first.
+export function stepTimeLimit(seconds: number, steps: number, config: GameConfig = gameConfig): number {
+  return clampTimeLimit(clampTimeLimit(seconds, config) + steps * config.timeLimitStepSeconds, config);
+}
+
+// Whether two sets of settings play a different time limit: one has a clock and the other none, or
+// both have one of different lengths. The Paused screen uses it to say a change starts next turn.
+export function timeLimitDiffers(a: GameSettings, b: GameSettings, config: GameConfig = gameConfig): boolean {
+  const timed = hasTimeLimit(a, config);
+  if (timed !== hasTimeLimit(b, config)) return true;
+  return timed && a.roundSeconds !== b.roundSeconds;
+}
+
 // Whether rounds with these settings run a visible countdown: the mode has one and No time limit is off.
 export function hasTimeLimit(settings: GameSettings, config: GameConfig = gameConfig): boolean {
   return hasTimerSetting(settings.mode, config) && !settings.noTimeLimit;

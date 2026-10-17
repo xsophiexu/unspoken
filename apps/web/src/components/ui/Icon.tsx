@@ -21,6 +21,9 @@ export const iconPaths = {
   play: 'M7 4.5l12 7.5-12 7.5z',
   close: 'M6 6l12 12M18 6L6 18',
   info: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 11v5.5M12 7.5h.01',
+  timer: 'M12 5.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zM12 9v4l2.5 1.8M9.5 2.5h5',
+  minus: 'M5.5 12h13',
+  plus: 'M5.5 12h13M12 5.5v13',
 } as const;
 
 export type IconName = keyof typeof iconPaths;

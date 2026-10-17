@@ -1,0 +1,224 @@
+/* The big time between − and +. */
+.readout {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  margin-top: var(--un-space-1);
+}
+
+.readout .stepper {
+  width: var(--un-layout-control-time-limit-stepper);
+  height: var(--un-layout-control-time-limit-stepper);
+}
+
+.readout .stepper > span {
+  width: var(--un-layout-control-time-limit-stepper);
+  height: var(--un-layout-control-time-limit-stepper);
+  border-radius: var(--un-radius-lg);
+}
+
+.readout .stepper:disabled {
+  opacity: var(--un-opacity-disabled);
+}
+
+.time {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: calc(var(--un-layout-control-input-height) + var(--un-space-10));
+  padding: 0 var(--un-space-2);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-color-surface-raised);
+  color: var(--un-color-ink);
+  cursor: text;
+}
+
+.time:has(:focus-visible) {
+  box-shadow: inset 0 0 0 var(--un-layout-stroke-focus) var(--region-accent);
+}
+
+.input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.input:focus {
+  outline: none;
+}
+
+/* Outside the accepted range: an ink outline, never red. */
+.invalid {
+  box-shadow: inset 0 0 0 var(--un-layout-stroke-focus) var(--un-color-ink);
+}
+
+/* No time limit: greyed with the region's disabled colors. */
+.off {
+  background: var(--region-disabled);
+  color: var(--region-disabled-ink);
+  cursor: default;
+}
+
+.unit {
+  margin: 0;
+  text-align: center;
+  color: var(--region-muted);
+}
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.range {
+  --track: var(--un-layout-control-time-limit-track);
+  --thumb: var(--un-layout-control-time-limit-thumb);
+  width: 100%;
+  height: var(--un-layout-min-touch);
+  margin: 0;
+  background: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.range::-webkit-slider-runnable-track {
+  height: var(--track);
+  border-radius: var(--un-radius-pill);
+  background: linear-gradient(to right, var(--region-accent) var(--fill), var(--region-track) var(--fill));
+}
+
+.range::-moz-range-track {
+  height: var(--track);
+  border-radius: var(--un-radius-pill);
+  background: linear-gradient(to right, var(--region-accent) var(--fill), var(--region-track) var(--fill));
+}
+
+.range::-webkit-slider-thumb {
+  width: var(--thumb);
+  height: var(--thumb);
+  margin-top: calc((var(--track) - var(--thumb)) / 2);
+  border: var(--un-layout-stroke-focus) solid var(--region-accent);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-bg);
+  appearance: none;
+}
+
+.range::-moz-range-thumb {
+  width: var(--thumb);
+  height: var(--thumb);
+  border: var(--un-layout-stroke-focus) solid var(--region-accent);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-bg);
+}
+
+.range:focus-visible {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.range:disabled {
+  opacity: var(--un-opacity-disabled);
+  cursor: default;
+}
+
+.ends {
+  display: flex;
+  justify-content: space-between;
+  color: var(--region-muted);
+}
+
+/* No time limit: a row with a switch at the right. */
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  margin-top: var(--un-space-1);
+  padding: var(--un-space-3) var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  cursor: pointer;
+}
+
+.switchRow:has(:focus-visible) .track {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.switchText,
+.rowText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  min-width: 0;
+}
+
+.detail {
+  color: var(--region-muted);
+}
+
+.track {
+  flex: none;
+  position: relative;
+  width: var(--un-space-10);
+  height: var(--un-space-6);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-track);
+}
+
+.thumb {
+  position: absolute;
+  top: var(--un-space-0-5);
+  left: var(--un-space-0-5);
+  width: var(--un-space-5);
+  height: var(--un-space-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--un-color-surface-raised);
+}
+
+.on {
+  background: var(--region-accent);
+}
+
+.on .thumb {
+  transform: translateX(calc(var(--un-space-10) - var(--un-space-5) - 2 * var(--un-space-0-5)));
+}
+
+/* The row on the Paused screen. */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  width: 100%;
+  min-height: var(--un-layout-button-height);
+  padding: var(--un-space-2-5) var(--un-space-4);
+  border: 0;
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+.row:focus-visible {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.rowIcon {
+  flex: none;
+  font-size: var(--un-layout-icon-md);
+}
+
+.value {
+  font-variant-numeric: tabular-nums;
+}
