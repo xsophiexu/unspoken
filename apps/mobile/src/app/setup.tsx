@@ -26,7 +26,7 @@ import {
 import { layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
-import { StyleSheet, Switch, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from 'react-native';
 
 import { backToGame, goBack } from '../nav';
 import { usePrefs } from '../state/prefs';
@@ -246,15 +246,10 @@ function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: T
             {s.noTimeLimitDetail}
           </Txt>
         </View>
-        <Switch
-          value={noTimeLimit}
-          onValueChange={onNoTimeLimit}
-          trackColor={{ false: colors.track, true: colors.accent }}
-          thumbColor={field.bg}
-          ios_backgroundColor={colors.track}
-          accessibilityElementsHidden
-          importantForAccessibility="no-hide-descendants"
-        />
+        {/* Drawn rather than the platform Switch, so it looks the same on iOS, Android and web. */}
+        <View style={[styles.track, noTimeLimit ? styles.trackOn : null, { backgroundColor: noTimeLimit ? colors.accent : colors.track }]}>
+          <View style={[styles.thumb, { backgroundColor: field.bg }]} />
+        </View>
       </Press>
     </View>
   );
@@ -298,4 +293,7 @@ const styles = StyleSheet.create({
     gap: space[3],
   },
   switchText: { flex: 1, gap: space[0.5] },
+  track: { width: space[10], height: space[6], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
+  trackOn: { alignItems: 'flex-end' },
+  thumb: { width: space[5], height: space[5], borderRadius: radius.pill },
 });
