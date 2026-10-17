@@ -13,7 +13,7 @@ const copy = en.setup;
 describe('New game setup', () => {
   it('offers a timer and skips only where the mode has them', () => {
     const { unmount } = renderApp(<SetupScreen mode="classic" />);
-    expect(screen.getByRole('textbox', { name: /Round timer 2:30/ })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Round timer 1:30/ })).toBeInTheDocument();
     expect(screen.getByRole('radiogroup', { name: copy.skips })).toBeInTheDocument();
     unmount();
 

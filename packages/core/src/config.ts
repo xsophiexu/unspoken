@@ -95,8 +95,8 @@ export const gameConfig: GameConfig = {
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },
   ],
-  // The app opens straight into an Endless game at Hard with All cards.
-  defaults: { mode: 'endless', difficulty: 'Hard', categories: [], skips: 3 },
+  // The app opens straight into an Endless game at Normal with All cards.
+  defaults: { mode: 'endless', difficulty: 'Normal', categories: [], skips: 3 },
   skipOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null],
   minRoundSeconds: 10,
   maxRoundSeconds: 99 * 60 + 59,

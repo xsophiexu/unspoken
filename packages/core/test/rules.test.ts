@@ -25,8 +25,8 @@ describe('catalogs', () => {
     expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams', 'timeAttack']);
   });
 
-  it('starts a fresh install on Endless at Hard with All cards, 2:30 and 3 skips', () => {
-    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Hard', categories: [], roundSeconds: 150, skips: 3 });
+  it('starts a fresh install on Endless at Normal with All cards, 1:30 and 3 skips', () => {
+    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Normal', categories: [], roundSeconds: 90, skips: 3 });
   });
 });
 

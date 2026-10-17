@@ -38,7 +38,7 @@ describe('Reverse', () => {
   });
 
   it('scores the word’s worth when the guesser got it', () => {
-    const state = play(start(), [{ type: 'revealClue' }, { type: 'showAnswer' }, { type: 'got' }]);
+    const state = play(start({ difficulty: 'Hard' }), [{ type: 'revealClue' }, { type: 'showAnswer' }, { type: 'got' }]);
     expect(state.score).toBe(3);
     expect(state.played).toBe(1);
   });
