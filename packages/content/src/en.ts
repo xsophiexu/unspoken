@@ -704,6 +704,129 @@ export const en = {
     },
   },
 
+  // --- Versus --------------------------------------------------------------------------------
+  // Teams (or players) take turns giving clues; everyone scores against each other. Setup reuses
+  // Mind Reader's Custom game screens with these lines in place of theirs.
+  versus: {
+    setup: {
+      step: 'Versus · Step {n} of {total}',
+      back: '← Modes',
+      playersHint: 'Individual needs at least {individual} players. Teams need {teams}.',
+      tooFew: { one: 'Versus needs at least {min} players. Add 1 more.', other: 'Versus needs at least {min} players. Add {n} more.' },
+      individualHint: 'Individual · {min} or more players. Everyone takes turns giving clues and scores on their own.',
+      teamsHint: 'Teams · {min} or more players. Teams take turns: one teammate gives clues, the rest of the team guesses.',
+      first: 'Clue Giver first',
+    },
+    settings: {
+      title: 'Game settings',
+      rounds: 'ROUNDS',
+      roundsLabel: 'Rounds',
+      roundsTeams: 'Every team plays once a round',
+      roundsIndividual: 'Everyone gives clues once a round',
+      skipsLabel: 'Skips per turn',
+      skipsSub: 'Pass on a card you can’t describe',
+      scoring: 'SCORING',
+      penalty: 'Banned word penalty',
+      penaltyOff: 'Off: a banned word scores 0',
+      penaltyOn: { one: 'Lose {n} point when a banned word is said', other: 'Lose {n} points when a banned word is said' },
+      pointsLost: 'Points lost',
+      pointsLostTeams: 'Taken from the team’s score',
+      pointsLostIndividual: 'Only the Clue Giver loses them',
+      pointsLostValue: '−{n}',
+    },
+
+    // --- The header on a turn ---
+    round: 'Round {round} of {rounds}',
+    details: 'Details',
+    cards: {
+      teamUp: '{team} are up',
+      givesClues: '{name} gives clues',
+      clueGiver: 'Clue Giver',
+      guessing: 'Guessing',
+      guesser: 'Guesser',
+    },
+    detailsSheet: {
+      title: 'Who’s playing this turn',
+      clueGiver: 'CLUE GIVER',
+      guessing: 'GUESSING',
+      watching: 'WATCHING FOR BANNED WORDS',
+      nextTeams: 'Next turn: {team} are up · {name} gives clues.',
+      nextIndividual: 'Next turn: {name} gives clues.',
+      last: 'This is the last turn of the game.',
+    },
+
+    // --- Pass the phone to the Clue Giver ---
+    pass: {
+      kicker: 'Round {round} of {rounds}',
+      title: '{whose} turn',
+      sub: '{name} gives clues',
+      subOthers: 'Everyone else guesses',
+      subOne: '{name} guesses',
+      clueGiver: 'CLUE GIVER',
+      guessing: 'GUESSING',
+      guesser: 'GUESSER',
+      watching: 'WATCHING FOR BANNED WORDS',
+      note: 'Hand the phone to {name}. Only {name} looks at the card.',
+      nextTime: 'Next time, {name} gives clues for {team}.',
+      ready: '{name} is ready · Start',
+    },
+
+    // --- The turn ---
+    turn: {
+      tapWho: 'Correct? Tap who got it',
+      endTurn: 'End turn',
+    },
+
+    // --- Turn recap ---
+    recap: {
+      kicker: 'Round {round} of {rounds} · {team}',
+      kickerIndividual: 'Round {round} of {rounds} · {name} gave clues',
+      title: 'Turn recap',
+      scored: '{side} scored',
+      correct: { one: '{n} correct', other: '{n} correct' },
+      notGuessed: { one: '{n} not guessed', other: '{n} not guessed' },
+      banned: { one: '{n} banned word', other: '{n} banned words' },
+      hint: 'Tap a word to change it',
+      outcomes: { correct: 'Correct', notGuessed: 'Not guessed', banned: 'Banned word' },
+      timeUp: 'time ran out',
+      // A row's state for screen readers: "Doubt, Correct, plus 1. Tap to change."
+      rowLabel: '{word}, {outcome}, {points}. Tap to change.',
+      next: 'Next: {whose} turn',
+      seeScores: 'See scores',
+      seeResults: 'See results',
+    },
+    // Points on the recap and scores: "+3", "0", "−1".
+    plus: '+{n}',
+    minus: '−{n}',
+
+    scores: {
+      kicker: 'After round {round} of {rounds}',
+      title: 'Scores',
+      left: { one: '{n} round left.', other: '{n} rounds left.' },
+      next: 'NEXT TURN',
+      nextTeams: '{team} are up · {name} gives clues',
+      nextIndividual: '{name} gives clues · everyone else guesses',
+      nextOne: '{name} gives clues · {guesser} guesses',
+      hand: 'Hand the phone to {name}.',
+      start: 'Start {whose} turn',
+    },
+    results: {
+      kicker: { one: 'Game over · {n} round', other: 'Game over · {n} rounds' },
+      winTeam: '{team} win',
+      winPlayer: '{name} wins',
+      tie: 'It’s a tie',
+      sub: '{points} · {details}',
+      points: { one: '{n} point', other: '{n} points' },
+      correct: { one: '{n} correct', other: '{n} correct' },
+      banned: { one: '{n} banned word', other: '{n} banned words' },
+      asClueGiver: '{n} as Clue Giver',
+      guessing: '{n} guessing',
+      penalty: { one: '−{n} banned word', other: '−{n} banned words' },
+      playAgain: 'Play again',
+      newGame: 'New game',
+    },
+  },
+
   // --- Accessibility labels ------------------------------------------------------------------
   a11y: {
     noTimeLimit: 'No time limit',
@@ -733,6 +856,7 @@ export const en = {
     unlimitedSkips: 'Unlimited skips',
     difficultyInfo: 'About difficulties',
     categories: 'Categories: {summary}. Tap to choose.',
+    gotIt: '{name} got it',
   },
 };
 

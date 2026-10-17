@@ -17,3 +17,6 @@ export * from './en';
 
 // What each Mind Reader screen says, from the round state.
 export * from './mindReader';
+
+// What each Versus screen says, from the round state.
+export * from './versus';
