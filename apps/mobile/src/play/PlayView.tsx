@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { layout, maxWidth, motion, playMargins, radius, ringCardSize, space, type PlayMargins, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
+import { layout, maxWidth, motion, playMargins, radius, ringCardSize, screenClass, space, type PlayMargins, type RegionColors, type TimerBar as TimerBarSlot, type Theme } from '@unspoken/design-tokens';
 import { useState, type ReactNode } from 'react';
 import { Animated, ScrollView, StyleSheet, useWindowDimensions, View, type StyleProp, type ViewStyle } from 'react-native';
 
@@ -41,8 +41,8 @@ type Props = {
   handlers?: PlayHandlers;
   insets?: Insets;
   labels?: ControlLabels;
-  // The height the screen is drawn at, when it isn't the window's (thumbnails).
-  height?: number;
+  // The size the screen is drawn at, when it isn't the window's (thumbnails).
+  screen?: { width: number; height: number };
   // A mode's own header in place of the style's (Versus: the round and its role cards), and its own
   // controls in place of Skip and Correct (Versus: tap who got it).
   header?: ReactNode;
@@ -60,6 +60,10 @@ type Frame = {
   // A short screen (small phones): a smaller word, compact banned lists and less room under the
   // controls.
   short: boolean;
+  // A narrow screen (small phones): a smaller word set tighter, and compact banned lists.
+  narrow: boolean;
+  // A large screen (big phones): a larger header title and the controls a little higher.
+  large: boolean;
   // The play screen margins in this style. Panels, bands and bars that run edge to edge bleed out by
   // the side margin.
   margins: PlayMargins;
@@ -71,8 +75,9 @@ type Frame = {
   controls?: ReactNode;
 };
 
-export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, height, header, controls }: Props) {
+export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, screen, header, controls }: Props) {
   const window = useWindowDimensions();
+  const size = screenClass((screen ?? window).width, (screen ?? window).height);
   const { regions: r, style } = theme;
   const page = r[style.regions.page];
   const panel = style.arrangement === 'lowerPanel' || style.arrangement === 'sheet';
@@ -83,7 +88,7 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, h
     h: handlers,
     insets,
     labels,
-    short: (height ?? window.height) < layout.shortScreen.height,
+    ...size,
     margins: playMargins(style),
     page,
     word: style.regions.word ? r[style.regions.word] : page,
@@ -109,7 +114,8 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, h
 // right the header stats, the timer chip or dial and the menu. A dial beside the mode label comes
 // before the menu; in a row of buttons alone it sits at the far right. Reverse and Mind Reader
 // share this header.
-export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme; model: HeaderModel; clock: Clock | null; handlers?: HeaderHandlers }) {
+// titleScale: Card's mode name at this much its style's size (layout.largeScreen).
+export function PlayHeader({ theme, model, clock, handlers: h, titleScale = 1 }: { theme: Theme; model: HeaderModel; clock: Clock | null; handlers?: HeaderHandlers; titleScale?: number }) {
   const { header, timer, stats } = theme.style;
   const colors = theme.regions[theme.style.regions.page];
   const top = header.position === 'top';
@@ -117,7 +123,7 @@ export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme;
   const dial = clock && timer.variant === 'dial' ? <TimerDial slot={timer} clock={clock} colors={colors} onPause={h?.onPause} /> : null;
   const left =
     header.variant === 'titleBadge' ? (
-      <TitleBadge slot={header} colors={colors} model={model} onBadge={h?.onBadge} />
+      <TitleBadge slot={titleScale === 1 ? header : { ...header, size: Math.round(header.size * titleScale) }} colors={colors} model={model} onBadge={h?.onBadge} />
     ) : top ? (
       <ModeLabel slot={header} colors={colors} model={model} onPress={h?.onModeLabel} />
     ) : (
@@ -141,7 +147,7 @@ export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme;
 
 function header(f: Frame) {
   if (f.header) return f.header;
-  return <PlayHeader theme={f.theme} model={f.model} clock={f.model.clock} handlers={f.h} />;
+  return <PlayHeader theme={f.theme} model={f.model} clock={f.model.clock} handlers={f.h} titleScale={f.large ? layout.largeScreen.titleScale : 1} />;
 }
 
 function statsAt(f: Frame, placement: 'belowHeader' | 'aboveWord' | 'underWord' | 'footer', colors: RegionColors) {
@@ -199,7 +205,7 @@ function panelLine(f: Frame) {
 function banned(f: Frame, colors: RegionColors) {
   const card = f.model.card;
   if (!card) return null;
-  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={f.margins.paddingX} short={f.short} />;
+  return <Banned slot={f.theme.style.banned} colors={colors} words={card.banned} freshIndex={card.freshIndex} ramp={f.theme.colors.ramp} bleed={f.margins.paddingX} small={f.short || f.narrow} />;
 }
 
 // The mode label above the word (when the style puts it there), the word, and what follows it:
@@ -208,7 +214,7 @@ function WordBlock({ f, colors, moving = false, onCard = false }: { f: Frame; co
   const card = f.model.card;
   const slot = f.theme.style.header;
   const label = slot.position === 'aboveWord' && slot.variant !== 'titleBadge' ? <ModeLabel slot={slot} colors={colors} model={f.model} onPress={f.h?.onModeLabel} /> : null;
-  const word = card ? <Word slot={f.theme.style.word} colors={colors} word={card.card.word} short={f.short} /> : null;
+  const word = card ? <Word slot={f.theme.style.word} colors={colors} word={card.card.word} short={f.short} narrow={f.narrow} /> : null;
   return (
     <View style={styles.wordBlock}>
       {onCard ? null : statsAt(f, 'aboveWord', colors)}
@@ -332,7 +338,7 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
   );
   const stats = statsAt(f, 'footer', colors);
   const line = (bleed?: number) => clockAt(f, 'aboveControls', colors, bleed);
-  const under = f.margins.paddingBottom;
+  const under = f.margins.paddingBottom + (f.large ? layout.largeScreen.controlsLift : 0);
   const pad = { paddingTop: separate ? f.margins.footerTop : space[3], paddingBottom: f.insets.bottom + (f.short ? Math.min(under, space[3]) : under) };
   if (!fills) {
     return (

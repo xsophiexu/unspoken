@@ -1,7 +1,7 @@
 import type { ColorId, ColorMode } from './palettes';
 import type { RegionTone } from './regions';
 import { buttonPair, layout, type RadiusName } from './scales';
-import { textStyles } from './typography';
+import { fontMetrics, textStyles } from './typography';
 
 // Layout styles as data. Every platform implements a small set of slot components once (header,
 // timer, stats, word, banned list, controls), each with a few variants, plus one screen frame per
@@ -436,16 +436,36 @@ export function playMargins(style: LayoutStyle): PlayMargins {
   return { ...layout.play, ...style.margins };
 }
 
-// The Card timer ring for the space it can take: layout.card.ringScale times as wide as that space
-// (the space inside the side margins, so the ring reaches into them) but always at least
-// layout.card.ringMargin from the screen edges, up to that much more than layout.card.maxWidth,
-// and as tall as the maxWidth × maxHeight shape gives at that width, never taller than the space
-// (342 × 567 on the reference screen with layout.play margins).
+// The Card timer ring for the space it can take (the space inside the side margins): as wide as
+// that space, so its edges line up with the header and controls, up to layout.card.ringScale times
+// layout.card.maxWidth, and as tall as the maxWidth × maxHeight shape gives at that width, never
+// taller than the space (326 × 540 on the reference screen with layout.play margins).
 export function ringCardSize(width: number, height: number): { width: number; height: number } {
-  const { maxWidth, maxHeight, ringScale, ringMargin } = layout.card;
-  const reach = Math.max(0, layout.play.paddingX - ringMargin);
-  const w = Math.max(0, Math.min(Math.min(width, maxWidth) * ringScale, width + 2 * reach));
+  const { maxWidth, maxHeight, ringScale } = layout.card;
+  const w = Math.max(0, Math.min(width, maxWidth * ringScale));
   return { width: w, height: Math.max(0, Math.min(height, (w * maxHeight) / maxWidth)) };
+}
+
+// Which screen-size adjustments a window gets: short (layout.shortScreen), narrow
+// (layout.narrowScreen) and large (layout.largeScreen).
+export function screenClass(width: number, height: number): { short: boolean; narrow: boolean; large: boolean } {
+  return {
+    short: height < layout.shortScreen.height,
+    narrow: width < layout.narrowScreen.width,
+    large: width >= layout.largeScreen.width && height >= layout.largeScreen.height,
+  };
+}
+
+// Padding for text set at a line height tighter than its glyphs need: the lines sit closer, and
+// the padding above and below gives back what the first line's accents and the last line's
+// descenders reach past the box (fontMetrics), in px at that font size.
+export function tightLeading(lineHeight: number, size: number): { paddingTop: number; paddingBottom: number } {
+  const { contentAscent, contentDescent, ink } = fontMetrics;
+  const half = (contentAscent + contentDescent - lineHeight) / 2;
+  return {
+    paddingTop: Math.ceil(Math.max(0, ink.text.ascent - (contentAscent - half)) * size),
+    paddingBottom: Math.ceil(Math.max(0, ink.text.descent - (contentDescent - half)) * size),
+  };
 }
 
 // splitBar: the space above its labels (they center in the bar's height less its paddingBottom).

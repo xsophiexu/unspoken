@@ -406,23 +406,23 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
           footer={
             <>
               {v ? (
-                <View style={[styles.nextBox, { backgroundColor: page.chip }]}>
+                <View style={[styles.nextBox, styles.nextTurn, { backgroundColor: page.chip }]}>
                   <Txt variant="overline" color={page.muted}>
                     {en.mindReader.scores.next}
                   </Txt>
-                  <View style={mrStyles.row}>
+                  <View style={styles.nextLine}>
                     {v.nextColor !== null ? <TeamDot color={v.nextColor} size={space[2]} /> : null}
-                    <Txt variant="label" color={page.ink} style={mrStyles.grow}>
+                    <Txt variant="label" color={page.ink} style={styles.nextText}>
                       {v.next}
                     </Txt>
                   </View>
-                  <View style={mrStyles.row}>
+                  <View style={styles.nextLine}>
                     {v.clueColor !== null ? <TeamDot color={v.clueColor} size={space[2]} /> : null}
-                    <Txt variant="label" color={page.ink} style={mrStyles.grow}>
+                    <Txt variant="label" color={page.ink} style={styles.nextText}>
                       {v.nextClues}
                     </Txt>
                   </View>
-                  <Txt variant="small" color={page.muted}>
+                  <Txt variant="small" color={page.muted} style={styles.nextText}>
                     {v.hand}
                   </Txt>
                 </View>
@@ -628,6 +628,10 @@ const styles = StyleSheet.create({
   sideCard: { gap: space[2.5] },
   pointsRow: { borderTopWidth: layout.stroke.hairline, paddingTop: space[2.5] },
   nextBox: { borderRadius: radius.xl, padding: space[4], gap: space[1.5] },
+  // Scores' NEXT TURN box: every line centered, a team dot centered with its line as one unit.
+  nextTurn: { alignItems: 'center' },
+  nextLine: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: space[2.5] },
+  nextText: { flexShrink: 1, textAlign: 'center' },
   standing: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.xl, paddingHorizontal: space[4], minHeight: layout.button.height + space[2] },
   list: { paddingVertical: space[1] },
   scoreRule: { paddingVertical: space[2.5] },

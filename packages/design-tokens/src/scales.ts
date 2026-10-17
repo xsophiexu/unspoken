@@ -151,13 +151,13 @@ export const layout = {
   minTouch: 44,
   // caretScale: the ▾ after the mode and level, relative to the header text size.
   header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
-  // Card style: the word tile inside the timer ring. The ring is at most maxWidth × maxHeight and
-  // keeps that shape on narrower screens (ringCardSize). floatingHeight: the Deck card's height,
-  // which shrinks on shorter screens. ringScale: the Card ring and its tile are drawn this much
-  // larger than the space inside the side margins (and than maxWidth × maxHeight), reaching into the
-  // margins, while the header, status line and controls keep their places. ringMargin: the ring
-  // never comes closer than this to the screen edge (Kurt: standard mobile side margins).
-  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, ringMargin: 24, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
+  // Card style: the word tile inside the timer ring. The ring keeps the maxWidth × maxHeight shape
+  // and fills the space inside the side margins, so its edges line up with the header and the
+  // controls (Kurt), shrinking with narrower screens (ringCardSize). ringScale: on wide screens the
+  // ring stops growing at this much more than maxWidth × maxHeight. floatingHeight: the Deck card's
+  // height, which shrinks on shorter screens.
+  // shortScreenClearance: how much a height-bound ring shrinks (in proportion) on short web screens.
+  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, shortScreenClearance: 32, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
   // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
   // the height of a compact tile or band.
@@ -165,6 +165,13 @@ export const layout = {
   // Windows shorter than this (small phones) use compact banned lists and scale the word's largest
   // size by wordScale, so the word and every banned word fit without scrolling.
   shortScreen: { height: 700, wordScale: 0.8 },
+  // Windows narrower than this (Galaxy A, 360 wide) scale the word's largest size by wordScale, use
+  // the compact banned lists, and set a word that wraps at wordLineHeight (tighter than the word
+  // style's own), padded so no accent or descender leaves the box (tightLeading).
+  narrowScreen: { width: 380, wordScale: 0.86, wordLineHeight: 1.08 },
+  // Windows at least this wide and this tall (Pixel 8 Pro, 412 × 915) draw the play header's title
+  // titleScale times larger and lift the controls by controlsLift.
+  largeScreen: { width: 410, height: 900, titleScale: 1.12, controlsLift: space[2.5] },
   // headerRoom: the space above a roomy sheet header (Choose categories); headerGap: the space
   // between that header (title, count and hint) and the content under it.
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },
