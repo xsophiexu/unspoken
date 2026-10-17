@@ -3321,7 +3321,7 @@
    "Neighbors",
    "Loud",
    "Home",
-   "Keg",
+   "Dancing",
    "Host",
    "Cops",
    "Basement"
@@ -7622,7 +7622,7 @@
    "Peck",
    "Mouth",
    "Pucker",
-   "Make out",
+   "Valentine",
    "Romance",
    "Mistletoe",
    "Goodnight",
@@ -13789,7 +13789,7 @@
    "Screen",
    "Bar",
    "Song",
-   "Drunk",
+   "Party",
    "Duet",
    "Off-key",
    "Japan"
@@ -17839,7 +17839,7 @@
    "Disorganized",
    "Fun",
    "Spicy",
-   "Hangover",
+   "Frantic",
    "Frazzled",
    "Untidy"
   ],
@@ -20002,8 +20002,8 @@
    "Celebrate",
    "Before",
    "Best man",
-   "Strip club",
-   "Hangover",
+   "Groomsmen",
+   "Weekend",
    "Last night"
   ],
   "difficulty": "Harder",
@@ -20028,29 +20028,6 @@
    "Nag",
    "Road",
    "Behind"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Bloody Mary",
-  "banned": [
-   "Tomato",
-   "Vodka",
-   "Celery",
-   "Brunch",
-   "Spicy",
-   "Cocktail",
-   "Hangover",
-   "Juice",
-   "Garnish",
-   "Tabasco"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -24949,7 +24926,7 @@
    "Partner",
    "Lie",
    "Sneak",
-   "Mistress",
+   "Secret",
    "Two-timing",
    "Caught"
   ],
@@ -25247,7 +25224,7 @@
    "Kanye",
    "Wealthy",
    "Greedy",
-   "Sugar daddy",
+   "Older",
    "Fortune",
    "Spouse",
    "Prospector"
@@ -35223,29 +35200,6 @@
   "allCardsWeight": 0.01389
  },
  {
-  "word": "Rave",
-  "banned": [
-   "Party",
-   "Techno",
-   "Dance",
-   "Glow sticks",
-   "Warehouse",
-   "Ecstasy",
-   "DJ",
-   "Night",
-   "Electronic",
-   "Bass"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Arts and Entertainment",
-  "themes": [
-   "Arts and Entertainment"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01389
- },
- {
   "word": "Reality show",
   "banned": [
    "Unscripted",
@@ -35392,10 +35346,10 @@
    "Concert",
    "Music",
    "Fans",
-   "Groupies",
+   "Stage",
    "Tour",
    "Mick Jagger",
-   "Sex drugs"
+   "Rock and roll"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -35716,7 +35670,7 @@
    "Partner",
    "Dip",
    "Ballroom",
-   "Sexy",
+   "Dramatic",
    "Buenos Aires"
   ],
   "difficulty": "Harder",
@@ -43000,29 +42954,6 @@
   "allCardsWeight": 0.01562
  },
  {
-  "word": "Day drinking",
-  "banned": [
-   "Afternoon",
-   "Alcohol",
-   "Sun",
-   "Brunch",
-   "Patio",
-   "Early",
-   "Beer",
-   "Tipsy",
-   "Weekend",
-   "Boozy"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
   "word": "Dim sum",
   "banned": [
    "Chinese",
@@ -43035,29 +42966,6 @@
    "Steamed",
    "Cantonese",
    "Plates"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Dry January",
-  "banned": [
-   "Sober",
-   "Month",
-   "Alcohol",
-   "Resolution",
-   "New Year",
-   "Abstain",
-   "Quit",
-   "Detox",
-   "Challenge",
-   "Booze"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -45414,29 +45322,6 @@
   ],
   "allCards": true,
   "allCardsWeight": 0.01622
- },
- {
-  "word": "Prohibition",
-  "banned": [
-   "Alcohol",
-   "Speakeasy",
-   "Ban",
-   "1920s",
-   "Gangster",
-   "Law",
-   "Bootleg",
-   "Al Capone",
-   "Amendment",
-   "Moonshine"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "History and Myth",
-  "themes": [
-   "History and Myth"
-  ],
-  "allCards": false,
-  "allCardsWeight": 0
  },
  {
   "word": "Prophecy",
@@ -48062,29 +47947,6 @@
   "allCardsWeight": 0.01562
  },
  {
-  "word": "Open relationship",
-  "banned": [
-   "Polyamory",
-   "Monogamy",
-   "Other people",
-   "Partners",
-   "Agreement",
-   "Couple",
-   "Free",
-   "Exclusive",
-   "Swingers",
-   "Dating"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
   "word": "Opposites attract",
   "banned": [
    "Different",
@@ -48140,7 +48002,7 @@
    "Couple",
    "Cringe",
    "Get a room",
-   "Making out",
+   "Hugging",
    "Hold hands",
    "Acronym"
   ],
@@ -48396,29 +48258,6 @@
    "Shy",
    "Network",
    "Charming"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Thirst trap",
-  "banned": [
-   "Selfie",
-   "Photo",
-   "Attention",
-   "Instagram",
-   "Hot",
-   "Post",
-   "Likes",
-   "Shirtless",
-   "Bait",
-   "Flex"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -56793,7 +56632,7 @@
    "Rude",
    "Stand-up",
    "Crowd",
-   "Drunk",
+   "Annoying",
    "Insult"
   ],
   "difficulty": "Expert 1",
@@ -59092,7 +58931,7 @@
    "Joy",
    "Bliss",
    "Elated",
-   "Ecstasy",
+   "Delight",
    "High",
    "Zendaya",
    "Thrill",
@@ -65045,29 +64884,6 @@
   "allCardsWeight": 0.02083
  },
  {
-  "word": "Hair of the dog",
-  "banned": [
-   "Hangover",
-   "Drink",
-   "Morning",
-   "Cure",
-   "Alcohol",
-   "More",
-   "Bite",
-   "Mimosa",
-   "Remedy",
-   "Bloody Mary"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02083
- },
- {
   "word": "House wine",
   "banned": [
    "Cheap",
@@ -65172,29 +64988,6 @@
    "Leaf",
    "Cup",
    "Espresso"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02083
- },
- {
-  "word": "Liquid lunch",
-  "banned": [
-   "Drinks",
-   "Booze",
-   "Alcohol",
-   "Midday",
-   "Martini",
-   "Office",
-   "Mad Men",
-   "Instead",
-   "Pub",
-   "Beer"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -67262,7 +67055,7 @@
    "Thug",
    "England",
    "Riot",
-   "Drunk",
+   "Vandal",
    "Brawl",
    "Troublemaker"
   ],
@@ -67832,8 +67625,8 @@
   "banned": [
    "Ladies' man",
    "Lover",
-   "Womanizer",
-   "Seducer",
+   "Flirt",
+   "Heartbreaker",
    "Player",
    "Don Juan",
    "Charmer",
@@ -68045,7 +67838,7 @@
    "Betrayal",
    "Spouse",
    "Lover",
-   "Mistress",
+   "Secret",
    "Marriage",
    "Trust"
   ],
@@ -68133,7 +67926,7 @@
    "Friends",
    "Not romantic",
    "Plato",
-   "Non-sexual",
+   "Just friends",
    "Pure",
    "Companionship",
    "Love",
@@ -69129,29 +68922,6 @@
    "Dark",
    "Schedule",
    "Insomnia"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Health and Body",
-  "themes": [
-   "Health and Body"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02222
- },
- {
-  "word": "Sobriety",
-  "banned": [
-   "Sober",
-   "Alcohol",
-   "Drink",
-   "Recovery",
-   "Clean",
-   "Drunk",
-   "AA",
-   "Chip",
-   "Milestone",
-   "Days"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -72555,7 +72325,7 @@
    "Insights",
    "Model",
    "Big data",
-   "Sexiest"
+   "Charts"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -74710,7 +74480,7 @@
   "word": "Body double",
   "banned": [
    "Stand-in",
-   "Nude",
+   "Camera",
    "Scene",
    "Actor",
    "Replace",
@@ -77888,12 +77658,12 @@
   "banned": [
    "Two",
    "Meanings",
-   "Innuendo",
+   "Clever",
    "French",
    "Joke",
    "Word",
    "Pun",
-   "Dirty",
+   "Wordplay",
    "Ambiguous",
    "Suggestive"
   ],
@@ -81495,29 +81265,6 @@
   "allCardsWeight": 0.03226
  },
  {
-  "word": "Teetotaler",
-  "banned": [
-   "Sober",
-   "Abstain",
-   "Never",
-   "Drink",
-   "Alcohol",
-   "Temperance",
-   "Refuse",
-   "Dry",
-   "Water",
-   "Booze"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03226
- },
- {
   "word": "Age of Exploration",
   "banned": [
    "Columbus",
@@ -81697,30 +81444,6 @@
   "theme": "History and Myth",
   "themes": [
    "History and Myth"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.024
- },
- {
-  "word": "Concubine",
-  "banned": [
-   "Mistress",
-   "Emperor",
-   "Harem",
-   "Secondary wife",
-   "Kept",
-   "Royal",
-   "Consort",
-   "Courtesan",
-   "Ancient",
-   "Lover"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "History and Myth",
-  "themes": [
-   "History and Myth",
-   "Love and Relationships"
   ],
   "allCards": true,
   "allCardsWeight": 0.024
@@ -82836,7 +82559,7 @@
    "Field",
    "Fans",
    "Run",
-   "Streaker",
+   "Stadium",
    "Storm",
    "Crowd",
    "Soccer",
@@ -83430,29 +83153,6 @@
   "allCardsWeight": 0.02381
  },
  {
-  "word": "Don Juan",
-  "banned": [
-   "Casanova",
-   "Womanizer",
-   "Seducer",
-   "Lover",
-   "Byron",
-   "Spanish",
-   "Lothario",
-   "Ladies' man",
-   "Legend",
-   "Player"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02381
- },
- {
   "word": "Dowry",
   "banned": [
    "Bride",
@@ -83553,7 +83253,7 @@
    "Passion",
    "Temporary",
    "Fixation",
-   "Lust",
+   "Adore",
    "Intense",
    "Fleeting",
    "Puppy love"
@@ -85201,29 +84901,6 @@
   "allCardsWeight": 0.01818
  },
  {
-  "word": "Honey trap",
-  "banned": [
-   "Seduce",
-   "Spy",
-   "Lure",
-   "Romance",
-   "Sex",
-   "Blackmail",
-   "Bait",
-   "Sting",
-   "Attractive",
-   "Compromise"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Law and Diplomacy",
-  "themes": [
-   "Law and Diplomacy"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01818
- },
- {
   "word": "Hush money",
   "banned": [
    "Silence",
@@ -86064,29 +85741,6 @@
    "Water",
    "Absorb",
    "Abroad"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Culture and Travel",
-  "themes": [
-   "Culture and Travel"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03103
- },
- {
-  "word": "Love hotel",
-  "banned": [
-   "Japan",
-   "Hourly",
-   "Couples",
-   "Sex",
-   "Room",
-   "Rent",
-   "Themed",
-   "Discreet",
-   "Motel",
-   "Affair"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -89226,29 +88880,6 @@
   "allCardsWeight": 0.03125
  },
  {
-  "word": "Casting couch",
-  "banned": [
-   "Sex",
-   "Favors",
-   "Hollywood",
-   "Producer",
-   "Exploitation",
-   "Role",
-   "Abuse",
-   "Weinstein",
-   "Audition",
-   "MeToo"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Arts and Entertainment",
-  "themes": [
-   "Arts and Entertainment"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03125
- },
- {
   "word": "Clapperboard",
   "banned": [
    "Action",
@@ -89606,29 +89237,6 @@
    "Statue of Liberty",
    "Sheen",
    "Vintage"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Arts and Entertainment",
-  "themes": [
-   "Arts and Entertainment"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03125
- },
- {
-  "word": "Pin-up",
-  "banned": [
-   "Poster",
-   "Girl",
-   "Betty Grable",
-   "Retro",
-   "Locker",
-   "Calendar",
-   "Sexy",
-   "Forties",
-   "Bettie Page",
-   "Bomber"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -94715,29 +94323,6 @@
    "Gestures",
    "Unconscious",
    "Echo"
-  ],
-  "difficulty": "Master 2",
-  "score": 7,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
-  "word": "Philanderer",
-  "banned": [
-   "Womanizer",
-   "Cheater",
-   "Affairs",
-   "Unfaithful",
-   "Player",
-   "Casanova",
-   "Lothario",
-   "Flirt",
-   "Husband",
-   "Roving"
   ],
   "difficulty": "Master 2",
   "score": 7,
@@ -103381,52 +102966,6 @@
   "allCardsWeight": 0.04
  },
  {
-  "word": "Lothario",
-  "banned": [
-   "Womanizer",
-   "Seducer",
-   "Casanova",
-   "Don Juan",
-   "Player",
-   "Rake",
-   "Charmer",
-   "Ladies' man",
-   "Rogue",
-   "Flirt"
-  ],
-  "difficulty": "Master 3",
-  "score": 8,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
-  "word": "Paramour",
-  "banned": [
-   "Lover",
-   "Affair",
-   "Mistress",
-   "Illicit",
-   "Secret",
-   "Romance",
-   "Love",
-   "French",
-   "Beloved",
-   "Partner"
-  ],
-  "difficulty": "Master 3",
-  "score": 8,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
   "word": "Parentification",
   "banned": [
    "Child",
@@ -110586,29 +110125,6 @@
   ],
   "allCards": true,
   "allCardsWeight": 0.04
- },
- {
-  "word": "Compersion",
-  "banned": [
-   "Joy",
-   "Partner",
-   "Polyamory",
-   "Jealousy",
-   "Opposite",
-   "Happy",
-   "Other lover",
-   "Vicarious",
-   "Delight",
-   "Open"
-  ],
-  "difficulty": "Grandmaster",
-  "score": 10,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": false,
-  "allCardsWeight": 0
  },
  {
   "word": "Coup de foudre",
