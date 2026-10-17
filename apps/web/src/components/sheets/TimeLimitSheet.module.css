@@ -66,10 +66,19 @@
   cursor: default;
 }
 
+.off .input {
+  -webkit-text-fill-color: currentColor;
+  opacity: 1;
+}
+
 .unit {
   margin: 0;
   text-align: center;
   color: var(--region-muted);
+}
+
+.unitOff {
+  color: var(--region-disabled-ink);
 }
 
 .slider {
@@ -135,25 +144,13 @@
   color: var(--region-muted);
 }
 
-/* No time limit: a row with a switch at the right. */
-.switchRow {
+/* The No limit switch and the close button at the right of the title. */
+.end {
   display: flex;
   align-items: center;
-  gap: var(--un-space-3);
-  margin-top: var(--un-space-1);
-  padding: var(--un-space-3) var(--un-space-4);
-  border-radius: var(--un-radius-xl);
-  background: var(--region-chip);
-  color: var(--region-chip-ink);
-  cursor: pointer;
+  gap: var(--un-space-2);
 }
 
-.switchRow:has(:focus-visible) .track {
-  outline: var(--un-space-0-5) solid var(--region-accent);
-  outline-offset: var(--un-space-0-5);
-}
-
-.switchText,
 .rowText {
   flex: 1;
   display: flex;
@@ -164,33 +161,6 @@
 
 .detail {
   color: var(--region-muted);
-}
-
-.track {
-  flex: none;
-  position: relative;
-  width: var(--un-space-10);
-  height: var(--un-space-6);
-  border-radius: var(--un-radius-pill);
-  background: var(--region-track);
-}
-
-.thumb {
-  position: absolute;
-  top: var(--un-space-0-5);
-  left: var(--un-space-0-5);
-  width: var(--un-space-5);
-  height: var(--un-space-5);
-  border-radius: var(--un-radius-pill);
-  background: var(--un-color-surface-raised);
-}
-
-.on {
-  background: var(--region-accent);
-}
-
-.on .thumb {
-  transform: translateX(calc(var(--un-space-10) - var(--un-space-5) - 2 * var(--un-space-0-5)));
 }
 
 /* The row on the Paused screen. */

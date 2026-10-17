@@ -174,16 +174,14 @@ export const en = {
     noLimit: 'No limit',
     startsNextTurn: 'Starts next turn',
   },
-  // The time limit changer on the Paused screen: the same rules as setup's TIME LIMIT (0:30 to
-  // 10:00, typed min : sec, a calm note outside the range, No time limit), with − and + beside the
-  // big time and a slider under it. A saved change starts next turn; this turn keeps its time left.
+  // The time limit changer on the Paused screen: the same rules and words as setup's TIME LIMIT
+  // (0:30 to 10:00, typed min : sec, a calm note outside the range, the No limit switch on the title
+  // row and No clock this game while it is on), with − and + beside the big time and a slider under
+  // it. A saved change starts next turn; this turn keeps its time left.
   timeLimit: {
     title: 'Time limit',
     keepsClock: 'Starts next turn · this turn keeps its {clock}',
     startsNextTurn: 'Starts next turn',
-    // The big readout while No time limit is on.
-    noLimit: 'No limit',
-    noTimeLimit: { title: 'No time limit', detail: 'Turns end when you choose' },
     save: 'Save',
   },
   pass: {

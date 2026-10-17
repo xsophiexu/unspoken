@@ -41,7 +41,7 @@ const T = layout.control.timeLimit;
 
 // The big time limit changer on the Paused screen: − and + beside the big time (15 seconds a step),
 // the time itself typed like setup's box (digits fill from the right; 1:75 settles as 2:15 once the
-// box loses focus), a slider from 0:30 to 10:00, and a No time limit switch. A time outside the
+// box loses focus), a slider from 0:30 to 10:00, and setup's No limit switch on the title row. A time outside the
 // range shows setup's calm note and Save waits until it is fixed.
 export function TimeLimitSheet({ visible, onClose, value, clock, onSave }: Props) {
   return (
@@ -76,7 +76,13 @@ function Changer({ colors, value, clock, onClose, onSave }: Omit<Props, 'visible
 
   return (
     <>
-      <SheetHeader title={s.title} sub={clock ? format(s.keepsClock, { clock }) : s.startsNextTurn} colors={colors} onClose={onClose} />
+      <SheetHeader
+        title={s.title}
+        sub={clock ? format(s.keepsClock, { clock }) : s.startsNextTurn}
+        colors={colors}
+        end={<NoLimitSwitch on={off} colors={colors} knob={field.bg} onChange={setOff} />}
+        onClose={onClose}
+      />
 
       <View style={styles.readout}>
         <Stepper icon="minus" label={format(en.a11y.shorter, { step })} colors={colors} disabled={off || seconds <= MIN} onPress={() => setTime(stepTimeLimit(seconds, -1))} />
@@ -84,11 +90,11 @@ function Changer({ colors, value, clock, onClose, onSave }: Omit<Props, 'visible
           onPress={() => input.current?.focus()}
           disabled={off}
           fadeDisabled={false}
-          accessibilityLabel={off ? s.noLimit : format(en.a11y.timer, { clock: label })}
+          accessibilityLabel={format(en.a11y.timer, { clock: label })}
           style={[styles.time, { backgroundColor: off ? colors.disabled : field.bg, borderColor: off ? colors.disabled : focused ? colors.accent : outOfRange ? colors.ink : field.bg }]}
         >
-          <Txt variant={off ? 'headline' : 'score'} color={off ? colors.disabledInk : field.ink} style={styles.tabular} numberOfLines={1} adjustsFontSizeToFit>
-            {off ? s.noLimit : label}
+          <Txt variant="score" color={off ? colors.disabledInk : field.ink} style={styles.tabular} numberOfLines={1} adjustsFontSizeToFit>
+            {label}
           </Txt>
         </Press>
         <Stepper icon="plus" label={format(en.a11y.longer, { step })} colors={colors} disabled={off || seconds >= MAX} onPress={() => setTime(stepTimeLimit(seconds, 1))} />
@@ -110,36 +116,14 @@ function Changer({ colors, value, clock, onClose, onSave }: Omit<Props, 'visible
         accessibilityElementsHidden
         importantForAccessibility="no"
       />
-      {!off ? (
-        <Txt variant="small" color={colors.muted} style={styles.center}>
-          {en.setup.timerUnit}
-        </Txt>
-      ) : null}
+      {/* Like setup's box: while No limit is on the time stays, greyed, and keeps for when it goes off. */}
+      <Txt variant="small" color={off ? colors.disabledInk : colors.muted} style={styles.center}>
+        {off ? en.setup.noClock : en.setup.timerUnit}
+      </Txt>
 
       <Slider seconds={seconds} disabled={off} colors={colors} onChange={setTime} />
       {outOfRange ? <Note text={format(en.setup.timerOutOfRange, LIMITS)} colors={colors} /> : null}
 
-      <Press
-        onPress={() => setOff(!off)}
-        accessibilityRole="switch"
-        accessibilityLabel={s.noTimeLimit.title}
-        accessibilityHint={s.noTimeLimit.detail}
-        accessibilityState={{ checked: off }}
-        style={[styles.switchRow, { backgroundColor: colors.chip }]}
-      >
-        <View style={styles.switchText}>
-          <Txt variant="optionTitle" color={colors.chipInk}>
-            {s.noTimeLimit.title}
-          </Txt>
-          <Txt variant="subline" color={colors.muted}>
-            {s.noTimeLimit.detail}
-          </Txt>
-        </View>
-        {/* Drawn rather than the platform Switch, like setup's, so it looks the same everywhere. */}
-        <View style={[styles.track, off ? styles.trackOn : null, { backgroundColor: off ? colors.accent : colors.track }]}>
-          <View style={[styles.thumb, { backgroundColor: field.bg }]} />
-        </View>
-      </Press>
 
       <Button
         kind="primary"
@@ -150,6 +134,28 @@ function Changer({ colors, value, clock, onClose, onSave }: Omit<Props, 'visible
         onPress={() => onSave({ noTimeLimit: off, roundSeconds: inRange ? seconds : value.roundSeconds })}
       />
     </>
+  );
+}
+
+// Setup's No limit switch: the short label and a small drawn switch, at the right of the title row.
+function NoLimitSwitch({ on, colors, knob, onChange }: { on: boolean; colors: RegionColors; knob: string; onChange: (on: boolean) => void }) {
+  return (
+    <Press
+      onPress={() => onChange(!on)}
+      accessibilityRole="switch"
+      accessibilityLabel={en.a11y.noTimeLimit}
+      accessibilityState={{ checked: on }}
+      hitSlop={slopFor(space[4.5])}
+      style={styles.noLimit}
+    >
+      <Txt variant="subline" color={colors.muted}>
+        {en.setup.noLimit}
+      </Txt>
+      {/* Drawn rather than the platform Switch, like setup's, so it looks the same everywhere. */}
+      <View style={[styles.track, on ? styles.trackOn : null, { backgroundColor: on ? colors.accent : colors.track }]}>
+        <View style={[styles.thumb, { backgroundColor: knob }]} />
+      </View>
+    </Press>
   );
 }
 
@@ -271,10 +277,10 @@ const styles = StyleSheet.create({
   sliderEnds: { flexDirection: 'row', justifyContent: 'space-between' },
   note: { flexDirection: 'row', alignItems: 'center', gap: space[2], borderRadius: radius.md, paddingHorizontal: space[3.5], paddingVertical: space[2.5] },
   noteText: { flex: 1 },
-  switchRow: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.xl, paddingHorizontal: space[4], paddingVertical: space[3], marginTop: space[2] },
-  switchText: { flex: 1, gap: space[0.5] },
-  track: { width: space[10], height: space[6], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
+  // The No limit switch, the same size as setup's.
+  noLimit: { flexDirection: 'row', alignItems: 'center', gap: space[2], minHeight: layout.control.iconBadge },
+  track: { width: space[8], height: space[4.5], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
   trackOn: { alignItems: 'flex-end' },
-  thumb: { width: space[5], height: space[5], borderRadius: radius.pill },
+  thumb: { width: space[3.5], height: space[3.5], borderRadius: radius.pill },
   save: { marginTop: space[3] },
 });

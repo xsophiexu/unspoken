@@ -327,8 +327,10 @@ describe('Changing the time limit on the Paused screen', () => {
   it('turns the time limit off from the next turn; this turn still runs out', () => {
     const { game, paused } = pauseClassic();
     const sheet = openChanger(paused);
-    fireEvent.click(sheet.getByRole('switch', { name: new RegExp(en.timeLimit.noTimeLimit.title) }));
-    expect(sheet.getByText(en.timeLimit.noLimit)).toBeInTheDocument();
+    fireEvent.click(sheet.getByRole('switch', { name: en.a11y.noTimeLimit }));
+    expect(sheet.getByText(en.setup.noClock)).toBeInTheDocument();
+    // The time stays, greyed, for when the switch goes off.
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '2:30' }) })).toBeDisabled();
     expect(sheet.getByRole('slider', { name: en.a11y.timeLimitSlider })).toBeDisabled();
     fireEvent.click(sheet.getByRole('button', { name: en.timeLimit.save }));
 

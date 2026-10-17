@@ -346,8 +346,8 @@ describe('changing the time limit on the Paused screen', () => {
     await pauseClassic();
     fireEvent.press(screen.getByLabelText(rowLabel('2:30')));
     await screen.findByText(en.timeLimit.title);
-    fireEvent.press(screen.getByRole('switch', { name: en.timeLimit.noTimeLimit.title }));
-    expect(screen.getByText(en.timeLimit.noLimit)).toBeOnTheScreen();
+    fireEvent.press(screen.getByRole('switch', { name: en.a11y.noTimeLimit }));
+    expect(screen.getByText(en.setup.noClock)).toBeOnTheScreen();
     expect(screen.getByLabelText(format(en.a11y.longer, { step }))).toBeDisabled();
     fireEvent.press(screen.getByLabelText(en.timeLimit.save));
     await afterSlide();
