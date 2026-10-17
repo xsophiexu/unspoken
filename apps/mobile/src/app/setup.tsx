@@ -42,7 +42,9 @@ import { Icon } from '../ui/Icon';
 import { Press, slopFor } from '../ui/Press';
 import { Screen, ScreenTitle, ScreenTop, SectionLabel } from '../ui/Screen';
 import { Tile } from '../ui/Tile';
+import { ToggleTrack } from '../ui/Toggle';
 import { Txt } from '../ui/Txt';
+import { VersusSettings } from '../versus/VersusSettings';
 
 const THEMES = categoriesInBank(bank);
 const SUMMARY_COPY = { all: en.themes.all, names: en.categories, many: en.themes.many };
@@ -60,6 +62,8 @@ export default function SetupScreen() {
   const mode = modeParam(param, prefs.settings.mode);
   // Step 3 of a Custom Mind Reader game: the time limit and rounds above the words.
   const custom = mode === 'mindReader' && customParam === '1';
+  // Step 3 of Versus: the turn's time limit, rounds, skips and scoring above the words.
+  const versus = modeRules(mode).play === 'versus';
   const [draft, setDraft] = useState<GameSettings>(() => ({ ...prefs.settings, mode }));
   const [open, setOpen] = useState<Open>(null);
   const allCardsTap = useRef<AllCardsTap>(null);
@@ -79,8 +83,10 @@ export default function SetupScreen() {
     prefs.startGame(settings, custom ? 'custom' : undefined);
     backToGame();
   };
+  // Versus keeps its turn time in its own setup, apart from the other modes' time limit.
+  const ready = canStart(settings) && (!versus || prefs.versus.noTimeLimit || isTimeLimitInRange(prefs.versus.turnSeconds));
   const start = () => {
-    if (!canStart(settings)) return;
+    if (!ready) return;
     if (isSmallDeck(cards)) setOpen('smallDeck');
     else play();
   };
@@ -92,7 +98,17 @@ export default function SetupScreen() {
 
   // A Custom Mind Reader game has its time limit at the top, above rounds.
   const timer = (colors: RegionColors) =>
-    hasTimerSetting(mode) ? (
+    versus ? (
+      <View style={styles.section}>
+        <TimerField
+          seconds={prefs.versus.turnSeconds}
+          noTimeLimit={prefs.versus.noTimeLimit}
+          colors={colors}
+          onChange={(turnSeconds) => prefs.setVersus((v) => ({ ...v, turnSeconds }))}
+          onNoTimeLimit={(noTimeLimit) => prefs.setVersus((v) => ({ ...v, noTimeLimit }))}
+        />
+      </View>
+    ) : hasTimerSetting(mode) ? (
       <View style={styles.section}>
         <TimerField
           seconds={draft.roundSeconds}
@@ -114,7 +130,7 @@ export default function SetupScreen() {
     <Screen
       tone="base"
       width="column"
-      footer={(colors) => <Button kind="primary" label={s.start} colors={colors} disabled={!canStart(settings)} onPress={start} />}
+      footer={(colors) => <Button kind="primary" label={s.start} colors={colors} disabled={!ready} onPress={start} />}
     >
       {(colors) => (
         <>
@@ -123,6 +139,12 @@ export default function SetupScreen() {
               <StepTop step={3} total={3} title={en.mindReader.settings.title} colors={colors} onBack={goBack} />
               {timer(colors)}
               <MindReaderRounds colors={colors} />
+            </>
+          ) : versus ? (
+            <>
+              <StepTop step={3} total={3} title={en.versus.settings.title} colors={colors} onBack={goBack} stepText={en.versus.setup.step} />
+              {timer(colors)}
+              <VersusSettings colors={colors} />
             </>
           ) : (
             <>
@@ -185,9 +207,9 @@ export default function SetupScreen() {
             </Grid>
           </View>
 
-          {!custom ? timer(colors) : null}
+          {!custom && !versus ? timer(colors) : null}
 
-          {hasSkipSetting(mode) ? (
+          {hasSkipSetting(mode) && !versus ? (
             <View style={styles.section}>
               <SectionLabel label={s.skips} aside={s.skipsHint} colors={colors} />
               <Grid columns={layout.grid.skips} gap={space[2]}>
@@ -271,10 +293,7 @@ function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: T
           <Txt variant="subline" color={colors.muted}>
             {s.noLimit}
           </Txt>
-          {/* Drawn rather than the platform Switch, so it looks the same on iOS, Android and web. */}
-          <View style={[styles.track, noTimeLimit ? styles.trackOn : null, { backgroundColor: noTimeLimit ? colors.accent : colors.track }]}>
-            <View style={[styles.thumb, { backgroundColor: field.bg }]} />
-          </View>
+          <ToggleTrack on={noTimeLimit} colors={colors} knob={field.bg} />
         </Press>
       </View>
       <Press
@@ -365,8 +384,4 @@ const styles = StyleSheet.create({
   noLimit: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
   timerSide: { flexShrink: 1, maxWidth: '45%', alignItems: 'flex-end', textAlign: 'right' },
   end: { textAlign: 'right' },
-  // The No limit switch, small enough to sit on the label row.
-  track: { width: space[8], height: space[4.5], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
-  trackOn: { alignItems: 'flex-end' },
-  thumb: { width: space[3.5], height: space[3.5], borderRadius: radius.pill },
 });

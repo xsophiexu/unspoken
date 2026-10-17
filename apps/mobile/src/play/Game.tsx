@@ -1,6 +1,9 @@
 import { en, roundCopy } from '@unspoken/content';
 import {
   canAnswer,
+  canPlayVersus,
+  modeRules,
+  resumableSettings,
   formatClock,
   hasTimeLimit,
   hasTimerSetting,
@@ -37,8 +40,10 @@ import { useSwipe } from './useSwipe';
 // The play screen: one round of the saved settings. Starting a game or restarting changes the
 // game id, which remounts the round with fresh state.
 export function Game() {
-  const { settings, gameId } = usePrefs();
-  return <Round key={gameId} settings={settings} />;
+  const { settings, gameId, versus } = usePrefs();
+  // A Versus game whose lineup was changed so it can't play opens the default mode instead.
+  const playable = modeRules(settings.mode).play === 'versus' && !canPlayVersus(versus.lineup) ? resumableSettings(settings) : settings;
+  return <Round key={gameId} settings={playable} />;
 }
 
 // What every mode's screen shares: the header buttons, the sheets they open, the tour, the

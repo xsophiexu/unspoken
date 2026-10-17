@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { emptyLineup, gameConfig, type GameSettings, type MindReaderPlay, type MindReaderSetup, type PlayKind } from '@unspoken/core';
+import { defaultVersusSetup, emptyLineup, gameConfig, resumableSettings, type GameSettings, type MindReaderPlay, type MindReaderSetup, type PlayKind, type VersusSetup } from '@unspoken/core';
 import { DEFAULT_THEME, resolveTheme, type Theme, type ThemeSelection } from '@unspoken/design-tokens';
 import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Appearance } from 'react-native';
@@ -24,6 +24,10 @@ type Prefs = {
   // The Custom game being set up (players, teams, rounds), kept for this app session.
   mindReader: MindReaderSetup;
   setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
+  // The Versus game being set up (players, teams, rounds, turn time, skips, penalty), kept for
+  // this app session; a Versus game plays it.
+  versus: VersusSetup;
+  setVersus: (change: (setup: VersusSetup) => VersusSetup) => void;
   // Save these settings for the next round, leaving the round in progress as it is.
   saveSettings: (settings: GameSettings) => void;
   // A new round with the same settings.
@@ -55,6 +59,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   const [tourOpen, setTourOpen] = useState(false);
   const [mindReaderPlay, setMindReaderPlay] = useState<MindReaderPlay>('quick');
   const [mindReader, setMindReaderState] = useState<MindReaderSetup>(() => ({ lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default }));
+  const [versus, setVersus] = useState<VersusSetup>(() => defaultVersusSetup(emptyLineup()));
   // Which how-it-works cards were seen this session; kept in memory only.
   const [intros] = useState(() => new Set<PlayKind>());
 
@@ -63,7 +68,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
     loadPrefs().then((loaded) => {
       if (!live) return;
       const prefs = loaded ?? firstLaunch();
-      setSaved(prefs);
+      // A Versus lineup lasts one app session, so a saved Versus game opens the default mode.
+      setSaved({ ...prefs, settings: resumableSettings(prefs.settings) });
       // The tour opens by itself on the first game, and once more whenever it changes.
       setTourOpen(prefs.tourVersion !== en.howToPlay.version);
     });
@@ -100,6 +106,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       mindReaderPlay,
       mindReader,
       setMindReader: setMindReaderState,
+      versus,
+      setVersus,
       openTour: () => setTourOpen(true),
       closeTour: () => {
         setTourOpen(false);
@@ -110,7 +118,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         intros.add(kind);
       },
     };
-  }, [saved, gameId, tourOpen, update, intros, mindReaderPlay, mindReader]);
+  }, [saved, gameId, tourOpen, update, intros, mindReaderPlay, mindReader, versus]);
 
   // Nothing renders until the saved look is read, so the first frame is already themed.
   if (!value) return null;

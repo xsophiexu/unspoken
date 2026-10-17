@@ -40,14 +40,31 @@ export function TeamBadge({ name, color }: { name: string; color: number }) {
 }
 
 // Back link and step count, the title, and a bar for each step with the steps done filled in.
-export function StepTop({ step, total, title, colors, onBack, back = en.mindReader.back }: { step: number; total: number; title: string; colors: RegionColors; onBack: () => void; back?: string }) {
+export function StepTop({
+  step,
+  total,
+  title,
+  colors,
+  onBack,
+  back = en.mindReader.back,
+  stepText = en.mindReader.step,
+}: {
+  step: number;
+  total: number;
+  title: string;
+  colors: RegionColors;
+  onBack: () => void;
+  back?: string;
+  // "Step {n} of {total}", or a game's own ("Versus · Step {n} of {total}").
+  stepText?: string;
+}) {
   return (
     <View style={styles.stepTop}>
       <ScreenTop
         left={<LinkButton label={back} colors={colors} onPress={onBack} />}
         right={
           <Txt variant="subline" color={colors.muted}>
-            {format(en.mindReader.step, { n: step, total })}
+            {format(stepText, { n: step, total })}
           </Txt>
         }
       />
@@ -73,10 +90,13 @@ export function Stepper({
   max,
   colors,
   fill,
+  display,
 }: {
   label: string;
   sub?: string;
   value: number;
+  // The value as shown, when it isn't the plain number ("−1" for points lost).
+  display?: string;
   onChange: (value: number) => void;
   min: number;
   max: number;
@@ -115,7 +135,7 @@ export function Stepper({
       </View>
       {step(-1, 'minus', en.a11y.fewer)}
       <Txt variant="sheetTitle" color={colors.ink} style={styles.stepValue} accessibilityLiveRegion="polite">
-        {value}
+        {display ?? value}
       </Txt>
       {step(1, 'plus', en.a11y.more)}
     </View>
