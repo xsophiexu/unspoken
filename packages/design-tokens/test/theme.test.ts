@@ -16,6 +16,7 @@ import {
   ringCardSize,
   splitBarGrowth,
   splitBarLabelSpace,
+  tourStepsFor,
 } from '../src';
 
 describe('resolveTheme', () => {
@@ -269,5 +270,24 @@ describe('splitBarGrowth', () => {
     expect(grow).toBeLessThan(inset);
     // The labels' bottom edge sits at least paddingBottom above the inset.
     expect((split.paddingBottom ?? 0) + grow + above).toBeGreaterThanOrEqual(inset + (split.paddingBottom ?? 0));
+  });
+});
+
+describe('tourStepsFor', () => {
+  const steps = [
+    { id: 'intro', target: null },
+    { id: 'word', target: 'word' },
+    { id: 'difficulty', target: 'difficulty' },
+    { id: 'menu', target: 'menu' },
+  ] as const;
+  const ids = (style: (typeof STYLE_IDS)[number]) => tourStepsFor(steps, layoutStyleFor(style, 'light')).map((s) => s.id);
+
+  it('keeps the difficulty step where the level button sits in the top row', () => {
+    expect(ids('card')).toEqual(['intro', 'word', 'difficulty', 'menu']);
+    expect(ids('split')).toContain('difficulty');
+  });
+
+  it('skips it in styles that put the mode and level above the word instead', () => {
+    for (const style of ['ink', 'bottom', 'chips'] as const) expect(ids(style)).toEqual(['intro', 'word', 'menu']);
   });
 });

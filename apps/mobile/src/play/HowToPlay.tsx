@@ -1,6 +1,6 @@
 import { en, type SpotlightStep } from '@unspoken/content';
 import { captionPlacement, tourGesture, type SpotRect } from '@unspoken/core';
-import { layout, maxWidth, motion, palettes, radius, space, spotlight, type Theme } from '@unspoken/design-tokens';
+import { layout, maxWidth, motion, palettes, radius, space, spotlight, tourStepsFor, type Theme } from '@unspoken/design-tokens';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, useWindowDimensions, View, type GestureResponderEvent } from 'react-native';
 
@@ -24,7 +24,8 @@ function measure(node: View): Promise<SpotRect | null> {
 // from the word to the banned list, the level, the menu and the Play button, one caption per step.
 // A tap or a swipe left or up moves forward, a swipe right or down goes back, and Play ends it. Nothing moves on its own.
 export function HowToPlay({ targets, theme, insets, onClose }: { targets: Targets; theme: Theme; insets: Insets; onClose: () => void }) {
-  const steps = en.howToPlay.steps;
+  // Without a difficulty button in the top row, the style skips that step.
+  const [steps] = useState(() => tourStepsFor(en.howToPlay.steps, theme.style));
   const [index, setIndex] = useState(0);
   const step: SpotlightStep = steps[index] ?? steps[0]!;
   const forward = () => setIndex((i) => Math.min(steps.length - 1, i + 1));

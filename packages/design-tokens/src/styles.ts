@@ -455,3 +455,10 @@ export function splitBarLabelSpace(slot: ControlsSlot): number {
 export function splitBarGrowth(slot: ControlsSlot, bottomInset: number): number {
   return Math.max(0, bottomInset - splitBarLabelSpace(slot));
 }
+
+// How to play's steps over a style: the "Tap here to change difficulty" step only where the mode and
+// level button sits in the top row (header position 'top'). Styles that put it on a line above the
+// word (Ink, Bottom, Chips) have no difficulty button on top, so they skip that step.
+export function tourStepsFor<T extends { target: string | null }>(steps: readonly T[], style: LayoutStyle): T[] {
+  return steps.filter((step) => step.target !== 'difficulty' || style.header.position === 'top');
+}

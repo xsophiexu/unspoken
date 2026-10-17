@@ -101,7 +101,7 @@ export function PlayScreen() {
         />
       )}
       {sheet === 'difficulty' && <DifficultyPicker round={round} onClose={close} onPick={(difficulty) => fresh(() => changeDifficulty(difficulty))} />}
-      {showTour && <Spotlight rootRef={rootRef} onDone={finishTour} />}
+      {showTour && <Spotlight rootRef={rootRef} onDone={finishTour} layoutStyle={layoutStyle} />}
     </div>
   );
 }

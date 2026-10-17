@@ -2,7 +2,7 @@
 
 import { en, type SpotlightTarget } from '@unspoken/content';
 import { captionPlacement, tourGesture, type SpotRect } from '@unspoken/core';
-import { layout, motion, space, spotlight } from '@unspoken/design-tokens';
+import { layout, motion, space, spotlight, tourStepsFor, type LayoutStyle } from '@unspoken/design-tokens';
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
@@ -14,9 +14,9 @@ type SpotlightProps = {
   // The play screen, where the steps find their targets by data-spot.
   rootRef: RefObject<HTMLElement | null>;
   onDone: () => void;
+  // The player's style: without a difficulty button in the top row it skips that step.
+  layoutStyle: LayoutStyle;
 };
-
-const steps = en.howToPlay.steps;
 
 function findTarget(root: HTMLElement | null, target: SpotlightTarget | null, play: HTMLElement | null): HTMLElement | null {
   if (target === 'play') return play;
@@ -30,7 +30,8 @@ type Frame = { width: number; height: number; floor: number };
 // the part of the screen each caption is about. A tap or click, a swipe left or up, a scroll down or
 // right (wheel or trackpad) or the right arrow moves forward; a swipe right or down, a scroll up or
 // left or the left arrow goes back; Play (always there) ends the tour. Nothing moves on its own.
-export function Spotlight({ rootRef, onDone }: SpotlightProps) {
+export function Spotlight({ rootRef, onDone, layoutStyle }: SpotlightProps) {
+  const [steps] = useState(() => tourStepsFor(en.howToPlay.steps, layoutStyle));
   const dialogRef = useRef<HTMLDialogElement>(null);
   const playRef = useRef<HTMLButtonElement>(null);
   const dotsRef = useRef<HTMLOListElement>(null);
