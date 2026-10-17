@@ -235,7 +235,7 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
   deck: {
     id: 'deck',
     color: follow,
-    thumbnailColor: 'teal',
+    thumbnailColor: 'clay',
     arrangement: 'floatingCard',
     regions: { page: 'base', word: 'raised' },
     header: { variant: 'pill', position: 'top', container: 'outlined', size: 15, menu: 'sliders', menuContainer: 'none' },
