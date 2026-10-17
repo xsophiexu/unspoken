@@ -6,6 +6,7 @@ import {
   cssText,
   cardSwipes,
   cssVariables,
+  fontMetrics,
   layout,
   layoutStyleFor,
   layoutStyles,
@@ -15,8 +16,11 @@ import {
   playMargins,
   resolveTheme,
   ringCardSize,
+  screenClass,
   splitBarGrowth,
   splitBarLabelSpace,
+  textStyles,
+  tightLeading,
   tourStepsFor,
 } from '../src';
 
@@ -185,19 +189,14 @@ describe('play screen margins', () => {
 });
 
 describe('ringCardSize', () => {
-  const { maxWidth, maxHeight, ringScale, ringMargin } = layout.card;
+  const { maxWidth, maxHeight, ringScale } = layout.card;
   const ringOn = (screen: number) => ringCardSize(screen - 2 * layout.play.paddingX, 2000);
 
-  it('draws the ring a little larger than the space inside the side margins, keeping its shape', () => {
-    const width = layout.referenceScreen.width - 2 * layout.play.paddingX;
-    const ring = ringCardSize(width, layout.referenceScreen.height);
-    expect(ring.width).toBeGreaterThan(width);
-    expect(ring.height / ring.width).toBeCloseTo(maxHeight / maxWidth);
-  });
-
-  it('keeps at least the ring margin from the screen edges on phones', () => {
-    for (const screen of [320, 360, 390, 412, 430]) {
-      expect((screen - ringOn(screen).width) / 2).toBeGreaterThanOrEqual(ringMargin - 0.001);
+  it('lines the ring up with the side margins on phones, keeping its shape', () => {
+    for (const screen of [320, 360, 384, 393, 412, 430]) {
+      const ring = ringOn(screen);
+      expect((screen - ring.width) / 2).toBeCloseTo(layout.play.paddingX);
+      expect(ring.height / ring.width).toBeCloseTo(maxHeight / maxWidth);
     }
   });
 
@@ -206,6 +205,34 @@ describe('ringCardSize', () => {
     expect(largest.width).toBeCloseTo(maxWidth * ringScale);
     expect(largest.height).toBeCloseTo(maxHeight * ringScale);
     expect(ringCardSize(300, 200).height).toBe(200);
+  });
+});
+
+describe('screenClass', () => {
+  it('treats a Galaxy A as narrow, a Pixel 8 Pro as large and the reference screen as neither', () => {
+    expect(screenClass(360, 800)).toEqual({ short: false, narrow: true, large: false });
+    expect(screenClass(412, 915)).toEqual({ short: false, narrow: false, large: true });
+    const { width, height } = layout.referenceScreen;
+    expect(screenClass(width, height)).toEqual({ short: false, narrow: false, large: false });
+    expect(screenClass(width, 640).short).toBe(true);
+  });
+});
+
+describe('tightLeading', () => {
+  const { contentAscent, contentDescent, ink } = fontMetrics;
+  const size = 40;
+
+  it('pads tight lines so the first line’s accents and the last line’s descenders stay in the box', () => {
+    const lineHeight = layout.narrowScreen.wordLineHeight;
+    const { paddingTop, paddingBottom } = tightLeading(lineHeight, size);
+    const half = ((contentAscent + contentDescent - lineHeight) / 2) * size;
+    expect(paddingTop + contentAscent * size - half).toBeGreaterThanOrEqual(ink.text.ascent * size);
+    expect(paddingBottom + contentDescent * size - half).toBeGreaterThanOrEqual(ink.text.descent * size);
+    expect(lineHeight).toBeLessThan(textStyles.word.lineHeight);
+  });
+
+  it('adds nothing at a line height the glyphs already fit', () => {
+    expect(tightLeading(textStyles.word.lineHeight, size)).toEqual({ paddingTop: 0, paddingBottom: 0 });
   });
 });
 

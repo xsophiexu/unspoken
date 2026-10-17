@@ -18,8 +18,8 @@ type Props = {
   ramp: readonly RampBand[];
   // The side margin, which variants that run edge to edge bleed out by.
   bleed: number;
-  // Short windows (small phones) use the compact sizes for any list.
-  short: boolean;
+  // Short or narrow windows (small phones) use the compact sizes for any list.
+  small: boolean;
 };
 
 // Bands run edge to edge down into the footer, so the list sits at the bottom of its area.
@@ -28,9 +28,9 @@ export const pinsToFooter = (slot: BannedSlot) => slot.variant === 'bands';
 // The banned words in any of the style catalog's list variants. Lists of
 // layout.banned.compactFrom words or more (Escalate's ten), and every list on a short window, switch
 // to compact sizes, and every word shrinks to fit its cell.
-export function Banned({ slot, colors, words, freshIndex, ramp, bleed, short }: Props) {
+export function Banned({ slot, colors, words, freshIndex, ramp, bleed, small }: Props) {
   const [width, onLayout] = useWidth();
-  const compact = short || words.length >= layout.banned.compactFrom;
+  const compact = small || words.length >= layout.banned.compactFrom;
   const max = compact ? Math.min(slot.size, textStyles.chipSmall.size) : slot.size;
   const variant: TextStyleName = slot.weight === 600 ? 'label' : 'chip';
   const word = (text: string, room: number, color: string, extra?: object) => (

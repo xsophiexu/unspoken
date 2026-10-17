@@ -450,6 +450,16 @@
   background: var(--region-chip);
 }
 
+/* Scores' NEXT TURN box: every line centered, a team dot centered with its line as one unit. */
+.nextTurn {
+  align-items: center;
+  text-align: center;
+}
+
+.nextLine {
+  justify-content: center;
+}
+
 .standings {
   display: flex;
   flex-direction: column;

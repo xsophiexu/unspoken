@@ -20,7 +20,7 @@ export function Thumbnail({ selection, width }: { selection: ThemeSelection; wid
       style={[styles.frame, { width, height: H * scale, borderRadius: layout.thumbnail.radius }]}
     >
       <View style={[styles.screen, { transform: [{ scale }] }]}>
-        <PlayView theme={resolveTheme(selection)} model={sample} height={H} />
+        <PlayView theme={resolveTheme(selection)} model={sample} screen={layout.referenceScreen} />
       </View>
     </View>
   );

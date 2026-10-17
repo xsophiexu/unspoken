@@ -381,15 +381,15 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
           footer={
             <>
               {v && (
-                <div className={styles.nextBox}>
+                <div className={cx(styles.nextBox, styles.nextTurn)}>
                   <p className={cx(styles.muted, text('overline'))}>{en.mindReader.scores.next}</p>
-                  <p className={cx(styles.dotRow, text('label'))}>
+                  <p className={cx(styles.dotRow, styles.nextLine, text('label'))}>
                     {v.nextColor !== null && <TeamDot color={v.nextColor} small />}
-                    <span className={styles.grow}>{v.next}</span>
+                    <span className={styles.shrink}>{v.next}</span>
                   </p>
-                  <p className={cx(styles.dotRow, text('label'))}>
+                  <p className={cx(styles.dotRow, styles.nextLine, text('label'))}>
                     {v.clueColor !== null && <TeamDot color={v.clueColor} small />}
-                    <span className={styles.grow}>{v.nextClues}</span>
+                    <span className={styles.shrink}>{v.nextClues}</span>
                   </p>
                   <p className={cx(styles.muted, text('small'))}>{v.hand}</p>
                 </div>
