@@ -8,7 +8,7 @@ import {
   type RoundAction,
   type SwipeRoundState,
 } from '@unspoken/core';
-import type { RegionColors, Theme } from '@unspoken/design-tokens';
+import { cardSwipes, type RegionColors, type Theme } from '@unspoken/design-tokens';
 import { router, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState, type Dispatch, type ReactNode } from 'react';
@@ -151,6 +151,7 @@ function SwipeRound({ state, dispatch, chrome }: SwipeProps) {
     can: (kind) => canAnswer(state, kind),
     onAnswer: (kind) => dispatch({ type: kind }),
     active: canAnswer(state, 'correct'),
+    drag: cardSwipes(chrome.theme.style),
   });
   const { page, insets } = chrome;
   return (

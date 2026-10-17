@@ -2,7 +2,7 @@
 
 import { en } from '@unspoken/content';
 import { blankCellSize, format, plural, reverseCard, wordShape, type ReverseRoundState } from '@unspoken/core';
-import { space, type LayoutStyle } from '@unspoken/design-tokens';
+import { cardSwipes, space, type LayoutStyle } from '@unspoken/design-tokens';
 import { useRef, type CSSProperties } from 'react';
 
 import { Controls } from '@/components/play/Controls';
@@ -34,6 +34,7 @@ export function ReverseRound({ round, layoutStyle: s, blocked, onMenu, onHeader 
     can: { correct: answering, skip: answering },
     onAnswer: (kind: SwipeAnswer) => dispatch({ type: kind === 'correct' ? 'got' : 'missed' }),
     cardKey: round.phase === 'answer' ? cardKey : null,
+    drags: cardSwipes(s),
   });
   useAnswerKeys(answering, answer);
 

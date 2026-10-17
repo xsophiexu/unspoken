@@ -2,7 +2,7 @@
 
 import { en } from '@unspoken/content';
 import { isClockRunning, pausedStatus, swipeSummary, type SwipeRoundState } from '@unspoken/core';
-import type { LayoutStyle } from '@unspoken/design-tokens';
+import { cardSwipes, type LayoutStyle } from '@unspoken/design-tokens';
 import { useEffect, useRef } from 'react';
 
 import { swipeModel } from '@/components/play/model';
@@ -36,6 +36,7 @@ export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onH
     can: { correct: active && model.canCorrect, skip: active && model.canSkip },
     onAnswer: (kind: SwipeAnswer) => dispatch({ type: kind }),
     cardKey: model.card?.key ?? null,
+    drags: cardSwipes(layoutStyle),
   });
   useAnswerKeys(active, answer);
 

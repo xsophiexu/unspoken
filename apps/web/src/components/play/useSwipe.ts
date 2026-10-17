@@ -15,6 +15,8 @@ type SwipeOptions = {
   onAnswer: (answer: SwipeAnswer) => void;
   // Changes with every card; the idle nudge restarts its wait when it does.
   cardKey: string | null;
+  // false: the style's card doesn't swipe (cardSwipes). No drag and no hint; answer() still works.
+  drags?: boolean;
 };
 
 type Drag = { id: number; x: number; y: number; dx: number; active: boolean };
@@ -42,7 +44,7 @@ function setDrag(el: HTMLElement, dx: number, phase: Phase | null) {
 // Swipe right for Correct and left for Skip. The card follows the pointer; past the threshold it
 // flies off and the answer is sent, otherwise it settles back. Buttons and keys use answer(), which
 // plays the same fly-off. With reduced motion, answers apply at once.
-export function useSwipe({ frameRef, can, onAnswer, cardKey }: SwipeOptions) {
+export function useSwipe({ frameRef, can, onAnswer, cardKey, drags = true }: SwipeOptions) {
   const reduced = useReducedMotion();
   const drag = useRef<Drag | null>(null);
   const flying = useRef(false);
@@ -93,7 +95,7 @@ export function useSwipe({ frameRef, can, onAnswer, cardKey }: SwipeOptions) {
     }, motion.duration.base);
   }, [frameRef, later]);
 
-  const enabled = can.correct || can.skip;
+  const enabled = (can.correct || can.skip) && drags;
   const surface = useMemo((): HTMLAttributes<HTMLDivElement> => {
     if (!enabled) return {};
     return {

@@ -209,6 +209,9 @@ export type LayoutStyle = {
   banned: BannedSlot;
   controls: ControlsSlot;
   panel?: PanelSlot;
+  // false: the card doesn't swipe (no drag, no swipe hint); Skip and Correct are taps only. Read
+  // with cardSwipes.
+  swipe?: false;
   // Top and bottom margins where the style differs from layout.play.
   margins?: Partial<Pick<PlayMargins, 'paddingTop' | 'paddingBottom'>>;
   // What changes in dark mode.
@@ -273,8 +276,10 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'belowHeader', emphasis: 'plain' },
     word: { container: 'none', label: false, size: 58, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'columns', size: 22, weight: 500, label: true },
-    // Shorter than Ledger's bar, so Skip and Correct sit close to the bottom edge.
-    controls: { variant: 'splitBar', height: 76, radius: 'none', skip: 'filled', skipWidth: 150, paddingBottom: 6 },
+    // Shorter than Ledger's bar, so Skip and Correct sit close to the bottom edge. The labels sit
+    // right on the bottom safe area (no paddingBottom); the bar is taps only (swipe: false).
+    controls: { variant: 'splitBar', height: 64, radius: 'none', skip: 'filled', skipWidth: 150 },
+    swipe: false,
     margins: { paddingBottom: 0 },
     dark: { regions: { lower: 'sunken', skip: 'sunken' }, banned: { labelColor: 'accentText' } },
   },
@@ -461,4 +466,9 @@ export function splitBarGrowth(slot: ControlsSlot, bottomInset: number): number 
 // word (Ink, Bottom, Chips) have no difficulty button on top, so they skip that step.
 export function tourStepsFor<T extends { target: string | null }>(steps: readonly T[], style: LayoutStyle): T[] {
   return steps.filter((step) => step.target !== 'difficulty' || style.header.position === 'top');
+}
+
+// Whether the card in a style swipes (drag and swipe hint). Skip and Correct always tap.
+export function cardSwipes(style: LayoutStyle): boolean {
+  return style.swipe !== false;
 }

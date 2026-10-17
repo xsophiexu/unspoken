@@ -24,6 +24,8 @@ type Options = {
   onAnswer: (kind: Answer) => void;
   // Paused, a sheet open, round over: no hint, no drag.
   active: boolean;
+  // false: the style's card doesn't swipe (cardSwipes). No drag and no hint; answer() still works.
+  drag?: boolean;
 };
 
 const { swipe, enter: enterSpring, hint: hintTiming } = motion;
@@ -33,7 +35,7 @@ const settle = { friction: swipe.settle.friction, tension: swipe.settle.tension,
 // Swipe right for Correct and left for Skip. The card follows the finger; past the threshold it
 // flies off, then the answer is dispatched and the next card springs in. It also nudges right once
 // at the start and after an idle spell, to show that it swipes.
-export function useSwipe({ can, onAnswer, active }: Options): Swipe {
+export function useSwipe({ can, onAnswer, active, drag = true }: Options): Swipe {
   const reduceMotion = useReduceMotion();
   const [dx] = useState(() => new Animated.Value(0));
   const [enter] = useState(() => new Animated.Value(1));
@@ -43,9 +45,9 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
   const hinted = useRef(false);
   const nudge = useRef<Animated.CompositeAnimation | null>(null);
   const [idle, setIdle] = useState(0);
-  const latest = useRef({ can, onAnswer, active, reduceMotion });
+  const latest = useRef({ can, onAnswer, active, drag, reduceMotion });
   useEffect(() => {
-    latest.current = { can, onAnswer, active, reduceMotion };
+    latest.current = { can, onAnswer, active, drag, reduceMotion };
   });
 
   const stopHint = useCallback(() => {
@@ -59,7 +61,7 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
   // drag would, while "› SWIPE" fades in from under it, then springs back. Once soon after the round
   // opens, then after an idle spell with no swipe or tap. With reduced motion only the label shows.
   useEffect(() => {
-    if (!active) return;
+    if (!active || !drag) return;
     const id = setTimeout(
       () => {
         hinted.current = true;
@@ -92,7 +94,7 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
       }
       hint.setValue(0);
     };
-  }, [active, idle, reduceMotion, dx, hint]);
+  }, [active, drag, idle, reduceMotion, dx, hint]);
 
   const answer = useCallback(
     (kind: Answer) => {
@@ -138,7 +140,7 @@ export function useSwipe({ can, onAnswer, active }: Options): Swipe {
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_, g) =>
-        latest.current.active && !flying.current && Math.abs(g.dx) > swipe.startSlopPx && Math.abs(g.dx) > Math.abs(g.dy),
+        latest.current.active && latest.current.drag && !flying.current && Math.abs(g.dx) > swipe.startSlopPx && Math.abs(g.dx) > Math.abs(g.dy),
       // Keep the gesture if the browser starts selecting text under the pointer.
       onPanResponderTerminationRequest: () => false,
       onPanResponderGrant: () => {

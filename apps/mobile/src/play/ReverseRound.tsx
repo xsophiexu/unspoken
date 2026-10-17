@@ -1,6 +1,6 @@
 import { en } from '@unspoken/content';
 import { blankCellSize, format, plural, reverseCard, wordShape, type ReverseRoundState, type RoundAction } from '@unspoken/core';
-import { layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
+import { cardSwipes, layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import type { Dispatch } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 
@@ -30,6 +30,7 @@ export function ReverseRound({ state, dispatch, chrome }: { state: ReverseRoundS
     can: () => true,
     onAnswer: (kind) => dispatch({ type: kind === 'correct' ? 'got' : 'missed' }),
     active: state.phase === 'answer',
+    drag: cardSwipes(chrome.theme.style),
   });
 
   let card = null;

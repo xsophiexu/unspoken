@@ -4,6 +4,7 @@ import {
   DEFAULT_THEME,
   STYLE_IDS,
   cssText,
+  cardSwipes,
   cssVariables,
   layout,
   layoutStyleFor,
@@ -289,5 +290,14 @@ describe('tourStepsFor', () => {
 
   it('skips it in styles that put the mode and level above the word instead', () => {
     for (const style of ['ink', 'bottom', 'chips'] as const) expect(ids(style)).toEqual(['intro', 'word', 'menu']);
+  });
+});
+
+describe('cardSwipes', () => {
+  it('turns swiping off in Split (taps only), in light and dark, and keeps it everywhere else', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      expect(cardSwipes(layoutStyleFor('split', mode))).toBe(false);
+      for (const style of STYLE_IDS.filter((id) => id !== 'split')) expect(cardSwipes(layoutStyleFor(style, mode))).toBe(true);
+    }
   });
 });
