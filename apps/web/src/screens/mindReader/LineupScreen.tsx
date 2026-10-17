@@ -5,7 +5,6 @@ import {
   addPlayer,
   canUseTeams,
   format,
-  gameConfig,
   lineupIssue,
   minTeamPlayers,
   playerName,
@@ -14,7 +13,6 @@ import {
   setTeamCount,
   shuffleOrder,
   shuffleTeams,
-  type Lineup,
   type PlayStyle,
   type TeamPreset,
 } from '@unspoken/core';
@@ -23,15 +21,14 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { AddPill, Card, Dialog, NameField, NamePill, Note, SegmentSwitch, StepTop, Stepper, TeamBadge } from '@/components/mindReader/parts';
+import { useLineupSetup, type LineupGame } from '@/components/mindReader/lineupGame';
 import { TeamSheet } from '@/components/mindReader/TeamSheet';
 import { usePlayerMenu } from '@/components/mindReader/usePlayerMenu';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { Screen } from '@/components/ui/Screen';
 import { Section } from '@/components/ui/Section';
-import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
-import { useGame } from '@/state/game';
 
 import styles from './setup.module.css';
 
@@ -40,31 +37,30 @@ function teamPresets(): TeamPreset[] {
   return en.mindReader.teamNames.map((name, i) => ({ name, color: teamColorOrder[i] ?? i }));
 }
 
-// Custom game, step 2: Individual or Teams, the turn order or the teams, and any changes to them.
-export function MindReaderLineupScreen() {
-  const { mindReader, setMindReader } = useGame();
+// Setup step 2 (Mind Reader's Custom game, Versus): Individual or Teams, the turn order or the
+// teams, and any changes to them.
+export function MindReaderLineupScreen({ game = 'mindReader' }: { game?: LineupGame }) {
   const router = useRouter();
-  const { lineup } = mindReader;
+  const { lineup, edit, config: rules, copy, routes } = useLineupSetup(game);
   const s = en.mindReader.lineup;
-  const config = gameConfig.mindReader;
+  const config = rules.mindReader;
   const [needTeams, setNeedTeams] = useState(false);
   const [adding, setAdding] = useState(false);
   const [editingTeam, setEditingTeam] = useState<string | null>(null);
-  const edit = (change: (l: Lineup) => Lineup) => setMindReader((m) => ({ ...m, lineup: change(m.lineup) }));
   const menu = usePlayerMenu(lineup, edit);
-  const issue = lineupIssue(lineup);
+  const issue = lineupIssue(lineup, rules);
   const n = lineup.players.length;
 
   const pickStyle = (style: PlayStyle) => {
-    if (style === 'teams' && !canUseTeams(n)) setNeedTeams(true);
-    else edit((l) => setStyle(l, style, teamPresets()));
+    if (style === 'teams' && !canUseTeams(n, rules)) setNeedTeams(true);
+    else edit((l) => setStyle(l, style, teamPresets(), rules));
   };
   const addField = (
     <NameField
       placeholder={s.addPlaceholder}
       autoFocus
       onSubmit={(name) => {
-        edit((l) => addPlayer(l, name));
+        edit((l) => addPlayer(l, name, rules));
         setAdding(false);
       }}
     />
@@ -75,12 +71,12 @@ export function MindReaderLineupScreen() {
       tone="base"
       width="column"
       footer={
-        <Button size="large" disabled={issue !== null} onClick={() => router.push(routes.mindReaderSettings)}>
+        <Button size="large" disabled={issue !== null} onClick={() => router.push(routes.settings)}>
           {en.mindReader.next}
         </Button>
       }
     >
-      <StepTop step={2} total={3} title={s.title} back={{ href: routes.mindReaderPlayers, label: en.mindReader.back }} />
+      <StepTop step={2} total={3} title={s.title} back={{ href: routes.players, label: en.mindReader.back }} stepText={copy.step} />
       <div className={styles.section}>
         <SegmentSwitch
           name="playStyle"
@@ -92,7 +88,7 @@ export function MindReaderLineupScreen() {
           value={lineup.style}
           onChange={pickStyle}
         />
-        <p className={cx(styles.muted, text('hint'))}>{lineup.style === 'teams' ? format(s.teamsHint, { min: minTeamPlayers() }) : format(s.individualHint, { min: config.minPlayers })}</p>
+        <p className={cx(styles.muted, text('hint'))}>{lineup.style === 'teams' ? format(copy.teamsHint, { min: minTeamPlayers(rules) }) : format(copy.individualHint, { min: config.minPlayers })}</p>
       </div>
 
       {lineup.style === 'individual' ? (
@@ -109,7 +105,7 @@ export function MindReaderLineupScreen() {
                     onClick={(event) => menu.open(p.id, event.currentTarget)}
                   >
                     <span className={cx(styles.grow, styles.ellipsis, text('label'))}>{format(s.orderName, { n: i + 1, name: p.name })}</span>
-                    {i === 0 && <span className={cx(styles.muted, text('small'))}>{s.first}</span>}
+                    {i === 0 && <span className={cx(styles.muted, text('small'))}>{copy.first}</span>}
                     <span className={styles.pencil}>
                       <Icon name="pencil" />
                     </span>
@@ -132,7 +128,7 @@ export function MindReaderLineupScreen() {
       ) : (
         <>
           <Section label={s.teamSetup}>
-            <Stepper label={s.teamCount} value={lineup.teams.length} min={config.minTeams} max={config.maxTeams} fill="raised" onChange={(count) => edit((l) => setTeamCount(l, count, teamPresets()))} />
+            <Stepper label={s.teamCount} value={lineup.teams.length} min={config.minTeams} max={config.maxTeams} fill="raised" onChange={(count) => edit((l) => setTeamCount(l, count, teamPresets(), rules))} />
             {issue?.kind === 'tooManyTeams' && <Note>{format(s.tooManyTeams, { min: config.minPerTeam, max: issue.max })}</Note>}
             <Button variant="secondary" icon="shuffle" onClick={() => edit((l) => shuffleTeams(l, Math.random))}>
               {s.shuffleTeams}
@@ -183,11 +179,11 @@ export function MindReaderLineupScreen() {
       )}
 
       {menu.element}
-      {editingTeam && <TeamSheet teamId={editingTeam} onClose={() => setEditingTeam(null)} />}
+      {editingTeam && <TeamSheet game={game} teamId={editingTeam} onClose={() => setEditingTeam(null)} />}
       {needTeams && (
         <Dialog
-          title={format(s.needTeams.title, { min: minTeamPlayers() })}
-          body={plural(n, s.needTeams.body, { missing: Math.max(0, minTeamPlayers() - n) })}
+          title={format(s.needTeams.title, { min: minTeamPlayers(rules) })}
+          body={plural(n, s.needTeams.body, { missing: Math.max(0, minTeamPlayers(rules) - n) })}
           primary={{
             label: s.needTeams.add,
             onClick: () => {

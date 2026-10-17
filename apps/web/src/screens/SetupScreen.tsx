@@ -14,6 +14,7 @@ import {
   hasTimerSetting,
   isSmallDeck,
   isTimeLimitInRange,
+  modeRules,
   plural,
   tapAllCards,
   toggleDifficulty,
@@ -37,6 +38,7 @@ import { InlineSwitch } from '@/components/ui/InlineSwitch';
 import { MindReaderRounds } from '@/components/mindReader/MindReaderRounds';
 import { StepTop } from '@/components/mindReader/parts';
 import { Section } from '@/components/ui/Section';
+import { VersusSettings } from '@/components/versus/VersusSettings';
 import { routes } from '@/lib/routes';
 import { toggleCategory } from '@/lib/settings';
 import { cx, text } from '@/lib/ui';
@@ -62,6 +64,9 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   const allCardsTap = useRef<AllCardsTap>(null);
   const update = (change: Partial<GameSettings>) => setSettings((current) => ({ ...current, ...change }));
   const { difficulties, categories, roundSeconds, skips, noTimeLimit } = settings;
+  // Step 3 of Versus: the turn's time limit (kept in its own setup), rounds, skips and scoring.
+  const versus = modeRules(mode).play === 'versus';
+  const turn = game.versus;
   const cards = deckSize(bank, difficulties, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
   const summary = categoriesSummary(categories, summaryCopy);
@@ -70,8 +75,9 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
     game.newGame(settings, custom ? 'custom' : undefined);
     router.push(routes.play);
   };
+  const ready = canStart(settings) && (!versus || turn.noTimeLimit || isTimeLimitInRange(turn.turnSeconds));
   const start = () => {
-    if (!canStart(settings)) return;
+    if (!ready) return;
     if (isSmallDeck(cards)) setOpen('smallDeck');
     else play();
   };
@@ -84,8 +90,26 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   const limits = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
   // The time is checked once the box loses focus; Start waits while it is out of range.
   const timeOutOfRange = hasTimeLimit(settings) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
+  const turnOutOfRange = versus && !turn.noTimeLimit && !isTimeLimitInRange(turn.turnSeconds) && !timerFocused;
 
-  const timerSection = hasTimerSetting(mode) && (
+  const versusTimer = versus && (
+    <Section
+      label={copy.timer}
+      aside={<InlineSwitch label={copy.noLimit} name={en.a11y.noTimeLimit} checked={turn.noTimeLimit} onChange={(on) => game.setVersus((v) => ({ ...v, noTimeLimit: on }))} />}
+    >
+      <TimerInput
+        seconds={turn.turnSeconds}
+        invalid={turnOutOfRange}
+        disabled={turn.noTimeLimit}
+        range={format(copy.timerRange, limits)}
+        onFocusChange={setTimerFocused}
+        onChange={(seconds) => game.setVersus((v) => ({ ...v, turnSeconds: seconds }))}
+      />
+      {turnOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
+    </Section>
+  );
+
+  const timerSection = hasTimerSetting(mode) && !versus && (
     <Section
       label={copy.timer}
       aside={<InlineSwitch label={copy.noLimit} name={en.a11y.noTimeLimit} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />}
@@ -108,11 +132,11 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
     <Screen
       tone="base"
       width="column"
-      back={custom ? undefined : { href: routes.modes, label: copy.back }}
-      action={custom ? undefined : <span className={cx(styles.muted, text('link'))}>{en.modes[mode].name}</span>}
-      title={custom ? undefined : copy.title}
+      back={custom || versus ? undefined : { href: routes.modes, label: copy.back }}
+      action={custom || versus ? undefined : <span className={cx(styles.muted, text('link'))}>{en.modes[mode].name}</span>}
+      title={custom || versus ? undefined : copy.title}
       footer={
-        <Button size="large" disabled={!canStart(settings)} onClick={start}>
+        <Button size="large" disabled={!ready} onClick={start}>
           {copy.start}
         </Button>
       }
@@ -122,6 +146,13 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
           <StepTop step={3} total={3} title={en.mindReader.settings.title} back={{ href: routes.mindReaderLineup, label: en.mindReader.back }} />
           {timerSection}
           <MindReaderRounds />
+        </>
+      )}
+      {versus && (
+        <>
+          <StepTop step={3} total={3} title={en.versus.settings.title} back={{ href: routes.versusLineup, label: en.mindReader.back }} stepText={en.versus.setup.step} />
+          {versusTimer}
+          <VersusSettings />
         </>
       )}
       <button
@@ -163,7 +194,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
 
       {!custom && timerSection}
 
-      {hasSkipSetting(mode) && (
+      {hasSkipSetting(mode) && !versus && (
         <Section label={copy.skips} aside={copy.skipsHint}>
           <Grid columns={layout.grid.skips} role="radiogroup" aria-label={copy.skips}>
             {gameConfig.skipOptions.map((option) => (

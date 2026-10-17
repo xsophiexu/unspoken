@@ -36,18 +36,22 @@ type PlayFrameProps = {
   frameRef?: Ref<HTMLDivElement>;
   // Paused, Pass the phone and round-over screens, drawn over the frame.
   overlay?: ReactNode;
+  // A mode's own top in place of the style's header (Versus: the round and its role cards), and its
+  // own controls in place of Skip and Correct (Versus: tap who got it).
+  top?: ReactNode;
+  controls?: ReactNode;
 };
 
 // The play screen for any layout style, assembled from the slot components. The arrangement decides
 // how the regions stack; each slot decides what it shows at each anchor. Adding a style is adding
 // data to @unspoken/design-tokens, not code here.
-export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, overlay }: PlayFrameProps) {
+export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, overlay, top, controls: ownControls }: PlayFrameProps) {
   const { arrangement, regions } = s;
   const card = model.card;
   const word = card && <Word slot={s.word} word={card.word} />;
   const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} />;
   const timer = (at: Parameters<typeof Timer>[0]['at']) => <Timer slot={s.timer} at={at} clock={model.clock} onPause={actions?.onPause} />;
-  const controls = (
+  const controls = ownControls ?? (
     <Controls
       slot={s.controls}
       regions={regions}
@@ -173,7 +177,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       surface={surface}
       top={
         <>
-          <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />
+          {top ?? <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />}
           {timer('top')}
           <Stats slot={s.stats} at="belowHeader" stats={model.stats} />
         </>

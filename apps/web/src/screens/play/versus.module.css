@@ -1,0 +1,214 @@
+/* Versus screens. Every value is a design token from /theme.css. */
+
+/* Pass the phone */
+
+.passTitle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2);
+  text-align: center;
+}
+
+.passRow {
+  justify-content: space-between;
+}
+
+.passValue {
+  min-width: 0;
+  text-align: end;
+}
+
+/* The turn */
+
+/* The header sits on the play screen's margins, its role cards on the setup screens'. */
+.turnHeader {
+  display: flex;
+  flex-direction: column;
+}
+
+.guessRow {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--un-space-3);
+  width: 100%;
+}
+
+.skip {
+  position: relative;
+  align-self: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-1);
+  min-height: var(--un-layout-min-touch);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--region-ink);
+}
+
+.skip:disabled,
+.whoButton:disabled {
+  color: var(--region-disabled-ink);
+}
+
+.skipBar {
+  width: var(--un-space-6);
+  height: var(--hairline);
+  background: var(--region-rule);
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-2);
+}
+
+.whoButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--un-space-2);
+}
+
+.whoButton {
+  min-height: var(--un-layout-versus-guesser-button);
+  padding: 0 var(--un-space-4);
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.whoButton:disabled {
+  background: var(--region-disabled);
+}
+
+.endTurn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-1);
+  width: 100%;
+}
+
+/* Turn recap */
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+}
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--un-space-3);
+  row-gap: var(--un-space-1);
+  margin-top: var(--un-space-1);
+}
+
+.count {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.dot {
+  flex: none;
+  width: var(--un-layout-versus-count-dot);
+  height: var(--un-layout-versus-count-dot);
+  border-radius: var(--un-radius-pill);
+}
+
+.dot[data-outcome='correct'] {
+  background: var(--region-accent);
+}
+
+.dot[data-outcome='notGuessed'] {
+  background: var(--region-track);
+}
+
+.dot[data-outcome='banned'] {
+  border: var(--hairline) solid var(--region-ink);
+}
+
+.total {
+  flex: none;
+  color: var(--region-ink);
+  line-height: 1;
+}
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.recapRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  width: 100%;
+  min-height: var(--un-layout-versus-recap-row);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--region-ink);
+  text-align: start;
+  cursor: pointer;
+}
+
+.recapRow + .recapRow {
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+.wordCell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.recapRow[data-outcome='banned'] .word {
+  text-decoration: line-through;
+}
+
+.pill {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-0-5);
+  min-height: var(--un-layout-versus-status-pill);
+  padding: 0 var(--un-space-2-5);
+  border: var(--hairline) solid transparent;
+  border-radius: var(--un-radius-pill);
+}
+
+.recapRow[data-outcome='correct'] .pill {
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.recapRow[data-outcome='notGuessed'] .pill {
+  background: var(--region-chip);
+  color: var(--region-muted);
+}
+
+.recapRow[data-outcome='banned'] .pill {
+  border-color: var(--region-ink);
+  color: var(--region-ink);
+}
+
+.points {
+  flex: none;
+  min-width: var(--un-space-6);
+  text-align: end;
+}
+
+.recapRow[data-outcome='notGuessed'] .points {
+  color: var(--region-muted);
+}

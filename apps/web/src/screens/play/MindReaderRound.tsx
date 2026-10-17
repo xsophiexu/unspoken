@@ -510,7 +510,7 @@ function ToughBox({ prompt, onSwitch }: { prompt: { title: string; body: string;
 }
 
 // Teams (or players) by total, the leader on a white row.
-function Standings({ rows }: { rows: readonly ScoreRow[] }) {
+export function Standings({ rows }: { rows: readonly ScoreRow[] }) {
   return (
     <ol className={styles.standings}>
       {rows.map((row, i) => (

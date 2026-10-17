@@ -38,14 +38,27 @@ export function TeamBadge({ name, color }: { name: string; color: number }) {
 }
 
 // Back link and step count, the title, and a bar for each step with the steps done filled in.
-export function StepTop({ step, total, title, back }: { step: number; total: number; title: string; back: { href: string; label: string } }) {
+export function StepTop({
+  step,
+  total,
+  title,
+  back,
+  stepText = en.mindReader.step,
+}: {
+  step: number;
+  total: number;
+  title: string;
+  back: { href: string; label: string };
+  // "Step {n} of {total}", or a game's own ("Versus · Step {n} of {total}").
+  stepText?: string;
+}) {
   return (
     <div className={styles.stepTop}>
       <div className={styles.topRow}>
         <Link href={back.href} className={cx(styles.link, text('link'))}>
           {back.label}
         </Link>
-        <span className={cx(styles.muted, text('subline'))}>{format(en.mindReader.step, { n: step, total })}</span>
+        <span className={cx(styles.muted, text('subline'))}>{format(stepText, { n: step, total })}</span>
       </div>
       <h1 className={text('title')}>{title}</h1>
       <div className={styles.bars} aria-hidden="true">
@@ -66,10 +79,13 @@ export function Stepper({
   min,
   max,
   fill,
+  display,
 }: {
   label: string;
   sub?: string;
   value: number;
+  // The value as shown, when it isn't the plain number ("−1" for points lost).
+  display?: string;
   onChange: (value: number) => void;
   min: number;
   max: number;
@@ -86,7 +102,7 @@ export function Stepper({
         −
       </button>
       <output className={cx(styles.stepValue, text('sheetTitle'))} aria-live="polite">
-        {value}
+        {display ?? value}
       </output>
       <button type="button" className={cx(styles.stepButton, text('optionTitle'))} disabled={value >= max} aria-label={format(en.a11y.more, { label })} onClick={() => onChange(value + 1)}>
         +

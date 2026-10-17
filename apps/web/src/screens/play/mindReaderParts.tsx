@@ -37,7 +37,7 @@ export function MRFrame({ layoutStyle, header, children, footer, center = false,
 // The header row placed as the play screen's is in the player's style (Classic's header): its side
 // and top margins and title size. The content under it keeps the setup screens' side margin, so the
 // row is inset by the difference (mindReader.module.css).
-function headerVars(s: LayoutStyle): CSSProperties {
+export function headerVars(s: LayoutStyle): CSSProperties {
   const margins = playMargins(s);
   // Styles whose play header is a title (Card) set its size; pill headers have no title to match.
   const size = s.header.variant === 'titleBadge' ? s.header.size : layout.mindReader.titleSize;

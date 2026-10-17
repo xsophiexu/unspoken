@@ -2,12 +2,15 @@
 
 import { bank } from '@unspoken/content';
 import {
+  canPlayVersus,
   cardsFor,
   createRound,
+  defaultVersusSetup,
   emptyLineup,
   gameConfig,
   modeRules,
   newSeed,
+  resumableSettings,
   roundReducer,
   withDifficulty,
   type Difficulty,
@@ -18,6 +21,7 @@ import {
   type Random,
   type RoundAction,
   type RoundState,
+  type VersusSetup,
 } from '@unspoken/core';
 import { createContext, use, useCallback, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
@@ -36,20 +40,31 @@ type GameState = {
   // set up (players, teams, rounds), kept for this visit.
   play: MindReaderPlay;
   mindReader: MindReaderSetup;
+  // The Versus game being set up (players, teams, rounds, turn time, skips, penalty), kept for
+  // this visit; a Versus game plays it.
+  versus: VersusSetup;
 };
 
 type GameAction =
   | { type: 'play'; action: RoundAction }
   | { type: 'newGame'; settings: GameSettings; seed: number; play: MindReaderPlay }
   | { type: 'setMindReader'; change: (setup: MindReaderSetup) => MindReaderSetup }
+  | { type: 'setVersus'; change: (setup: VersusSetup) => VersusSetup }
   | { type: 'saveSettings'; settings: GameSettings };
 
-function startRound(settings: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader'>): RoundState {
+// A Versus game whose lineup can't play (none set up this visit) opens the default mode instead.
+function playable(settings: GameSettings, versus: VersusSetup): GameSettings {
+  return modeRules(settings.mode).play === 'versus' && !canPlayVersus(versus.lineup) ? resumableSettings(settings) : settings;
+}
+
+function startRound(wanted: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader' | 'versus'>): RoundState {
+  const settings = playable(wanted, state.versus);
   return createRound(settings, {
     cards: cardsFor(bank, settings.difficulties, settings.categories),
     seed,
     showIntro: !state.introSeen[modeRules(settings.mode).play],
     mindReader: { play: state.play, setup: state.mindReader },
+    versus: state.versus,
   });
 }
 
@@ -67,6 +82,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'setMindReader':
       return { ...state, mindReader: action.change(state.mindReader) };
+    case 'setVersus':
+      return { ...state, versus: action.change(state.versus) };
     // The round in progress keeps the settings it started with; the next one plays these.
     case 'saveSettings':
       return { ...state, settings: action.settings };
@@ -82,6 +99,8 @@ type GameContextValue = {
   newGame: (settings: GameSettings, play?: MindReaderPlay) => void;
   mindReader: MindReaderSetup;
   setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
+  versus: VersusSetup;
+  setVersus: (change: (setup: VersusSetup) => VersusSetup) => void;
   // Save these settings for the next round, leaving the round in progress as it is.
   saveSettings: (settings: GameSettings) => void;
   // A fresh round with the same settings (and the same way of playing Mind Reader).
@@ -100,8 +119,14 @@ type GameProviderProps = {
 
 export function GameProvider({ children, random = Math.random }: GameProviderProps) {
   const [state, send] = useReducer(gameReducer, undefined, (): GameState => {
-    const settings = parseSettings(readStored(SETTINGS_STORAGE_KEY));
-    const fresh = { introSeen: {}, play: 'quick' as const, mindReader: { lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default } };
+    // A Versus lineup lasts one visit, so a saved Versus game opens the default mode.
+    const settings = resumableSettings(parseSettings(readStored(SETTINGS_STORAGE_KEY)));
+    const fresh = {
+      introSeen: {},
+      play: 'quick' as const,
+      mindReader: { lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default },
+      versus: defaultVersusSetup(emptyLineup()),
+    };
     return { ...fresh, settings, round: startRound(settings, newSeed(random), fresh) };
   });
 
@@ -111,6 +136,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
   const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
   const newGame = useCallback((settings: GameSettings, play: MindReaderPlay = 'quick') => send({ type: 'newGame', settings, seed: newSeed(random), play }), [random]);
   const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ type: 'setMindReader', change }), []);
+  const setVersus = useCallback((change: (setup: VersusSetup) => VersusSetup) => send({ type: 'setVersus', change }), []);
   const saveSettings = useCallback((settings: GameSettings) => send({ type: 'saveSettings', settings }), []);
 
   const value = useMemo(
@@ -121,11 +147,13 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       newGame,
       mindReader: state.mindReader,
       setMindReader,
+      versus: state.versus,
+      setVersus,
       saveSettings,
       restart: () => newGame(state.settings, state.play),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty), state.play),
     }),
-    [state.settings, state.round, state.play, state.mindReader, dispatch, newGame, setMindReader, saveSettings],
+    [state.settings, state.round, state.play, state.mindReader, state.versus, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

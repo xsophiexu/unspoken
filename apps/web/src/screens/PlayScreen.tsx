@@ -15,6 +15,7 @@ import { useTheme } from '@/state/theme';
 import { MindReaderRound } from './play/MindReaderRound';
 import { ReverseRound } from './play/ReverseRound';
 import { SwipeRound } from './play/SwipeRound';
+import { VersusRound } from './play/VersusRound';
 
 // The How to play version the player last finished or closed. It opens by itself on the first game,
 // and again once whenever the walkthrough changes (a returning player who saw an older one, saved
@@ -47,6 +48,7 @@ export function PlayScreen() {
   // Leaving for another screen: a round with a clock waits on Paused; one without carries on.
   const leave = () => {
     if (swipe) dispatch(round.clock ? { type: 'pause', reason: 'user' } : { type: 'resume' });
+    if (round.kind === 'versus' && round.phase === 'turn' && round.clock) dispatch({ type: 'pause' });
   };
   // Restart and a new level start a fresh round, so the sheet just goes away.
   const fresh = (start: () => void) => {
@@ -73,6 +75,7 @@ export function PlayScreen() {
       {round.kind === 'swipe' && <SwipeRound {...props} round={round} layoutStyle={layoutStyle} />}
       {round.kind === 'reverse' && <ReverseRound {...props} round={round} layoutStyle={layoutStyle} />}
       {round.kind === 'mindReader' && <MindReaderRound {...props} round={round} layoutStyle={layoutStyle} />}
+      {round.kind === 'versus' && <VersusRound {...props} round={round} layoutStyle={layoutStyle} />}
 
       {sheet === 'menu' && (
         <GameMenu

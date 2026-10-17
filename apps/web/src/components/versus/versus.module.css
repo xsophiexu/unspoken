@@ -1,0 +1,21 @@
+/* Versus: Game settings, the turn's guesser controls and the turn recap. */
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+/* The same box as a Stepper row, with the switch in place of − and +. */
+.switchRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+  padding: var(--un-space-3) var(--un-space-3) var(--un-space-3) var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+  color: var(--region-ink);
+}

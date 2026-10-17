@@ -1,7 +1,7 @@
 'use client';
 
 import { en } from '@unspoken/content';
-import { addPlayer, format, movePlayer, playerName, renameTeam, setTeamColor, type Lineup } from '@unspoken/core';
+import { addPlayer, format, movePlayer, playerName, renameTeam, setTeamColor } from '@unspoken/core';
 import { teamColors } from '@unspoken/design-tokens';
 import { useId, useState } from 'react';
 
@@ -10,18 +10,16 @@ import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Sheet } from '@/components/ui/Sheet';
 import { cx, text } from '@/lib/ui';
-import { useGame } from '@/state/game';
 
+import { useLineupSetup, type LineupGame } from './lineupGame';
 import { AddPill, NameField, NamePill, teamColorVar } from './parts';
 import { usePlayerMenu } from './usePlayerMenu';
 import styles from './mindReader.module.css';
 
 // Customize team: its name and color, its players (tap one for options) and players to bring over
 // from other teams. Render it while open.
-export function TeamSheet({ teamId, onClose }: { teamId: string; onClose: () => void }) {
-  const { mindReader, setMindReader } = useGame();
-  const { lineup } = mindReader;
-  const edit = (change: (l: Lineup) => Lineup) => setMindReader((m) => ({ ...m, lineup: change(m.lineup) }));
+export function TeamSheet({ game = 'mindReader', teamId, onClose }: { game?: LineupGame; teamId: string; onClose: () => void }) {
+  const { lineup, edit, config } = useLineupSetup(game);
   const menu = usePlayerMenu(lineup, edit);
   const id = useId();
   const [adding, setAdding] = useState(false);
@@ -77,7 +75,7 @@ export function TeamSheet({ teamId, onClose }: { teamId: string; onClose: () => 
               autoFocus
               onSubmit={(added) => {
                 edit((l) => {
-                  const next = addPlayer(l, added);
+                  const next = addPlayer(l, added, config);
                   const newest = next.players[next.players.length - 1];
                   return newest && next.players.length > l.players.length ? movePlayer(next, newest.id, team.id) : next;
                 });
