@@ -3,5 +3,6 @@ export * from './palettes';
 export * from './regions';
 export * from './scales';
 export * from './styles';
+export * from './teams';
 export * from './theme';
 export * from './typography';

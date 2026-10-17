@@ -11,8 +11,10 @@ import {
   motion,
   opacity,
   palettes,
+  popoverColors,
   resolveTheme,
   spotlight,
+  teamColors,
   textStyles,
   type ColorId,
   type ColorMode,
@@ -73,8 +75,12 @@ function sharedTokens(): Vars {
 const followStyle = STYLE_IDS.find((id) => layoutStyles[id].color.kind === 'follow') ?? STYLE_IDS[0];
 
 function paletteVars(color: ColorId, mode: ColorMode): Vars {
+  const theme = resolveTheme({ style: followStyle, color, mode });
   return {
-    ...cssVariables(resolveTheme({ style: followStyle, color, mode })),
+    ...cssVariables(theme),
+    // Mind Reader: the team colors by index, and the menu that opens on a player.
+    ...Object.fromEntries(teamColors[mode].map((c, i) => [`--un-team-${i}`, c])),
+    ...Object.fromEntries(Object.entries(popoverColors(theme.colors, mode)).map(([k, v]) => [`--un-popover-${k}`, v])),
     // The How to play Play label: the color's light-mode accent text in both modes (see spotlight tokens).
     '--un-spotlight-play-ink': palettes[color].light.accentText,
   };
