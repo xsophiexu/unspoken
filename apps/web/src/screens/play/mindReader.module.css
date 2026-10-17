@@ -47,7 +47,7 @@
 }
 
 .roomy {
-  gap: var(--un-space-6);
+  gap: var(--un-layout-mind-reader-predict-gap);
 }
 
 .footer {
@@ -254,8 +254,8 @@
   background: var(--region-chip);
 }
 
-.quickBand {
-  padding-block: var(--un-space-7);
+.predictBand {
+  padding-block: var(--un-layout-mind-reader-predict-band-y);
 }
 
 .wordCard {

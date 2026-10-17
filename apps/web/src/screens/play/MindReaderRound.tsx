@@ -136,7 +136,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
         <MRFrame
           layoutStyle={s}
           center={centered}
-          roomy={quick}
+          roomy
           header={header({ cards: true, details: true })}
           footer={
             <>
@@ -148,7 +148,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
           }
         >
           {/* The word block on a band the color of the role cards, its text indented like theirs. */}
-          <div className={cx(styles.band, quick && styles.quickBand)}>
+          <div className={cx(styles.band, styles.predictBand)}>
             <p className={cx(styles.muted, text('subline'))}>{v.kicker}</p>
             <BigWord word={word} />
           </div>
@@ -170,10 +170,9 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
                 />
               );
             })}
-            {v.note && !quick && <Note icon="eyeOff">{v.note}</Note>}
           </div>
-          {/* Quick Play gives the hint a section of its own. */}
-          {v.note && quick && <Note icon="eyeOff">{v.note}</Note>}
+          {/* The hint is a section of its own, clear of the last word. */}
+          {v.note && <Note icon="eyeOff">{v.note}</Note>}
         </MRFrame>
       );
       break;

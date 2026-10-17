@@ -21,7 +21,7 @@ import styles from './mindReader.module.css';
 // spoken log, the coach card and the sheets.
 
 // The page in the style's page tone: an optional header, the content and the buttons.
-// roomy: wider gaps between sections (Quick Play's Predict).
+// roomy: the Predict screens' wider gaps between sections.
 export function MRFrame({ layoutStyle, header, children, footer, center = false, roomy = false }: { layoutStyle: LayoutStyle; header?: ReactNode; children: ReactNode; footer: ReactNode; center?: boolean; roomy?: boolean }) {
   return (
     <main className={styles.page} data-region={layoutStyle.regions.page} style={headerVars(layoutStyle)}>

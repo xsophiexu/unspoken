@@ -131,43 +131,42 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
             </>
           }
         >
-          <View style={quick ? styles.quickStack : styles.stack}>
-          {/* The word block on a band the color of the role cards, its text indented like theirs. */}
-          <View style={[styles.band, quick && styles.quickBand, { backgroundColor: page.chip }]}>
-            <Txt variant="subline" color={page.muted}>
-              {v.kicker}
-            </Txt>
-            <BigWord word={word} colors={page} />
-          </View>
-          <View style={styles.section}>
-            <LabelRow label={v.label} aside={v.hint ?? undefined} colors={page} />
-            {state.predictions.map((value, i) => {
-              const last = i === state.predictions.length - 1;
-              const placeholder = format(en.mindReader.predict.placeholder, { n: i + 1 });
-              return (
-                <TextInput
-                  key={i}
-                  ref={(el) => {
-                    inputs.current[i] = el;
-                  }}
-                  value={value}
-                  onChangeText={(text) => dispatch({ type: 'predict', index: i, text })}
-                  placeholder={placeholder}
-                  placeholderTextColor={raised.muted}
-                  accessibilityLabel={placeholder}
-                  autoCapitalize="words"
-                  autoCorrect={false}
-                  returnKeyType={last ? 'done' : 'next'}
-                  submitBehavior={last ? 'blurAndSubmit' : 'submit'}
-                  onSubmitEditing={() => inputs.current[i + 1]?.focus()}
-                  style={[styles.input, nativeTextStyle('input'), { color: raised.ink, backgroundColor: raised.bg, borderColor: value.trim() ? page.accent : raised.bg }]}
-                />
-              );
-            })}
-            {v.note && !quick ? <Note text={v.note} colors={page} icon="eyeOff" /> : null}
-          </View>
-          {/* Quick Play gives the hint a section of its own. */}
-          {v.note && quick ? <Note text={v.note} colors={page} icon="eyeOff" /> : null}
+          <View style={styles.predict}>
+            {/* The word block on a band the color of the role cards, its text indented like theirs. */}
+            <View style={[styles.band, styles.predictBand, { backgroundColor: page.chip }]}>
+              <Txt variant="subline" color={page.muted}>
+                {v.kicker}
+              </Txt>
+              <BigWord word={word} colors={page} />
+            </View>
+            <View style={styles.section}>
+              <LabelRow label={v.label} aside={v.hint ?? undefined} colors={page} />
+              {state.predictions.map((value, i) => {
+                const last = i === state.predictions.length - 1;
+                const placeholder = format(en.mindReader.predict.placeholder, { n: i + 1 });
+                return (
+                  <TextInput
+                    key={i}
+                    ref={(el) => {
+                      inputs.current[i] = el;
+                    }}
+                    value={value}
+                    onChangeText={(text) => dispatch({ type: 'predict', index: i, text })}
+                    placeholder={placeholder}
+                    placeholderTextColor={raised.muted}
+                    accessibilityLabel={placeholder}
+                    autoCapitalize="words"
+                    autoCorrect={false}
+                    returnKeyType={last ? 'done' : 'next'}
+                    submitBehavior={last ? 'blurAndSubmit' : 'submit'}
+                    onSubmitEditing={() => inputs.current[i + 1]?.focus()}
+                    style={[styles.input, nativeTextStyle('input'), { color: raised.ink, backgroundColor: raised.bg, borderColor: value.trim() ? page.accent : raised.bg }]}
+                  />
+                );
+              })}
+            </View>
+            {/* The hint is a section of its own, clear of the last word. */}
+            {v.note ? <Note text={v.note} colors={page} icon="eyeOff" /> : null}
           </View>
         </MRFrame>
       );
@@ -596,9 +595,9 @@ const styles = StyleSheet.create({
   section: { gap: space[2.5] },
   kicker: { gap: space[1] },
   band: { gap: space[1], borderRadius: radius.lg, paddingHorizontal: space[3], paddingVertical: space[5] },
-  quickBand: { paddingVertical: space[7] },
-  stack: { gap: space[4] },
-  quickStack: { gap: space[6] },
+  // Every Predict screen: roomy sections and a tall word band.
+  predict: { gap: layout.mindReader.predictGap },
+  predictBand: { paddingVertical: layout.mindReader.predictBandY },
   centerHead: { alignItems: 'center', gap: space[1] },
   centerText: { textAlign: 'center' },
   roleCard: { gap: space[1] },
