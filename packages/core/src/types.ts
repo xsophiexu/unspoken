@@ -61,8 +61,8 @@ export const CATEGORY_IDS = [
 ] as const;
 export type Category = (typeof CATEGORY_IDS)[number];
 
-// Order matches the Modes grid in the designs. Zen was removed.
-export const MODE_IDS = ['classic', 'endless', 'teams', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader'] as const;
+// Order matches the Modes grid in the designs. Zen was removed; Versus took the Teams tile.
+export const MODE_IDS = ['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader'] as const;
 export type ModeId = (typeof MODE_IDS)[number];
 
 // A playable card. Banned words run strongest first.

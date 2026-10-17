@@ -7,6 +7,7 @@ import type { Category, ModeId } from './types';
 import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, type SwipeRoundState } from './round/swipe';
 import type { ReverseRoundState } from './round/reverse';
 import { currentRoles, type MindReaderRoundState } from './round/mindReader';
+import { versusCurrentRoles, type VersusRoundState } from './round/versus';
 import type { RoundState } from './round';
 
 // The catalog slots these lines read. Placeholders ({points}, {skips}, ...) are filled with format()
@@ -25,6 +26,7 @@ export type RoundCopy = {
     | 'skipsUsedOf'
     | 'passed'
     | 'mindReaderRound'
+    | 'versusRound'
     | 'mindReaderWord'
     | 'reverse'
     | 'withThemes'
@@ -60,6 +62,8 @@ export function roundSubline(state: RoundState, copy: RoundCopy): string {
       return reverseStatus(state, copy);
     case 'mindReader':
       return mindReaderStatus(state, copy);
+    case 'versus':
+      return versusStatus(state, copy);
     case 'swipe': {
       if (state.rules.escalates) {
         const esc = swipeEscalate(state);
@@ -99,6 +103,11 @@ function mindReaderStatus(state: MindReaderRoundState, copy: RoundCopy): string 
   return format(copy.status.mindReaderRound, { round: roles.round, rounds: state.match.setup.rounds });
 }
 
+// "Round 2 of 5".
+function versusStatus(state: VersusRoundState, copy: RoundCopy): string {
+  return format(copy.status.versusRound, { round: versusCurrentRoles(state).round, rounds: state.setup.rounds });
+}
+
 function reverseStatus(state: ReverseRoundState, copy: RoundCopy): string {
   return format(copy.status.reverse, { points: plural(state.score, copy.units.points), words: plural(state.played, copy.units.words) });
 }
@@ -112,6 +121,8 @@ export function menuStatus(state: RoundState, copy: RoundCopy): string {
       return withThemes(reverseStatus(state, copy));
     case 'mindReader':
       return withThemes(mindReaderStatus(state, copy));
+    case 'versus':
+      return withThemes(versusStatus(state, copy));
     case 'swipe': {
       const points = plural(state.correct, copy.units.points);
       if (state.rules.clock === 'hidden') return withThemes(format(copy.status.hiddenTimer, { mode: copy.modes[state.settings.mode].name }));

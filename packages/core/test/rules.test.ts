@@ -32,9 +32,9 @@ import {
 import { settingsFor } from './fixtures';
 
 describe('catalogs', () => {
-  it('lists the modes in Modes-grid order, Teams and Time Attack coming soon and no Zen', () => {
-    expect(MODE_IDS).toEqual(['classic', 'endless', 'teams', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
-    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['teams', 'timeAttack']);
+  it('lists the modes in Modes-grid order, Versus where Teams was, Time Attack coming soon and no Zen', () => {
+    expect(MODE_IDS).toEqual(['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
+    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['timeAttack']);
   });
 
   it('starts a fresh install on Endless at Normal with All cards, 1:30 and 3 skips', () => {
@@ -78,7 +78,7 @@ describe('round timer', () => {
   });
 
   it('is set in setup only for modes with a visible clock (Mind Reader’s Custom games have one)', () => {
-    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'teams', 'timeAttack', 'mindReader']);
+    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'mindReader']);
   });
 });
 
@@ -89,8 +89,8 @@ describe('banned words', () => {
 });
 
 describe('skips', () => {
-  it('are limited only in Classic, Teams, Time Attack and Escalate', () => {
-    expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'teams', 'timeAttack', 'escalate']);
+  it('are limited only in Classic, Versus, Time Attack and Escalate', () => {
+    expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'escalate']);
   });
 });
 
@@ -133,7 +133,7 @@ describe('canStart', () => {
   });
 
   it('refuses modes that are not available yet', () => {
-    expect(canStart(settingsFor('teams'))).toBe(false);
+    expect(canStart(settingsFor('timeAttack'))).toBe(false);
   });
 });
 
@@ -277,7 +277,7 @@ describe('parseSettings', () => {
   });
 
   it('defaults fields that are missing, unknown or out of range, and never starts an unavailable mode', () => {
-    expect(parseSettings({ mode: 'teams', difficulty: 'Impossible', categories: ['Society', 'Nope', 'Society'], roundSeconds: 'soon', skips: 99 })).toEqual({
+    expect(parseSettings({ mode: 'timeAttack', difficulty: 'Impossible', categories: ['Society', 'Nope', 'Society'], roundSeconds: 'soon', skips: 99 })).toEqual({
       ...defaultSettings(),
       categories: ['Society'],
     });

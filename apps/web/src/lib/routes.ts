@@ -10,6 +10,10 @@ export const routes = {
   mindReaderPlayers: '/mind-reader/players/',
   mindReaderLineup: '/mind-reader/lineup/',
   mindReaderSettings: '/setup/?mode=mindReader&custom=1',
+  // Versus: who's playing, Individual or Teams, then game settings.
+  versus: '/versus/',
+  versusLineup: '/versus/lineup/',
+  versusSettings: '/setup/?mode=versus',
   customize: '/customize/',
   feedback: (from: FeedbackEntryPoint) => `/feedback/?from=${from}`,
   thanks: (from: FeedbackEntryPoint) => `/thanks/?from=${from}`,

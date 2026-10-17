@@ -8,7 +8,7 @@ import type { Category, Difficulty, FeedbackEntryPoint, FeedbackTopic, ModeId, R
 const modes: Record<ModeId, { name: string; sub: string }> = {
   classic: { name: 'Classic', sub: 'Timed round, score what you can' },
   endless: { name: 'Endless', sub: 'No clock, no limits, go until you stop' },
-  teams: { name: 'Teams', sub: 'Two teams, pass the phone' },
+  versus: { name: 'Versus', sub: 'Score against each other, alone or in teams' },
   timeAttack: { name: 'Time Attack', sub: 'Correct answers add time' },
   escalate: { name: 'Escalate', sub: 'One more banned word every time you are correct' },
   hotPotato: { name: 'Hot Potato', sub: 'Hidden timer, pass it on' },
@@ -151,6 +151,7 @@ export const en = {
     skipsUsedOf: '{used} of {limit}',
     passed: '{words} passed',
     mindReaderRound: 'Round {round} of {rounds}',
+    versusRound: 'Round {round} of {rounds}',
     mindReaderWord: 'Word {word}',
     reverse: '{points} · {words}',
     withThemes: '{status} · {themes}',

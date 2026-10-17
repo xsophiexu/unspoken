@@ -13,7 +13,7 @@ import { useGame } from '@/state/game';
 
 // Pick a mode to set up a game. Modes that are not ready yet show Coming soon; the card at the
 // bottom asks for ideas. Every tile is the same size, whatever its detail line says. Mind Reader
-// opens its own start screen (Quick Play, Custom game, Practice).
+// opens its own start screen (Quick Play, Custom game, Practice); Versus starts with who's playing.
 export function ModesScreen() {
   const { settings } = useGame();
   const copy = en.modesScreen;
@@ -30,7 +30,7 @@ export function ModesScreen() {
               status={available ? undefined : copy.comingSoon}
               disabled={!available}
               selected={id === settings.mode}
-              href={id === 'mindReader' ? routes.mindReader : routes.setup(id)}
+              href={id === 'mindReader' ? routes.mindReader : id === 'versus' ? routes.versus : routes.setup(id)}
             />
           );
         })}

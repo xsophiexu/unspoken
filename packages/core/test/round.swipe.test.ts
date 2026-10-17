@@ -281,6 +281,6 @@ describe('createRound / roundReducer', () => {
   });
 
   it('refuse modes that are not available', () => {
-    expect(() => createRound(settingsFor('teams'), { cards, seed: 1 })).toThrow();
+    expect(() => createRound(settingsFor('timeAttack'), { cards, seed: 1 })).toThrow();
   });
 });

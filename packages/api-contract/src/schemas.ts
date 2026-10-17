@@ -10,6 +10,7 @@ import {
   MODE_IDS,
   PLAY_KINDS,
   canSendFeedback,
+  gameConfig,
   feedbackRules,
   type Card,
   type DealtDeck,
@@ -73,6 +74,17 @@ export const gameConfigSchema = z.object({
     quickDifficulty: difficulty,
     scoring: z.object({ guess: whole, bonusEverySeconds: z.number().int().positive(), bonusPoints: whole, perPrediction: whole, notGuessed: whole }),
   }),
+  // Servers from before Versus don't send it; clients then use their own.
+  versus: z
+    .object({
+      lineup: z.object({ minPlayers: whole, maxPlayers: whole, minPerTeam: whole, minTeams: whole, maxTeams: whole }),
+      rounds: z.object({ default: whole, min: whole, max: whole }),
+      turnSeconds: whole,
+      skips: z.object({ default: whole, min: whole, max: whole }),
+      correctPoints: whole,
+      penalty: z.object({ on: z.boolean(), points: z.object({ default: whole, min: whole, max: whole }) }),
+    })
+    .default(gameConfig.versus),
 }) satisfies z.ZodType<GameConfig>;
 
 // POST /v1/decks: a shuffled deck for one or more difficulties and themes (none means All cards).

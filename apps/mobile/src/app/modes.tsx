@@ -37,7 +37,7 @@ export default function ModesScreen() {
                   disabled={!available}
                   height={tileHeight}
                   onNaturalHeight={reportHeight(id)}
-                  onPress={() => router.push(id === 'mindReader' ? '/mind-reader' : { pathname: '/setup', params: { mode: id } })}
+                  onPress={() => router.push(id === 'mindReader' ? '/mind-reader' : id === 'versus' ? '/versus' : { pathname: '/setup', params: { mode: id } })}
                 />
               );
             })}

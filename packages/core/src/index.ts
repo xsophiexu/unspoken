@@ -16,6 +16,8 @@ export { advance, currentCard, newDeck, type DeckState } from './round/deck';
 export * from './round/swipe';
 export * from './round/reverse';
 export * from './round/mindReader';
+export * from './round/versus';
+export * from './versus/match';
 export * from './mindReader/lineup';
 export * from './mindReader/match';
 export * from './round';
