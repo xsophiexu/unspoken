@@ -1,6 +1,6 @@
 import { en, type DetailsSection, type RoleCard, type SpokenRow } from '@unspoken/content';
 import { format, type SpokenEntry } from '@unspoken/core';
-import { layout, maxWidth, radius, space, textStyles, type RegionColors } from '@unspoken/design-tokens';
+import { layout, maxWidth, playMargins, radius, space, textStyles, type RegionColors } from '@unspoken/design-tokens';
 import { useState, type ReactNode } from 'react';
 import { KeyboardAvoidingView, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -20,8 +20,10 @@ import type { Chrome } from './Game';
 // The page: an optional header, the content (scrolling when it runs long) and the buttons.
 export function MRFrame({ chrome, header, children, footer, center = false }: { chrome: Chrome; header?: ReactNode; children: ReactNode; footer: ReactNode; center?: boolean }) {
   const { insets, page } = chrome;
+  // A header sits where the play screen's does; a screen without one starts at the setup margin.
+  const top = header ? headerPlacement(chrome).top : layout.screen.paddingTop;
   return (
-    <KeyboardAvoidingView behavior="padding" style={[styles.page, { backgroundColor: page.bg, paddingTop: insets.top + layout.screen.paddingTop }]}>
+    <KeyboardAvoidingView behavior="padding" style={[styles.page, { backgroundColor: page.bg, paddingTop: insets.top + top }]}>
       <View style={[styles.column, { paddingBottom: insets.bottom + layout.screen.paddingBottom }]}>
         {header}
         <ScrollView style={styles.fill} contentContainerStyle={[styles.content, center && styles.center]} keyboardShouldPersistTaps="handled">
@@ -31,6 +33,17 @@ export function MRFrame({ chrome, header, children, footer, center = false }: { 
       </View>
     </KeyboardAvoidingView>
   );
+}
+
+// The header row placed as the play screen's is in the player's style (Classic's header): its side
+// and top margins and title size. The content under it keeps the setup screens' side margin, so
+// the row is inset by the difference.
+function headerPlacement(chrome: Chrome) {
+  const { header } = chrome.theme.style;
+  const margins = playMargins(chrome.theme.style);
+  // Styles whose play header is a title (Card) set its size; pill headers have no title to match.
+  const size = header.variant === 'titleBadge' ? header.size : layout.mindReader.titleSize;
+  return { inset: margins.paddingX - layout.screen.paddingX, top: margins.paddingTop, size };
 }
 
 function MenuDots({ colors, onPress }: { colors: RegionColors; onPress: () => void }) {
@@ -44,26 +57,49 @@ function MenuDots({ colors, onPress }: { colors: RegionColors; onPress: () => vo
 
 // "Round 2 of 5" with a Details pill and the menu; the role cards under it when given. Cards in a
 // row share the tallest card's height, one line each unless a name needs two.
-// `chip` sits beside the title (Quick play's difficulty).
-export function TurnHeader({ chrome, title, chip, cards, onDetails }: { chrome: Chrome; title: string; chip?: ReactNode; cards?: readonly RoleCard[]; onDetails?: () => void }) {
+// `chip` sits beside the title (Quick Play's difficulty).
+export function TurnHeader({
+  chrome,
+  title,
+  subtitle,
+  chip,
+  cards,
+  onDetails,
+}: {
+  chrome: Chrome;
+  title: string;
+  // A small secondary line under the title (Quick Play names the game there).
+  subtitle?: string;
+  chip?: ReactNode;
+  cards?: readonly RoleCard[];
+  onDetails?: () => void;
+}) {
   const { page } = chrome;
+  const place = headerPlacement(chrome);
   return (
     <View style={styles.header}>
-      <View style={styles.headerRow}>
-        <View style={styles.titleRow}>
-          <Txt variant="modeName" size={layout.mindReader.titleSize} color={page.ink} accessibilityRole="header" numberOfLines={1} style={styles.shrink}>
-            {title}
-          </Txt>
-          {chip}
-          {onDetails ? (
-            <Press onPress={onDetails} accessibilityLabel={en.a11y.roundDetails} hitSlop={slopFor(space[7.5])} style={[styles.details, { backgroundColor: page.chip }]}>
-              <Txt variant="label" color={page.accentText}>
-                {en.mindReader.details}
-              </Txt>
-            </Press>
-          ) : null}
+      <View style={{ marginHorizontal: place.inset }}>
+        <View style={[styles.headerRow, styles.playRow]}>
+          <View style={styles.titleRow}>
+            <Txt variant="modeName" size={place.size} color={page.ink} accessibilityRole="header" numberOfLines={1} style={styles.shrink}>
+              {title}
+            </Txt>
+            {chip}
+            {onDetails ? (
+              <Press onPress={onDetails} accessibilityLabel={en.a11y.roundDetails} hitSlop={slopFor(space[7.5])} style={[styles.details, { backgroundColor: page.chip }]}>
+                <Txt variant="label" color={page.accentText}>
+                  {en.mindReader.details}
+                </Txt>
+              </Press>
+            ) : null}
+          </View>
+          <MenuDots colors={page} onPress={chrome.handlers.onMenu ?? (() => undefined)} />
         </View>
-        <MenuDots colors={page} onPress={chrome.handlers.onMenu ?? (() => undefined)} />
+        {subtitle ? (
+          <Txt variant="hint" color={page.muted} numberOfLines={1}>
+            {subtitle}
+          </Txt>
+        ) : null}
       </View>
       {cards && cards.length > 0 ? (
         <View style={styles.cards}>
@@ -83,7 +119,7 @@ export function TurnHeader({ chrome, title, chip, cards, onDetails }: { chrome: 
   );
 }
 
-// Quick play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
+// Quick Play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
 export function DifficultyChip({ label, colors, onPress }: { label: string; colors: RegionColors; onPress: () => void }) {
   return (
     <Press
@@ -104,13 +140,14 @@ export function DifficultyChip({ label, colors, onPress }: { label: string; colo
 // Practice: "Practice · 1 of 4", the step's title and Skip.
 export function PracticeHeader({ chrome, overline, title, onSkip }: { chrome: Chrome; overline: string; title: string; onSkip: () => void }) {
   const { page } = chrome;
+  const place = headerPlacement(chrome);
   return (
-    <View style={[styles.headerRow, styles.header]}>
+    <View style={[styles.headerRow, styles.header, { marginHorizontal: place.inset }]}>
       <View style={styles.shrink}>
         <Txt variant="overline" color={page.muted}>
           {overline}
         </Txt>
-        <Txt variant="modeName" color={page.ink} accessibilityRole="header">
+        <Txt variant="modeName" size={place.size} color={page.ink} accessibilityRole="header">
           {title}
         </Txt>
       </View>
@@ -336,6 +373,8 @@ const styles = StyleSheet.create({
   footer: { gap: space[3] },
   header: { gap: space[3], paddingBottom: space[1] },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space[3], minHeight: layout.minTouch },
+  // As tall as the menu button, as on the play screen, so its center sits at the same height.
+  playRow: { minHeight: layout.header.menuButton },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: space[2], flexShrink: 1 },
   shrink: { flexShrink: 1 },
   chip: { flexDirection: 'row', alignItems: 'center', gap: space[0.5], minHeight: space[6], borderRadius: radius.xs, paddingLeft: space[2], paddingRight: space[1] },

@@ -2,9 +2,9 @@
 
 import { en, type DetailsSection, type RoleCard, type SpokenRow } from '@unspoken/content';
 import { format, type SpokenEntry } from '@unspoken/core';
-import { layout, textStyles, type LayoutStyle } from '@unspoken/design-tokens';
+import { layout, playMargins, textStyles, type LayoutStyle } from '@unspoken/design-tokens';
 import Link from 'next/link';
-import { useId, useState, type ReactNode } from 'react';
+import { useId, useState, type CSSProperties, type ReactNode } from 'react';
 
 import { Card, LabelRow, NamePill, SegmentSwitch, Stepper, TeamDot } from '@/components/mindReader/parts';
 import { MenuButton } from '@/components/play/Header';
@@ -21,25 +21,53 @@ import styles from './mindReader.module.css';
 // spoken log, the coach card and the sheets.
 
 // The page in the style's page tone: an optional header, the content and the buttons.
-export function MRFrame({ layoutStyle, header, children, footer, center = false }: { layoutStyle: LayoutStyle; header?: ReactNode; children: ReactNode; footer: ReactNode; center?: boolean }) {
+// roomy: wider gaps between sections (Quick Play's Predict).
+export function MRFrame({ layoutStyle, header, children, footer, center = false, roomy = false }: { layoutStyle: LayoutStyle; header?: ReactNode; children: ReactNode; footer: ReactNode; center?: boolean; roomy?: boolean }) {
   return (
-    <main className={styles.page} data-region={layoutStyle.regions.page}>
-      <div className={styles.column}>
+    <main className={styles.page} data-region={layoutStyle.regions.page} style={headerVars(layoutStyle)}>
+      <div className={styles.column} data-header={header ? '' : undefined}>
         {header}
-        <div className={cx(styles.content, center && styles.center)}>{children}</div>
+        <div className={cx(styles.content, center && styles.center, roomy && styles.roomy)}>{children}</div>
         <div className={styles.footer}>{footer}</div>
       </div>
     </main>
   );
 }
 
+// The header row placed as the play screen's is in the player's style (Classic's header): its side
+// and top margins and title size. The content under it keeps the setup screens' side margin, so the
+// row is inset by the difference (mindReader.module.css).
+function headerVars(s: LayoutStyle): CSSProperties {
+  const margins = playMargins(s);
+  // Styles whose play header is a title (Card) set its size; pill headers have no title to match.
+  const size = s.header.variant === 'titleBadge' ? s.header.size : layout.mindReader.titleSize;
+  return { '--header-x': `${margins.paddingX}px`, '--header-top': `${margins.paddingTop}px`, '--header-title': `${size}px` } as CSSProperties;
+}
+
 // "Round 2 of 5" with a Details pill and the menu; the role cards under it when given. Cards in a
 // row share the tallest card's height, two lines at most with an ellipsis. `chip` sits beside the
-// title (Quick play's difficulty).
-export function TurnHeader({ layoutStyle, title, chip, cards, onDetails, onMenu }: { layoutStyle: LayoutStyle; title: string; chip?: ReactNode; cards?: readonly RoleCard[]; onDetails?: () => void; onMenu: () => void }) {
+// title (Quick Play's difficulty).
+export function TurnHeader({
+  layoutStyle,
+  title,
+  subtitle,
+  chip,
+  cards,
+  onDetails,
+  onMenu,
+}: {
+  layoutStyle: LayoutStyle;
+  title: string;
+  // A small secondary line under the title (Quick Play names the game there).
+  subtitle?: string;
+  chip?: ReactNode;
+  cards?: readonly RoleCard[];
+  onDetails?: () => void;
+  onMenu: () => void;
+}) {
   return (
     <header className={styles.header}>
-      <div className={styles.headerRow}>
+      <div className={cx(styles.headerRow, styles.playRow)}>
         <div className={styles.titleRow}>
           <h1 className={cx(styles.title, styles.ellipsis, text('modeName'))}>{title}</h1>
           {chip}
@@ -51,6 +79,7 @@ export function TurnHeader({ layoutStyle, title, chip, cards, onDetails, onMenu 
         </div>
         <MenuButton slot={layoutStyle.header} onMenu={onMenu} />
       </div>
+      {subtitle && <p className={cx(styles.subtitle, styles.muted, styles.ellipsis, text('hint'))}>{subtitle}</p>}
       {cards && cards.length > 0 && (
         <div className={styles.cards}>
           {cards.map((card) => (
@@ -67,7 +96,7 @@ export function TurnHeader({ layoutStyle, title, chip, cards, onDetails, onMenu 
   );
 }
 
-// Quick play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
+// Quick Play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
 export function DifficultyChip({ label, onClick }: { label: string; onClick: () => void }) {
   return (
     <button type="button" className={cx(styles.chip, text('badge'))} aria-label={format(en.mindReader.quick.chip, { difficulty: label })} aria-haspopup="dialog" onClick={onClick}>
@@ -80,10 +109,10 @@ export function DifficultyChip({ label, onClick }: { label: string; onClick: () 
 // Practice: "Practice · 1 of 4", the step's title and Skip.
 export function PracticeHeader({ overline, title, skipHref, onLeave }: { overline: string; title: string; skipHref: string; onLeave: () => void }) {
   return (
-    <header className={cx(styles.headerRow, styles.header)}>
+    <header className={cx(styles.headerRow, styles.playRow, styles.header)}>
       <div className={styles.shrink}>
         <p className={cx(styles.muted, text('overline'))}>{overline}</p>
-        <h1 className={text('modeName')}>{title}</h1>
+        <h1 className={cx(styles.title, text('modeName'))}>{title}</h1>
       </div>
       <Link href={skipHref} className={cx(styles.link, text('link'))} onClick={onLeave}>
         {en.mindReader.practice.skip}

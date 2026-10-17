@@ -17,7 +17,7 @@ type Prefs = {
   tourOpen: boolean;
   setLook: (patch: Partial<ThemeSelection>) => void;
   // Save these settings and start a new round with them. Mind Reader also takes how to play
-  // (Quick play, Custom or Practice); a Custom game plays the mindReader setup below.
+  // (Quick Play, Custom or Practice); a Custom game plays the mindReader setup below.
   startGame: (settings: GameSettings, play?: MindReaderPlay) => void;
   // How the current Mind Reader game is played.
   mindReaderPlay: MindReaderPlay;

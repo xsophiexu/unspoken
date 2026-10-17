@@ -407,7 +407,7 @@ export const en = {
     start: {
       back: '← Modes',
       sub: 'Predict the clues before they’re said.',
-      quick: { title: 'Quick play', body: 'Starts right away. No setup, no teams, no scores.', action: 'Play' },
+      quick: { title: 'Quick Play', body: 'Starts right away. No setup, no teams, no scores.', action: 'Play' },
       custom: { title: 'Custom game', body: 'Players, teams, rounds, time limit, words' },
       practice: { title: 'Practice', body: 'A guided practice turn and how scoring works' },
     },
@@ -524,7 +524,7 @@ export const en = {
       showTeams: 'Show the Mind Readers the word',
       showIndividual: 'Show {name} the word',
       quick: {
-        kicker: 'Quick play · Word {n}',
+        kicker: 'Quick Play · Word {n}',
         title: 'Pick your roles',
         reader: 'Whoever holds the phone',
         clueGiver: 'Pick one player',
@@ -638,27 +638,32 @@ export const en = {
       newGame: 'New game',
     },
 
-    // --- Quick play: the header's difficulty chip and its sheet ---
+    // --- Quick Play: the header's difficulty chip and its sheet ---
     quick: {
-      title: 'Quick play',
+      title: 'Quick Play',
       chip: 'Difficulty {difficulty}. Tap to change.',
       sheetTitle: 'Difficulty',
       apply: 'Apply difficulty',
       custom: 'Custom settings',
     },
 
-    // --- Quick play: the word is over ---
+    // --- Quick Play: the word is over ---
     quickOver: {
       guessed: 'GUESSED IT',
       notGuessed: 'NOT GUESSED',
       pass: 'Pass the phone to someone new to be the next Mind Reader.',
       next: 'Next word',
-      end: 'End quick play',
+      end: 'End Quick Play',
       custom: 'Custom game',
-      // After a word that wasn't guessed.
+      // After a word that wasn't guessed: an easier difficulty if there is one.
       tough: 'Tough one?',
       lower: 'You can lower the difficulty.',
       switch: 'Switch difficulty',
+      // After a new difficulty is applied from this screen.
+      applied: 'Difficulty is now {name}',
+      appliedNext: 'Next words come from {name}.',
+      // Opens the difficulty sheet again from the confirmation.
+      switchAgain: 'Switch',
     },
 
     // --- Practice ---
@@ -691,7 +696,7 @@ export const en = {
         // The guess in the example, in seconds left.
         exampleSecondsLeft: 42,
       },
-      quick: 'Quick play',
+      quick: 'Quick Play',
       custom: 'Custom game',
       again: 'Practice again',
     },

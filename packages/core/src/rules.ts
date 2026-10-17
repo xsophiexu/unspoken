@@ -69,6 +69,12 @@ export function hardestDifficulty(list: readonly Difficulty[], config: GameConfi
   return hardest;
 }
 
+// Whether the catalog has a difficulty easier than every pick (Quick Play then offers to lower it).
+export function hasEasierDifficulty(list: readonly Difficulty[], config: GameConfig = gameConfig): boolean {
+  const first = config.difficulties[0]?.id;
+  return first !== undefined && !list.includes(first) && list.length > 0;
+}
+
 // The easiest of the picks; the badge names it.
 export function easiestDifficulty(list: readonly Difficulty[], config: GameConfig = gameConfig): Difficulty {
   const easiest = sortDifficulties(list, config)[0];

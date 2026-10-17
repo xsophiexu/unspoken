@@ -12,7 +12,7 @@ import { Press } from '../../ui/Press';
 import { Screen, ScreenTitle, ScreenTop } from '../../ui/Screen';
 import { Txt } from '../../ui/Txt';
 
-// Mind Reader's start: Quick play in one tap, a Custom game set up in three steps, or a Practice turn.
+// Mind Reader's start: Quick Play in one tap, a Custom game set up in three steps, or a Practice turn.
 export default function MindReaderStart() {
   const { theme } = usePrefs();
   const start = useStartMindReader();

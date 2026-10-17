@@ -51,7 +51,7 @@ async function playTurn(user: UserEvent, game: ReturnType<typeof renderFlow>['ga
 const gameWords = ['sun', 'sand', 'sea', 'hotel', 'trip'];
 
 describe('Mind Reader', () => {
-  it('starts Quick play in one tap: no setup, no round heading', async () => {
+  it('starts Quick Play in one tap: no setup, no round heading', async () => {
     const user = userEvent.setup();
     const { router } = renderApp(
       <>
@@ -66,12 +66,13 @@ describe('Mind Reader', () => {
     const game = within(screen.getByRole('region', { name: 'game' }));
     expect(game.getByRole('heading', { name: m.roles.quick.title })).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.roles.quick.show }));
-    expect(game.getByRole('heading', { name: m.quick.title })).toBeInTheDocument();
+    expect(game.getByRole('heading', { name: 'Quick Play' })).toBeInTheDocument();
+    expect(game.getByText('Mind Reader')).toBeInTheDocument();
     expect(game.queryByRole('heading', { name: /^Round/ })).not.toBeInTheDocument();
     expect(game.getByRole('button', { name: 'Write 5 more' })).toBeDisabled();
   });
 
-  it('starts Quick play at Normal, and the chip changes the difficulty', async () => {
+  it('starts Quick Play at Normal, and the chip changes the difficulty', async () => {
     saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Expert'], categories: [], skips: 3 } });
     const user = userEvent.setup();
     renderApp(
@@ -121,9 +122,32 @@ describe('Mind Reader', () => {
 
     await user.click(game.getByRole('button', { name: m.quickOver.next }));
     await playWord(false);
-    expect(game.getByText(m.quickOver.tough, { exact: false })).toBeInTheDocument();
+    // Normal is the easiest difficulty: nothing easier to switch to, so no box.
+    expect(game.queryByText(m.quickOver.tough)).not.toBeInTheDocument();
+    expect(game.queryByRole('button', { name: m.quickOver.switch })).not.toBeInTheDocument();
+
+    await user.click(game.getByRole('button', { name: 'Difficulty NORMAL. Tap to change.' }));
+    let sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Normal/ }));
+    await user.click(sheet.getByRole('button', { name: m.quick.apply }));
+    await user.click(game.getByRole('button', { name: m.quickOver.next }));
+    await playWord(false);
+    expect(game.getByText(m.quickOver.tough)).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.quickOver.switch }));
+    sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Normal/ }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
+    await user.click(sheet.getByRole('button', { name: m.quick.apply }));
+    // Applied on the result screen: it confirms, and the next word uses it.
+    expect(game.getByText('Difficulty is now Normal')).toBeInTheDocument();
+    expect(game.getByText('Next words come from Normal.')).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Difficulty NORMAL. Tap to change.' })).toBeInTheDocument();
+    await user.click(game.getByRole('button', { name: m.quickOver.switchAgain }));
     expect(screen.getByRole('dialog', { name: m.quick.sheetTitle })).toBeInTheDocument();
+    await user.keyboard('{Escape}');
+    await user.click(game.getByRole('button', { name: m.quickOver.next }));
+    expect(game.getByRole('button', { name: m.roles.quick.show })).toBeInTheDocument();
   });
 
   it('needs 3 players, and offers Add players or Individual when Teams is picked with 3', async () => {

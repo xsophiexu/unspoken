@@ -32,7 +32,7 @@ type GameState = {
   round: RoundState;
   // Reverse and Mind Reader show their how-to card once per visit.
   introSeen: Partial<Record<PlayKind, true>>;
-  // How the Mind Reader game is played (Quick play, Custom, Practice), and the Custom game being
+  // How the Mind Reader game is played (Quick Play, Custom, Practice), and the Custom game being
   // set up (players, teams, rounds), kept for this visit.
   play: MindReaderPlay;
   mindReader: MindReaderSetup;

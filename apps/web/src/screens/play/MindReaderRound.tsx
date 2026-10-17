@@ -11,6 +11,7 @@ import {
   predictView,
   difficultyBadge,
   quickOverView,
+  toughPrompt,
   resultsView,
   roleCards,
   rolesView,
@@ -21,7 +22,7 @@ import {
   turnTitle,
   type ScoreRow,
 } from '@unspoken/content';
-import { correctPredictions, format, isMindReaderClockRunning, quickPlaySettings, lastTurn, mindReaderCard, mindReaderClockProgress, type MindReaderRoundState } from '@unspoken/core';
+import { correctPredictions, format, isMindReaderClockRunning, quickPlaySettings, lastTurn, mindReaderCard, mindReaderClockProgress, type GameSettings, type MindReaderRoundState } from '@unspoken/core';
 import { layout, type LayoutStyle } from '@unspoken/design-tokens';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -43,15 +44,19 @@ const TICK_SECONDS = 1;
 type MindReaderRoundProps = RoundScreenProps & { round: MindReaderRoundState; layoutStyle: LayoutStyle };
 
 // Mind Reader: roles, predict, show the Clue Giver, clues, then the turn's result, the scores and
-// the winner (Custom); word after word in Quick play; one guided turn in Practice. The words on
+// the winner (Custom); word after word in Quick Play; one guided turn in Practice. The words on
 // every screen come from @unspoken/content's presenters, shared with the app.
 export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu, onLeave }: MindReaderRoundProps) {
   const game = useGame();
   const { dispatch } = game;
   const [sheet, setSheet] = useState<'details' | 'fix' | 'difficulty' | null>(null);
+  // Quick Play: a difficulty applied on the word-over screen waits for Next word.
+  const [pending, setPending] = useState<GameSettings | null>(null);
   const word = mindReaderCard(state)?.word ?? '';
   const custom = state.match !== null;
   const practice = state.play === 'practice';
+  const quick = !custom && !practice;
+  const difficulties = (pending ?? state.settings).difficulties;
   const step = practiceStep(state);
 
   // The clock stops while a sheet covers the turn.
@@ -66,10 +71,10 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
   const startHere = (play: 'quick' | 'practice') =>
     game.newGame(play === 'quick' ? quickPlaySettings(game.settings) : { ...game.settings, mode: 'mindReader' }, play);
   const details = detailsSheet(state);
-  // Quick play and Practice keep their few lines in the middle of the screen.
+  // Quick Play and Practice keep their few lines in the middle of the screen.
   const centered = !custom;
-  // Custom: the round, Details and the role cards. Quick play: "Quick play", the difficulty chip and
-  // the menu. Practice: its step and Skip.
+  // Custom: the round, Details and the role cards. Quick Play: "Quick Play" with the difficulty chip
+  // and the menu, "Mind Reader" under it. Practice: its step and Skip.
   const header = (props: { cards?: boolean; details?: boolean } = {}) =>
     practice ? (
       <PracticeHeader overline={step.overline} title={en.mindReader.practice.title} skipHref={routes.mindReader} onLeave={onLeave} />
@@ -77,7 +82,8 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
       <TurnHeader
         layoutStyle={s}
         title={turnTitle(state)}
-        chip={custom ? undefined : <DifficultyChip label={difficultyBadge(state.settings.difficulties)} onClick={() => setSheet('difficulty')} />}
+        subtitle={custom ? undefined : en.modes.mindReader.name}
+        chip={custom ? undefined : <DifficultyChip label={difficultyBadge(difficulties)} onClick={() => setSheet('difficulty')} />}
         cards={custom && props.cards ? roleCards(state) : undefined}
         onDetails={custom && props.details ? () => setSheet('details') : undefined}
         onMenu={onMenu}
@@ -130,6 +136,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
         <MRFrame
           layoutStyle={s}
           center={centered}
+          roomy={quick}
           header={header({ cards: true, details: true })}
           footer={
             <>
@@ -141,7 +148,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
           }
         >
           {/* The word block on a band the color of the role cards, its text indented like theirs. */}
-          <div className={styles.band}>
+          <div className={cx(styles.band, quick && styles.quickBand)}>
             <p className={cx(styles.muted, text('subline'))}>{v.kicker}</p>
             <BigWord word={word} />
           </div>
@@ -163,8 +170,10 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
                 />
               );
             })}
-            {v.note && <Note icon="eyeOff">{v.note}</Note>}
+            {v.note && !quick && <Note icon="eyeOff">{v.note}</Note>}
           </div>
+          {/* Quick Play gives the hint a section of its own. */}
+          {v.note && quick && <Note icon="eyeOff">{v.note}</Note>}
         </MRFrame>
       );
       break;
@@ -269,6 +278,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
     case 'over': {
       if (!custom) {
         const v = quickOverView(state);
+        const tough = toughPrompt(difficulties, { guessed: state.guessed, applied: pending !== null });
         screen = (
           <MRFrame
             layoutStyle={s}
@@ -276,7 +286,11 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
             header={header()}
             footer={
               <>
-                <Button size="large" onClick={() => dispatch({ type: 'next' })}>
+                <Button size="large" onClick={() => {
+                    if (!pending) return dispatch({ type: 'next' });
+                    setPending(null);
+                    game.newGame(pending, 'quick');
+                  }}>
                   {en.mindReader.quickOver.next}
                 </Button>
                 <p className={styles.links}>
@@ -297,19 +311,8 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
               <p className={text('optionTitle')}>{v.correct}</p>
               {v.said && <p className={cx(styles.muted, text('small'))}>{v.said}</p>}
             </Card>
-            {/* A word that wasn't guessed offers an easier difficulty. */}
-            {!state.guessed && (
-              <div className={styles.tough}>
-                <p className={cx(styles.grow, text('label'))}>
-                  {en.mindReader.quickOver.tough}
-                  <br />
-                  {en.mindReader.quickOver.lower}
-                </p>
-                <Button variant="secondary" size="compact" onClick={() => setSheet('difficulty')}>
-                  {en.mindReader.quickOver.switch}
-                </Button>
-              </div>
-            )}
+            {/* A word that wasn't guessed offers an easier difficulty, or confirms the new one. */}
+            {tough && <ToughBox prompt={tough} onSwitch={() => setSheet('difficulty')} />}
             <p className={cx(styles.muted, styles.centerText, text('hint'))}>{en.mindReader.quickOver.pass}</p>
           </MRFrame>
         );
@@ -480,10 +483,29 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
     <>
       {screen}
       {sheet === 'difficulty' && !custom && (
-        <DifficultySheet settings={state.settings} onClose={close} onApply={(settings) => game.newGame(settings, 'quick')} customHref={routes.mindReaderPlayers} onCustom={onLeave} />
+        <DifficultySheet
+          settings={pending ?? state.settings}
+          onClose={close}
+          // On the word-over screen the new difficulty starts with the next word; elsewhere at once.
+          onApply={(settings) => (state.phase === 'over' ? setPending(settings) : game.newGame(settings, 'quick'))} customHref={routes.mindReaderPlayers} onCustom={onLeave} />
       )}
       {sheet === 'details' && details && <DetailsSheet sections={details.sections} footer={details.footer} onClose={close} />}
     </>
+  );
+}
+
+// The box after a Quick Play word that wasn't guessed, on the role cards' color.
+function ToughBox({ prompt, onSwitch }: { prompt: { title: string; body: string; action: string }; onSwitch: () => void }) {
+  return (
+    <div className={styles.tough} aria-live="polite">
+      <div className={cx(styles.grow, text('label'))}>
+        <p>{prompt.title}</p>
+        <p>{prompt.body}</p>
+      </div>
+      <Button variant="secondary" size="compact" onClick={onSwitch}>
+        {prompt.action}
+      </Button>
+    </div>
   );
 }
 

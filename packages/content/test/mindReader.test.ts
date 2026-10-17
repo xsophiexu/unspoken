@@ -1,7 +1,7 @@
 import { addPlayer, createMindReaderRound, defaultSettings, emptyLineup, mindReaderReducer, setStyle, type Lineup, type MindReaderAction, type MindReaderRoundState } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
-import { bank, cluesView, detailsSheet, overView, predictView, resultsView, roleCards, rolesView, scoresView, showView, turnTitle } from '../src';
+import { bank, difficultyBadge, toughPrompt, cluesView, detailsSheet, overView, predictView, resultsView, roleCards, rolesView, scoresView, showView, turnTitle } from '../src';
 
 const named = (...names: string[]): Lineup => names.reduce((l, n) => addPlayer(l, n), emptyLineup());
 const teams = setStyle(named('Maya', 'Sam', 'Ava', 'Leo', 'Priya', 'Kai'), 'teams', ['Sharks', 'Owls'].map((name, color) => ({ name, color })));
@@ -72,5 +72,19 @@ describe('Mind Reader screens in English', () => {
     ]);
     expect(one.phase).toBe('results');
     expect(resultsView(one)).toMatchObject({ kicker: 'Game over · 1 round', title: 'Priya wins', sub: '13 points · 1 correct prediction' });
+  });
+});
+
+describe('Quick Play difficulty', () => {
+  it('offers an easier difficulty only when one exists, and confirms a new pick', () => {
+    const missed = { guessed: false, applied: false };
+    expect(toughPrompt(['Hard'], missed)).toEqual({ title: 'Tough one?', body: 'You can lower the difficulty.', action: 'Switch difficulty' });
+    expect(toughPrompt(['Hard'], { guessed: true, applied: false })).toBeNull();
+    expect(toughPrompt(['Normal', 'Hard'], missed)).toBeNull();
+    expect(toughPrompt(['Tricky'], { guessed: true, applied: true })).toEqual({ title: 'Difficulty is now Tricky', body: 'Next words come from Tricky.', action: 'Switch' });
+  });
+
+  it('names several picks by the easiest on the chip', () => {
+    expect(difficultyBadge(['Expert', 'Hard'])).toBe('HARD+');
   });
 });

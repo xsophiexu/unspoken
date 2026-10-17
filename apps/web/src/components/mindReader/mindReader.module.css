@@ -375,3 +375,12 @@
   height: var(--un-layout-swatch-size);
   border-radius: var(--un-radius-pill);
 }
+
+/* Quick Play's difficulty sheet: the tiles close under the title, room above the buttons. */
+.tiles {
+  margin-top: calc(-1 * var(--un-space-2));
+}
+
+.footer {
+  margin-top: var(--un-space-4);
+}

@@ -11,7 +11,7 @@ import { cx, text } from '@/lib/ui';
 import styles from './setup.module.css';
 import { useStartMindReader } from './useStartMindReader';
 
-// Mind Reader's start: Quick play in one tap, a Custom game set up in three steps, or a Practice turn.
+// Mind Reader's start: Quick Play in one tap, a Custom game set up in three steps, or a Practice turn.
 export function MindReaderStartScreen() {
   const start = useStartMindReader();
   const s = en.mindReader.start;

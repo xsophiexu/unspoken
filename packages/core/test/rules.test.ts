@@ -8,6 +8,7 @@ import {
   defaultRoundSeconds,
   defaultSettings,
   gameConfig,
+  hasEasierDifficulty,
   hasSkipSetting,
   hasTimerSetting,
   hiddenRoundSeconds,
@@ -320,5 +321,14 @@ describe('toDifficulty', () => {
     expect(toDifficulty('Expert 4')).toBeUndefined();
     expect(toDifficulty('toString')).toBeUndefined();
     expect(toDifficulty(3)).toBeUndefined();
+  });
+});
+
+describe('hasEasierDifficulty', () => {
+  it('is true only when the first difficulty in the catalog is not picked', () => {
+    const first = gameConfig.difficulties[0]!.id;
+    const second = gameConfig.difficulties[1]!.id;
+    expect(hasEasierDifficulty([second])).toBe(true);
+    expect(hasEasierDifficulty([first, second])).toBe(false);
   });
 });

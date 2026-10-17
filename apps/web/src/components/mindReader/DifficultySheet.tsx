@@ -11,18 +11,21 @@ import sheetStyles from '@/components/sheets/sheets.module.css';
 import { Button } from '@/components/ui/Button';
 import { Section } from '@/components/ui/Section';
 import { Sheet } from '@/components/ui/Sheet';
+import { cx } from '@/lib/ui';
+
+import styles from './mindReader.module.css';
 
 type Props = {
   settings: GameSettings;
   onClose: () => void;
-  // Plays the picked difficulties (Quick play starts a new word with them).
+  // Plays the picked difficulties (Quick Play starts a new word with them).
   onApply: (settings: GameSettings) => void;
   // Custom settings: the Custom game setup.
   customHref: string;
   onCustom: () => void;
 };
 
-// Quick play's difficulty-only sheet: New game's multi-select difficulty tiles, Custom settings on
+// Quick Play's difficulty-only sheet: New game's multi-select difficulty tiles, Custom settings on
 // the left and Apply difficulty on the right. Render it while open.
 export function DifficultySheet({ settings, onClose, onApply, customHref, onCustom }: Props) {
   const id = useId();
@@ -33,7 +36,7 @@ export function DifficultySheet({ settings, onClose, onApply, customHref, onCust
   return (
     <Sheet labelledBy={id} onClose={onClose}>
       <SheetHead id={id} title={q.sheetTitle} />
-      <Section label={en.setup.difficulty} aside={difficultyPickNote(difficulties, cards)}>
+      <Section className={styles.tiles} label={en.setup.difficulty} aside={difficultyPickNote(difficulties, cards)}>
         <DifficultyGrid
           kind="pick"
           label={en.setup.difficulty}
@@ -43,7 +46,7 @@ export function DifficultySheet({ settings, onClose, onApply, customHref, onCust
           detail={(level) => plural(deckSize(bank, level, categories), en.units.cards)}
         />
       </Section>
-      <div className={sheetStyles.buttonPair}>
+      <div className={cx(sheetStyles.buttonPair, styles.footer)}>
         <Button size="large" variant="secondary" href={customHref} onClick={onCustom}>
           {q.custom}
         </Button>

@@ -50,7 +50,7 @@ export type MindReaderRoundState = {
   // The turn's time limit in seconds, or null to count up with no limit.
   limit: number | null;
   paused: boolean;
-  // Whether the last word was guessed (Quick play and practice).
+  // Whether the last word was guessed (Quick Play and practice).
   guessed: boolean;
   // 1-based: the word being played this game.
   word: number;
@@ -81,7 +81,7 @@ function emptyPredictions(config: GameConfig): string[] {
   return Array.from({ length: config.mindReader.predictions }, () => '');
 }
 
-// Quick play's settings from the saved ones: Mind Reader at the Quick play difficulty.
+// Quick Play's settings from the saved ones: Mind Reader at the Quick Play difficulty.
 export function quickPlaySettings(settings: GameSettings, config: GameConfig = gameConfig): GameSettings {
   return withDifficulty({ ...settings, mode: 'mindReader' }, config.mindReader.quickDifficulty, config);
 }
@@ -91,7 +91,7 @@ export function createMindReaderRound(
   { cards, seed, config = gameConfig, mindReader = { play: 'quick' } }: RoundOptions & { mindReader?: MindReaderStart },
 ): MindReaderRoundState {
   if (modeRules(settings.mode, config).play !== 'mindReader') throw new Error(`${settings.mode} is not Mind Reader`);
-  // A Custom game whose lineup can't play falls back to Quick play.
+  // A Custom game whose lineup can't play falls back to Quick Play.
   const custom = mindReader.play === 'custom' && mindReader.setup && canPlay(mindReader.setup.lineup, config) ? mindReader.setup : null;
   const play: MindReaderPlay = mindReader.play === 'custom' && !custom ? 'quick' : mindReader.play;
   return {
@@ -104,7 +104,7 @@ export function createMindReaderRound(
     predictions: emptyPredictions(config),
     spoken: [],
     elapsed: 0,
-    // Only Custom games run a clock; Quick play and practice count up.
+    // Only Custom games run a clock; Quick Play and practice count up.
     limit: custom && hasTimeLimit(settings, config) ? settings.roundSeconds : null,
     paused: false,
     guessed: false,

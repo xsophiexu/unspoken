@@ -13,7 +13,7 @@ import { useGame } from '@/state/game';
 
 // Pick a mode to set up a game. Modes that are not ready yet show Coming soon; the card at the
 // bottom asks for ideas. Every tile is the same size, whatever its detail line says. Mind Reader
-// opens its own start screen (Quick play, Custom game, Practice).
+// opens its own start screen (Quick Play, Custom game, Practice).
 export function ModesScreen() {
   const { settings } = useGame();
   const copy = en.modesScreen;

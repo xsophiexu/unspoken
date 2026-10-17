@@ -2,6 +2,7 @@ import {
   DIFFICULTY_IDS,
   correctPredictions,
   difficultyLabel,
+  hasEasierDifficulty,
   currentRoles,
   endsRound,
   format,
@@ -57,7 +58,7 @@ const isTeams = (state: MindReaderRoundState) => lineupOf(state)?.style === 'tea
 
 // --- Header --------------------------------------------------------------------------------------
 
-// "Round 2 of 5" in a Custom game; "Quick play" otherwise.
+// "Round 2 of 5" in a Custom game; "Quick Play" otherwise.
 export function turnTitle(state: MindReaderRoundState): string {
   const roles = currentRoles(state);
   return roles && state.match ? format(m.round, { round: roles.round, rounds: state.match.setup.rounds }) : m.quick.title;
@@ -368,7 +369,7 @@ export function resultsView(state: MindReaderRoundState): ResultsView | null {
   };
 }
 
-// --- Quick play and practice -------------------------------------------------------------------------
+// --- Quick Play and practice -------------------------------------------------------------------------
 
 export function quickOverView(state: MindReaderRoundState): { kicker: string; correct: string; said: string } {
   const said = [...new Set(state.spoken.map((e) => state.predictions[e.prediction]?.trim() ?? ''))].filter(Boolean);
@@ -420,13 +421,33 @@ export function predictionChips(state: MindReaderRoundState): { index: number; w
   return state.predictions.map((word, index) => ({ index, word: word.trim() })).filter((p) => p.word);
 }
 
-// --- Quick play difficulty ---------------------------------------------------------------------------
+// --- Quick Play difficulty ---------------------------------------------------------------------------
 
 const badges = Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].badge])) as Record<Difficulty, string>;
 
 // The header chip's text: "NORMAL", or "HARD+" for several difficulties.
 export function difficultyBadge(difficulties: readonly Difficulty[]): string {
   return difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix });
+}
+
+const difficultyNames = Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].name])) as Record<Difficulty, string>;
+
+// The picks by name: "Hard", or "Normal+" for several.
+export function difficultyName(difficulties: readonly Difficulty[]): string {
+  return difficultyLabel(difficulties, { names: difficultyNames, mixed: en.difficultyMix });
+}
+
+// The box on a Quick Play result: after a word that wasn't guessed, lower the difficulty when an
+// easier one exists (none when it's already the easiest); once a new pick is applied, confirm it.
+export function toughPrompt(
+  difficulties: readonly Difficulty[],
+  { guessed, applied }: { guessed: boolean; applied: boolean },
+): { title: string; body: string; action: string } | null {
+  const q = en.mindReader.quickOver;
+  const name = difficultyName(difficulties);
+  if (applied) return { title: format(q.applied, { name }), body: format(q.appliedNext, { name }), action: q.switchAgain };
+  if (guessed || !hasEasierDifficulty(difficulties)) return null;
+  return { title: q.tough, body: q.lower, action: q.switch };
 }
 
 // The difficulty sheet's note: "Pick one or more", or "2 difficulties · 1,507 cards".

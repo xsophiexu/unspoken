@@ -92,7 +92,7 @@ export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
   return { points: null, detail: roundSubline(state, copy) };
 }
 
-// "Round 2 of 5" in a Custom game; "Word 3" in Quick play and practice.
+// "Round 2 of 5" in a Custom game; "Word 3" in Quick Play and practice.
 function mindReaderStatus(state: MindReaderRoundState, copy: RoundCopy): string {
   const roles = currentRoles(state);
   if (!state.match || !roles) return format(copy.status.mindReaderWord, { word: state.word });

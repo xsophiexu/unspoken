@@ -18,6 +18,22 @@
     calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
 }
 
+/* A header sits where the play screen's does (--header-* from playMargins). */
+.column[data-header] {
+  padding-top: calc(var(--header-top) + env(safe-area-inset-top));
+}
+
+.playRow {
+  min-height: var(--un-layout-header-menu-button);
+  margin-inline: calc(var(--header-x) - var(--un-layout-screen-padding-x));
+}
+
+/* Quick Play's "Mind Reader" line: right under the title row, on its inset. */
+.subtitle {
+  margin-top: calc(-1 * var(--un-space-3));
+  margin-inline: calc(var(--header-x) - var(--un-layout-screen-padding-x));
+}
+
 .content {
   flex: 1 0 auto;
   display: flex;
@@ -28,6 +44,10 @@
 
 .center {
   justify-content: center;
+}
+
+.roomy {
+  gap: var(--un-space-6);
 }
 
 .footer {
@@ -158,7 +178,7 @@
 }
 
 .title {
-  font-size: var(--un-layout-mind-reader-title-size);
+  font-size: var(--header-title);
 }
 
 .chip {
@@ -232,6 +252,10 @@
   padding: var(--un-space-5) var(--un-space-3);
   border-radius: var(--un-radius-lg);
   background: var(--region-chip);
+}
+
+.quickBand {
+  padding-block: var(--un-space-7);
 }
 
 .wordCard {

@@ -91,7 +91,7 @@ describe('Mind Reader turn', () => {
   });
 });
 
-describe('Quick play', () => {
+describe('Quick Play', () => {
   it('has no clock, scores or teams, and plays word after word', () => {
     const state = start({ play: 'quick' });
     expect([state.limit, state.match]).toEqual([null, null]);
@@ -115,7 +115,7 @@ describe('Practice', () => {
 });
 
 describe('Custom game', () => {
-  it('falls back to Quick play when the lineup can’t play', () => {
+  it('falls back to Quick Play when the lineup can’t play', () => {
     expect(start({ play: 'custom', setup: { lineup: named('Maya', 'Leo'), rounds: 5 } }).play).toBe('quick');
   });
 
@@ -162,7 +162,7 @@ it('runs through createRound and roundReducer', () => {
   expect(roundReducer(state, { type: 'showWord' })).toMatchObject({ phase: 'predict' });
 });
 
-it('starts Quick play at its own difficulty, whatever was saved', () => {
+it('starts Quick Play at its own difficulty, whatever was saved', () => {
   const saved = { ...settingsFor('classic'), difficulties: ['Hard', 'Expert'] as const };
   const quick = quickPlaySettings({ ...saved, difficulties: [...saved.difficulties] }, gameConfig);
   expect(quick).toMatchObject({ mode: 'mindReader', difficulties: [gameConfig.mindReader.quickDifficulty] });
