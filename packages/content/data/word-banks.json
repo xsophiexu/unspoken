@@ -2301,29 +2301,6 @@
   "allCardsWeight": 0.0082
  },
  {
-  "word": "Bartender",
-  "banned": [
-   "Drinks",
-   "Pour",
-   "Cocktail",
-   "Beer",
-   "Tips",
-   "Pub",
-   "Mix",
-   "Serve",
-   "Shaker",
-   "Barkeep"
-  ],
-  "difficulty": "Normal",
-  "score": 2,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0082
- },
- {
   "word": "Bedtime",
   "banned": [
    "Sleep",
@@ -2508,29 +2485,6 @@
   "allCardsWeight": 0.0082
  },
  {
-  "word": "Champagne",
-  "banned": [
-   "Bubbly",
-   "France",
-   "Toast",
-   "Celebrate",
-   "Sparkling",
-   "Wine",
-   "Pop",
-   "Cork",
-   "New Year",
-   "Flute"
-  ],
-  "difficulty": "Normal",
-  "score": 2,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0082
- },
- {
   "word": "Chopsticks",
   "banned": [
    "Sticks",
@@ -2589,29 +2543,6 @@
    "Prank",
    "Goof off",
    "Attention"
-  ],
-  "difficulty": "Normal",
-  "score": 2,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0082
- },
- {
-  "word": "Cocktail",
-  "banned": [
-   "Drink",
-   "Bar",
-   "Mixed",
-   "Alcohol",
-   "Martini",
-   "Party",
-   "Shaker",
-   "Garnish",
-   "Hour",
-   "Liquor"
   ],
   "difficulty": "Normal",
   "score": 2,
@@ -2773,29 +2704,6 @@
    "Weekday",
    "Relax",
    "PTO"
-  ],
-  "difficulty": "Normal",
-  "score": 2,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0082
- },
- {
-  "word": "Designated driver",
-  "banned": [
-   "Sober",
-   "Drink",
-   "Car",
-   "Party",
-   "Ride",
-   "Home",
-   "Alcohol",
-   "Keys",
-   "Responsible",
-   "Friends"
   ],
   "difficulty": "Normal",
   "score": 2,
@@ -4127,7 +4035,7 @@
    "Honk",
    "Yell",
    "Highway",
-   "Middle finger",
+   "Tailgate",
    "Cut off",
    "Mad"
   ],
@@ -9211,7 +9119,7 @@
    "Patrol",
    "Squad",
    "Donut",
-   "Pig",
+   "Handcuffs",
    "Law",
    "Siren"
   ],
@@ -9736,7 +9644,7 @@
    "K-9",
    "German shepherd",
    "Sniff",
-   "Drugs",
+   "Airport",
    "Canine",
    "Officer",
    "Bomb",
@@ -10912,7 +10820,7 @@
    "Text",
    "Fix",
    "Change",
-   "Ducking",
+   "Embarrassing",
    "Wrong word",
    "Auto",
    "Keyboard"
@@ -11190,7 +11098,7 @@
    "Phone",
    "Thumbs up",
    "Laugh",
-   "Eggplant",
+   "Wink",
    "Message"
   ],
   "difficulty": "Normal",
@@ -21166,29 +21074,6 @@
   "allCardsWeight": 0.00962
  },
  {
-  "word": "Last call",
-  "banned": [
-   "Bar",
-   "Closing",
-   "Final",
-   "Order",
-   "Drinks",
-   "Bartender",
-   "Time",
-   "Lights",
-   "Night",
-   "Shout"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
   "word": "Lint trap",
   "banned": [
    "Dryer",
@@ -21270,29 +21155,6 @@
    "Beer",
    "Sports",
    "Den"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Margarita",
-  "banned": [
-   "Tequila",
-   "Lime",
-   "Salt",
-   "Rim",
-   "Mexican",
-   "Frozen",
-   "Cocktail",
-   "Cinco de Mayo",
-   "Glass",
-   "Triple sec"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -21419,52 +21281,6 @@
   "allCardsWeight": 0.00962
  },
  {
-  "word": "Mimosa",
-  "banned": [
-   "Orange",
-   "Juice",
-   "Champagne",
-   "Brunch",
-   "Sparkling",
-   "Bottomless",
-   "Cocktail",
-   "Prosecco",
-   "Morning",
-   "Flute"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Mocktail",
-  "banned": [
-   "Alcohol-free",
-   "Drink",
-   "Virgin",
-   "Sober",
-   "Cocktail",
-   "Fake",
-   "Juice",
-   "Mixed",
-   "Designated",
-   "Fancy"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
   "word": "Morning routine",
   "banned": [
    "Wake up",
@@ -21546,29 +21362,6 @@
    "Alias",
    "Childhood",
    "Buddy"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Nightcap",
-  "banned": [
-   "Drink",
-   "Bed",
-   "Before",
-   "Late",
-   "Last",
-   "Evening",
-   "Whiskey",
-   "Alcohol",
-   "Sleep",
-   "One more"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -26329,7 +26122,7 @@
    "Heart",
    "Hormone",
    "Excite",
-   "Junkie",
+   "Skydiving",
    "Thrill",
    "Gland",
    "EpiPen"
@@ -27091,7 +26884,7 @@
    "Tylenol",
    "Advil",
    "Pill",
-   "Opioid"
+   "Sore"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -28046,29 +27839,6 @@
   "allCardsWeight": 0.0125
  },
  {
-  "word": "Fake ID",
-  "banned": [
-   "Bar",
-   "Underage",
-   "License",
-   "Drink",
-   "Card",
-   "Forged",
-   "Twenty-one",
-   "Bouncer",
-   "Fraud",
-   "College"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Law and Diplomacy",
-  "themes": [
-   "Law and Diplomacy"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0125
- },
- {
   "word": "Fugitive",
   "banned": [
    "Run",
@@ -28766,7 +28536,7 @@
    "Sneak",
    "Border",
    "Illegal",
-   "Drugs",
+   "Treasure",
    "Cargo",
    "Hide",
    "Customs",
@@ -28789,9 +28559,9 @@
    "Sneak",
    "Illegal",
    "Hide",
-   "Drugs",
+   "Goods",
    "Customs",
-   "Cartel",
+   "Ship",
    "Pirate",
    "Bootleg"
   ],
@@ -28812,10 +28582,10 @@
    "Informant",
    "Tattletale",
    "Police",
-   "Narc",
+   "Spill",
    "Betray",
    "Squeal",
-   "Stitches",
+   "Whistleblower",
    "Golden"
   ],
   "difficulty": "Harder",
@@ -28975,7 +28745,7 @@
    "Infiltrate",
    "Fake",
    "Identity",
-   "Narc",
+   "Sting",
    "Agent",
    "Blend in"
   ],
@@ -29665,7 +29435,7 @@
    "Drinks",
    "Expensive",
    "Small",
-   "Bottles",
+   "Candy",
    "Charge",
    "Mini"
   ],
@@ -34791,7 +34561,7 @@
    "Neon",
    "Crack",
    "Bend",
-   "Rave",
+   "Concert",
    "Dark",
    "Light",
    "Plastic",
@@ -35349,7 +35119,7 @@
    "Stage",
    "Tour",
    "Mick Jagger",
-   "Rock and roll"
+   "Encore"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -39719,7 +39489,7 @@
    "Celebrity",
    "Online",
    "Backlash",
-   "Woke",
+   "Callout",
    "Outrage",
    "Apology"
   ],
@@ -42931,29 +42701,6 @@
   "allCardsWeight": 0.01562
  },
  {
-  "word": "Craft beer",
-  "banned": [
-   "IPA",
-   "Brewery",
-   "Hops",
-   "Local",
-   "Small",
-   "Microbrew",
-   "Hipster",
-   "Ale",
-   "Artisan",
-   "Pint"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
   "word": "Dim sum",
   "banned": [
    "Chinese",
@@ -43472,29 +43219,6 @@
    "Hoarder",
    "Sparse",
    "Bare"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Mixologist",
-  "banned": [
-   "Bartender",
-   "Cocktails",
-   "Drinks",
-   "Bar",
-   "Shake",
-   "Fancy",
-   "Martini",
-   "Shaker",
-   "Garnish",
-   "Craft"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -44047,29 +43771,6 @@
    "Front desk",
    "Eye-opener",
    "Lesson"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Wine tasting",
-  "banned": [
-   "Sip",
-   "Spit",
-   "Vineyard",
-   "Swirl",
-   "Sommelier",
-   "Glass",
-   "Napa",
-   "Flight",
-   "Notes",
-   "Palate"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -46063,7 +45764,7 @@
   "word": "Doping",
   "banned": [
    "Steroids",
-   "Drugs",
+   "Tour de France",
    "Cheat",
    "Test",
    "Athlete",
@@ -46799,12 +46500,12 @@
   "word": "Steroids",
   "banned": [
    "Muscles",
-   "Drugs",
-   "Inject",
+   "Gym",
+   "Shortcut",
    "Cheat",
    "Bodybuilder",
    "Baseball",
-   "Roid rage",
+   "Biceps",
    "Testosterone",
    "Bulk",
    "Hormones"
@@ -47291,29 +46992,6 @@
    "Negotiate",
    "Concession",
    "Settle"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Cougar",
-  "banned": [
-   "Older",
-   "Woman",
-   "Younger",
-   "Man",
-   "Cat",
-   "Dating",
-   "Prowl",
-   "Age gap",
-   "Mountain lion",
-   "Mrs. Robinson"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -47854,29 +47532,6 @@
   "allCardsWeight": 0.01562
  },
  {
-  "word": "Mail-order bride",
-  "banned": [
-   "Catalog",
-   "Foreign",
-   "Wife",
-   "Marry",
-   "Online",
-   "Ship",
-   "Overseas",
-   "Visa",
-   "Arranged",
-   "Purchase"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
   "word": "Office romance",
   "banned": [
    "Coworkers",
@@ -48005,29 +47660,6 @@
    "Hugging",
    "Hold hands",
    "Acronym"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Pillow talk",
-  "banned": [
-   "Bed",
-   "Couple",
-   "Intimate",
-   "Whisper",
-   "Night",
-   "Chat",
-   "Lover",
-   "Secrets",
-   "Sheets",
-   "Cuddle"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -48327,29 +47959,6 @@
    "Manipulate",
    "Fight",
    "Leave"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Trophy wife",
-  "banned": [
-   "Younger",
-   "Rich",
-   "Beautiful",
-   "Arm candy",
-   "Older",
-   "Husband",
-   "Wealthy",
-   "Gold digger",
-   "Prize",
-   "Show off"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -49540,7 +49149,7 @@
    "Meeting",
    "Share",
    "Chairs",
-   "AA",
+   "Counselor",
    "Others",
    "Struggle",
    "Weekly",
@@ -50464,8 +50073,8 @@
    "Hide",
    "Illegal",
    "Mob",
-   "Drug",
-   "Breaking Bad"
+   "Offshore",
+   "Shell company"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -52883,7 +52492,7 @@
    "Message",
    "Clip",
    "Emergency",
-   "Drug dealer"
+   "On call"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -58611,7 +58220,7 @@
    "Ignorance",
    "Perfect",
    "Delight",
-   "Ecstasy",
+   "Cloud nine",
    "Euphoria",
    "Paradise",
    "Wedded"
@@ -58932,8 +58541,8 @@
    "Bliss",
    "Elated",
    "Delight",
-   "High",
-   "Zendaya",
+   "Over the moon",
+   "Jubilant",
    "Thrill",
    "Rush",
    "Excitement"
@@ -63756,29 +63365,6 @@
   "allCardsWeight": 0.02564
  },
  {
-  "word": "Deep state",
-  "banned": [
-   "Conspiracy",
-   "Government",
-   "Secret",
-   "Bureaucrats",
-   "Hidden",
-   "Control",
-   "Shadow",
-   "Agencies",
-   "Unelected",
-   "Cabal"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Society",
-  "themes": [
-   "Society"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02564
- },
- {
   "word": "Echo chamber",
   "banned": [
    "Bubble",
@@ -64884,29 +64470,6 @@
   "allCardsWeight": 0.02083
  },
  {
-  "word": "House wine",
-  "banned": [
-   "Cheap",
-   "Restaurant",
-   "Default",
-   "Red",
-   "White",
-   "Glass",
-   "Carafe",
-   "Bottle",
-   "Order",
-   "Menu"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02083
- },
- {
   "word": "In-flight meal",
   "banned": [
    "Airplane",
@@ -65287,29 +64850,6 @@
    "Vintage",
    "Sniff",
    "Somm"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02083
- },
- {
-  "word": "Speakeasy",
-  "banned": [
-   "Prohibition",
-   "Secret",
-   "Bar",
-   "Hidden",
-   "Password",
-   "1920s",
-   "Illegal",
-   "Cocktails",
-   "Door",
-   "Gatsby"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -67926,7 +67466,7 @@
    "Friends",
    "Not romantic",
    "Plato",
-   "Just friends",
+   "Buddy",
    "Pure",
    "Companionship",
    "Love",
@@ -68294,13 +67834,13 @@
    "Quit",
    "Sudden",
    "Stop",
-   "Smoking",
+   "Caffeine",
    "Abruptly",
    "Habit",
-   "Withdrawal",
+   "Willpower",
    "All at once",
    "Immediately",
-   "Addiction"
+   "Resolution"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -68366,7 +67906,7 @@
    "Juice",
    "Body",
    "Rid",
-   "Rehab",
+   "Spa",
    "Tea",
    "Pure",
    "Reset"
@@ -68634,29 +68174,6 @@
   "allCardsWeight": 0.02222
  },
  {
-  "word": "Nicotine patch",
-  "banned": [
-   "Smoking",
-   "Quit",
-   "Cigarettes",
-   "Arm",
-   "Sticker",
-   "Skin",
-   "Craving",
-   "Gum",
-   "Wean",
-   "Addiction"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Health and Body",
-  "themes": [
-   "Health and Body"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02222
- },
- {
   "word": "Over the counter",
   "banned": [
    "Pharmacy",
@@ -68729,15 +68246,15 @@
   "word": "Relapse",
   "banned": [
    "Recovery",
-   "Sober",
+   "Illness",
    "Fall back",
-   "Addiction",
+   "Habit",
    "Again",
    "Slip",
    "Return",
    "Setback",
-   "Wagon",
-   "Rehab"
+   "Symptoms",
+   "Doctor"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -69097,15 +68614,15 @@
   "word": "Withdrawal",
   "banned": [
    "Quit",
-   "Addiction",
-   "Drug",
+   "Account",
+   "Troops",
    "Bank",
    "Money",
    "Pull",
    "Symptoms",
-   "Cold turkey",
+   "Teller",
    "ATM",
-   "Detox"
+   "Retreat"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -71494,10 +71011,10 @@
    "Internet",
    "Black market",
    "Anonymous",
-   "Drugs",
+   "Browser",
    "Hackers",
    "Underground",
-   "Silk Road"
+   "Encrypted"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -72551,7 +72068,7 @@
    "AI",
    "See",
    "Hallucinate",
-   "Drugs",
+   "Mirage",
    "Imagine",
    "Chatbot",
    "Fake",
@@ -74535,29 +74052,6 @@
    "Discovered",
    "Big break",
    "Movie"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Arts and Entertainment",
-  "themes": [
-   "Arts and Entertainment"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02174
- },
- {
-  "word": "Burlesque",
-  "banned": [
-   "Tease",
-   "Striptease",
-   "Corset",
-   "Feathers",
-   "Cabaret",
-   "Dita",
-   "Tassels",
-   "Variety",
-   "Risqué",
-   "Parody"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -78604,8 +78098,8 @@
    "Excuse",
    "Meme",
    "Loss",
-   "Drug",
-   "Inhale",
+   "Cry",
+   "Sad",
    "Delusion",
    "Salty",
    "Lose"
@@ -78724,29 +78218,6 @@
    "Instagram",
    "Humble",
    "Subtle"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Pop Culture",
-  "themes": [
-   "Pop Culture"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
-  "word": "Pick-me",
-  "banned": [
-   "Not like other",
-   "Girl",
-   "Attention",
-   "Validation",
-   "Men",
-   "Different",
-   "Tomboy",
-   "Approval",
-   "TikTok",
-   "Slang"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -81185,29 +80656,6 @@
    "Fry",
    "Alarm",
    "Avocado"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03226
- },
- {
-  "word": "Sober curious",
-  "banned": [
-   "Alcohol",
-   "Explore",
-   "Drink",
-   "Less",
-   "Mocktail",
-   "Trend",
-   "Mindful",
-   "Gen Z",
-   "Wellness",
-   "Quit"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -85810,29 +85258,6 @@
    "Muezzin",
    "Tall",
    "Dome"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Culture and Travel",
-  "themes": [
-   "Culture and Travel"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.03103
- },
- {
-  "word": "Montezuma's revenge",
-  "banned": [
-   "Diarrhea",
-   "Mexico",
-   "Water",
-   "Stomach",
-   "Sick",
-   "Tourist",
-   "Toilet",
-   "Drink",
-   "Aztec",
-   "Bug"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -91491,29 +90916,6 @@
    "Reddit",
    "Urban legend",
    "Viral"
-  ],
-  "difficulty": "Master 2",
-  "score": 7,
-  "theme": "Pop Culture",
-  "themes": [
-   "Pop Culture"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
-  "word": "Fan service",
-  "banned": [
-   "Pander",
-   "Please",
-   "Viewers",
-   "Anime",
-   "Gratuitous",
-   "Reward",
-   "Cameo",
-   "Callback",
-   "Fanbase",
-   "Easter egg"
   ],
   "difficulty": "Master 2",
   "score": 7,
@@ -103909,30 +103311,6 @@
   "allCardsWeight": 0.024
  },
  {
-  "word": "Enshittification",
-  "banned": [
-   "Platform",
-   "Worse",
-   "Decay",
-   "Users",
-   "Doctorow",
-   "Profit",
-   "Squeeze",
-   "Quality",
-   "Degrade",
-   "Internet"
-  ],
-  "difficulty": "Master 3",
-  "score": 8,
-  "theme": "Technology",
-  "themes": [
-   "Technology",
-   "Business"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.024
- },
- {
   "word": "Moore's law",
   "banned": [
    "Transistors",
@@ -110286,29 +109664,6 @@
   ],
   "allCards": true,
   "allCardsWeight": 0.04
- },
- {
-  "word": "Westermarck effect",
-  "banned": [
-   "Siblings",
-   "Raised together",
-   "Childhood",
-   "Attraction",
-   "Aversion",
-   "Kibbutz",
-   "Finnish",
-   "Anthropologist",
-   "Familiarity",
-   "Taboo"
-  ],
-  "difficulty": "Grandmaster",
-  "score": 10,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": false,
-  "allCardsWeight": 0
  },
  {
   "word": "Autophagy",
