@@ -58,7 +58,16 @@ export const gameConfigSchema = z.object({
   escalate: z.object({ start: whole, max: whole, winAtMax: whole, minFullCards: whole }),
   hotPotato: z.object({ maxFactor: z.number().positive() }),
   reverse: z.object({ firstClues: whole }),
-  mindReader: z.object({ predictions: whole }),
+  mindReader: z.object({
+    predictions: whole,
+    minPlayers: whole,
+    maxPlayers: whole,
+    minPerTeam: whole,
+    minTeams: whole,
+    maxTeams: whole,
+    rounds: z.object({ default: whole, min: whole, max: whole }),
+    scoring: z.object({ guess: whole, bonusEverySeconds: z.number().int().positive(), bonusPoints: whole, perPrediction: whole, notGuessed: whole }),
+  }),
 }) satisfies z.ZodType<GameConfig>;
 
 // POST /v1/decks: a shuffled deck for a difficulty and themes (none means All cards). The same seed

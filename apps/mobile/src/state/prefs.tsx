@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import type { GameSettings, PlayKind } from '@unspoken/core';
+import { emptyLineup, gameConfig, type GameSettings, type MindReaderPlay, type MindReaderSetup, type PlayKind } from '@unspoken/core';
 import { DEFAULT_THEME, resolveTheme, type Theme, type ThemeSelection } from '@unspoken/design-tokens';
 import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Appearance } from 'react-native';
@@ -16,8 +16,14 @@ type Prefs = {
   gameId: number;
   tourOpen: boolean;
   setLook: (patch: Partial<ThemeSelection>) => void;
-  // Save these settings and start a new round with them.
-  startGame: (settings: GameSettings) => void;
+  // Save these settings and start a new round with them. Mind Reader also takes how to play
+  // (Quick play, Custom or Practice); a Custom game plays the mindReader setup below.
+  startGame: (settings: GameSettings, play?: MindReaderPlay) => void;
+  // How the current Mind Reader game is played.
+  mindReaderPlay: MindReaderPlay;
+  // The Custom game being set up (players, teams, rounds), kept for this app session.
+  mindReader: MindReaderSetup;
+  setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
   // A new round with the same settings.
   restart: () => void;
   openTour: () => void;
@@ -45,6 +51,8 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   const [saved, setSaved] = useState<SavedPrefs | null>(null);
   const [gameId, setGameId] = useState(0);
   const [tourOpen, setTourOpen] = useState(false);
+  const [mindReaderPlay, setMindReaderPlay] = useState<MindReaderPlay>('quick');
+  const [mindReader, setMindReaderState] = useState<MindReaderSetup>(() => ({ lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default }));
   // Which how-it-works cards were seen this session; kept in memory only.
   const [intros] = useState(() => new Set<PlayKind>());
 
@@ -80,11 +88,15 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
       gameId,
       tourOpen,
       setLook: (patch) => update((p) => ({ ...p, theme: { ...p.theme, ...patch } })),
-      startGame: (settings) => {
+      startGame: (settings, play = 'quick') => {
         update((p) => ({ ...p, settings }));
+        setMindReaderPlay(play);
         setGameId((id) => id + 1);
       },
       restart: () => setGameId((id) => id + 1),
+      mindReaderPlay,
+      mindReader,
+      setMindReader: setMindReaderState,
       openTour: () => setTourOpen(true),
       closeTour: () => {
         setTourOpen(false);
@@ -95,7 +107,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         intros.add(kind);
       },
     };
-  }, [saved, gameId, tourOpen, update, intros]);
+  }, [saved, gameId, tourOpen, update, intros, mindReaderPlay, mindReader]);
 
   // Nothing renders until the saved look is read, so the first frame is already themed.
   if (!value) return null;

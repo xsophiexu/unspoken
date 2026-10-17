@@ -54,7 +54,7 @@ describe('status lines in English', () => {
 
   it('Reverse and Mind Reader have their own lines', () => {
     expect(roundSubline(start(settings({ mode: 'reverse' })), roundCopy)).toBe('0 pts · 0 words');
-    expect(roundSubline(start(settings({ mode: 'mindReader' })), roundCopy)).toBe('Round 1 · No timer');
+    expect(roundSubline(start(settings({ mode: 'mindReader' })), roundCopy)).toBe('Word 1');
   });
 
   it('splits the score from the rest for styles that show it apart', () => {

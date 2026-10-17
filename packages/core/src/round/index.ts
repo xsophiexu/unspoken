@@ -1,7 +1,7 @@
 import { gameConfig } from '../config';
 import { modeRules } from '../rules';
 import type { GameSettings } from '../types';
-import { createMindReaderRound, mindReaderReducer, type MindReaderAction, type MindReaderRoundState } from './mindReader';
+import { createMindReaderRound, mindReaderReducer, type MindReaderAction, type MindReaderRoundState, type MindReaderStart } from './mindReader';
 import { createReverseRound, reverseReducer, type IntroOption, type ReverseAction, type ReverseRoundState } from './reverse';
 import { createSwipeRound, swipeReducer, type RoundOptions, type SwipeAction, type SwipeRoundState } from './swipe';
 
@@ -9,7 +9,7 @@ export type RoundState = SwipeRoundState | ReverseRoundState | MindReaderRoundSt
 export type RoundAction = SwipeAction | ReverseAction | MindReaderAction;
 
 // Start a round for any available mode. Settings pick the state machine (config.modes[].play).
-export function createRound(settings: GameSettings, options: RoundOptions & IntroOption): RoundState {
+export function createRound(settings: GameSettings, options: RoundOptions & IntroOption & { mindReader?: MindReaderStart }): RoundState {
   const rules = modeRules(settings.mode, options.config ?? gameConfig);
   if (!rules.available) throw new Error(`${settings.mode} is not available yet`);
   switch (rules.play) {
@@ -36,7 +36,21 @@ export function roundReducer(state: RoundState, action: RoundAction): RoundState
 
 const SWIPE: readonly string[] = ['correct', 'skip', 'tick', 'pause', 'resume', 'ready'] satisfies SwipeAction['type'][];
 const REVERSE: readonly string[] = ['start', 'revealClue', 'togglePeek', 'showAnswer', 'got', 'missed'] satisfies ReverseAction['type'][];
-const MIND_READER: readonly string[] = ['start', 'predict', 'handOff', 'takeOver', 'finishClues', 'nextWord'] satisfies MindReaderAction['type'][];
+const MIND_READER: readonly string[] = [
+  'showWord',
+  'predict',
+  'handOff',
+  'startClues',
+  'spoke',
+  'unspoke',
+  'tick',
+  'pause',
+  'resume',
+  'finishClues',
+  'dismissCoach',
+  'fixTurn',
+  'next',
+] satisfies MindReaderAction['type'][];
 
 function isSwipeAction(action: RoundAction): action is SwipeAction {
   return SWIPE.includes(action.type);

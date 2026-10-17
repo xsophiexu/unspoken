@@ -50,8 +50,8 @@ describe('round timer', () => {
     expect(next).toMatchObject({ difficulty: 'Normal', roundSeconds: 75 });
   });
 
-  it('is set in setup only for modes with a visible clock', () => {
-    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'teams', 'timeAttack']);
+  it('is set in setup only for modes with a visible clock (Mind Reader’s Custom games have one)', () => {
+    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'teams', 'timeAttack', 'mindReader']);
   });
 });
 

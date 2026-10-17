@@ -4,12 +4,16 @@ import { bank } from '@unspoken/content';
 import {
   cardsFor,
   createRound,
+  emptyLineup,
+  gameConfig,
   modeRules,
   newSeed,
   roundReducer,
   withDifficulty,
   type Difficulty,
   type GameSettings,
+  type MindReaderPlay,
+  type MindReaderSetup,
   type PlayKind,
   type Random,
   type RoundAction,
@@ -28,15 +32,23 @@ type GameState = {
   round: RoundState;
   // Reverse and Mind Reader show their how-to card once per visit.
   introSeen: Partial<Record<PlayKind, true>>;
+  // How the Mind Reader game is played (Quick play, Custom, Practice), and the Custom game being
+  // set up (players, teams, rounds), kept for this visit.
+  play: MindReaderPlay;
+  mindReader: MindReaderSetup;
 };
 
-type GameAction = { type: 'play'; action: RoundAction } | { type: 'newGame'; settings: GameSettings; seed: number };
+type GameAction =
+  | { type: 'play'; action: RoundAction }
+  | { type: 'newGame'; settings: GameSettings; seed: number; play: MindReaderPlay }
+  | { type: 'setMindReader'; change: (setup: MindReaderSetup) => MindReaderSetup };
 
-function startRound(settings: GameSettings, seed: number, introSeen: GameState['introSeen']): RoundState {
+function startRound(settings: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader'>): RoundState {
   return createRound(settings, {
     cards: cardsFor(bank, settings.difficulty, settings.categories),
     seed,
-    showIntro: !introSeen[modeRules(settings.mode).play],
+    showIntro: !state.introSeen[modeRules(settings.mode).play],
+    mindReader: { play: state.play, setup: state.mindReader },
   });
 }
 
@@ -48,8 +60,12 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       const introSeen = action.action.type === 'start' ? { ...state.introSeen, [state.round.kind]: true } : state.introSeen;
       return { ...state, round, introSeen };
     }
-    case 'newGame':
-      return { ...state, settings: action.settings, round: startRound(action.settings, action.seed, state.introSeen) };
+    case 'newGame': {
+      const next = { ...state, settings: action.settings, play: action.play };
+      return { ...next, round: startRound(action.settings, action.seed, next) };
+    }
+    case 'setMindReader':
+      return { ...state, mindReader: action.change(state.mindReader) };
   }
 }
 
@@ -57,9 +73,12 @@ type GameContextValue = {
   settings: GameSettings;
   round: RoundState;
   dispatch: (action: RoundAction) => void;
-  // A fresh round with these settings (new words, score back to 0).
-  newGame: (settings: GameSettings) => void;
-  // A fresh round with the same settings.
+  // A fresh round with these settings (new words, score back to 0). Mind Reader also takes how to
+  // play; a Custom game plays the mindReader setup.
+  newGame: (settings: GameSettings, play?: MindReaderPlay) => void;
+  mindReader: MindReaderSetup;
+  setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
+  // A fresh round with the same settings (and the same way of playing Mind Reader).
   restart: () => void;
   // A fresh round at another level; a timer still on its default follows the level.
   changeDifficulty: (difficulty: Difficulty) => void;
@@ -76,14 +95,16 @@ type GameProviderProps = {
 export function GameProvider({ children, random = Math.random }: GameProviderProps) {
   const [state, send] = useReducer(gameReducer, undefined, (): GameState => {
     const settings = parseSettings(readStored(SETTINGS_STORAGE_KEY));
-    return { settings, round: startRound(settings, newSeed(random), {}), introSeen: {} };
+    const fresh = { introSeen: {}, play: 'quick' as const, mindReader: { lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default } };
+    return { ...fresh, settings, round: startRound(settings, newSeed(random), fresh) };
   });
 
   useEffect(() => writeStored(SETTINGS_STORAGE_KEY, state.settings), [state.settings]);
 
   // Stable across renders, so timers and listeners that dispatch don't restart on every tick.
   const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
-  const newGame = useCallback((settings: GameSettings) => send({ type: 'newGame', settings, seed: newSeed(random) }), [random]);
+  const newGame = useCallback((settings: GameSettings, play: MindReaderPlay = 'quick') => send({ type: 'newGame', settings, seed: newSeed(random), play }), [random]);
+  const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ type: 'setMindReader', change }), []);
 
   const value = useMemo(
     (): GameContextValue => ({
@@ -91,10 +112,12 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       round: state.round,
       dispatch,
       newGame,
-      restart: () => newGame(state.settings),
-      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty)),
+      mindReader: state.mindReader,
+      setMindReader,
+      restart: () => newGame(state.settings, state.play),
+      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty), state.play),
     }),
-    [state.settings, state.round, dispatch, newGame],
+    [state.settings, state.round, state.play, state.mindReader, dispatch, newGame, setMindReader],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

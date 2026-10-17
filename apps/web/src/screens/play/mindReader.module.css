@@ -1,0 +1,436 @@
+/* Mind Reader turns. Every value is a design token from /theme.css. */
+
+.page {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  max-width: var(--un-max-width-column);
+  min-height: 100dvh;
+  padding: calc(var(--un-layout-screen-padding-top) + env(safe-area-inset-top)) var(--un-layout-screen-padding-x)
+    calc(var(--un-layout-screen-padding-bottom) + env(safe-area-inset-bottom));
+}
+
+.content {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  padding-block: var(--un-space-4);
+}
+
+.center {
+  justify-content: center;
+}
+
+.footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding-top: var(--un-space-3);
+  background: linear-gradient(to bottom, transparent, var(--region-bg) var(--un-space-3));
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.shrink {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+.accentText {
+  color: var(--region-accent-text);
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clamp {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  color: var(--region-chip-ink);
+}
+
+.centerText {
+  text-align: center;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--un-layout-min-touch);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--region-accent-text);
+  text-decoration: none;
+}
+
+.footerLink {
+  align-self: center;
+}
+
+.wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2-5);
+}
+
+.kicker,
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.centerHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.labelRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.dotRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding-bottom: var(--un-space-1);
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+  min-height: var(--un-layout-min-touch);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--un-layout-mind-reader-title-size);
+}
+
+.details {
+  flex: none;
+  min-height: var(--un-space-7-5);
+  padding: 0 var(--un-space-3);
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-accent-text);
+}
+
+.cards {
+  display: flex;
+  gap: var(--un-space-1-5);
+  align-items: stretch;
+}
+
+.roleCard {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  padding: var(--un-space-2-5) var(--un-space-3);
+  border-radius: var(--un-radius-lg);
+  background: var(--region-chip);
+}
+
+/* Word */
+
+.word {
+  color: var(--region-ink);
+}
+
+/* Predict: the word block on a very light accent band, not a white card. */
+.band {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding: var(--un-space-5);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-tint);
+}
+
+.wordCard {
+  align-items: center;
+  padding-block: var(--un-space-6);
+}
+
+.tight {
+  gap: var(--un-space-1);
+}
+
+.roleTitle {
+  font-size: calc(var(--un-layout-mind-reader-title-size) - var(--un-space-1));
+}
+
+.input {
+  width: 100%;
+  min-height: var(--un-layout-control-input-height);
+  padding: 0 var(--un-space-4);
+  border: var(--un-layout-stroke-outline) solid var(--un-raised-bg);
+  border-radius: var(--un-radius-md);
+  background: var(--un-raised-bg);
+  color: var(--un-raised-ink);
+}
+
+.input::placeholder {
+  color: var(--un-raised-muted);
+}
+
+.inputFilled,
+.input:focus-visible {
+  outline: none;
+  border-color: var(--region-accent);
+}
+
+/* Clues */
+
+.cluesCard {
+  gap: var(--un-space-2);
+  padding: var(--un-space-5) var(--un-space-4-5);
+}
+
+.predChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-height: calc(var(--un-layout-mind-reader-pill-height) + var(--un-space-1));
+  padding: 0 var(--un-space-1) 0 var(--un-space-3-5);
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-space-7);
+  height: var(--un-space-7);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-bg);
+  color: var(--region-accent-text);
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3-5);
+  padding: var(--un-space-3) var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+}
+
+.clockValue {
+  font-size: var(--un-layout-mind-reader-clock-size);
+  font-variant-numeric: tabular-nums;
+}
+
+.track {
+  height: var(--un-layout-mind-reader-clock-bar);
+  margin-bottom: var(--un-space-1-5);
+  overflow: hidden;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-track);
+}
+
+.progress {
+  height: 100%;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+}
+
+.log {
+  padding-block: var(--un-space-0-5);
+}
+
+.logList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logRow {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-height: var(--un-layout-mind-reader-log-row);
+}
+
+.logRow + .logRow {
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+.remove {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-mind-reader-remove-button);
+  height: var(--un-layout-mind-reader-remove-button);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-muted);
+  font-size: var(--un-layout-icon-sm);
+}
+
+.pair {
+  display: flex;
+  gap: var(--un-space-2-5);
+}
+
+.pairSecondary {
+  flex: 0 0 auto;
+  min-width: 35%;
+}
+
+/* Practice */
+
+.coach {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1-5);
+  padding: var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+}
+
+.coachAction {
+  align-self: flex-end;
+}
+
+/* After the turn */
+
+.quickResult {
+  align-items: center;
+  gap: var(--un-space-0-5);
+}
+
+.bigNumber {
+  font-size: var(--un-layout-mind-reader-title-size);
+}
+
+.pointsRow {
+  padding-top: var(--un-space-2-5);
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+.nextBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1-5);
+  padding: var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+}
+
+.standings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.standing {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  min-height: calc(var(--un-layout-button-height) + var(--un-space-2));
+  padding: 0 var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+}
+
+.standing[data-region] {
+  background: var(--region-bg);
+}
+
+.list {
+  padding-block: var(--un-space-1);
+  gap: 0;
+}
+
+.scoreRule {
+  padding-block: var(--un-space-2-5);
+}
+
+.scoreRule + .scoreRule {
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+/* Who's playing this turn */
+
+.detailsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2-5);
+  padding-top: var(--un-space-3);
+}
+
+.detailsSection + .detailsSection {
+  border-top: var(--hairline) solid var(--region-rule);
+}
+
+.teamTag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1-5);
+}

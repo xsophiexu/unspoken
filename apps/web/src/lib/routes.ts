@@ -5,6 +5,11 @@ export const routes = {
   play: '/',
   modes: '/modes/',
   setup: (mode: ModeId) => `/setup/?mode=${mode}`,
+  // Mind Reader: its start screen, then a Custom game's steps (players, lineup, game settings).
+  mindReader: '/mind-reader/',
+  mindReaderPlayers: '/mind-reader/players/',
+  mindReaderLineup: '/mind-reader/lineup/',
+  mindReaderSettings: '/setup/?mode=mindReader&custom=1',
   customize: '/customize/',
   feedback: (from: FeedbackEntryPoint) => `/feedback/?from=${from}`,
   thanks: (from: FeedbackEntryPoint) => `/thanks/?from=${from}`,

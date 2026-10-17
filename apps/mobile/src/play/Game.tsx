@@ -11,7 +11,7 @@ import {
 import { cardSwipes, type RegionColors, type Theme } from '@unspoken/design-tokens';
 import { router, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState, type Dispatch, type ReactNode } from 'react';
+import { useCallback, useEffect, useState, type Dispatch, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -61,13 +61,23 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
 
   // The clock stops while a sheet or the tour is open or another screen is on top, and starts
   // again when they close. A pause the player chose stays until they resume.
-  const halted = sheet !== null || prefs.tourOpen || !focused;
+  // Mind Reader's own sheets (Details, Fix this turn) stop its clock too.
+  const [roundSheet, setRoundSheet] = useState(false);
+  const onRoundSheet = useCallback((open: boolean) => setRoundSheet(open), []);
+  const halted = sheet !== null || roundSheet || prefs.tourOpen || !focused;
   const pause = state.kind === 'swipe' ? state.pause : null;
+  const mindReaderPaused = state.kind === 'mindReader' ? state.paused : false;
+  const mindReaderPhase = state.kind === 'mindReader' ? state.phase : null;
   useEffect(() => {
+    if (state.kind === 'mindReader') {
+      if (halted && !mindReaderPaused) dispatch({ type: 'pause' });
+      if (!halted && mindReaderPaused) dispatch({ type: 'resume' });
+      return;
+    }
     if (state.kind !== 'swipe') return;
     if (halted && pause === null) dispatch({ type: 'pause', reason: sheet === 'menu' ? 'menu' : 'sheet' });
     if (!halted && (pause === 'menu' || pause === 'sheet')) dispatch({ type: 'resume' });
-  }, [state.kind, halted, pause, sheet, dispatch]);
+  }, [state.kind, halted, pause, mindReaderPaused, mindReaderPhase, sheet, dispatch]);
 
   const close = () => setSheet(null);
   const changeSettings = () => {
@@ -99,7 +109,7 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
       body = <ReverseRound state={state} dispatch={dispatch} chrome={chrome} />;
       break;
     case 'mindReader':
-      body = <MindReaderRound state={state} dispatch={dispatch} chrome={chrome} />;
+      body = <MindReaderRound state={state} dispatch={dispatch} chrome={chrome} onSheet={onRoundSheet} />;
       break;
   }
 

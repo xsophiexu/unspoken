@@ -127,7 +127,8 @@ export const en = {
     hotPotato: 'Pass after each correct word',
     skipsUsedOf: '{used} of {limit}',
     passed: '{words} passed',
-    mindReaderRound: 'Round {round} · No timer',
+    mindReaderRound: 'Round {round} of {rounds}',
+    mindReaderWord: 'Word {word}',
     reverse: '{points} · {words}',
     withThemes: '{status} · {themes}',
     clockLeft: '{clock} left · {points}',
@@ -339,42 +340,298 @@ export const en = {
 
   // --- Mind Reader ---------------------------------------------------------------------------
   mindReader: {
-    howTo: {
-      kicker: 'How it works',
-      title: 'Predict the clues',
-      steps: [
-        { title: 'Guesser, look away', body: 'Only the Mind Reader and Clue Giver see the word.' },
-        { title: 'Mind Reader, predict', body: 'Write 5 words the Clue Giver might say.' },
-        { title: 'Hand over the phone', body: 'The Clue Giver sees only the word.' },
-        { title: 'Clue Giver, give clues', body: 'Help the Guesser get the word.' },
-        { title: 'Mind Reader, count', body: 'Keep track of how many of your words get said.' },
-      ],
-      start: 'Start',
+    // The Mind Reader start screen, opened from its tile on Modes.
+    start: {
+      back: '← Modes',
+      sub: 'Predict the clues before they’re said.',
+      quick: { title: 'Quick play', body: 'Starts right away. No setup, no teams, no scores.', action: 'Play' },
+      custom: { title: 'Custom game', body: 'Players, teams, rounds, time limit, words' },
+      practice: { title: 'Practice', body: 'A guided practice turn and how scoring works' },
     },
-    predictKicker: 'Mind Reader · the word is',
-    predictionsLabel: 'YOUR {n} PREDICTIONS',
-    predictionsHint: 'Words you think the Clue Giver will say',
-    placeholder: 'Word {n}',
-    writeMore: 'Write {n} more',
-    handOff: 'Hand to the Clue Giver',
-    passLabel: 'PASS THE PHONE',
-    passTitle: 'Clue Giver,\nready?',
-    remember: 'Mind Reader, remember your {n} words.',
-    takeOver: 'I’m the Clue Giver',
-    clueKicker: 'Clue Giver · your word',
-    clueHint: 'Give clues until the Guesser gets it. Somewhere, the Mind Reader is counting.',
-    pass: 'Pass',
-    gotIt: 'Got it',
-    guessed: 'Guessed it',
-    passed: 'Passed',
-    predicted: 'THE MIND READER PREDICTED',
-    howMany: 'Mind Reader: how many did the Clue Giver say?',
-    nextWord: 'Next word',
+    // Custom game setup: Who’s playing? → How do you want to play? → Game settings.
+    step: 'Step {n} of {total}',
+    back: '← Back',
+    next: 'Next',
+    players: {
+      title: 'Who’s playing?',
+      count: 'NUMBER OF PLAYERS',
+      countAside: 'From the names',
+      countLabel: 'Players',
+      names: 'NAMES · {n}',
+      namesAside: 'Optional',
+      placeholder: 'Add a player name',
+      // A player added by the count with no name typed.
+      defaultName: 'Player {n}',
+      tooFew: { one: 'Mind Reader needs at least {min} players. Add 1 more.', other: 'Mind Reader needs at least {min} players. Add {n} more.' },
+    },
+    lineup: {
+      title: 'How do you want to play?',
+      individual: 'Individual',
+      teams: 'Teams',
+      individualHint: 'Individual · {min} or more players. Roles rotate; everyone scores on their own.',
+      teamsHint: 'Teams · {min} or more players. One team predicts while another gives clues and guesses.',
+      order: 'PLAYERS · TURN ORDER',
+      orderAside: 'Tap a name to edit',
+      orderName: '{n} · {name}',
+      first: 'Mind Reader first',
+      addPlayer: '+ Add player',
+      addPlaceholder: 'Player name',
+      shuffleOrder: 'Shuffle order',
+      teamSetup: 'TEAM SETUP',
+      teamCount: 'Number of teams',
+      shuffleTeams: 'Shuffle teammates',
+      teamsLabel: 'TEAMS · {players}',
+      teamsAside: 'Tap a team to edit it',
+      players: { one: '{n} player', other: '{n} players' },
+      smallTeam: '{team} has {size}. Each team needs at least {min} to continue.',
+      tooManyTeams: 'Teams need at least {min} players each. Choose {max} teams or fewer, or add players below.',
+      // The pop-up when Teams is tapped with too few players.
+      needTeams: {
+        title: 'Teams need {min} or more players',
+        body: { one: 'You have {n} player. Add at least {missing} more to play in teams, or keep playing Individual.', other: 'You have {n} players. Add at least {missing} more to play in teams, or keep playing Individual.' },
+        add: 'Add players',
+        stay: 'Stay with Individual',
+      },
+      // The menu on a player: their row in Individual, their chip in Teams.
+      menu: { rename: 'Rename', moveTo: 'Move to', remove: 'Remove from game', moveHeader: 'MOVE TO' },
+      save: 'Save',
+    },
+    customize: {
+      title: 'Customize team',
+      name: 'NAME',
+      color: 'COLOR',
+      members: 'IN THIS TEAM',
+      membersAside: 'Tap a name for options',
+      addFrom: 'ADD FROM OTHER TEAMS',
+      addFromAside: 'Tap to add',
+      addFromName: '+ {name}',
+      done: 'Done',
+    },
+    // Teams in the order they are added; players can rename them.
+    teamNames: ['Sharks', 'Owls', 'Foxes', 'Bears', 'Wolves', 'Otters'],
+    // Step 3 on Game settings, above the time limit.
+    settings: {
+      title: 'Game settings',
+      rounds: 'ROUNDS',
+      roundsLabel: 'Rounds',
+      roundsTeams: 'Every team plays once a round',
+      roundsIndividual: 'Everyone is the Mind Reader once a round',
+    },
+
+    // --- The header on a turn ---
+    round: 'Round {round} of {rounds}',
+    details: 'Details',
+    cards: {
+      readers: 'Mind Readers',
+      reader: 'Mind Reader',
+      clueGiver: 'Clue Giver',
+      teamUp: '{team} are up',
+      givesClues: '{name} gives clues',
+    },
+    detailsSheet: {
+      title: 'Who’s playing this turn',
+      readers: 'MIND READERS',
+      reader: 'MIND READER',
+      clueGiver: 'CLUE GIVER',
+      guessers: 'GUESSERS',
+      nextTeams: 'Next turn: {team} are the Mind Readers.',
+      nextIndividual: 'Next turn: {name} is the Mind Reader.',
+      last: 'This is the last turn of the game.',
+    },
+
+    // --- Roles, before anyone sees the word ---
+    roles: {
+      round: 'Round {round} of {rounds}',
+      title: '{whose} turn',
+      readers: 'MIND READERS',
+      reader: 'MIND READER',
+      clueGiver: 'CLUE GIVER',
+      guessing: 'GUESSING',
+      guessers: 'GUESSERS',
+      readersDetail: '{names} · predict together',
+      clueDetailTeams: 'From {team} · gives clues without the phone',
+      guessingDetail: '{names} · guess out loud',
+      readerDetail: { one: 'Predicts {n} word', other: 'Predicts {n} words' },
+      clueDetail: 'Gives clues without the phone',
+      guessersDetail: 'Guess out loud',
+      noteTeams: 'The word appears on the next screen. Only the Mind Readers look.',
+      noteOne: 'The word appears on the next screen. Only the Mind Reader looks.',
+      showTeams: 'Show the Mind Readers the word',
+      showIndividual: 'Show {name} the word',
+      quick: {
+        kicker: 'Quick play · Word {n}',
+        title: 'Pick your roles',
+        reader: 'Whoever holds the phone',
+        clueGiver: 'Pick one player',
+        guessers: 'Everyone else',
+        show: 'I’m the Mind Reader · Show the word',
+      },
+    },
+
+    // --- Predict ---
+    predict: {
+      kicker: '{name}, the word is',
+      kickerQuick: 'Mind Reader, the word is',
+      // The quiet label beside the menu on Quick play's Predict (no round heading there).
+      quickLabel: 'Mind Reader · Quick play',
+      kickerPractice: 'Mind Reader · the word is',
+      label: '{n} PREDICTIONS',
+      hint: 'Words {name} might say',
+      hintQuick: 'Words the Clue Giver might say',
+      placeholder: 'Word {n}',
+      noteTeams: 'Don’t let {team} see or hear.',
+      noteIndividual: 'Don’t let the others see or hear.',
+      noteQuick: 'Don’t let the Clue Giver or Guessers see.',
+      writeMore: 'Write {n} more',
+      done: 'Show {name} the word',
+      doneQuick: 'Show the Clue Giver the word',
+    },
+
+    // --- Show the Clue Giver the word ---
+    show: {
+      kicker: '{name} is the Clue Giver',
+      title: 'Show {name} the word',
+      titleQuick: 'Show the Clue Giver the word',
+      guessers: { one: '{names} is guessing: don’t show them.', other: '{names} are guessing: don’t show them.' },
+      guessersQuick: 'Don’t show the Guessers.',
+      keep: 'Keep the phone in your hand.',
+      givesClues: '{name} gives clues without the phone.',
+      givesCluesQuick: 'The Clue Giver gives clues without the phone.',
+      seen: '{name} has seen it and looked away',
+      seenQuick: 'Clue Giver has seen it · Start',
+    },
+
+    // --- Clues ---
+    clues: {
+      theWord: 'The word',
+      tapHint: 'Tap a word when the Clue Giver says it',
+      guessNowTeam: '{team} guess now: {value}',
+      guessNow: 'Guess now: {value}',
+      // What a guess scores right now: 3 + 4 = 7 points, or a flat 3 points with no limit.
+      value: '{base} + {bonus} = {points}',
+      spoken: 'SPOKEN!',
+      correct: { one: '{n} correct prediction', other: '{n} correct predictions' },
+      entry: '{time} · {word}',
+      countUp: 'Times count up from the start of the word. No time limit.',
+      guessedTeam: '{team} guessed it!',
+      guessed: 'Guessed it!',
+      notGuessed: 'Not guessed',
+    },
+
+    // --- Turn over (Custom) ---
+    over: {
+      guessedWith: '{side} guessed it with {time} left',
+      guessedSide: '{side} guessed it',
+      guessedWithAnon: 'Guessed it with {time} left',
+      guessedAnon: 'Guessed it',
+      timeUp: 'Time’s up · not guessed',
+      notGuessed: 'Not guessed',
+      fastGuess: 'Fast guess',
+      fastGuessDetail: '{base} + {per} per {every} s left',
+      flatGuess: 'Guessed it',
+      flatGuessDetail: 'No time limit',
+      predictions: 'Correct predictions',
+      predictionsDetail: { one: '{n} spoken', other: '{n} spoken' },
+      notGuessedBonus: 'Not guessed',
+      notGuessedDetail: 'Bonus to the Mind Readers',
+      points: '+{n}',
+      fix: 'Fix this turn',
+      seeScores: 'See scores',
+      seeResults: 'See results',
+    },
+    fix: {
+      title: 'Fix this turn',
+      outcome: 'OUTCOME',
+      got: '{side} got it',
+      notGuessed: 'Not guessed',
+      predictions: 'Correct predictions',
+      predictionsHint: 'Every time counts',
+      spoken: 'SPOKEN! · {n}',
+      removesOne: '× removes one',
+      save: 'Save',
+    },
+    scores: {
+      afterRound: 'After round {round} of {rounds}',
+      duringRound: 'Round {round} of {rounds}',
+      title: 'Scores',
+      next: 'NEXT TURN',
+      nextTeams: '{team} are the Mind Readers',
+      nextClueTeams: '{name} ({team}) gives clues · {guessers} guess',
+      nextIndividual: '{name} is the Mind Reader',
+      nextClueIndividual: '{name} gives clues · {guessers} guess',
+      hand: 'Hand the phone to {name}.',
+      // whose: possessive(name), "Owls’" or "Leo’s".
+      start: 'Start {whose} turn',
+    },
+    results: {
+      kicker: { one: 'Game over · {n} round', other: 'Game over · {n} rounds' },
+      winTeam: '{team} win',
+      winPlayer: '{name} wins',
+      tie: 'It’s a tie',
+      sub: '{points} · {predictions}',
+      points: { one: '{n} point', other: '{n} points' },
+      predictions: { one: '{n} correct prediction', other: '{n} correct predictions' },
+      playAgain: 'Play again',
+      newGame: 'New game',
+    },
+
+    // --- Quick play: the word is over ---
+    quickOver: {
+      guessed: 'GUESSED IT',
+      notGuessed: 'NOT GUESSED',
+      pass: 'Pass the phone to someone new to be the next Mind Reader.',
+      next: 'Next word',
+      end: 'End quick play',
+    },
+
+    // --- Practice ---
+    practice: {
+      overline: 'Practice · {step} of {total}',
+      title: 'Practice turn',
+      skip: 'Skip',
+      coach: [
+        {
+          label: 'Step 1 · Predict',
+          body: 'Use the word at the top to make {n} predictions: words you think the Clue Giver will say. Don’t let the Clue Giver or Guessers see.',
+          action: 'Got it',
+        },
+        { label: 'Step 2 · Show the Clue Giver', body: 'Keep the phone in your hand and show only the Clue Giver. They give clues without the phone.', action: 'Got it' },
+        {
+          label: 'Step 3 · Count every time',
+          body: 'Tap a word whenever the Clue Giver says it, even again. × removes a mistake. Tap Guessed it! when they get it.',
+          action: 'Try it',
+        },
+      ],
+      scoring: {
+        title: 'How scoring works',
+        lead: 'Wrong guesses never cost anything.',
+        fast: { title: 'Guessing it fast', detail: '{guess}, plus {bonus} for every {every} seconds left' },
+        spoken: { title: 'Each prediction spoken', detail: 'To the Mind Readers, every time, repeats too' },
+        notGuessed: { title: 'Not guessed in time', detail: 'Bonus to the Mind Readers' },
+        individual: { title: 'Individual', detail: 'The Clue Giver scores the guess' },
+        points: '+{n}',
+        example: { title: 'Example', body: 'Guessed with {time} left: {sum}. One prediction said twice: +{twice}.' },
+        // The guess in the example, in seconds left.
+        exampleSecondsLeft: 42,
+      },
+      quick: 'Quick play',
+      custom: 'Custom game',
+      again: 'Practice again',
+    },
   },
 
   // --- Accessibility labels ------------------------------------------------------------------
   a11y: {
     noTimeLimit: 'No time limit',
+    fewer: 'Fewer {label}',
+    more: 'More {label}',
+    removePlayer: 'Remove {name}',
+    playerOptions: '{name}: options',
+    editTeam: 'Edit {team}',
+    teamColor: 'Color {n}',
+    spoke: '{word} was said',
+    unspoke: 'Remove {word} at {time}',
+    roundDetails: 'Who’s playing this turn',
     menu: 'Menu',
     customize: 'Customize',
     pause: 'Pause',
@@ -388,6 +645,17 @@ export const en = {
 };
 
 export type CopyCatalog = typeof en;
+
+// "Maya", "Maya and Sam", "Maya, Sam and Ava".
+export function listNames(names: readonly string[]): string {
+  if (names.length <= 1) return names[0] ?? '';
+  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+}
+
+// "Sharks’ turn", "Maya’s turn": the name with its possessive ending.
+export function possessive(name: string): string {
+  return /s$/i.test(name) ? `${name}’` : `${name}’s`;
+}
 
 // The slice of the catalog the shared status lines in @unspoken/core read. Typing it here makes the
 // catalog fail to compile if it misses a slot they need.

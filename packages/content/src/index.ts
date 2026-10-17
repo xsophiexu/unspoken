@@ -14,3 +14,6 @@ export const bank: readonly BankEntry[] = normalizeBank(raw as BankCardInput[]);
 // The copy catalog: every user-facing string, in English. A new locale is a copy of en.ts typed as
 // CopyCatalog.
 export * from './en';
+
+// What each Mind Reader screen says, from the round state.
+export * from './mindReader';

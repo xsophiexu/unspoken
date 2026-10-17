@@ -21,7 +21,9 @@ export type IconName =
   | 'play'
   | 'sun'
   | 'moon'
-  | 'info';
+  | 'info'
+  | 'pencil'
+  | 'shuffle';
 
 type Props = { name: IconName; size: number; color: string; background?: string };
 
@@ -104,6 +106,10 @@ function glyph(name: IconName, color: string, background: string) {
       );
     case 'moon':
       return <Path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9z" {...stroke} strokeWidth={1.8} />;
+    case 'pencil':
+      return <Path d="M13.5 3.5l3 3L7 16H4v-3zM11.5 5.5l3 3" {...stroke} strokeWidth={1.7} />;
+    case 'shuffle':
+      return <Path d="M2.5 6h3c3.5 0 5.5 8 9 8h3M2.5 14h3c1.4 0 2.5-1.2 3.4-2.8M11.1 8.8C12 7.2 13.1 6 14.5 6h3M15.5 3.5L18 6l-2.5 2.5M15.5 11.5L18 14l-2.5 2.5" {...stroke} strokeWidth={1.7} />;
     case 'info':
       return <Path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zM10 9.2v4.6M10 6.3h.01" {...stroke} strokeWidth={1.7} />;
   }

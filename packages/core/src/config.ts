@@ -26,7 +26,7 @@ export type ModeRules = {
   id: ModeId;
   play: PlayKind;
   clock: ClockKind;
-  // Whether correct answers score points (Hot Potato and Mind Reader keep no score).
+  // Whether correct answers score points (Hot Potato keeps no score; Mind Reader scores Custom games only).
   scored: boolean;
   // Whether setup offers a skip limit. Without one, skips are unlimited and only counted.
   skipLimit: boolean;
@@ -64,7 +64,21 @@ export type GameConfig = {
   };
   hotPotato: { maxFactor: number };
   reverse: { firstClues: number };
-  mindReader: { predictions: number };
+  mindReader: {
+    predictions: number;
+    // Custom games: at least minPlayers; Teams need minTeams teams of at least minPerTeam each.
+    minPlayers: number;
+    maxPlayers: number;
+    minPerTeam: number;
+    minTeams: number;
+    maxTeams: number;
+    // The Rounds stepper on Game settings; every team (or player) is the Mind Reader once a round.
+    rounds: { default: number; min: number; max: number };
+    // A correct guess scores guess, plus bonusPoints for every bonusEverySeconds left on the clock
+    // (guess alone with no time limit). The Mind Readers score perPrediction every time one of their
+    // words is said, and notGuessed when the word isn't guessed.
+    scoring: { guess: number; bonusEverySeconds: number; bonusPoints: number; perPrediction: number; notGuessed: number };
+  };
 };
 
 const swipe = { play: 'swipe', escalates: false, passAfterCorrect: false, bonusSeconds: 0 } as const;
@@ -95,7 +109,7 @@ export const gameConfig: GameConfig = {
     // Hot Potato: no timer to set; the hidden clock runs a random length.
     { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterCorrect: true, available: true },
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
-    { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },
+    { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'visible', scored: true, skipLimit: false, available: true },
   ],
   // The app opens straight into an Endless game at Normal with All cards.
   defaults: { mode: 'endless', difficulty: 'Normal', categories: [], skips: 3 },
@@ -109,6 +123,16 @@ export const gameConfig: GameConfig = {
   hotPotato: { maxFactor: 2 },
   // Three clues show to start; each extra clue makes the word worth a point less.
   reverse: { firstClues: 3 },
-  // The Mind Reader writes 5 words they think the Clue Giver will say.
-  mindReader: { predictions: 5 },
+  // The Mind Reader writes 5 words they think the Clue Giver will say. 3 players or more; teams
+  // of 2 or more, 2 to 6 teams. 5 rounds to start. A guess with 0:42 left scores 3 + 4.
+  mindReader: {
+    predictions: 5,
+    minPlayers: 3,
+    maxPlayers: 24,
+    minPerTeam: 2,
+    minTeams: 2,
+    maxTeams: 6,
+    rounds: { default: 5, min: 1, max: 20 },
+    scoring: { guess: 3, bonusEverySeconds: 10, bonusPoints: 1, perPrediction: 1, notGuessed: 3 },
+  },
 };
