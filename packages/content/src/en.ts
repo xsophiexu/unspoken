@@ -86,7 +86,7 @@ const howToPlaySteps: SpotlightStep[] = [
     target: null,
     art: 'mic',
     text: 'Describe it out loud.',
-    rules: ['No saying part of the word, like “hang” or “over”', 'No rhymes or “sounds like”', 'No pointing or acting it out'],
+    rules: ['No saying part of the word, like “road” or “trip”', 'No rhymes or “sounds like”', 'No pointing or acting it out'],
   },
   { id: 'difficulty', target: 'difficulty', text: 'Tap here to change difficulty.' },
   { id: 'menu', target: 'menu', text: 'Tap here to change the game mode or the look.' },
