@@ -1,0 +1,192 @@
+/* Mind Reader's start screen and Custom game steps. Every value is a design token from /theme.css. */
+
+.muted {
+  color: var(--region-muted);
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2-5);
+}
+
+.chevron {
+  flex: none;
+  width: var(--un-layout-icon-sm);
+  height: var(--un-layout-icon-sm);
+}
+
+/* Start */
+
+.quick,
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  width: 100%;
+  border: 0;
+  text-align: left;
+  text-decoration: none;
+}
+
+.quick {
+  padding: var(--un-space-5);
+  border-radius: var(--un-radius-card-large);
+}
+
+.rowText {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+}
+
+.play {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1);
+  min-height: calc(var(--un-layout-min-touch) - var(--un-space-1));
+  padding: 0 var(--un-space-4);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2-5);
+}
+
+.row {
+  padding: var(--un-space-4);
+  border-radius: var(--un-radius-card-large);
+}
+
+/* Players */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nameChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1);
+  max-width: 100%;
+  min-height: var(--un-layout-mind-reader-pill-height);
+  padding: 0 var(--un-space-1) 0 var(--un-space-3);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.remove {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-mind-reader-remove-button);
+  height: var(--un-layout-mind-reader-remove-button);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: transparent;
+  color: var(--region-muted);
+}
+
+/* Lineup */
+
+.list {
+  padding-block: var(--un-space-1);
+  gap: 0;
+}
+
+.order {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.orderRow,
+.teamHead {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--region-ink);
+  text-align: left;
+}
+
+.orderRow {
+  min-height: calc(var(--un-layout-mind-reader-log-row) + var(--un-space-2-5));
+  border-bottom: var(--hairline) solid var(--region-rule);
+}
+
+.orderRowOpen {
+  outline: var(--un-layout-stroke-focus) solid var(--region-accent);
+  outline-offset: calc(-1 * var(--un-layout-stroke-focus));
+  border-radius: var(--un-radius-md);
+}
+
+.pencil {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-space-7);
+  height: var(--un-space-7);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  font-size: var(--un-layout-icon-sm);
+}
+
+.addRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: calc(var(--un-layout-min-touch) + var(--un-space-2));
+  padding: var(--un-space-1-5) 0;
+}
+
+.addLink {
+  border: 0;
+  background: transparent;
+  color: var(--region-accent-text);
+  text-align: left;
+}
+
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+/* Game settings (step 3) */
+
+.stepSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-6);
+}

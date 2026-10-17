@@ -28,6 +28,8 @@ import { Choice } from '@/components/ui/Choice';
 import { Grid } from '@/components/ui/Grid';
 import { Screen } from '@/components/ui/Screen';
 import { InlineSwitch } from '@/components/ui/InlineSwitch';
+import { MindReaderRounds } from '@/components/mindReader/MindReaderRounds';
+import { StepTop } from '@/components/mindReader/parts';
 import { Section } from '@/components/ui/Section';
 import { routes } from '@/lib/routes';
 import { toggleCategory } from '@/lib/settings';
@@ -40,8 +42,9 @@ const copy = en.setup;
 const themes = categoriesInBank(bank);
 
 // New game: difficulty, themes, and the timer and skips where the mode has them. Starts from the
-// current settings with the chosen mode.
-export function SetupScreen({ mode }: { mode: ModeId }) {
+// current settings with the chosen mode. custom: step 3 of a Custom Mind Reader game, with the time
+// limit and rounds at the top.
+export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: boolean }) {
   const game = useGame();
   const router = useRouter();
   const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
@@ -53,7 +56,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
 
   const start = () => {
     if (!canStart(settings)) return;
-    game.newGame(settings);
+    game.newGame(settings, custom ? 'custom' : undefined);
     router.push(routes.play);
   };
 
@@ -61,19 +64,43 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
   // The time is checked once the box loses focus; Start waits while it is out of range.
   const timeOutOfRange = hasTimeLimit(settings) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
 
+  const timerSection = hasTimerSetting(mode) && (
+    <Section
+      label={copy.timer}
+      aside={<InlineSwitch label={copy.noLimit} name={en.a11y.noTimeLimit} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />}
+    >
+      <TimerInput
+        seconds={roundSeconds}
+        invalid={timeOutOfRange}
+        disabled={noTimeLimit}
+        range={format(copy.timerRange, limits)}
+        onFocusChange={setTimerFocused}
+        onChange={(seconds) => update({ roundSeconds: seconds })}
+      />
+      {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
+    </Section>
+  );
+
   return (
     <Screen
       tone="base"
       width="column"
-      back={{ href: routes.modes, label: copy.back }}
-      action={<span className={cx(styles.muted, text('link'))}>{en.modes[mode].name}</span>}
-      title={copy.title}
+      back={custom ? undefined : { href: routes.modes, label: copy.back }}
+      action={custom ? undefined : <span className={cx(styles.muted, text('link'))}>{en.modes[mode].name}</span>}
+      title={custom ? undefined : copy.title}
       footer={
         <Button size="large" disabled={!canStart(settings)} onClick={start}>
           {copy.start}
         </Button>
       }
     >
+      {custom && (
+        <>
+          <StepTop step={3} total={3} title={en.mindReader.settings.title} back={{ href: routes.mindReaderLineup, label: en.mindReader.back }} />
+          {timerSection}
+          <MindReaderRounds />
+        </>
+      )}
       <Section label={copy.difficulty}>
         <DifficultyGrid
           kind="pick"
@@ -111,22 +138,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
         )}
       </Section>
 
-      {hasTimerSetting(mode) && (
-        <Section
-          label={copy.timer}
-          aside={<InlineSwitch label={copy.noLimit} name={en.a11y.noTimeLimit} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />}
-        >
-          <TimerInput
-            seconds={roundSeconds}
-            invalid={timeOutOfRange}
-            disabled={noTimeLimit}
-            range={format(copy.timerRange, limits)}
-            onFocusChange={setTimerFocused}
-            onChange={(seconds) => update({ roundSeconds: seconds })}
-          />
-          {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
-        </Section>
-      )}
+      {!custom && timerSection}
 
       {hasSkipSetting(mode) && (
         <Section label={copy.skips} aside={copy.skipsHint}>
