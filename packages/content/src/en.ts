@@ -9,9 +9,9 @@ const modes: Record<ModeId, { name: string; sub: string }> = {
   classic: { name: 'Classic', sub: 'Timed round, score what you can' },
   endless: { name: 'Endless', sub: 'No clock, no limits, go until you stop' },
   teams: { name: 'Teams', sub: 'Two teams, pass the phone' },
-  timeAttack: { name: 'Time attack', sub: 'Correct answers add time' },
+  timeAttack: { name: 'Time Attack', sub: 'Correct answers add time' },
   escalate: { name: 'Escalate', sub: 'One more banned word every time you are correct' },
-  hotPotato: { name: 'Hot potato', sub: 'Hidden timer, pass it on' },
+  hotPotato: { name: 'Hot Potato', sub: 'Hidden timer, pass it on' },
   reverse: { name: 'Reverse', sub: 'Guess the word from its clues' },
   mindReader: { name: 'Mind Reader', sub: 'Predict the clues before they’re said' },
 };

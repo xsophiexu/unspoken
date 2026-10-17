@@ -143,7 +143,7 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
 
 type SwipeProps = { state: SwipeRoundState; dispatch: Dispatch<RoundAction>; chrome: Chrome };
 
-// Classic, Endless, Time attack, Escalate, Hot potato.
+// Classic, Endless, Time Attack, Escalate, Hot Potato.
 function SwipeRound({ state, dispatch, chrome }: SwipeProps) {
   const model = playModel(state);
   const summary = swipeSummary(state, roundCopy);

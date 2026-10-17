@@ -112,7 +112,7 @@ export function menuStatus(state: RoundState, copy: RoundCopy): string {
   }
 }
 
-// The clock label on a swipe round: "2:30", or the hidden-clock word for Hot potato. Null without a clock.
+// The clock label on a swipe round: "2:30", or the hidden-clock word for Hot Potato. Null without a clock.
 export function clockLabel(state: SwipeRoundState, copy: RoundCopy): string | null {
   if (!state.clock) return null;
   return state.rules.clock === 'hidden' ? copy.status.hiddenClock : formatClock(state.clock.left);
@@ -135,7 +135,7 @@ export type RoundSummary = {
   label: string;
   // The big number, when there is one.
   value: number | null;
-  // A sentence in place of the number (Hot potato).
+  // A sentence in place of the number (Hot Potato).
   title: string | null;
   sub: string;
 };

@@ -33,12 +33,12 @@ export type HeaderModel = {
 };
 
 export type PlayModel = HeaderModel & {
-  // Null for modes without a clock. Hot potato's hidden clock has a label and no progress.
+  // Null for modes without a clock. Hot Potato's hidden clock has a label and no progress.
   clock: { label: string; progress: number } | null;
   card: SwipeCardView | null;
   canCorrect: boolean;
   canSkip: boolean;
-  // A line under the controls (Hot potato).
+  // A line under the controls (Hot Potato).
   note: string | null;
 };
 

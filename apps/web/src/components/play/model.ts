@@ -33,7 +33,7 @@ export type PlayModel = HeaderModel & {
   canSkip: boolean;
   // No answer yet this round (the "swipe the card" hint shows until the first one).
   firstCard: boolean;
-  // A line under the controls (Hot potato's rule), or null.
+  // A line under the controls (Hot Potato's rule), or null.
   note: string | null;
 };
 

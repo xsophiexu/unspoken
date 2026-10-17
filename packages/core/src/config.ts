@@ -10,7 +10,7 @@ export type DifficultyRules = {
   roundSeconds: number;
   // Banned words shown on each card (and clues in Reverse).
   bannedCount: number;
-  // Hot potato: the shortest hidden round. The longest is hotPotato.maxFactor times this.
+  // Hot Potato: the shortest hidden round. The longest is hotPotato.maxFactor times this.
   hotPotatoMinSeconds: number;
 };
 
@@ -26,7 +26,7 @@ export type ModeRules = {
   id: ModeId;
   play: PlayKind;
   clock: ClockKind;
-  // Whether correct answers score points (Hot potato and Mind Reader keep no score).
+  // Whether correct answers score points (Hot Potato and Mind Reader keep no score).
   scored: boolean;
   // Whether setup offers a skip limit. Without one, skips are unlimited and only counted.
   skipLimit: boolean;
@@ -34,7 +34,7 @@ export type ModeRules = {
   bonusSeconds: number;
   // Whether banned words grow with correct answers (Escalate).
   escalates: boolean;
-  // Whether the phone is handed on after every word (Hot potato).
+  // Whether the phone is handed on after every word (Hot Potato).
   passAfterEveryWord: boolean;
   available: boolean;
 };
@@ -70,7 +70,7 @@ const swipe = { play: 'swipe', escalates: false, passAfterEveryWord: false, bonu
 export const gameConfig: GameConfig = {
   // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Grandmaster, 2:30 at Expert 1.
   // Cards show 5 banned words at Normal and Harder, 6 at the other levels.
-  // Hot potato's shortest round grows from 0:45 at Normal to 2:30 at Grandmaster.
+  // Hot Potato's shortest round grows from 0:45 at Normal to 2:30 at Grandmaster.
   difficulties: [
     { id: 'Normal', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 },
     { id: 'Harder', roundSeconds: 120, bannedCount: 5, hotPotatoMinSeconds: 60 },
@@ -90,7 +90,7 @@ export const gameConfig: GameConfig = {
     { ...swipe, id: 'timeAttack', clock: 'visible', scored: true, skipLimit: true, bonusSeconds: 5, available: true },
     // Escalate has no clock.
     { ...swipe, id: 'escalate', clock: 'none', scored: true, skipLimit: true, escalates: true, available: true },
-    // Hot potato: no timer to set; the hidden clock runs a random length.
+    // Hot Potato: no timer to set; the hidden clock runs a random length.
     { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterEveryWord: true, available: true },
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'none', scored: false, skipLimit: false, available: true },

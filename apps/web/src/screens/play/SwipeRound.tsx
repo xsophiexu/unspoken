@@ -21,7 +21,7 @@ const TICK_MS = 1000;
 
 type SwipeRoundProps = RoundScreenProps & { round: SwipeRoundState; layoutStyle: LayoutStyle };
 
-// Classic, Endless, Time attack, Escalate and Hot potato: one card at a time in the chosen style.
+// Classic, Endless, Time Attack, Escalate and Hot Potato: one card at a time in the chosen style.
 export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onHeader, onLeave }: SwipeRoundProps) {
   const { dispatch, restart } = useGame();
   const frameRef = useRef<HTMLDivElement>(null);

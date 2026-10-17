@@ -60,12 +60,12 @@ describe('banned words', () => {
 });
 
 describe('skips', () => {
-  it('are limited only in Classic, Teams, Time attack and Escalate', () => {
+  it('are limited only in Classic, Teams, Time Attack and Escalate', () => {
     expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'teams', 'timeAttack', 'escalate']);
   });
 });
 
-describe('Hot potato hidden length', () => {
+describe('Hot Potato hidden length', () => {
   it('runs from 0:45–1:30 at Normal up to 2:30–5:00 at Grandmaster', () => {
     expect(hotPotatoRange('Normal')).toEqual({ min: 45, max: 90 });
     expect(hotPotatoRange('Expert 1')).toEqual({ min: 75, max: 150 });

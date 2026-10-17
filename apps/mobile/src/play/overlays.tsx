@@ -9,7 +9,7 @@ import { Icon } from '../ui/Icon';
 import { Txt } from '../ui/Txt';
 import type { Insets } from './PlayView';
 
-// Full-screen states over a swipe round: Paused, Pass the phone (Hot potato) and Round over.
+// Full-screen states over a swipe round: Paused, Pass the phone (Hot Potato) and Round over.
 
 function Overlay({ colors, insets, see = false, children, footer }: { colors: RegionColors; insets: Insets; see?: boolean; children: ReactNode; footer?: ReactNode }) {
   return (

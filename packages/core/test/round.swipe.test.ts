@@ -102,7 +102,7 @@ describe('Endless', () => {
   });
 });
 
-describe('Time attack', () => {
+describe('Time Attack', () => {
   it('adds 5 seconds for every correct answer', () => {
     const state = play(start('timeAttack', { roundSeconds: 30 }), [{ type: 'tick', seconds: 10 }, { type: 'correct' }]);
     expect(state.clock?.left).toBe(25);
@@ -172,7 +172,7 @@ describe('Escalate', () => {
   });
 });
 
-describe('Hot potato', () => {
+describe('Hot Potato', () => {
   it('hides a clock whose length falls in the level’s range, ignoring the round timer setting', () => {
     for (const difficulty of ['Normal', 'Expert 1', 'Grandmaster'] as const) {
       const { min, max } = hotPotatoRange(difficulty);

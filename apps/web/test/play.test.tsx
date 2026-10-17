@@ -171,7 +171,7 @@ describe('Play', () => {
     expect(caption()).toBe('Tap here to change the game mode or the look.');
   });
 
-  it('keeps Hot potato’s rule under the controls while playing', () => {
+  it('keeps Hot Potato’s rule under the controls while playing', () => {
     saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: { ...classic, mode: 'hotPotato' } });
     const { game } = renderPlay();
     expect(game.getByText(en.status.hotPotato)).toBeInTheDocument();

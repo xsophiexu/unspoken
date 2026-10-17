@@ -1,4 +1,4 @@
-// Classic, Endless, Time attack, Escalate and Hot potato: one card at a time, swipe right for
+// Classic, Endless, Time Attack, Escalate and Hot Potato: one card at a time, swipe right for
 // Correct and left for Skip. Pure reducer and selectors; the UI animates, then dispatches.
 
 import { playableCards } from '../bank';
@@ -20,11 +20,11 @@ export type SwipeRoundState = {
   deck: DeckState;
   correct: number;
   skipped: number;
-  // Seconds on the clock; null for modes without one. `total` grows when Time attack adds time
+  // Seconds on the clock; null for modes without one. `total` grows when Time Attack adds time
   // beyond the starting length, so the ring never overflows.
   clock: { total: number; left: number } | null;
   pause: PauseReason | null;
-  // Hot potato: showing "Pass the phone" until the next player is ready.
+  // Hot Potato: showing "Pass the phone" until the next player is ready.
   passing: boolean;
 };
 
@@ -35,13 +35,13 @@ export type SwipeAction =
   | { type: 'tick'; seconds?: number }
   | { type: 'pause'; reason?: PauseReason }
   | { type: 'resume' }
-  // Hot potato: the next player has the phone.
+  // Hot Potato: the next player has the phone.
   | { type: 'ready' };
 
 export type RoundOptions = {
   // Cards for the chosen difficulty and themes (see cardsFor). The round never loads the bank itself.
   cards: readonly Card[];
-  // Seeds dealing and Hot potato's hidden length. Use newSeed() in apps, fixed numbers in tests.
+  // Seeds dealing and Hot Potato's hidden length. Use newSeed() in apps, fixed numbers in tests.
   seed: number;
   config?: GameConfig;
 };

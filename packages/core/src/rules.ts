@@ -23,7 +23,7 @@ export function bannedCountFor(difficulty: Difficulty, config: GameConfig = game
   return difficultyRules(difficulty, config).bannedCount;
 }
 
-// Whether setup shows a round timer for the mode. Hot potato's clock is hidden and random, so it has none to set.
+// Whether setup shows a round timer for the mode. Hot Potato's clock is hidden and random, so it has none to set.
 export function hasTimerSetting(mode: ModeId, config: GameConfig = gameConfig): boolean {
   return modeRules(mode, config).clock === 'visible';
 }
@@ -33,13 +33,13 @@ export function hasSkipSetting(mode: ModeId, config: GameConfig = gameConfig): b
   return modeRules(mode, config).skipLimit;
 }
 
-// Hot potato's hidden round length range at a level, in whole seconds.
+// Hot Potato's hidden round length range at a level, in whole seconds.
 export function hotPotatoRange(difficulty: Difficulty, config: GameConfig = gameConfig): { min: number; max: number } {
   const min = difficultyRules(difficulty, config).hotPotatoMinSeconds;
   return { min, max: Math.round(min * config.hotPotato.maxFactor) };
 }
 
-// Picks Hot potato's hidden round length: uniformly between the level's shortest round and the longest.
+// Picks Hot Potato's hidden round length: uniformly between the level's shortest round and the longest.
 export function hiddenRoundSeconds(difficulty: Difficulty, random: Random, config: GameConfig = gameConfig): number {
   const { min, max } = hotPotatoRange(difficulty, config);
   return Math.round(min + random() * (max - min));
