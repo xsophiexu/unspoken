@@ -29,6 +29,8 @@ export function parseSettings(value: unknown, config = gameConfig): GameSettings
       .nullable()
       .refine((skips) => config.skipOptions.includes(skips))
       .catch(fallback.skips),
+    // Settings saved before the switch existed have a time limit.
+    noTimeLimit: z.boolean().catch(false),
   });
   const parsed = schema.parse(typeof value === 'object' && value !== null ? value : {});
   // A missing or bad timer follows the saved level's default.

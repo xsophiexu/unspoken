@@ -43,7 +43,8 @@ export type GameConfig = {
   difficulties: readonly DifficultyRules[];
   categories: readonly Category[];
   modes: readonly ModeRules[];
-  defaults: Omit<GameSettings, 'roundSeconds'>;
+  // The time limit follows the difficulty, and No time limit starts off.
+  defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit'>;
   // Choices on the "Skips per round" grid; null is unlimited (∞).
   skipOptions: readonly (number | null)[];
   // The shortest time limit setup accepts. The box takes any four digits; outside this range setup

@@ -110,6 +110,9 @@ export type GameSettings = {
   categories: readonly Category[];
   // Round length in seconds. Ignored by modes without a visible clock.
   roundSeconds: number;
+  // No time limit: a mode with a visible clock plays without one, like Endless, and the player ends
+  // the round from the menu. roundSeconds is kept, so turning the switch off brings that time back.
+  noTimeLimit: boolean;
   // Skips allowed per round, or null for unlimited. Ignored by modes without a skip limit.
   skips: number | null;
 };

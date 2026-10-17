@@ -86,6 +86,27 @@ describe('Classic', () => {
   });
 });
 
+describe('Classic with No time limit', () => {
+  const untimed = () => start('classic', { roundSeconds: 60, skips: 2, noTimeLimit: true });
+
+  it('has no clock: ticks change nothing and time never runs out', () => {
+    const state = untimed();
+    expect(state.clock).toBeNull();
+    expect(isClockRunning(state)).toBe(false);
+    expect(play(state, [{ type: 'tick', seconds: 3600 }])).toBe(state);
+    const later = play(state, [...times<SwipeAction>(40, { type: 'correct' }), { type: 'tick', seconds: 3600 }]);
+    expect(isSwipeOver(later)).toBe(false);
+    expect(canAnswer(later, 'correct')).toBe(true);
+  });
+
+  it('still keeps score and the skip limit', () => {
+    const state = play(untimed(), [{ type: 'correct' }, { type: 'skip' }, { type: 'skip' }]);
+    expect(state.correct).toBe(1);
+    expect(skipsLeft(state)).toBe(0);
+    expect(canAnswer(state, 'skip')).toBe(false);
+  });
+});
+
 describe('Endless', () => {
   it('has no clock: ticks change nothing and the round never ends', () => {
     const state = start('endless');

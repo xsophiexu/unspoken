@@ -1,0 +1,57 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  min-height: var(--un-layout-min-touch);
+  padding: var(--un-space-3) var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--un-color-surface-raised);
+  color: var(--un-color-ink);
+  cursor: pointer;
+}
+
+.row:has(:focus-visible) {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+}
+
+.detail {
+  color: var(--un-color-muted);
+}
+
+.track {
+  flex: none;
+  position: relative;
+  width: var(--un-space-10);
+  height: var(--un-space-6);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-track);
+}
+
+.thumb {
+  position: absolute;
+  top: var(--un-space-0-5);
+  left: var(--un-space-0-5);
+  width: var(--un-space-5);
+  height: var(--un-space-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--un-color-surface-raised);
+  box-shadow: var(--un-shadow-raised);
+}
+
+.on {
+  background: var(--region-accent);
+}
+
+.on .thumb {
+  transform: translateX(calc(var(--un-space-10) - var(--un-space-5) - 2 * var(--un-space-0-5)));
+}
+

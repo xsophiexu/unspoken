@@ -72,7 +72,7 @@ export function toggleCategory(categories: readonly Category[], category: Catego
 // The settings a fresh install starts with.
 export function defaultSettings(config: GameConfig = gameConfig): GameSettings {
   const { defaults } = config;
-  return { ...defaults, categories: [...defaults.categories], roundSeconds: defaultRoundSeconds(defaults.difficulty, config) };
+  return { ...defaults, categories: [...defaults.categories], roundSeconds: defaultRoundSeconds(defaults.difficulty, config), noTimeLimit: false };
 }
 
 // Whether a time limit is one setup accepts (0:30 to 10:00).
@@ -85,10 +85,15 @@ export function clampTimeLimit(seconds: number, config: GameConfig = gameConfig)
   return Math.min(config.maxRoundSeconds, Math.max(config.minRoundSeconds, seconds));
 }
 
-// Whether settings can start a game: a visible timer needs a time limit in range.
+// Whether rounds with these settings run a visible countdown: the mode has one and No time limit is off.
+export function hasTimeLimit(settings: GameSettings, config: GameConfig = gameConfig): boolean {
+  return hasTimerSetting(settings.mode, config) && !settings.noTimeLimit;
+}
+
+// Whether settings can start a game: a visible timer needs a time limit in range, unless it is off.
 export function canStart(settings: GameSettings, config: GameConfig = gameConfig): boolean {
   if (!modeRules(settings.mode, config).available) return false;
-  if (!hasTimerSetting(settings.mode, config)) return true;
+  if (!hasTimeLimit(settings, config)) return true;
   return isTimeLimitInRange(settings.roundSeconds, config);
 }
 
@@ -116,5 +121,7 @@ export function parseSettings(value: unknown, config: GameConfig = gameConfig): 
       ? clampTimeLimit(seconds, config)
       : defaultRoundSeconds(difficulty, config);
   const skips = config.skipOptions.find((n) => n === v.skips);
-  return { mode, difficulty, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips };
+  // Settings saved before the switch existed have a time limit.
+  const noTimeLimit = v.noTimeLimit === true;
+  return { mode, difficulty, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips, noTimeLimit };
 }

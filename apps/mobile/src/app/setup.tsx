@@ -9,6 +9,7 @@ import {
   formatClock,
   gameConfig,
   hasSkipSetting,
+  hasTimeLimit,
   hasTimerSetting,
   isTimeLimitInRange,
   modeRules,
@@ -25,7 +26,7 @@ import {
 import { layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, Switch, TextInput, View } from 'react-native';
 
 import { backToGame, goBack } from '../nav';
 import { usePrefs } from '../state/prefs';
@@ -127,7 +128,13 @@ export default function SetupScreen() {
           </View>
 
           {hasTimerSetting(mode) ? (
-            <TimerField seconds={draft.roundSeconds} colors={colors} onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))} />
+            <TimerField
+              seconds={draft.roundSeconds}
+              noTimeLimit={draft.noTimeLimit}
+              colors={colors}
+              onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))}
+              onNoTimeLimit={(noTimeLimit) => setDraft((cur) => ({ ...cur, noTimeLimit }))}
+            />
           ) : null}
 
           {hasSkipSetting(mode) ? (
@@ -155,14 +162,21 @@ export default function SetupScreen() {
   );
 }
 
-type TimerProps = { seconds: number; colors: RegionColors; onChange: (seconds: number) => void };
+type TimerProps = {
+  seconds: number;
+  noTimeLimit: boolean;
+  colors: RegionColors;
+  onChange: (seconds: number) => void;
+  onNoTimeLimit: (on: boolean) => void;
+};
 
 const LIMITS = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
 
 // The time limit fills from the right as digits are typed, like a microwave: 1, 4, 5 reads 1:45.
 // Once the box loses focus, seconds over 59 roll into minutes (1:75 reads 2:15) and a time outside
-// the accepted range shows a calm note; Start waits until it is fixed.
-function TimerField({ seconds, colors, onChange }: TimerProps) {
+// the accepted range shows a calm note; Start waits until it is fixed. No time limit greys the box
+// out and keeps its time, so turning the switch off brings it back.
+function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: TimerProps) {
   const { theme } = usePrefs();
   const field = theme.regions.raised;
   const input = useRef<TextInput>(null);
@@ -170,7 +184,9 @@ function TimerField({ seconds, colors, onChange }: TimerProps) {
   const [focused, setFocused] = useState(false);
   const label = timerDigitsLabel(digits);
   const s = en.setup;
-  const outOfRange = !focused && !isTimeLimitInRange(seconds);
+  const outOfRange = !noTimeLimit && !focused && !isTimeLimitInRange(seconds);
+  const ink = noTimeLimit ? colors.disabledInk : field.ink;
+  const unitInk = noTimeLimit ? colors.disabledInk : field.muted;
   // A new difficulty moves a default time with it, and a typed 1:75 settles as 2:15; show that time.
   if (!focused && digits !== secondsToTimerDigits(seconds)) setDigits(secondsToTimerDigits(seconds));
 
@@ -179,13 +195,20 @@ function TimerField({ seconds, colors, onChange }: TimerProps) {
       <SectionLabel label={s.timer} aside={format(s.timerRange, LIMITS)} colors={colors} />
       <Press
         onPress={() => input.current?.focus()}
+        disabled={noTimeLimit}
+        fadeDisabled={false}
         accessibilityLabel={format(en.a11y.timer, { clock: label })}
-        style={[styles.timer, { backgroundColor: field.bg, borderColor: focused ? colors.accent : outOfRange ? colors.ink : field.bg }]}
+        style={[
+          styles.timer,
+          noTimeLimit
+            ? { backgroundColor: colors.disabled, borderColor: colors.disabled }
+            : { backgroundColor: field.bg, borderColor: focused ? colors.accent : outOfRange ? colors.ink : field.bg },
+        ]}
       >
-        <Txt variant="headline" color={field.ink} style={styles.tabular}>
+        <Txt variant="headline" color={ink} style={styles.tabular}>
           {label}
         </Txt>
-        <Txt variant="hint" color={field.muted}>
+        <Txt variant="hint" color={unitInk}>
           {s.timerUnit}
         </Txt>
       </Press>
@@ -198,6 +221,7 @@ function TimerField({ seconds, colors, onChange }: TimerProps) {
           onChange(timerDigitsToSeconds(next));
         }}
         keyboardType="number-pad"
+        editable={!noTimeLimit}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         caretHidden
@@ -206,6 +230,32 @@ function TimerField({ seconds, colors, onChange }: TimerProps) {
         importantForAccessibility="no"
       />
       {outOfRange ? <Note text={format(s.timerOutOfRange, LIMITS)} colors={colors} /> : null}
+      <Press
+        onPress={() => onNoTimeLimit(!noTimeLimit)}
+        accessibilityRole="switch"
+        accessibilityLabel={s.noTimeLimit}
+        accessibilityHint={s.noTimeLimitDetail}
+        accessibilityState={{ checked: noTimeLimit }}
+        style={[styles.switchRow, { backgroundColor: field.bg }]}
+      >
+        <View style={styles.switchText}>
+          <Txt variant="optionTitle" color={field.ink}>
+            {s.noTimeLimit}
+          </Txt>
+          <Txt variant="subline" color={field.muted}>
+            {s.noTimeLimitDetail}
+          </Txt>
+        </View>
+        <Switch
+          value={noTimeLimit}
+          onValueChange={onNoTimeLimit}
+          trackColor={{ false: colors.track, true: colors.accent }}
+          thumbColor={field.bg}
+          ios_backgroundColor={colors.track}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        />
+      </Press>
     </View>
   );
 }
@@ -238,4 +288,14 @@ const styles = StyleSheet.create({
   hiddenInput: { position: 'absolute', width: 1, height: 1, opacity: 0 },
   note: { flexDirection: 'row', alignItems: 'center', gap: space[2], borderRadius: radius.md, paddingHorizontal: space[3.5], paddingVertical: space[2.5] },
   noteText: { flex: 1 },
+  switchRow: {
+    minHeight: layout.minTouch,
+    borderRadius: radius.xl,
+    paddingHorizontal: space[4],
+    paddingVertical: space[3],
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: space[3],
+  },
+  switchText: { flex: 1, gap: space[0.5] },
 });

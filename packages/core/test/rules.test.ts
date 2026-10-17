@@ -27,7 +27,7 @@ describe('catalogs', () => {
   });
 
   it('starts a fresh install on Endless at Normal with All cards, 1:30 and 3 skips', () => {
-    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Normal', categories: [], roundSeconds: 90, skips: 3 });
+    expect(defaultSettings()).toEqual({ mode: 'endless', difficulty: 'Normal', categories: [], roundSeconds: 90, skips: 3, noTimeLimit: false });
   });
 });
 
@@ -88,6 +88,11 @@ describe('canStart', () => {
     expect(canStart(settingsFor('classic', { roundSeconds: 601 }))).toBe(false);
   });
 
+  it('skips the time limit check when No time limit is on', () => {
+    expect(canStart(settingsFor('classic', { roundSeconds: 5, noTimeLimit: true }))).toBe(true);
+    expect(canStart(settingsFor('classic', { roundSeconds: 5, noTimeLimit: false }))).toBe(false);
+  });
+
   it('takes its time limits from the config', () => {
     const config = { ...gameConfig, minRoundSeconds: 60, maxRoundSeconds: 120 };
     expect(isTimeLimitInRange(59, config)).toBe(false);
@@ -120,8 +125,14 @@ describe('toggleCategory', () => {
 
 describe('parseSettings', () => {
   it('reads back settings that were saved', () => {
-    const saved = { mode: 'classic', difficulty: 'Elite', categories: ['Society', 'Business'], roundSeconds: 95, skips: null };
+    const saved = { mode: 'classic', difficulty: 'Elite', categories: ['Society', 'Business'], roundSeconds: 95, skips: null, noTimeLimit: true };
     expect(parseSettings(JSON.parse(JSON.stringify(saved)))).toEqual(saved);
+  });
+
+  it('reads settings saved before No time limit existed as timed', () => {
+    const saved = { mode: 'classic', difficulty: 'Elite', categories: [], roundSeconds: 95, skips: 2 };
+    expect(parseSettings(saved)).toEqual({ ...saved, noTimeLimit: false });
+    expect(parseSettings({ ...saved, noTimeLimit: 'yes' }).noTimeLimit).toBe(false);
   });
 
   it('defaults fields that are missing, unknown or out of range, and never starts an unavailable mode', () => {
@@ -141,7 +152,7 @@ describe('parseSettings', () => {
 
   it('moves a level saved under its old name to the level that replaced it', () => {
     const saved = { mode: 'classic', difficulty: 'Master 1', categories: [], roundSeconds: 95, skips: 2 };
-    expect(parseSettings(saved)).toEqual({ ...saved, difficulty: 'Expert' });
+    expect(parseSettings(saved)).toEqual({ ...saved, difficulty: 'Expert', noTimeLimit: false });
     // Without a typed time, the round follows the new level's default.
     expect(parseSettings({ difficulty: 'Grandmaster' })).toMatchObject({ difficulty: 'Legend', roundSeconds: defaultRoundSeconds('Legend') });
   });

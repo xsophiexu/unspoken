@@ -14,11 +14,13 @@ type TimerInputProps = {
   onFocusChange?: (focused: boolean) => void;
   // Outside the accepted range: the outline turns ink.
   invalid?: boolean;
+  // No time limit is on: the box greys out but keeps its time for when the switch goes off.
+  disabled?: boolean;
 };
 
 // The time limit, typed like a microwave: digits fill from the right, so 1, 4, 5 reads 1:45.
 // Seconds over 59 roll into minutes when the box loses focus (1:75 reads 2:15).
-export function TimerInput({ seconds, onChange, onFocusChange, invalid = false }: TimerInputProps) {
+export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, disabled = false }: TimerInputProps) {
   const [digits, setDigits] = useState(() => secondsToTimerDigits(seconds));
   const [focused, setFocused] = useState(false);
   // A new difficulty moves a default time with it; show that new time.
@@ -29,7 +31,7 @@ export function TimerInput({ seconds, onChange, onFocusChange, invalid = false }
     onFocusChange?.(next);
   };
   return (
-    <label className={cx(styles.box, invalid && styles.invalid)}>
+    <label className={cx(styles.box, invalid && styles.invalid, disabled && styles.disabled)}>
       <input
         className={cx(styles.input, text('title'))}
         inputMode="numeric"
@@ -37,6 +39,7 @@ export function TimerInput({ seconds, onChange, onFocusChange, invalid = false }
         value={label}
         aria-label={format(en.a11y.timer, { clock: label })}
         aria-invalid={invalid || undefined}
+        disabled={disabled}
         onFocus={() => focus(true)}
         onBlur={() => focus(false)}
         onChange={(event) => {

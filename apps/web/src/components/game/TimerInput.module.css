@@ -52,3 +52,15 @@
 .noteIcon {
   flex: none;
 }
+
+/* No time limit: greyed with the region's disabled colors, keeping the time. */
+.disabled {
+  background: var(--region-disabled);
+  color: var(--region-disabled-ink);
+  cursor: default;
+}
+
+.disabled .input,
+.disabled .unit {
+  color: inherit;
+}

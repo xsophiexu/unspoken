@@ -15,10 +15,12 @@ describe('New game setup', () => {
     const { unmount } = renderApp(<SetupScreen mode="classic" />);
     expect(screen.getByRole('textbox', { name: /Time limit 1:30/ })).toBeInTheDocument();
     expect(screen.getByRole('radiogroup', { name: copy.skips })).toBeInTheDocument();
+    expect(screen.getByRole('switch', { name: /No time limit/ })).not.toBeChecked();
     unmount();
 
     renderApp(<SetupScreen mode="hotPotato" />);
     expect(screen.queryByRole('textbox', { name: /Time limit/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('switch', { name: /No time limit/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('radiogroup', { name: copy.skips })).not.toBeInTheDocument();
   });
 
@@ -112,6 +114,33 @@ describe('New game setup', () => {
       // The timer was on Hard's default, so it follows the new level.
       roundSeconds: 240,
       skips: null,
+      noTimeLimit: false,
     });
+  });
+
+  it('No time limit greys out the box, keeps its time for later and saves the choice', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    const timer = screen.getByRole('textbox', { name: /Time limit/ });
+    const start = screen.getByRole('button', { name: copy.start });
+    await user.clear(timer);
+    await user.type(timer, '1200');
+    await user.tab();
+    expect(start).toBeDisabled();
+
+    await user.click(screen.getByRole('switch', { name: /No time limit/ }));
+    expect(timer).toBeDisabled();
+    expect(timer).toHaveValue('12:00');
+    expect(screen.queryByText('Choose between 0:30 and 10:00.')).not.toBeInTheDocument();
+    expect(start).toBeEnabled();
+
+    await user.click(screen.getByRole('switch', { name: /No time limit/ }));
+    expect(timer).toBeEnabled();
+    expect(timer).toHaveValue('12:00');
+    expect(start).toBeDisabled();
+
+    await user.click(screen.getByRole('switch', { name: /No time limit/ }));
+    await user.click(start);
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', noTimeLimit: true, roundSeconds: 720 });
   });
 });

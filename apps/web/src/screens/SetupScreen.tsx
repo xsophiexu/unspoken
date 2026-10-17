@@ -9,6 +9,7 @@ import {
   formatClock,
   gameConfig,
   hasSkipSetting,
+  hasTimeLimit,
   hasTimerSetting,
   isTimeLimitInRange,
   plural,
@@ -26,6 +27,7 @@ import { Button } from '@/components/ui/Button';
 import { Choice } from '@/components/ui/Choice';
 import { Grid } from '@/components/ui/Grid';
 import { Screen } from '@/components/ui/Screen';
+import { SwitchRow } from '@/components/ui/SwitchRow';
 import { Section } from '@/components/ui/Section';
 import { routes } from '@/lib/routes';
 import { toggleCategory } from '@/lib/settings';
@@ -45,7 +47,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
   const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
   const [timerFocused, setTimerFocused] = useState(false);
   const update = (change: Partial<GameSettings>) => setSettings((current) => ({ ...current, ...change }));
-  const { difficulty, categories, roundSeconds, skips } = settings;
+  const { difficulty, categories, roundSeconds, skips, noTimeLimit } = settings;
   const cards = deckSize(bank, difficulty, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
 
@@ -57,7 +59,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
 
   const limits = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
   // The time is checked once the box loses focus; Start waits while it is out of range.
-  const timeOutOfRange = hasTimerSetting(mode) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
+  const timeOutOfRange = hasTimeLimit(settings) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
 
   return (
     <Screen
@@ -114,10 +116,12 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
           <TimerInput
             seconds={roundSeconds}
             invalid={timeOutOfRange}
+            disabled={noTimeLimit}
             onFocusChange={setTimerFocused}
             onChange={(seconds) => update({ roundSeconds: seconds })}
           />
           {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
+          <SwitchRow title={copy.noTimeLimit} detail={copy.noTimeLimitDetail} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />
         </Section>
       )}
 

@@ -224,6 +224,9 @@ export const en = {
     // Under the box when the typed time is outside that range; Start waits until it is fixed.
     timerOutOfRange: 'Choose between {min} and {max}.',
     timerUnit: 'min : sec',
+    // The switch under the time limit box: the round has no clock and ends from the menu.
+    noTimeLimit: 'No time limit',
+    noTimeLimitDetail: 'Turns end when you choose',
     skips: 'SKIPS PER ROUND',
     skipsHint: '∞ = unlimited',
     unlimited: '∞',

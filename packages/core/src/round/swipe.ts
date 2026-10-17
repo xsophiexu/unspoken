@@ -4,7 +4,7 @@
 import { playableCards } from '../bank';
 import { gameConfig, type GameConfig, type ModeRules } from '../config';
 import { seededRandom } from '../random';
-import { bannedCountFor, escalateProgress, hiddenRoundSeconds, modeRules } from '../rules';
+import { bannedCountFor, escalateProgress, hasTimeLimit, hiddenRoundSeconds, modeRules } from '../rules';
 import type { Card, GameSettings } from '../types';
 import { advance, currentCard, newDeck, type DeckState } from './deck';
 
@@ -20,7 +20,7 @@ export type SwipeRoundState = {
   deck: DeckState;
   correct: number;
   skipped: number;
-  // Seconds on the clock; null for modes without one. `total` grows when Time Attack adds time
+  // Seconds on the clock; null for modes without one and for rounds with No time limit. `total` grows when Time Attack adds time
   // beyond the starting length, so the ring never overflows.
   clock: { total: number; left: number } | null;
   pause: PauseReason | null;
@@ -53,7 +53,7 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
   const seconds =
     rules.clock === 'hidden'
       ? hiddenRoundSeconds(settings.difficulty, rng.random, config)
-      : rules.clock === 'visible'
+      : hasTimeLimit(settings, config)
         ? settings.roundSeconds
         : null;
   return {

@@ -82,6 +82,29 @@ describe('picking a difficulty', () => {
   });
 });
 
+describe('Classic with No time limit', () => {
+  it('shows no clock and never runs out of time; the round goes on until the player leaves it from the menu', async () => {
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky', roundSeconds: 30, noTimeLimit: true } });
+    expect(await screen.findByLabelText(levelBadge('Tricky'))).toBeOnTheScreen();
+    expect(screen.queryByText(formatClock(30))).not.toBeOnTheScreen();
+
+    await act(async () => {
+      jest.advanceTimersByTime(10 * 60_000);
+    });
+    expect(screen.queryByText(en.over.timeUp)).not.toBeOnTheScreen();
+
+    fireEvent.press(screen.getByLabelText(en.play.correct));
+    await act(async () => {
+      jest.advanceTimersByTime(motion.swipe.flyOutMs);
+    });
+    expect(screen.getByText(/1 pt/)).toBeOnTheScreen();
+
+    // The menu still offers the ways out of a round.
+    fireEvent.press(screen.getByLabelText(en.a11y.menu));
+    expect(await screen.findByLabelText(en.menu.changeSettings.title)).toBeOnTheScreen();
+  });
+});
+
 describe('closing the ··· menu', () => {
   const closeAfterSlide = async () => {
     await act(async () => {
