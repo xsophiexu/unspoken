@@ -26,11 +26,12 @@ export function Chip({ label, colors, selected, onPress, count, role = 'radio' }
       accessibilityLabel={count === undefined ? label : `${label}, ${count}`}
       style={[styles.chip, { backgroundColor: selected ? colors.accent : colors.chip }]}
     >
-      <Txt variant="topicChip" color={ink}>
+      {/* Not selectable, so a double-tap (All cards) never selects the text on web. */}
+      <Txt variant="topicChip" color={ink} selectable={false}>
         {label}
       </Txt>
       {count === undefined ? null : (
-        <Txt variant="label" color={selected ? colors.onAccent : colors.muted}>
+        <Txt variant="label" color={selected ? colors.onAccent : colors.muted} selectable={false}>
           {count}
         </Txt>
       )}

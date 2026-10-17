@@ -4,34 +4,37 @@ import {
   MODE_IDS,
   canStart,
   categoriesInBank,
+  categoriesSummary,
   deckSize,
   format,
   formatClock,
   gameConfig,
   hasSkipSetting,
-  hasTimeLimit,
   hasTimerSetting,
+  isSmallDeck,
   isTimeLimitInRange,
   modeRules,
   plural,
   sanitizeTimerDigits,
   secondsToTimerDigits,
+  tapAllCards,
   timerDigitsLabel,
   timerDigitsToSeconds,
   toggleCategory,
-  withDifficulty,
+  toggleDifficulty,
+  type AllCardsTap,
   type GameSettings,
   type ModeId,
 } from '@unspoken/core';
-import { layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
+import { layout, motion, radius, space, type RegionColors } from '@unspoken/design-tokens';
 import { useLocalSearchParams } from 'expo-router';
 import { useMemo, useRef, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
 import { backToGame, goBack } from '../nav';
+import { CategoriesSheet, DifficultyInfoSheet, SmallDeckSheet } from '../setup/sheets';
 import { usePrefs } from '../state/prefs';
 import { Button, LinkButton } from '../ui/Button';
-import { Chip } from '../ui/Chip';
 import { Grid } from '../ui/Grid';
 import { Icon } from '../ui/Icon';
 import { Press, slopFor } from '../ui/Press';
@@ -40,29 +43,47 @@ import { Tile } from '../ui/Tile';
 import { Txt } from '../ui/Txt';
 
 const THEMES = categoriesInBank(bank);
+const SUMMARY_COPY = { all: en.themes.all, names: en.categories, many: en.themes.many };
 
 function modeParam(value: unknown, fallback: ModeId): ModeId {
   return MODE_IDS.find((id) => id === value && modeRules(id).available) ?? fallback;
 }
 
-// New game: difficulty, themes, and the timer and skips when the mode has them.
+type Open = 'categories' | 'info' | 'smallDeck' | null;
+
+// New game: categories, difficulties, and the timer and skips when the mode has them.
 export default function SetupScreen() {
   const prefs = usePrefs();
   const { mode: param } = useLocalSearchParams<{ mode?: string }>();
   const mode = modeParam(param, prefs.settings.mode);
   const [draft, setDraft] = useState<GameSettings>(() => ({ ...prefs.settings, mode }));
+  const [open, setOpen] = useState<Open>(null);
+  const allCardsTap = useRef<AllCardsTap>(null);
   const settings = { ...draft, mode };
   const s = en.setup;
+  const { difficulties, categories } = draft;
 
-  const counts = useMemo(() => DIFFICULTY_IDS.map((d) => deckSize(bank, d, draft.categories)), [draft.categories]);
-  const themeCounts = useMemo(() => THEMES.map((c) => deckSize(bank, draft.difficulties, [c])), [draft.difficulties]);
-  const allCount = deckSize(bank, draft.difficulties, []);
-  const cards = deckSize(bank, draft.difficulties, draft.categories);
+  const counts = useMemo(() => DIFFICULTY_IDS.map((d) => deckSize(bank, d, categories)), [categories]);
+  const themeCounts = useMemo(() => THEMES.map((c) => deckSize(bank, difficulties, [c])), [difficulties]);
+  const allCount = deckSize(bank, difficulties, []);
+  const cards = deckSize(bank, difficulties, categories);
+  const cardsText = plural(cards, en.units.cards);
+  const summary = categoriesSummary(categories, SUMMARY_COPY);
 
-  const start = () => {
-    if (!canStart(settings)) return;
+  const play = () => {
+    setOpen(null);
     prefs.startGame(settings);
     backToGame();
+  };
+  const start = () => {
+    if (!canStart(settings)) return;
+    if (isSmallDeck(cards)) setOpen('smallDeck');
+    else play();
+  };
+  const onAllCards = () => {
+    const tap = tapAllCards(categories, allCardsTap.current, Date.now(), THEMES, motion.doubleTapMs);
+    allCardsTap.current = tap.last;
+    setDraft((cur) => ({ ...cur, categories: tap.categories }));
   };
 
   return (
@@ -83,48 +104,51 @@ export default function SetupScreen() {
           />
           <ScreenTitle title={s.title} colors={colors} />
 
+          <Press
+            onPress={() => setOpen('categories')}
+            accessibilityRole="button"
+            accessibilityLabel={format(en.a11y.categories, { summary })}
+            accessibilityHint={cardsText}
+            style={[styles.categories, { backgroundColor: colors.chip }]}
+          >
+            <View style={styles.categoriesText}>
+              <Txt variant="optionTitle" color={colors.chipInk}>
+                {s.categories}
+              </Txt>
+              <Txt variant="small" color={colors.muted} numberOfLines={2}>
+                {format(s.categoriesDetail, { summary, cards: cardsText })}
+              </Txt>
+            </View>
+            <Icon name="chevronRight" size={layout.icon.md} color={colors.muted} />
+          </Press>
+
           <View style={styles.section}>
-            <SectionLabel label={s.difficulty} colors={colors} />
+            <View style={styles.difficultyHead}>
+              <Txt variant="overline" color={colors.muted} accessibilityRole="header">
+                {s.difficulty}
+              </Txt>
+              <Txt variant="subline" color={colors.muted} style={styles.aside} numberOfLines={1}>
+                {difficulties.length === 1
+                  ? s.difficultyHint
+                  : format(s.difficultyPicked, { difficulties: plural(difficulties.length, en.units.difficulties), cards: cardsText })}
+              </Txt>
+              <Press onPress={() => setOpen('info')} accessibilityRole="button" accessibilityLabel={en.a11y.difficultyInfo} hitSlop={slopFor(layout.icon.md)}>
+                <Icon name="info" size={layout.icon.md} color={colors.muted} />
+              </Press>
+            </View>
             <Grid columns={layout.grid.setupDifficulty} gap={space[2]}>
               {DIFFICULTY_IDS.map((d, i) => (
                 <Tile
                   key={d}
+                  checkbox
                   title={en.difficulties[d].name}
                   detail={plural(counts[i] ?? 0, en.units.cards)}
                   colors={colors}
-                  selected={draft.difficulties.includes(d)}
-                  onPress={() => setDraft((cur) => withDifficulty(cur, d))}
+                  selected={difficulties.includes(d)}
+                  onPress={() => setDraft((cur) => toggleDifficulty(cur, d))}
                 />
               ))}
             </Grid>
-          </View>
-
-          <View style={styles.section}>
-            <SectionLabel
-              label={s.themes}
-              aside={cards < gameConfig.smallDeckCards ? format(s.smallDeck, { cards: plural(cards, en.units.cards) }) : s.themesHint}
-              colors={colors}
-            />
-            <View style={styles.chips}>
-              <Chip
-                label={en.themes.all}
-                count={allCount}
-                colors={colors}
-                selected={draft.categories.length === 0}
-                onPress={() => setDraft((cur) => ({ ...cur, categories: toggleCategory(cur.categories, null) }))}
-              />
-              {THEMES.map((c, i) => (
-                <Chip
-                  key={c}
-                  role="checkbox"
-                  label={en.categories[c]}
-                  count={themeCounts[i]}
-                  colors={colors}
-                  selected={draft.categories.includes(c)}
-                  onPress={() => setDraft((cur) => ({ ...cur, categories: toggleCategory(cur.categories, c) }))}
-                />
-              ))}
-            </View>
           </View>
 
           {hasTimerSetting(mode) ? (
@@ -156,6 +180,20 @@ export default function SetupScreen() {
               </Grid>
             </View>
           ) : null}
+
+          <CategoriesSheet
+            visible={open === 'categories'}
+            onClose={() => setOpen(null)}
+            available={THEMES}
+            counts={themeCounts}
+            allCount={allCount}
+            cards={cards}
+            picked={categories}
+            onAllCards={onAllCards}
+            onToggle={(c) => setDraft((cur) => ({ ...cur, categories: toggleCategory(cur.categories, c) }))}
+          />
+          <DifficultyInfoSheet visible={open === 'info'} onClose={() => setOpen(null)} picked={difficulties} />
+          <SmallDeckSheet visible={open === 'smallDeck'} cards={cards} onBack={() => setOpen(null)} onPlay={play} />
         </>
       )}
     </Screen>
@@ -279,7 +317,11 @@ function Note({ text, colors }: { text: string; colors: RegionColors }) {
 
 const styles = StyleSheet.create({
   section: { gap: space[2.5] },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: space[2] },
+  categories: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.lg, paddingHorizontal: space[4], paddingVertical: space[3], minHeight: layout.button.height },
+  categoriesText: { flex: 1, gap: space[0.5] },
+  // DIFFICULTY, then the hint or the picks pinned right, then the (i) at the far right.
+  difficultyHead: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
+  aside: { flex: 1, textAlign: 'right' },
   timer: {
     minHeight: layout.control.input.height + space[6],
     borderRadius: radius.lg,
