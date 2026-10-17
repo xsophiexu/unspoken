@@ -408,8 +408,8 @@ export const en = {
       back: '← Modes',
       sub: 'Predict the clues before they’re said.',
       quick: { title: 'Quick Play', body: 'Starts right away. No setup, no teams, no scores.', action: 'Play' },
-      custom: { title: 'Custom game', body: 'Players, teams, rounds, time limit, words' },
-      practice: { title: 'Practice', body: 'A guided practice turn and how scoring works' },
+      custom: { title: 'Custom settings', body: 'Players, teams, rounds, time limit, words' },
+      practice: { title: 'Tutorial', body: 'A guided practice turn and how scoring works' },
     },
     // Custom game setup: Who’s playing? → How do you want to play? → Game settings.
     step: 'Step {n} of {total}',
@@ -524,7 +524,7 @@ export const en = {
       showTeams: 'Show the Mind Readers the word',
       showIndividual: 'Show {name} the word',
       quick: {
-        kicker: 'Quick Play · Word {n}',
+        kicker: 'Word {n}',
         title: 'Pick your roles',
         reader: 'Whoever holds the phone',
         clueGiver: 'Pick one player',
@@ -561,13 +561,13 @@ export const en = {
       givesClues: '{name} gives clues without the phone.',
       givesCluesQuick: 'The Clue Giver gives clues without the phone.',
       seen: '{name} has seen it and looked away',
-      seenQuick: 'Clue Giver has seen it · Start',
+      seenQuick: 'Clue Giver has seen it and looked away',
     },
 
     // --- Clues ---
     clues: {
       theWord: 'The word',
-      tapHint: 'Tap a word when the Clue Giver says it',
+      tapHint: 'Tap a word when the Clue Giver says it.',
       guessNowTeam: '{team} guess now: {value}',
       guessNow: 'Guess now: {value}',
       // What a guess scores right now: 3 + 4 = 7 points, or a flat 3 points with no limit.
@@ -644,6 +644,7 @@ export const en = {
       chip: 'Difficulty {difficulty}. Tap to change.',
       sheetTitle: 'Difficulty',
       apply: 'Apply difficulty',
+      applyMany: 'Apply difficulties',
       custom: 'Custom settings',
     },
 
@@ -668,19 +669,19 @@ export const en = {
 
     // --- Practice ---
     practice: {
-      overline: 'Practice · {step} of {total}',
+      overline: 'Tutorial · {step} of {total}',
       title: 'Practice turn',
-      skip: 'Skip',
+      skip: 'Skip tutorial',
       coach: [
         {
           label: 'Step 1 · Predict',
           body: 'Use the word at the top to make {n} predictions: words you think the Clue Giver will say. Don’t let the Clue Giver or Guessers see.',
           action: 'Got it',
         },
-        { label: 'Step 2 · Show the Clue Giver', body: 'Keep the phone in your hand and show only the Clue Giver. They give clues without the phone.', action: 'Got it' },
+        { label: 'Step 2 · Show the Clue Giver', body: 'Keep the phone in your hand and show only the Clue Giver.\nThey give clues without the phone.', action: 'Got it' },
         {
           label: 'Step 3 · Count every time',
-          body: 'Tap a word whenever the Clue Giver says it, even again. × removes a mistake. Tap Guessed it! when they get it.',
+          body: 'Tap + whenever the Clue Giver says a prediction, even again. × removes a mistake. Tap Guessed it! when they get it.',
           action: 'Try it',
         },
       ],
@@ -690,14 +691,14 @@ export const en = {
         fast: { title: 'Guessing it fast', detail: '{guess}, plus {bonus} for every {every} seconds left' },
         spoken: { title: 'Each prediction spoken', detail: 'To the Mind Readers, every time, repeats too' },
         notGuessed: { title: 'Not guessed in time', detail: 'Bonus to the Mind Readers' },
-        individual: { title: 'Individual', detail: 'The Clue Giver scores the guess' },
+        individual: { title: 'Individual', detail: 'The Clue Giver gets {guess} when it’s guessed' },
         points: '+{n}',
         example: { title: 'Example', body: 'Guessed with {time} left: {sum}. One prediction said twice: +{twice}.' },
         // The guess in the example, in seconds left.
         exampleSecondsLeft: 42,
       },
       quick: 'Quick Play',
-      custom: 'Custom game',
+      custom: 'Custom settings',
       again: 'Practice again',
     },
   },

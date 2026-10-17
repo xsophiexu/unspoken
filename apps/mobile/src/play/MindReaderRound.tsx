@@ -50,7 +50,6 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
   const word = mindReaderCard(state)?.word ?? '';
   const custom = state.match !== null;
   const practice = state.play === 'practice';
-  const quick = !custom && !practice;
   const difficulties = (pending ?? state.settings).difficulties;
   const step = practiceStep(state);
 
@@ -192,15 +191,19 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
                 {v.kicker}
               </Txt>
             ) : null}
-            <Txt variant="sheetTitle" color={page.ink} style={styles.centerText}>
-              {v.title}
-            </Txt>
+            {v.title ? (
+              <Txt variant="sheetTitle" color={page.ink} style={styles.centerText}>
+                {v.title}
+              </Txt>
+            ) : null}
           </View>
           <WordCard word={word} />
           <Note text={v.guessers} colors={page} icon="eyeOff" />
-          <Txt variant="hint" color={page.muted} style={styles.centerText}>
-            {`${v.keep}\n${v.gives}`}
-          </Txt>
+          {v.keep && v.gives ? (
+            <Txt variant="hint" color={page.muted} style={styles.centerText}>
+              {`${v.keep}\n${v.gives}`}
+            </Txt>
+          ) : null}
         </MRFrame>
       );
       break;
@@ -267,7 +270,7 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
           ) : null}
           <View style={styles.section}>
             <LabelRow label={en.mindReader.clues.spoken} aside={v.correct} colors={page} />
-            <SpokenList rows={v.spoken} onRemove={(i) => dispatch({ type: 'unspoke', entry: state.spoken.length - 1 - i })} />
+            <SpokenList rows={v.spoken} onRemove={(i) => dispatch({ type: 'unspoke', entry: i })} />
             {v.countUp ? (
               <Txt variant="small" color={page.muted}>
                 {v.countUp}
@@ -550,9 +553,14 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
 function ToughBox({ prompt, colors, onSwitch }: { prompt: { title: string; body: string; action: string }; colors: RegionColors; onSwitch: () => void }) {
   return (
     <View style={[styles.tough, { backgroundColor: colors.chip }]} accessibilityLiveRegion="polite">
-      <Txt variant="label" color={colors.chipInk} style={styles.grow}>
-        {`${prompt.title}\n${prompt.body}`}
-      </Txt>
+      <View style={[styles.grow, styles.toughText]}>
+        <Txt variant="optionTitle" color={colors.ink}>
+          {prompt.title}
+        </Txt>
+        <Txt variant="small" color={colors.muted}>
+          {prompt.body}
+        </Txt>
+      </View>
       <Button label={prompt.action} colors={colors} onPress={onSwitch} size="compact" />
     </View>
   );
@@ -568,10 +576,10 @@ function Standings({ rows, chrome }: { rows: readonly ScoreRow[]; chrome: Chrome
         const c = i === 0 ? raised : page;
         return (
           <View key={`${row.name}-${row.rank}`} style={[styles.standing, { backgroundColor: i === 0 ? raised.bg : page.chip }]}>
-            <Txt variant="label" color={c.muted}>
+            <Txt variant="optionTitle" color={c.muted}>
               {row.rank}
             </Txt>
-            {row.color !== null ? <TeamDot color={row.color} /> : null}
+            {row.color !== null ? <TeamDot color={row.color} size={layout.mindReader.standingDot} /> : null}
             <Txt variant="optionTitle" color={c.ink} style={mrStyles.grow} numberOfLines={1}>
               {row.name}
             </Txt>
@@ -597,7 +605,7 @@ const styles = StyleSheet.create({
   band: { gap: space[1], borderRadius: radius.lg, paddingHorizontal: space[3], paddingVertical: space[5] },
   // Every Predict screen: roomy sections and a tall word band.
   predict: { gap: layout.mindReader.predictGap },
-  predictBand: { paddingVertical: layout.mindReader.predictBandY },
+  predictBand: { paddingTop: layout.mindReader.predictBandTop, paddingBottom: layout.mindReader.predictBandBottom },
   centerHead: { alignItems: 'center', gap: space[1] },
   centerText: { textAlign: 'center' },
   roleCard: { gap: space[1] },
@@ -614,7 +622,9 @@ const styles = StyleSheet.create({
   link: { alignItems: 'center' },
   links: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: space[2] },
   tough: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.xl, paddingHorizontal: space[4], paddingVertical: space[3] },
-  quickResult: { alignItems: 'center', gap: space[0.5] },
+  // "2 correct predictions  Beach, Travel" on one line when it fits.
+  toughText: { gap: space[0.5] },
+  quickResult: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'baseline', columnGap: space[2], rowGap: space[0.5] },
   sideCard: { gap: space[2.5] },
   pointsRow: { borderTopWidth: layout.stroke.hairline, paddingTop: space[2.5] },
   nextBox: { borderRadius: radius.xl, padding: space[4], gap: space[1.5] },

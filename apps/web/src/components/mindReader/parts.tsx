@@ -24,8 +24,8 @@ export function teamColorVar(index: number): string {
   return `var(--un-team-${((index % TEAM_COLOR_COUNT) + TEAM_COLOR_COUNT) % TEAM_COLOR_COUNT})`;
 }
 
-export function TeamDot({ color, small = false }: { color: number; small?: boolean }) {
-  return <span className={cx(styles.dot, small && styles.dotSmall)} style={{ background: teamColorVar(color) }} aria-hidden="true" />;
+export function TeamDot({ color, small = false, large = false }: { color: number; small?: boolean; large?: boolean }) {
+  return <span className={cx(styles.dot, small && styles.dotSmall, large && styles.dotLarge)} style={{ background: teamColorVar(color) }} aria-hidden="true" />;
 }
 
 // The colored letter badge before a team's name on setup.

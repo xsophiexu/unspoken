@@ -1,7 +1,7 @@
 import { addPlayer, createMindReaderRound, defaultSettings, emptyLineup, mindReaderReducer, setStyle, type Lineup, type MindReaderAction, type MindReaderRoundState } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
-import { bank, difficultyBadge, toughPrompt, cluesView, detailsSheet, overView, predictView, resultsView, roleCards, rolesView, scoresView, showView, turnTitle } from '../src';
+import { bank, difficultyApplyLabel, difficultyBadge, toughPrompt, cluesView, detailsSheet, overView, predictView, resultsView, roleCards, rolesView, scoresView, showView, turnTitle } from '../src';
 
 const named = (...names: string[]): Lineup => names.reduce((l, n) => addPlayer(l, n), emptyLineup());
 const teams = setStyle(named('Maya', 'Sam', 'Ava', 'Leo', 'Priya', 'Kai'), 'teams', ['Sharks', 'Owls'].map((name, color) => ({ name, color })));
@@ -86,5 +86,7 @@ describe('Quick Play difficulty', () => {
 
   it('names several picks by the easiest on the chip', () => {
     expect(difficultyBadge(['Expert', 'Hard'])).toBe('HARD+');
+    expect(difficultyApplyLabel(['Hard'])).toBe('Apply difficulty');
+    expect(difficultyApplyLabel(['Expert', 'Hard'])).toBe('Apply difficulties');
   });
 });
