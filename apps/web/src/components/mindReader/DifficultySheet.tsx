@@ -1,6 +1,6 @@
 'use client';
 
-import { bank, difficultyPickNote, en } from '@unspoken/content';
+import { bank, difficultyApplyLabel, difficultyPickNote, en } from '@unspoken/content';
 import { deckSize, plural, toggleDifficulty, type GameSettings } from '@unspoken/core';
 import { layout } from '@unspoken/design-tokens';
 import { useId, useState } from 'react';
@@ -57,7 +57,7 @@ export function DifficultySheet({ settings, onClose, onApply, customHref, onCust
             onClose();
           }}
         >
-          {q.apply}
+          {difficultyApplyLabel(difficulties)}
         </Button>
       </div>
     </Sheet>

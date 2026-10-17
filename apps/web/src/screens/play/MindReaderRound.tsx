@@ -55,7 +55,6 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
   const word = mindReaderCard(state)?.word ?? '';
   const custom = state.match !== null;
   const practice = state.play === 'practice';
-  const quick = !custom && !practice;
   const difficulties = (pending ?? state.settings).difficulties;
   const step = practiceStep(state);
 
@@ -195,15 +194,17 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
         >
           <div className={styles.centerHead}>
             {v.kicker && <p className={cx(styles.muted, text('overline'))}>{v.kicker}</p>}
-            <h2 className={cx(styles.centerText, text('sheetTitle'))}>{v.title}</h2>
+            {v.title && <h2 className={cx(styles.centerText, text('sheetTitle'))}>{v.title}</h2>}
           </div>
           <WordCard word={word} />
           <Note icon="eyeOff">{v.guessers}</Note>
-          <p className={cx(styles.muted, styles.centerText, text('hint'))}>
-            {v.keep}
-            <br />
-            {v.gives}
-          </p>
+          {v.keep && v.gives && (
+            <p className={cx(styles.muted, styles.centerText, text('hint'))}>
+              {v.keep}
+              <br />
+              {v.gives}
+            </p>
+          )}
         </MRFrame>
       );
       break;
@@ -267,7 +268,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
           )}
           <div className={styles.section}>
             <LabelRow label={en.mindReader.clues.spoken} aside={v.correct} />
-            <SpokenList rows={v.spoken} onRemove={(i) => dispatch({ type: 'unspoke', entry: state.spoken.length - 1 - i })} />
+            <SpokenList rows={v.spoken} onRemove={(i) => dispatch({ type: 'unspoke', entry: i })} />
             {v.countUp && <p className={cx(styles.muted, text('small'))}>{v.countUp}</p>}
           </div>
         </MRFrame>
@@ -497,9 +498,9 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
 function ToughBox({ prompt, onSwitch }: { prompt: { title: string; body: string; action: string }; onSwitch: () => void }) {
   return (
     <div className={styles.tough} aria-live="polite">
-      <div className={cx(styles.grow, text('label'))}>
-        <p>{prompt.title}</p>
-        <p>{prompt.body}</p>
+      <div className={cx(styles.grow, styles.toughText)}>
+        <p className={text('optionTitle')}>{prompt.title}</p>
+        <p className={cx(styles.muted, text('small'))}>{prompt.body}</p>
       </div>
       <Button variant="secondary" size="compact" onClick={onSwitch}>
         {prompt.action}
@@ -514,8 +515,8 @@ function Standings({ rows }: { rows: readonly ScoreRow[] }) {
     <ol className={styles.standings}>
       {rows.map((row, i) => (
         <li key={`${row.name}-${row.rank}`} className={styles.standing} data-region={i === 0 ? 'raised' : undefined}>
-          <span className={cx(styles.muted, text('label'))}>{row.rank}</span>
-          {row.color !== null && <TeamDot color={row.color} />}
+          <span className={cx(styles.muted, text('optionTitle'))}>{row.rank}</span>
+          {row.color !== null && <TeamDot color={row.color} large />}
           <span className={cx(styles.grow, styles.ellipsis, text('optionTitle'))}>{row.name}</span>
           {row.last && <span className={cx(styles.muted, text('small'))}>{row.last}</span>}
           <span className={cx(styles.tabular, text('sheetTitle'))}>{row.total}</span>

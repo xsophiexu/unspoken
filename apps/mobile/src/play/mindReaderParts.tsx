@@ -96,7 +96,7 @@ export function TurnHeader({
           <MenuDots colors={page} onPress={chrome.handlers.onMenu ?? (() => undefined)} />
         </View>
         {subtitle ? (
-          <Txt variant="hint" color={page.muted} numberOfLines={1}>
+          <Txt variant="small" color={page.muted} numberOfLines={1}>
             {subtitle}
           </Txt>
         ) : null}
@@ -161,7 +161,7 @@ export function BigWord({ word, colors, max = layout.mindReader.wordSize, center
   const [width, onLayout] = useWidth();
   const size = fittedSize(word, width, { variant: 'word', max, min: textStyles.title.size, maxLines: 2 });
   return (
-    <View onLayout={onLayout}>
+    <View onLayout={onLayout} style={styles.stretch}>
       <Txt variant="word" size={size} color={colors.ink} accessibilityRole="header" style={center && styles.centerText}>
         {word}
       </Txt>
@@ -179,7 +179,7 @@ export function WordCard({ word }: { word: string }) {
   );
 }
 
-// Predicted words said, newest first, each with when and a × to take it back.
+// Predicted words said, in the order said, each with when and a × to take it back.
 export function SpokenList({ rows, onRemove }: { rows: readonly SpokenRow[]; onRemove?: (i: number) => void }) {
   const { theme } = usePrefs();
   const raised = theme.regions.raised;
@@ -303,8 +303,8 @@ export function FixSheet({ visible, onClose, got, guessed, spoken, predictions, 
     setOpen(visible);
     if (visible) setDraft({ guessed, spoken, predictions });
   }
-  // The list shows newest first; i counts from the top.
-  const shown = rows(draft.spoken).reverse();
+  // The list shows the order they were said in.
+  const shown = rows(draft.spoken);
   return (
     <Sheet visible={visible} onClose={onClose}>
       {(colors) => (
@@ -337,8 +337,7 @@ export function FixSheet({ visible, onClose, got, guessed, spoken, predictions, 
                 rows={shown}
                 onRemove={(i) =>
                   setDraft((d) => {
-                    const index = d.spoken.length - 1 - i;
-                    return { ...d, spoken: d.spoken.filter((_, k) => k !== index), predictions: Math.max(0, d.predictions - 1) };
+                    return { ...d, spoken: d.spoken.filter((_, k) => k !== i), predictions: Math.max(0, d.predictions - 1) };
                   })
                 }
               />
@@ -383,7 +382,9 @@ const styles = StyleSheet.create({
   cards: { flexDirection: 'row', gap: space[1.5], alignItems: 'stretch' },
   roleCard: { flex: 1, minWidth: 0, borderRadius: radius.lg, paddingHorizontal: space[3], paddingVertical: space[2.5], gap: space[0.5] },
   centerText: { textAlign: 'center' },
-  wordCard: { alignItems: 'center', paddingVertical: space[6] },
+  wordCard: { paddingVertical: space[6] },
+  // The big word takes the full width it is fitted to, even inside a centered stack.
+  stretch: { alignSelf: 'stretch' },
   list: { paddingVertical: space[0.5] },
   logRow: { flexDirection: 'row', alignItems: 'center', gap: space[2], minHeight: layout.mindReader.logRow },
   remove: { width: layout.mindReader.removeButton, height: layout.mindReader.removeButton, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },

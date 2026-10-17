@@ -79,7 +79,7 @@ export function TurnHeader({
         </div>
         <MenuButton slot={layoutStyle.header} onMenu={onMenu} />
       </div>
-      {subtitle && <p className={cx(styles.subtitle, styles.muted, styles.ellipsis, text('hint'))}>{subtitle}</p>}
+      {subtitle && <p className={cx(styles.subtitle, styles.muted, styles.ellipsis, text('small'))}>{subtitle}</p>}
       {cards && cards.length > 0 && (
         <div className={styles.cards}>
           {cards.map((card) => (
@@ -135,7 +135,7 @@ export function WordCard({ word }: { word: string }) {
   );
 }
 
-// Predicted words said, newest first, each with when and a × to take it back.
+// Predicted words said, in the order said, each with when and a × to take it back.
 export function SpokenList({ rows, onRemove }: { rows: readonly SpokenRow[]; onRemove?: (i: number) => void }) {
   if (rows.length === 0) return null;
   return (
@@ -164,7 +164,7 @@ export function CoachCard({ coach, onDismiss }: { coach: { label: string; body: 
   return (
     <div className={styles.coach} data-region="panel" aria-live="polite">
       <p className={cx(styles.muted, text('overline'))}>{coach.label}</p>
-      <p className={text('optionTitle')}>{coach.body}</p>
+      <p className={cx(styles.lines, text('optionTitle'))}>{coach.body}</p>
       <button type="button" className={cx(styles.coachAction, styles.link, text('link'))} onClick={onDismiss}>
         {coach.action}
       </button>
@@ -216,8 +216,8 @@ export function FixSheet({ onClose, got, guessed, spoken, predictions, rows, onS
   const f = en.mindReader.fix;
   const id = useId();
   const [draft, setDraft] = useState({ guessed, spoken, predictions });
-  // The list shows newest first; i counts from the top.
-  const shown = rows(draft.spoken).reverse();
+  // The list shows the order they were said in.
+  const shown = rows(draft.spoken);
   return (
     <Sheet labelledBy={id} onClose={onClose}>
       <SheetHead id={id} title={f.title} />
@@ -248,8 +248,7 @@ export function FixSheet({ onClose, got, guessed, spoken, predictions, rows, onS
             rows={shown}
             onRemove={(i) =>
               setDraft((d) => {
-                const index = d.spoken.length - 1 - i;
-                return { ...d, spoken: d.spoken.filter((_, k) => k !== index), predictions: Math.max(0, d.predictions - 1) };
+                return { ...d, spoken: d.spoken.filter((_, k) => k !== i), predictions: Math.max(0, d.predictions - 1) };
               })
             }
           />

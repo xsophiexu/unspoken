@@ -178,8 +178,8 @@ export const layout = {
   icon: { sm: 14, md: 18, lg: 22, xl: 24 },
   stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },
   // Mind Reader: the player menu's width, name pills, the role cards in the turn header (at most
-  // two lines each) and the word on the Clues and Show screens. predictGap and predictBandY: every
-  // Predict screen's gap between its sections and its word band's top and bottom padding.
+  // two lines each) and the word on the Clues and Show screens. predictGap, predictBandTop and
+  // predictBandBottom: every Predict screen's gap between its sections and its word band's padding.
   mindReader: {
     menuWidth: 220,
     pillHeight: 36,
@@ -192,8 +192,11 @@ export const layout = {
     logRow: 44,
     clockBar: 6,
     removeButton: 28,
-    predictGap: space[6],
-    predictBandY: space[7],
+    predictGap: space[7],
+    predictBandTop: space[6.5],
+    predictBandBottom: space[7.5],
+    // The team dot on the Scores and Results standings.
+    standingDot: space[4],
   },
   control: {
     // The round pause button beside a clock (the ring's gap label is the same height).

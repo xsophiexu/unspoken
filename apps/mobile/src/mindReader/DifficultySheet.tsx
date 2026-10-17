@@ -1,4 +1,4 @@
-import { bank, difficultyPickNote, en } from '@unspoken/content';
+import { bank, difficultyApplyLabel, difficultyPickNote, en } from '@unspoken/content';
 import { deckSize, plural, toggleDifficulty, DIFFICULTY_IDS, type GameSettings } from '@unspoken/core';
 import { layout, space } from '@unspoken/design-tokens';
 import { useState } from 'react';
@@ -57,7 +57,7 @@ export function DifficultySheet({ visible, settings, onClose, onApply, onCustom 
             style={styles.footer}
             secondary={{ label: q.custom, colors, onPress: onCustom }}
             primary={{
-              label: q.apply,
+              label: difficultyApplyLabel(difficulties),
               colors,
               onPress: () => {
                 onApply(draft);

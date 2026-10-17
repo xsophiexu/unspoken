@@ -44,6 +44,12 @@
   height: var(--un-space-2);
 }
 
+/* On the Scores and Results standings. */
+.dotLarge {
+  width: var(--un-layout-mind-reader-standing-dot);
+  height: var(--un-layout-mind-reader-standing-dot);
+}
+
 .badge {
   flex: none;
   display: inline-flex;

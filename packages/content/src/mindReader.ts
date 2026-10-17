@@ -193,12 +193,16 @@ export function predictView(state: MindReaderRoundState): PredictView {
   };
 }
 
-export type ShowView = { kicker: string | null; title: string; guessers: string; keep: string; gives: string; button: string };
+// Practice names the step in a quiet line and leaves the rest to its coach card: no title, no hint.
+export type ShowView = { kicker: string | null; title: string | null; guessers: string; keep: string | null; gives: string | null; button: string };
 
 export function showView(state: MindReaderRoundState): ShowView {
   const s = m.show;
   const lineup = lineupOf(state);
   const roles = currentRoles(state);
+  if (state.play === 'practice') {
+    return { kicker: s.titleQuick, title: null, guessers: s.guessersQuick, keep: null, gives: null, button: s.seenQuick };
+  }
   if (!lineup || !roles) {
     return { kicker: null, title: s.titleQuick, guessers: s.guessersQuick, keep: s.keep, gives: s.givesCluesQuick, button: s.seenQuick };
   }
@@ -250,15 +254,17 @@ export function cluesView(state: MindReaderRoundState): CluesView {
   const roles = currentRoles(state);
   const clueTeam = lineup && roles ? team(lineup, roles.clueTeamId) : null;
   const timed = state.limit !== null;
+  const practice = state.play === 'practice';
   const value = timed ? guessValue(state, mindReaderClock(state)) : null;
   return {
     clock: formatClock(mindReaderClock(state)),
     guessNow: value === null ? null : clueTeam ? format(c.guessNowTeam, { team: clueTeam.name, value }) : format(c.guessNow, { value }),
     correct: plural(state.spoken.length, c.correct),
-    spoken: spokenRows(state, state.spoken).reverse(),
-    countUp: timed ? null : c.countUp,
+    spoken: spokenRows(state, state.spoken),
+    // Practice keeps to Guessed it! and its coach card.
+    countUp: timed || practice ? null : c.countUp,
     guessed: clueTeam ? format(c.guessedTeam, { team: clueTeam.name }) : c.guessed,
-    notGuessed: timed ? null : c.notGuessed,
+    notGuessed: timed || practice ? null : c.notGuessed,
   };
 }
 
@@ -406,7 +412,7 @@ export function scoringRows(state: Pick<MindReaderRoundState, 'config'>): { rows
       { title: sc.fast.title, detail: format(sc.fast.detail, { guess, bonus: bonusPoints, every: bonusEverySeconds }), points: plus(guess) },
       { title: sc.spoken.title, detail: sc.spoken.detail, points: plus(perPrediction) },
       { title: sc.notGuessed.title, detail: sc.notGuessed.detail, points: plus(notGuessed) },
-      { title: sc.individual.title, detail: sc.individual.detail, points: plus(guess) },
+      { title: sc.individual.title, detail: format(sc.individual.detail, { guess }), points: plus(guess) },
     ],
     example: format(sc.example.body, {
       time: formatClock(left),
@@ -448,6 +454,11 @@ export function toughPrompt(
   if (applied) return { title: format(q.applied, { name }), body: format(q.appliedNext, { name }), action: q.switchAgain };
   if (guessed || !hasEasierDifficulty(difficulties)) return null;
   return { title: q.tough, body: q.lower, action: q.switch };
+}
+
+// The difficulty sheet's primary button: "Apply difficulty", or "Apply difficulties" for several.
+export function difficultyApplyLabel(difficulties: readonly Difficulty[]): string {
+  return difficulties.length > 1 ? en.mindReader.quick.applyMany : en.mindReader.quick.apply;
 }
 
 // The difficulty sheet's note: "Pick one or more", or "2 difficulties · 1,507 cards".
