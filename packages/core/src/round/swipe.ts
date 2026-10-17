@@ -4,7 +4,7 @@
 import { playableCards } from '../bank';
 import { gameConfig, type GameConfig, type ModeRules } from '../config';
 import { seededRandom } from '../random';
-import { bannedCountFor, escalateProgress, hasTimeLimit, hiddenRoundSeconds, modeRules } from '../rules';
+import { bannedCountFor, escalateProgress, hardestDifficulty, hasTimeLimit, hiddenRoundSeconds, modeRules } from '../rules';
 import type { Card, GameSettings } from '../types';
 import { advance, currentCard, newDeck, type DeckState } from './deck';
 
@@ -52,7 +52,7 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
   const rng = seededRandom(seed);
   const seconds =
     rules.clock === 'hidden'
-      ? hiddenRoundSeconds(settings.difficulty, rng.random, config)
+      ? hiddenRoundSeconds(hardestDifficulty(settings.difficulties, config), rng.random, config)
       : hasTimeLimit(settings, config)
         ? settings.roundSeconds
         : null;
@@ -108,7 +108,7 @@ export function canAnswer(state: SwipeRoundState, answer: 'correct' | 'skip'): b
 
 // Banned words showing on the card: the level's count, or Escalate's climbing count.
 export function bannedShown(state: SwipeRoundState): number {
-  return state.rules.escalates ? swipeEscalate(state).level : bannedCountFor(state.settings.difficulty, state.config);
+  return state.rules.escalates ? swipeEscalate(state).level : bannedCountFor(hardestDifficulty(state.settings.difficulties, state.config), state.config);
 }
 
 export type SwipeCardView = {

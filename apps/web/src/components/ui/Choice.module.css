@@ -95,3 +95,28 @@
   font-size: var(--un-space-5);
   margin-bottom: var(--un-space-1);
 }
+
+/* The check or plus in the top-right corner of a tile that is one of several picks. */
+.marked .title {
+  padding-inline-end: calc(var(--un-layout-icon-lg) + var(--un-space-1));
+}
+
+.mark {
+  position: absolute;
+  top: var(--un-space-3);
+  right: var(--un-space-3);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-icon-lg);
+  height: var(--un-layout-icon-lg);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-bg);
+  color: var(--region-muted);
+  font-size: var(--un-layout-icon-sm);
+}
+
+.on .mark {
+  background: var(--region-on-accent);
+  color: var(--region-accent);
+}

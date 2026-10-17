@@ -29,7 +29,7 @@ export function DifficultyPicker({ round, onClose, onPick }: DifficultyPickerPro
         kind="act"
         label={en.difficultyPicker.title}
         columns={layout.grid.setupDifficulty}
-        current={round.settings.difficulty}
+        current={round.settings.difficulties}
         onPick={onPick}
         detail={(difficulty) => plural(deckSize(bank, difficulty, categories), en.units.cards)}
       />

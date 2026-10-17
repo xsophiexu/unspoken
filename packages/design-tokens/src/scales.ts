@@ -102,6 +102,8 @@ export const motion = {
     labelWidthPx: 56,
     labelGapPx: 4,
   },
+  // Two taps closer together than this are a double-tap (All cards in Choose categories).
+  doubleTapMs: 300,
   // How to play: the spotlight glides between targets; steps change only on a tap or a swipe.
   spotlight: { moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
 } as const;
@@ -162,7 +164,9 @@ export const layout = {
   // Windows shorter than this (small phones) use compact banned lists and scale the word's largest
   // size by wordScale, so the word and every banned word fit without scrolling.
   shortScreen: { height: 700, wordScale: 0.8 },
-  sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26 },
+  // headerRoom: the space above a roomy sheet header (Choose categories); headerGap: the space
+  // between that header (title, count and hint) and the content under it.
+  sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
   grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
@@ -189,6 +193,9 @@ export const layout = {
     iconBadge: 36,
     stepNumber: 30,
     heroBadge: 72,
+    // The Paused screen's time limit changer: the round − and + beside the big time, and the
+    // slider's track and thumb under it.
+    timeLimit: { stepper: 48, track: 6, thumb: 26 },
   },
 } as const;
 

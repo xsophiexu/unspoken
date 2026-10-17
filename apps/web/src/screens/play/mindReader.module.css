@@ -194,14 +194,14 @@
   color: var(--region-ink);
 }
 
-/* Predict: the word block on a very light accent band, not a white card. */
+/* Predict: the word block on a band the color of the role cards, its text indented like theirs. */
 .band {
   display: flex;
   flex-direction: column;
   gap: var(--un-space-1);
-  padding: var(--un-space-5);
-  border-radius: var(--un-radius-xl);
-  background: var(--region-tint);
+  padding: var(--un-space-5) var(--un-space-3);
+  border-radius: var(--un-radius-lg);
+  background: var(--region-chip);
 }
 
 .wordCard {

@@ -23,7 +23,10 @@ export type IconName =
   | 'moon'
   | 'info'
   | 'pencil'
-  | 'shuffle';
+  | 'shuffle'
+  | 'timer'
+  | 'minus'
+  | 'plus';
 
 type Props = { name: IconName; size: number; color: string; background?: string };
 
@@ -63,6 +66,8 @@ function glyph(name: IconName, color: string, background: string) {
       return <Path d="M7.5 4l6 6-6 6" {...stroke} strokeWidth={2.6} />;
     case 'check':
       return <Path d="M4 10.5l4 4 8-9" {...stroke} strokeWidth={2.6} />;
+    case 'plus':
+      return <Path d="M10 4.5v11M4.5 10h11" {...stroke} strokeWidth={2.4} />;
     case 'cross':
       return <Path d="M5 5l10 10M15 5L5 15" {...stroke} />;
     case 'arrowRight':
@@ -112,5 +117,9 @@ function glyph(name: IconName, color: string, background: string) {
       return <Path d="M2.5 6h3c3.5 0 5.5 8 9 8h3M2.5 14h3c1.4 0 2.5-1.2 3.4-2.8M11.1 8.8C12 7.2 13.1 6 14.5 6h3M15.5 3.5L18 6l-2.5 2.5M15.5 11.5L18 14l-2.5 2.5" {...stroke} strokeWidth={1.7} />;
     case 'info':
       return <Path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zM10 9.2v4.6M10 6.3h.01" {...stroke} strokeWidth={1.7} />;
+    case 'timer':
+      return <Path d="M10 4.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM10 7.5V11l2 1.5M8 2h4" {...stroke} strokeWidth={1.8} />;
+    case 'minus':
+      return <Path d="M4.5 10h11" {...stroke} strokeWidth={2.4} />;
   }
 }

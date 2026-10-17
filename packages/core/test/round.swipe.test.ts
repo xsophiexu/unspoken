@@ -26,7 +26,7 @@ const play = (state: SwipeRoundState, actions: SwipeAction[]) => run(swipeReduce
 const word = (state: SwipeRoundState) => swipeCard(state)!.card.word;
 
 describe('Classic', () => {
-  const classic = () => start('classic', { roundSeconds: 60, skips: 2, difficulty: 'Hard' });
+  const classic = () => start('classic', { roundSeconds: 60, skips: 2, difficulties: ['Hard'] });
 
   it('scores a correct answer and moves to the next card', () => {
     const before = classic();
@@ -76,7 +76,12 @@ describe('Classic', () => {
 
   it('shows the level’s banned words on each card', () => {
     expect(swipeCard(classic())!.banned).toHaveLength(6);
-    expect(swipeCard(start('classic', { difficulty: 'Normal' }))!.banned).toHaveLength(5);
+    expect(swipeCard(start('classic', { difficulties: ['Normal'] }))!.banned).toHaveLength(5);
+  });
+
+  it('shows the hardest pick’s banned words when several difficulties are picked', () => {
+    expect(swipeCard(start('classic', { difficulties: ['Normal', 'Tricky'] }))!.banned).toHaveLength(5);
+    expect(swipeCard(start('classic', { difficulties: ['Normal', 'Hard'] }))!.banned).toHaveLength(6);
   });
 
   it('drains the timer share as the round runs', () => {
@@ -198,10 +203,19 @@ describe('Hot Potato', () => {
     for (const difficulty of ['Normal', 'Hard', 'Legend'] as const) {
       const { min, max } = hotPotatoRange(difficulty);
       for (let seed = 0; seed < 50; seed++) {
-        const state = start('hotPotato', { difficulty, roundSeconds: 5 }, seed);
+        const state = start('hotPotato', { difficulties: [difficulty], roundSeconds: 5 }, seed);
         expect(state.clock!.left).toBeGreaterThanOrEqual(min);
         expect(state.clock!.left).toBeLessThanOrEqual(max);
       }
+    }
+  });
+
+  it('hides a clock in the hardest pick’s range when several difficulties are picked', () => {
+    const { min, max } = hotPotatoRange('Legend');
+    for (let seed = 0; seed < 50; seed++) {
+      const left = start('hotPotato', { difficulties: ['Normal', 'Legend'] }, seed).clock!.left;
+      expect(left).toBeGreaterThanOrEqual(min);
+      expect(left).toBeLessThanOrEqual(max);
     }
   });
 

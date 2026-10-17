@@ -41,11 +41,12 @@ type GameState = {
 type GameAction =
   | { type: 'play'; action: RoundAction }
   | { type: 'newGame'; settings: GameSettings; seed: number; play: MindReaderPlay }
-  | { type: 'setMindReader'; change: (setup: MindReaderSetup) => MindReaderSetup };
+  | { type: 'setMindReader'; change: (setup: MindReaderSetup) => MindReaderSetup }
+  | { type: 'saveSettings'; settings: GameSettings };
 
 function startRound(settings: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader'>): RoundState {
   return createRound(settings, {
-    cards: cardsFor(bank, settings.difficulty, settings.categories),
+    cards: cardsFor(bank, settings.difficulties, settings.categories),
     seed,
     showIntro: !state.introSeen[modeRules(settings.mode).play],
     mindReader: { play: state.play, setup: state.mindReader },
@@ -66,6 +67,9 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'setMindReader':
       return { ...state, mindReader: action.change(state.mindReader) };
+    // The round in progress keeps the settings it started with; the next one plays these.
+    case 'saveSettings':
+      return { ...state, settings: action.settings };
   }
 }
 
@@ -78,6 +82,8 @@ type GameContextValue = {
   newGame: (settings: GameSettings, play?: MindReaderPlay) => void;
   mindReader: MindReaderSetup;
   setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
+  // Save these settings for the next round, leaving the round in progress as it is.
+  saveSettings: (settings: GameSettings) => void;
   // A fresh round with the same settings (and the same way of playing Mind Reader).
   restart: () => void;
   // A fresh round at another level; a timer still on its default follows the level.
@@ -105,6 +111,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
   const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
   const newGame = useCallback((settings: GameSettings, play: MindReaderPlay = 'quick') => send({ type: 'newGame', settings, seed: newSeed(random), play }), [random]);
   const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ type: 'setMindReader', change }), []);
+  const saveSettings = useCallback((settings: GameSettings) => send({ type: 'saveSettings', settings }), []);
 
   const value = useMemo(
     (): GameContextValue => ({
@@ -114,10 +121,11 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       newGame,
       mindReader: state.mindReader,
       setMindReader,
+      saveSettings,
       restart: () => newGame(state.settings, state.play),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty), state.play),
     }),
-    [state.settings, state.round, state.play, state.mindReader, dispatch, newGame, setMindReader],
+    [state.settings, state.round, state.play, state.mindReader, dispatch, newGame, setMindReader, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

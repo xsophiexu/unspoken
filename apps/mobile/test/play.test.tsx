@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { defaultRoundSeconds, format, formatClock } from '@unspoken/core';
+import { defaultRoundSeconds, format, formatClock, gameConfig, plural } from '@unspoken/core';
 import { gameMenu, motion, type RestartPlacement } from '@unspoken/design-tokens';
 import { act, fireEvent, renderRouter, screen, waitFor, within } from 'expo-router/testing-library';
 
@@ -28,14 +28,30 @@ const modePill = (mode: string, difficulty: string) => format(en.a11y.modeAndDif
 
 describe('a returning player', () => {
   it('plays at the renamed level when their saved settings use an old level name', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Master 1' as never, roundSeconds: defaultRoundSeconds('Expert') } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Master 1', roundSeconds: defaultRoundSeconds('Expert') } });
     expect(await screen.findByLabelText(levelBadge('Expert'))).toBeOnTheScreen();
+  });
+});
+
+describe('several difficulties', () => {
+  it('shows the easiest pick with a plus on the badge, and picking one in game plays just that one', async () => {
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Hard', 'Tough', 'Expert'] } });
+    expect(await screen.findByText('HARD+')).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByLabelText(levelBadge('Hard+')));
+    // Every pick is highlighted in the picker.
+    const picked = (await screen.findAllByRole('radio', { selected: true })).map((tile) => tile.props.accessibilityLabel as string);
+    expect(picked.map((label) => label.split(',')[0])).toEqual(['Hard', 'Tough', 'Expert']);
+
+    fireEvent.press(screen.getByRole('radio', { name: /^Tough/ }));
+    expect(await screen.findByLabelText(levelBadge('Tough'))).toBeOnTheScreen();
+    await waitFor(async () => expect((await savedPrefs()).settings.difficulties).toEqual(['Tough']));
   });
 });
 
 describe('switching the style on Customize', () => {
   it('redraws the play screen with the new style’s slots and keeps the choice', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky' } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Tricky'] } });
 
     // Card: the mode name with a level badge, and swipe bars without the "swipe the card" hint.
     expect(await screen.findByLabelText(levelBadge('Tricky'))).toBeOnTheScreen();
@@ -59,7 +75,7 @@ describe('switching the style on Customize', () => {
 
 describe('picking a difficulty', () => {
   it('starts a new round at that level', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky', roundSeconds: defaultRoundSeconds('Tricky') } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Tricky'], roundSeconds: defaultRoundSeconds('Tricky') } });
 
     // Correct flies the card out, then counts.
     fireEvent.press(await screen.findByLabelText(en.play.correct));
@@ -74,7 +90,7 @@ describe('picking a difficulty', () => {
     // A fresh round: the new level and the score back to zero, saved for next time.
     expect(await screen.findByLabelText(levelBadge('Hard'))).toBeOnTheScreen();
     expect(screen.getByText(/0 pts/)).toBeOnTheScreen();
-    await waitFor(async () => expect((await savedPrefs()).settings.difficulty).toBe('Hard'));
+    await waitFor(async () => expect((await savedPrefs()).settings.difficulties).toEqual(['Hard']));
 
     // ...with that level's full clock (the menu's status line shows the time left).
     fireEvent.press(screen.getByLabelText(en.a11y.menu));
@@ -84,7 +100,7 @@ describe('picking a difficulty', () => {
 
 describe('Classic with No time limit', () => {
   it('shows no clock and never runs out of time; the round goes on until the player leaves it from the menu', async () => {
-    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulty: 'Tricky', roundSeconds: 30, noTimeLimit: true } });
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Tricky'], roundSeconds: 30, noTimeLimit: true } });
     expect(await screen.findByLabelText(levelBadge('Tricky'))).toBeOnTheScreen();
     expect(screen.queryByText(formatClock(30))).not.toBeOnTheScreen();
 
@@ -255,5 +271,126 @@ describe('Game paused', () => {
     fireEvent.press(await screen.findByLabelText(en.a11y.menu));
     expect(await screen.findByLabelText(en.menu.changeSettings.title)).toBeOnTheScreen();
     expect(screen.getByText(/starts a new game/)).toBeOnTheScreen();
+  });
+});
+
+describe('changing the time limit on the Paused screen', () => {
+  const afterSlide = async () => {
+    await act(async () => {
+      jest.advanceTimersByTime(motion.duration.slow);
+    });
+  };
+  const seconds = (n: number) => act(async () => {
+    jest.advanceTimersByTime(n * 1000);
+  });
+  const rowLabel = (value: string) => format(en.a11y.changeTimeLimit, { value });
+  const step = plural(gameConfig.timeLimitStepSeconds, en.units.seconds);
+  const typeTime = (from: string, digits: string) => {
+    const box = screen.getByDisplayValue(from, { includeHiddenElements: true });
+    fireEvent(box, 'focus');
+    fireEvent.changeText(box, digits);
+    fireEvent(box, 'blur');
+  };
+
+  async function pauseClassic(settings: Record<string, unknown> = {}) {
+    // Deck: its timer chip carries the pause button.
+    await openApp('/', { theme: { style: 'deck' }, settings: { mode: 'classic', difficulty: 'Hard', roundSeconds: 150, ...settings } });
+    await screen.findByLabelText(modePill(en.modes.classic.name, 'Hard'));
+    await seconds(9);
+    fireEvent.press(screen.getByLabelText(en.a11y.pause));
+    expect(await screen.findByText(en.paused.label)).toBeOnTheScreen();
+  }
+
+  it('saves a longer time for the next turn while this turn keeps its time left', async () => {
+    await pauseClassic();
+    expect(screen.getByText('2:21')).toBeOnTheScreen();
+    fireEvent.press(screen.getByLabelText(rowLabel('2:30')));
+
+    expect(await screen.findByText(en.timeLimit.title)).toBeOnTheScreen();
+    expect(screen.getByText(format(en.timeLimit.keepsClock, { clock: '2:21' }))).toBeOnTheScreen();
+    for (let i = 0; i < 3; i++) fireEvent.press(screen.getByLabelText(format(en.a11y.longer, { step })));
+    expect(screen.getByText('3:15')).toBeOnTheScreen();
+    fireEvent.press(screen.getByLabelText(en.timeLimit.save));
+    await afterSlide();
+
+    // Back on Paused: the row shows the new time and says when it starts; the clock is untouched.
+    expect(screen.queryByText(en.timeLimit.title)).not.toBeOnTheScreen();
+    expect(screen.getByLabelText(rowLabel('3:15'))).toBeOnTheScreen();
+    expect(screen.getByText(en.paused.startsNextTurn)).toBeOnTheScreen();
+    expect(screen.getByText('2:21')).toBeOnTheScreen();
+    await waitFor(async () => expect((await savedPrefs()).settings).toMatchObject({ roundSeconds: 195, noTimeLimit: false }));
+
+    // Resume carries on from 2:21.
+    fireEvent.press(screen.getByLabelText(en.paused.resume));
+    await seconds(1);
+    fireEvent.press(screen.getByLabelText(en.a11y.menu));
+    expect(await screen.findByText(/^2:20 left/)).toBeOnTheScreen();
+    fireEvent.press(screen.getByLabelText(en.menu.restart));
+    await afterSlide();
+
+    // The next turn starts at the new length.
+    fireEvent.press(screen.getByLabelText(en.a11y.menu));
+    expect(await screen.findByText(/^3:15 left/)).toBeOnTheScreen();
+  });
+
+  it('takes a typed time with seconds rolling into minutes, and waits for one from 0:30 to 10:00', async () => {
+    await pauseClassic();
+    fireEvent.press(screen.getByLabelText(rowLabel('2:30')));
+    await screen.findByText(en.timeLimit.title);
+    const note = format(en.setup.timerOutOfRange, { min: '0:30', max: '10:00' });
+
+    typeTime('230', '1275');
+    expect(screen.getByText('13:15')).toBeOnTheScreen();
+    expect(screen.getByText(note)).toBeOnTheScreen();
+    expect(screen.getByLabelText(en.timeLimit.save)).toBeDisabled();
+
+    // − brings it back inside the range.
+    fireEvent.press(screen.getByLabelText(format(en.a11y.shorter, { step })));
+    expect(screen.getByText('9:45')).toBeOnTheScreen();
+    expect(screen.queryByText(note)).not.toBeOnTheScreen();
+
+    typeTime('945', '20');
+    expect(screen.getByText(note)).toBeOnTheScreen();
+    typeTime('20', '175');
+    expect(screen.getByText('2:15')).toBeOnTheScreen();
+    expect(screen.queryByText(note)).not.toBeOnTheScreen();
+    fireEvent.press(screen.getByLabelText(en.timeLimit.save));
+    await waitFor(async () => expect((await savedPrefs()).settings.roundSeconds).toBe(135));
+  });
+
+  it('turns the time limit off from the next turn; this turn still runs out', async () => {
+    await pauseClassic();
+    fireEvent.press(screen.getByLabelText(rowLabel('2:30')));
+    await screen.findByText(en.timeLimit.title);
+    fireEvent.press(screen.getByRole('switch', { name: en.a11y.noTimeLimit }));
+    expect(screen.getByText(en.setup.noClock)).toBeOnTheScreen();
+    expect(screen.getByLabelText(format(en.a11y.longer, { step }))).toBeDisabled();
+    fireEvent.press(screen.getByLabelText(en.timeLimit.save));
+    await afterSlide();
+
+    expect(screen.getByLabelText(rowLabel(en.paused.noLimit))).toBeOnTheScreen();
+    await waitFor(async () => expect((await savedPrefs()).settings).toMatchObject({ noTimeLimit: true, roundSeconds: 150 }));
+
+    fireEvent.press(screen.getByLabelText(en.paused.resume));
+    await seconds(141);
+    expect(await screen.findByText(en.over.timeUp)).toBeOnTheScreen();
+
+    // Play again: no clock this time.
+    fireEvent.press(screen.getByLabelText(en.over.playAgain));
+    await seconds(10 * 60);
+    expect(screen.queryByText(en.over.timeUp)).not.toBeOnTheScreen();
+  });
+
+  it('leaves the time limit as it was when the changer is closed without saving', async () => {
+    await pauseClassic();
+    fireEvent.press(screen.getByLabelText(rowLabel('2:30')));
+    await screen.findByText(en.timeLimit.title);
+    fireEvent.press(screen.getByLabelText(format(en.a11y.longer, { step })));
+    fireEvent.press(screen.getByLabelText(en.a11y.closeMenu));
+    await afterSlide();
+
+    expect(screen.getByLabelText(rowLabel('2:30'))).toBeOnTheScreen();
+    expect(screen.queryByText(en.paused.startsNextTurn)).not.toBeOnTheScreen();
+    expect((await savedPrefs()).settings.roundSeconds).toBe(150);
   });
 });

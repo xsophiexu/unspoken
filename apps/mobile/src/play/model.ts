@@ -6,10 +6,13 @@ import {
   clockProgress,
   createSwipeRound,
   defaultSettings,
+  difficultyLabel,
   roundReducer,
   roundStats,
   roundSubline,
   swipeCard,
+  DIFFICULTY_IDS,
+  type Difficulty,
   type GameSettings,
   type RoundAction,
   type RoundState,
@@ -42,12 +45,19 @@ export type PlayModel = HeaderModel & {
   note: string | null;
 };
 
+const names = mapDifficulties((d) => d.name);
+const badges = mapDifficulties((d) => d.badge);
+function mapDifficulties(pick: (d: (typeof en.difficulties)[Difficulty]) => string): Record<Difficulty, string> {
+  return Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, pick(en.difficulties[id])])) as Record<Difficulty, string>;
+}
+
 export function headerModel(state: RoundState): HeaderModel {
-  const level = en.difficulties[state.settings.difficulty];
+  const { difficulties } = state.settings;
   return {
     mode: en.modes[state.settings.mode].name,
-    level: level.name,
-    badge: level.badge,
+    // One difficulty by name; several as the easiest one and "+" (Hard+).
+    level: difficultyLabel(difficulties, { names, mixed: en.difficultyMix }),
+    badge: difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }),
     subline: roundSubline(state, roundCopy),
     stats: roundStats(state, roundCopy),
   };
@@ -73,7 +83,7 @@ const SAMPLE = { cardId: 'road-trip', correct: 7, skipped: 2, elapsedSeconds: 48
 export function previewModel(): PlayModel {
   const settings: GameSettings = { ...defaultSettings(), mode: 'classic', skips: SAMPLE.skipped + 1 };
   const card = bank.find((c) => c.id === SAMPLE.cardId) ?? bank[0];
-  const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulty, []);
+  const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulties, []);
   const actions: RoundAction[] = [
     ...Array.from({ length: SAMPLE.correct }, () => ({ type: 'correct' }) as const),
     ...Array.from({ length: SAMPLE.skipped }, () => ({ type: 'skip' }) as const),

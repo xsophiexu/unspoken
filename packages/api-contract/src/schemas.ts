@@ -13,6 +13,7 @@ import {
   feedbackRules,
   type Card,
   type DealtDeck,
+  type Difficulty,
   type GameConfig,
   type LegacyDifficulty,
 } from '@unspoken/core';
@@ -54,7 +55,10 @@ export const gameConfigSchema = z.object({
   skipOptions: z.array(whole.nullable()),
   minRoundSeconds: whole,
   maxRoundSeconds: whole,
+  timeLimitStepSeconds: whole,
   smallDeckCards: whole,
+  namedCategories: whole,
+  badgeMaxChars: whole,
   escalate: z.object({ start: whole, max: whole, winAtMax: whole, minFullCards: whole }),
   hotPotato: z.object({ maxFactor: z.number().positive() }),
   reverse: z.object({ firstClues: whole }),
@@ -70,15 +74,24 @@ export const gameConfigSchema = z.object({
   }),
 }) satisfies z.ZodType<GameConfig>;
 
-// POST /v1/decks: a shuffled deck for a difficulty and themes (none means All cards). The same seed
-// always deals the same deck; without one the server picks a seed and returns it.
-export const dealRequestSchema = z.object({
-  difficulty: requestDifficulty,
-  categories: z.array(category).default([]),
-  mode: mode.optional(),
-  count: z.number().int().min(1).max(1000).optional(),
-  seed: z.number().int().min(0).max(0xffffffff).optional(),
-});
+// POST /v1/decks: a shuffled deck for one or more difficulties and themes (none means All cards).
+// Newer clients send `difficulties`; older ones send a single `difficulty`, which still works. The
+// same seed always deals the same deck; without one the server picks a seed and returns it.
+export const dealRequestSchema = z
+  .object({
+    difficulty: requestDifficulty.optional(),
+    difficulties: z.array(requestDifficulty).min(1).optional(),
+    categories: z.array(category).default([]),
+    mode: mode.optional(),
+    count: z.number().int().min(1).max(1000).optional(),
+    seed: z.number().int().min(0).max(0xffffffff).optional(),
+  })
+  .refine((r) => r.difficulty !== undefined || r.difficulties !== undefined, { message: 'Name a difficulty', path: ['difficulty'] })
+  // Both go out, so a server from before `difficulties` still deals from the first pick.
+  .transform(({ difficulty, difficulties, ...rest }) => {
+    const picks = difficulties ?? [difficulty as Difficulty];
+    return { ...rest, difficulty: difficulty ?? (picks[0] as Difficulty), difficulties: picks };
+  });
 export type DealDeckRequest = z.input<typeof dealRequestSchema>;
 
 const cardSchema = z.object({

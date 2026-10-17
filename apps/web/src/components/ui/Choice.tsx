@@ -20,16 +20,23 @@ type ChoiceProps = {
   detail?: ReactNode;
   // Accessible name when the visible text is not enough (∞ reads as "Unlimited skips").
   label?: string;
+  // A check in the top-right corner when picked and a plus when not (difficulties on New game).
+  mark?: boolean;
 };
 
 const titleText = { tile: 'optionTitle', chip: 'topicChip', topic: 'topicChip', cell: 'button' } as const;
 
 // A selectable tile or chip: a native radio or checkbox under a styled label, so keyboard and
 // screen readers get the standard behavior.
-export function Choice({ type, name, checked, onChange, look, children, detail, label }: ChoiceProps) {
+export function Choice({ type, name, checked, onChange, look, children, detail, label, mark }: ChoiceProps) {
   return (
-    <label className={cx(styles.choice, styles[look], checked && styles.on)}>
+    <label className={cx(styles.choice, styles[look], checked && styles.on, mark && styles.marked)}>
       <input type={type} name={name} checked={checked} onChange={onChange} className="visually-hidden" aria-label={label} />
+      {mark && (
+        <span className={styles.mark} aria-hidden="true">
+          <Icon name={checked ? 'check' : 'plus'} />
+        </span>
+      )}
       <span className={cx(styles.title, text(titleText[look]))}>{children}</span>
       {detail !== undefined && <span className={cx(styles.detail, text(look === 'tile' ? 'small' : 'label'))}>{detail}</span>}
     </label>

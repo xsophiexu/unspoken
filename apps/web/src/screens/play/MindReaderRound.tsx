@@ -131,7 +131,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
             </>
           }
         >
-          {/* The word block on a very light accent band (not a white card), text on its left edge. */}
+          {/* The word block on a band the color of the role cards, its text indented like theirs. */}
           <div className={styles.band}>
             <p className={cx(styles.muted, text('subline'))}>{v.kicker}</p>
             <BigWord word={word} />

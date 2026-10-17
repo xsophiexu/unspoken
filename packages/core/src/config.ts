@@ -43,8 +43,9 @@ export type GameConfig = {
   difficulties: readonly DifficultyRules[];
   categories: readonly Category[];
   modes: readonly ModeRules[];
-  // The time limit follows the difficulty, and No time limit starts off.
-  defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit'>;
+  // The time limit follows the difficulty, and No time limit starts off. Defaults name one
+  // difficulty (served as before by GET /v1/config); settings start with it as their only pick.
+  defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit' | 'difficulties'> & { difficulty: Difficulty };
   // Choices on the "Skips per round" grid; null is unlimited (∞).
   skipOptions: readonly (number | null)[];
   // The shortest time limit setup accepts. The box takes any four digits; outside this range setup
@@ -52,8 +53,14 @@ export type GameConfig = {
   minRoundSeconds: number;
   // The longest time limit setup accepts.
   maxRoundSeconds: number;
-  // Setup warns that words will repeat below this many cards.
+  // How far the − and + buttons on the Paused screen's time limit changer move the time.
+  timeLimitStepSeconds: number;
+  // Below this many cards, Start game asks first: words are likely to repeat before the game ends.
   smallDeckCards: number;
+  // The Categories row on New game names this many picks at most, then counts them.
+  namedCategories: number;
+  // The longest the in-game difficulty badge gets, in characters ("NORMAL+").
+  badgeMaxChars: number;
   escalate: {
     start: number;
     max: number;
@@ -117,7 +124,13 @@ export const gameConfig: GameConfig = {
   // Time limits run from 0:30 to 10:00.
   minRoundSeconds: 30,
   maxRoundSeconds: 10 * 60,
-  smallDeckCards: 20,
+  // The time limit changer's − and + move it 15 seconds.
+  timeLimitStepSeconds: 15,
+  // A quick group gets through about a card every 12 seconds, about 12 cards in a 2:30 round; five
+  // rounds (a short game night) use about 60.
+  smallDeckCards: 60,
+  namedCategories: 2,
+  badgeMaxChars: 11,
   // Escalate starts with 4 banned words and adds one per correct answer. Three correct at 10 wins.
   escalate: { start: 4, max: 10, winAtMax: 3, minFullCards: 20 },
   hotPotato: { maxFactor: 2 },

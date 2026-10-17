@@ -27,6 +27,26 @@ const difficulties: Record<Difficulty, { name: string; badge: string }> = {
   Legend: { name: 'Legend', badge: 'LEGEND' },
 };
 
+// Several difficulties picked: the easiest one's name or badge, then "+" ("HARD+", "Hard+").
+const difficultyMixed = '{easiest}+';
+
+// The Difficulty info sheet on New game: the same category at each difficulty, every word from the
+// word bank at that difficulty.
+const difficultyExamples: { category: string; words: Record<Difficulty, string> }[] = [
+  {
+    category: 'FOOD',
+    words: { Normal: 'Leftovers', Tricky: 'Appetizer', Hard: 'Al dente', Tough: 'Umami', Expert: 'Fermentation', Elite: 'Sous vide', Master: 'Mise en place', Legend: 'Roux' },
+  },
+  {
+    category: 'BOOKS',
+    words: { Normal: 'Rhyme', Tricky: 'Cliffhanger', Hard: 'Prologue', Tough: 'Cliché', Expert: 'Pseudonym', Elite: 'Loanword', Master: 'Allusion', Legend: 'In medias res' },
+  },
+  {
+    category: 'WEATHER',
+    words: { Normal: 'Cloud', Tricky: 'Humidity', Hard: 'Typhoon', Tough: 'Cold front', Expert: 'Trade winds', Elite: 'Wind shear', Master: 'Rain shadow', Legend: 'Katabatic wind' },
+  },
+];
+
 // Category ids are already English; translations map them here.
 const categories: Record<Category, string> = {
   'Inner World': 'Inner World',
@@ -104,6 +124,7 @@ export const en = {
   },
   modes,
   difficulties,
+  difficultyMix: difficultyMixed,
   categories,
 
   // --- Shared units and status lines (RoundCopy in @unspoken/core) ---------------------------
@@ -113,9 +134,11 @@ export const en = {
     skips: { one: '{n} skip', other: '{n} skips' },
     words: { one: '{n} word', other: '{n} words' },
     cards: { one: '{n} card', other: '{n} cards' },
+    difficulties: { one: '{n} difficulty', other: '{n} difficulties' },
     cardsLabel: { one: 'card', other: 'cards' },
     bannedWords: { one: '{n} banned word', other: '{n} banned words' },
     letters: { one: '{n} letter', other: '{n} letters' },
+    seconds: { one: '{n} second', other: '{n} seconds' },
   },
   themes: { all: 'All cards', many: { one: '{n} category', other: '{n} categories' } },
   status: {
@@ -168,6 +191,21 @@ export const en = {
     resume: 'Resume',
     changeSettings: 'Change settings',
     newGame: 'New game',
+    // The row above Resume that opens the time limit changer, with the next turn's time at the right
+    // (or noLimit) and, once it differs from this turn's, startsNextTurn under the title.
+    changeTimeLimit: 'Change time limit',
+    noLimit: 'No limit',
+    startsNextTurn: 'Starts next turn',
+  },
+  // The time limit changer on the Paused screen: the same rules and words as setup's TIME LIMIT
+  // (0:30 to 10:00, typed min : sec, a calm note outside the range, the No limit switch on the title
+  // row and No clock this game while it is on), with − and + beside the big time and a slider under
+  // it. A saved change starts next turn; this turn keeps its time left.
+  timeLimit: {
+    title: 'Time limit',
+    keepsClock: 'Starts next turn · this turn keeps its {clock}',
+    startsNextTurn: 'Starts next turn',
+    save: 'Save',
   },
   pass: {
     label: 'PASS THE PHONE',
@@ -215,10 +253,13 @@ export const en = {
   setup: {
     back: '← Modes',
     title: 'New game',
+    // The Categories box above DIFFICULTY: its title, and the picks with their card count.
+    categories: 'Categories',
+    categoriesDetail: '{summary} · {cards}',
     difficulty: 'DIFFICULTY',
-    themes: 'CATEGORIES',
-    themesHint: 'Pick one or more',
-    smallDeck: 'Only {cards}, words will repeat',
+    // At the right of the DIFFICULTY label: the hint with one pick, the count and cards with more.
+    difficultyHint: 'Pick one or more',
+    difficultyPicked: '{difficulties} · {cards}',
     timer: 'TIME LIMIT',
     // Inside the box under min : sec: the times setup accepts.
     timerRange: '{min} to {max}',
@@ -234,6 +275,28 @@ export const en = {
     skipsHint: '∞ = unlimited',
     unlimited: '∞',
     start: 'Start game',
+  },
+
+  // The pull-up sheet from the Categories box on New game.
+  categoriesSheet: {
+    title: 'Choose categories',
+    hint: 'Double-tap All cards to highlight all',
+    // While every category is highlighted.
+    hintAll: 'Double-tap All cards to unhighlight all',
+    done: 'Done',
+  },
+  // The (i) at the right of DIFFICULTY on New game.
+  difficultyInfo: {
+    title: 'Difficulty',
+    body: 'Tap to select one or more difficulties. The examples below show the same category at each difficulty.',
+    examples: difficultyExamples,
+  },
+  // Start game with few cards to draw from.
+  smallDeck: {
+    title: 'Only {cards} match',
+    body: 'Cards are likely to repeat. Try adding categories or difficulties.',
+    playAnyway: 'Play anyway',
+    back: 'Go back',
   },
 
   // --- Customize -----------------------------------------------------------------------------
@@ -416,6 +479,8 @@ export const en = {
       roundsLabel: 'Rounds',
       roundsTeams: 'Every team plays once a round',
       roundsIndividual: 'Everyone is the Mind Reader once a round',
+      // Under the time limit when No limit is on: faster guesses can't score more.
+      flatGuess: 'A correct guess is a flat {points}.',
     },
 
     // --- The header on a turn ---
@@ -640,7 +705,15 @@ export const en = {
     closeMenu: 'Close menu',
     closeSheet: 'Close',
     timer: 'Time limit {clock}. Tap to type a new time.',
+    // The time limit changer's − and +, and its slider.
+    shorter: 'Shorter by {step}',
+    longer: 'Longer by {step}',
+    timeLimitSlider: 'Time limit',
+    // The Paused screen's Change time limit row, with the next turn's time limit.
+    changeTimeLimit: 'Change time limit, {value}',
     unlimitedSkips: 'Unlimited skips',
+    difficultyInfo: 'About difficulties',
+    categories: 'Categories: {summary}. Tap to choose.',
   },
 };
 

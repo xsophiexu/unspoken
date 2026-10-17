@@ -113,8 +113,8 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
             </>
           }
         >
-          {/* The word block on a very light accent band (not a white card), text on its left edge. */}
-          <View style={[styles.band, { backgroundColor: page.tint }]}>
+          {/* The word block on a band the color of the role cards, its text indented like theirs. */}
+          <View style={[styles.band, { backgroundColor: page.chip }]}>
             <Txt variant="subline" color={page.muted}>
               {v.kicker}
             </Txt>
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
   grow: { flex: 1 },
   section: { gap: space[2.5] },
   kicker: { gap: space[1] },
-  band: { gap: space[1], borderRadius: radius.xl, padding: space[5] },
+  band: { gap: space[1], borderRadius: radius.lg, paddingHorizontal: space[3], paddingVertical: space[5] },
   centerHead: { alignItems: 'center', gap: space[1] },
   centerText: { textAlign: 'center' },
   roleCard: { gap: space[1] },

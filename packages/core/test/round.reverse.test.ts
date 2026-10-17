@@ -16,19 +16,19 @@ describe('Reverse', () => {
   });
 
   it('shows three clues to start, worth a point more than the hidden ones', () => {
-    const view = reverseCard(start({ difficulty: 'Hard' }))!;
+    const view = reverseCard(start({ difficulties: ['Hard'] }))!;
     expect(view.total).toBe(6);
     expect(view.clues.filter((c) => c.revealed)).toHaveLength(3);
     expect(view.worth).toBe(4);
   });
 
   it('uses as many clues as the level shows banned words', () => {
-    expect(reverseCard(start({ difficulty: 'Normal' }))!.total).toBe(5);
+    expect(reverseCard(start({ difficulties: ['Normal'] }))!.total).toBe(5);
   });
 
   it('makes the word worth a point less for each extra clue, down to one point with every clue showing', () => {
     const worths = [];
-    let state = start({ difficulty: 'Hard' });
+    let state = start({ difficulties: ['Hard'] });
     for (let i = 0; i < 5; i++) {
       worths.push(reverseCard(state)!.worth);
       state = play(state, [{ type: 'revealClue' }]);
@@ -38,7 +38,7 @@ describe('Reverse', () => {
   });
 
   it('scores the word’s worth when the guesser got it', () => {
-    const state = play(start({ difficulty: 'Hard' }), [{ type: 'revealClue' }, { type: 'showAnswer' }, { type: 'got' }]);
+    const state = play(start({ difficulties: ['Hard'] }), [{ type: 'revealClue' }, { type: 'showAnswer' }, { type: 'got' }]);
     expect(state.score).toBe(3);
     expect(state.played).toBe(1);
   });

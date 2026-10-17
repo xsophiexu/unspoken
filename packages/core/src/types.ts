@@ -105,7 +105,9 @@ export type BankEntry = {
 
 export type GameSettings = {
   mode: ModeId;
-  difficulty: Difficulty;
+  // The picked difficulties, easiest first; never empty. Cards come from all of them, and the
+  // default time limit (and Hot Potato's hidden clock and banned word count) follows the hardest.
+  difficulties: readonly Difficulty[];
   // Word themes to draw from. Empty means All cards.
   categories: readonly Category[];
   // Round length in seconds. Ignored by modes without a visible clock.

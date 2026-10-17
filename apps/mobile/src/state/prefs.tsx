@@ -24,6 +24,8 @@ type Prefs = {
   // The Custom game being set up (players, teams, rounds), kept for this app session.
   mindReader: MindReaderSetup;
   setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
+  // Save these settings for the next round, leaving the round in progress as it is.
+  saveSettings: (settings: GameSettings) => void;
   // A new round with the same settings.
   restart: () => void;
   openTour: () => void;
@@ -93,6 +95,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         setMindReaderPlay(play);
         setGameId((id) => id + 1);
       },
+      saveSettings: (settings) => update((p) => ({ ...p, settings })),
       restart: () => setGameId((id) => id + 1),
       mindReaderPlay,
       mindReader,

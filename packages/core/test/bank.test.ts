@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { cardsFor, categoriesInBank, dealFromBank, deckSize, difficultyForScore, normalizeBank, playableCards, type BankCardInput } from '../src';
+import { cardsFor, categoriesInBank, dealFromBank, deckSize, difficultyForScore, gameConfig, isSmallDeck, normalizeBank, playableCards, type BankCardInput } from '../src';
 import { makeCards } from './fixtures';
 
 const ten = (w: string) => Array.from({ length: 10 }, (_, i) => `${w}${i}`);
@@ -89,6 +89,20 @@ describe('cardsFor', () => {
     expect(words(cardsFor(bank, 'Normal', []))).toEqual(['Nightmare']);
     expect(deckSize(bank, 'Legend', [])).toBe(0);
   });
+
+  it('draws from every picked difficulty', () => {
+    expect(words(cardsFor(bank, ['Normal', 'Hard'], []))).toEqual(['Hangover', 'Nightmare', 'Placebo', 'Unweighted']);
+    expect(words(cardsFor(bank, ['Normal', 'Hard'], ['Inner World', 'Pop Culture']))).toEqual(['Freddie Mercury', 'Nightmare']);
+    expect(deckSize(bank, ['Normal', 'Legend'], [])).toBe(1);
+  });
+});
+
+describe('isSmallDeck', () => {
+  it('asks before starting below the config’s threshold', () => {
+    expect(isSmallDeck(gameConfig.smallDeckCards - 1)).toBe(true);
+    expect(isSmallDeck(gameConfig.smallDeckCards)).toBe(false);
+    expect(isSmallDeck(10, { ...gameConfig, smallDeckCards: 5 })).toBe(false);
+  });
 });
 
 describe('categoriesInBank', () => {
@@ -145,5 +159,15 @@ describe('dealFromBank', () => {
     const dealt = dealFromBank(big, { difficulty: 'Hard', categories: ['Pop Culture'], seed: 1 });
     expect(dealt.cards).toHaveLength(10);
     expect(new Set(dealt.cards.map((c) => c.id)).size).toBe(10);
+  });
+
+  it('deals from several difficulties when a request names them', () => {
+    const mixed = normalizeBank([
+      { word: 'Easy one', banned: [], difficulty: 'Normal' },
+      { word: 'Hard one', banned: [], difficulty: 'Hard' },
+      { word: 'Legend one', banned: [], difficulty: 'Legend' },
+    ]);
+    const dealt = dealFromBank(mixed, { difficulties: ['Normal', 'Legend'], categories: [], seed: 3 });
+    expect(words(dealt.cards)).toEqual(['Easy one', 'Legend one']);
   });
 });

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, type LayoutChangeEvent } from 'react-native';
 
 import { fittedSize, useWidth } from './fit';
+import { Icon } from './Icon';
 import { Press } from './Press';
 import { Txt } from './Txt';
 
@@ -20,6 +21,9 @@ type Props = {
   // Center a one-line title (level tiles on the sheet).
   centered?: boolean;
   accessibilityLabel?: string;
+  // One of several picks (difficulties on New game): a check in the top-right corner when picked,
+  // a plus when not, and a checkbox to screen readers.
+  checkbox?: boolean;
   // Reports the height the title and detail need (ignoring height), so a grid can give every tile
   // the tallest one's height (useEqualHeight).
   onNaturalHeight?: (height: number) => void;
@@ -29,7 +33,7 @@ const textHeight = (e: LayoutChangeEvent) => Math.ceil(e.nativeEvent.layout.heig
 
 // A selectable tile: difficulties on Setup and the sheets, modes on Modes. Long names shrink to
 // stay on one line.
-export function Tile({ title, detail, status, colors, selected, onPress, disabled, height, centered, accessibilityLabel, onNaturalHeight }: Props) {
+export function Tile({ title, detail, status, colors, selected, onPress, disabled, height, centered, accessibilityLabel, checkbox, onNaturalHeight }: Props) {
   const [width, onLayout] = useWidth();
   const [titleHeight, setTitleHeight] = useState(0);
   // The detail line or the status pill under the title.
@@ -48,14 +52,16 @@ export function Tile({ title, detail, status, colors, selected, onPress, disable
   // Centered titles (narrow level tiles) may run nearly to the edges and shrink a little further.
   const padX = centered ? space[0.5] : space[3.5];
   const min = centered ? textStyles.badge.size : textStyles.small.size;
-  const size = fittedSize(title, width - 2 * padX, { variant: 'optionTitle', max: textStyles.optionTitle.size, min, maxLines: 1 });
+  // The corner mark takes room from the title.
+  const markRoom = checkbox ? layout.icon.lg + space[1] : 0;
+  const size = fittedSize(title, width - 2 * padX - markRoom, { variant: 'optionTitle', max: textStyles.optionTitle.size, min, maxLines: 1 });
   return (
     <Press
       onPress={onPress}
       disabled={disabled}
       fadeDisabled={false}
-      accessibilityRole="radio"
-      accessibilityState={{ selected }}
+      accessibilityRole={checkbox ? 'checkbox' : 'radio'}
+      accessibilityState={checkbox ? { checked: selected } : { selected }}
       accessibilityLabel={accessibilityLabel ?? [title, detail, status].filter(Boolean).join(', ')}
       style={[
         styles.tile,
@@ -65,7 +71,19 @@ export function Tile({ title, detail, status, colors, selected, onPress, disable
       ]}
     >
       <View onLayout={onLayout} style={styles.fill} />
-      <Txt variant="optionTitle" size={size} color={titleColor} numberOfLines={1} onLayout={(e) => setTitleHeight(textHeight(e))}>
+      {checkbox ? (
+        <View style={[styles.mark, { right: padX, top: padY, backgroundColor: selected ? colors.onAccent : colors.bg }]}>
+          <Icon name={selected ? 'check' : 'plus'} size={layout.icon.sm} color={selected ? colors.accent : colors.muted} />
+        </View>
+      ) : null}
+      <Txt
+        variant="optionTitle"
+        size={size}
+        color={titleColor}
+        numberOfLines={1}
+        style={checkbox ? { marginRight: markRoom } : undefined}
+        onLayout={(e) => setTitleHeight(textHeight(e))}
+      >
         {title}
       </Txt>
       {detail ? (
@@ -95,6 +113,8 @@ const styles = StyleSheet.create({
     borderWidth: layout.stroke.hairline,
     borderRadius: radius.pill,
   },
+  // The check or plus in a checkbox tile's top-right corner.
+  mark: { position: 'absolute', width: layout.icon.lg, height: layout.icon.lg, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   centered: { alignItems: 'center', justifyContent: 'center', paddingVertical: 0 },
   // Measures the tile's width without affecting its layout.
   fill: { ...StyleSheet.absoluteFill },

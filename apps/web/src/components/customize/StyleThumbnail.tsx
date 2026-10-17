@@ -21,7 +21,7 @@ function sampleModel(): PlayModel {
   const mode = gameConfig.modes.find((m) => m.available && m.play === 'swipe' && m.clock === 'visible');
   const settings = { ...defaultSettings(), mode: mode?.id ?? gameConfig.defaults.mode };
   const card = bank.find((c) => c.id === PREVIEW_CARD_ID);
-  const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulty, settings.categories);
+  const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulties, settings.categories);
   const round = createRound(settings, { cards, seed: PREVIEW_SEED });
   sample = swipeModel(round as SwipeRoundState);
   return sample;

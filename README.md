@@ -13,9 +13,9 @@ The interface follows the "Current interface · Decided" row of the Word Game Sc
 - Swipe the card right for Correct, left for Skip, with a timer ring around the card
 - Tap the difficulty badge next to the mode name to switch level mid-game (starts a new game)
 - ··· menu to restart, change settings or change colors (Teal, Heather, Sage, Rose)
-- Change settings: tap a mode, then set difficulty, themes (pick several, or All cards), round timer and skips
+- Change settings: tap a mode, then choose categories (pick several, or All cards), one or more difficulties, the round timer and skips
 - Cards show 5 banned words at Normal and Tricky, 6 at the other levels
-- The round timer defaults to 2:30 at Hard and scales with difficulty, from 1:30 at Normal to 5:00 at Legend. Type a time to override it.
+- The round timer defaults to 2:30 at Hard and scales with difficulty, from 1:30 at Normal to 5:00 at Legend. With several difficulties picked, it follows the hardest. Type a time to override it.
 - 4,947 cards across eight difficulties (Normal, Tricky, Hard, Tough, Expert, Elite, Master, Legend) and 17 themes, plus All cards. Each card's level comes from its familiarity score (2 is Normal, 9 and 10 are Legend). Every card has 10 banned words, strongest first, and some cards sit in two themes. All cards leaves out names, specific events and insider jargon (they stay in their themes) and balances the mix so niche themes come up less. Defaults: Hard, All cards.
 - Modes: Classic, Endless, Time Attack, Escalate, Hot Potato, Reverse and Mind Reader. Endless is the default. Teams is coming soon.
   - **Escalate:** no clock. Starts with 4 banned words and adds one for every correct answer. Get 3 correct with all 10 showing to win.

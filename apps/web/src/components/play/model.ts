@@ -1,12 +1,15 @@
 import { en } from '@unspoken/content';
 import {
+  DIFFICULTY_IDS,
   canAnswer,
+  difficultyLabel,
   clockLabel,
   clockProgress,
   isClockRunning,
   roundStats,
   roundSubline,
   swipeCard,
+  type Difficulty,
   type RoundState,
   type RoundStats,
   type SwipeRoundState,
@@ -37,11 +40,20 @@ export type PlayModel = HeaderModel & {
   note: string | null;
 };
 
+const difficultyText = (pick: 'name' | 'badge') =>
+  Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id][pick]])) as Record<Difficulty, string>;
+const names = difficultyText('name');
+const badges = difficultyText('badge');
+
 export function headerModel(state: RoundState): HeaderModel {
-  const { mode, difficulty } = state.settings;
+  const { mode, difficulties } = state.settings;
   return {
     modeName: en.modes[mode].name,
-    difficulty: en.difficulties[difficulty],
+    // One difficulty by name; several as the easiest one and "+" (Hard+, HARD+).
+    difficulty: {
+      name: difficultyLabel(difficulties, { names, mixed: en.difficultyMix }),
+      badge: difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }),
+    },
     subline: roundSubline(state, en),
     stats: roundStats(state, en),
   };

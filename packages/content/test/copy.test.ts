@@ -20,7 +20,7 @@ import { bank, roundCopy } from '../src';
 
 const settings = (overrides: Partial<GameSettings>): GameSettings => ({ ...defaultSettings(), ...overrides });
 const start = (s: GameSettings): RoundState =>
-  createRound(s, { cards: cardsFor(bank, s.difficulty, s.categories), seed: 1, showIntro: false });
+  createRound(s, { cards: cardsFor(bank, s.difficulties, s.categories), seed: 1, showIntro: false });
 const play = (state: RoundState, actions: RoundAction[]) => actions.reduce(roundReducer, state);
 const times = (n: number, action: RoundAction) => Array.from({ length: n }, () => action);
 

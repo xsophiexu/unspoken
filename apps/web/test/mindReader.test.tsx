@@ -103,6 +103,17 @@ describe('Mind Reader', () => {
     expect(lineup.getByRole('button', { name: m.next })).toBeDisabled();
   });
 
+  it('puts the time limit above rounds, and says a guess scores a flat 3 with no limit', async () => {
+    const user = userEvent.setup();
+    const { settings } = renderFlow();
+    const timeLimit = settings.getByText(en.setup.timer);
+    const rounds = settings.getByText(m.settings.rounds);
+    expect(timeLimit.compareDocumentPosition(rounds) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(settings.queryByText('A correct guess is a flat 3.')).not.toBeInTheDocument();
+    await user.click(settings.getByRole('switch', { name: en.a11y.noTimeLimit }));
+    expect(settings.getByText('A correct guess is a flat 3.')).toBeInTheDocument();
+  });
+
   it('plays a Custom Teams game to the winner: a turn each, then the results', async () => {
     saved({ [SETTINGS_STORAGE_KEY]: { mode: 'mindReader', difficulty: 'Normal', categories: [], skips: 3, noTimeLimit: true } });
     const user = userEvent.setup();

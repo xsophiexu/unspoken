@@ -1,10 +1,15 @@
-import { roundCopy } from '@unspoken/content';
+import { en, roundCopy } from '@unspoken/content';
 import {
   canAnswer,
+  formatClock,
+  hasTimeLimit,
+  hasTimerSetting,
   menuStatus,
   pausedStatus,
   swipeSummary,
+  timeLimitDiffers,
   withDifficulty,
+  type Difficulty,
   type RoundAction,
   type SwipeRoundState,
 } from '@unspoken/core';
@@ -25,6 +30,7 @@ import { PlayView, type HeaderHandlers, type Insets } from './PlayView';
 import { ReverseRound } from './ReverseRound';
 import { GameMenu, DifficultyPicker, ModeSheet } from './sheets';
 import { TargetsProvider, useTargets } from './spotlight';
+import { TimeLimitSheet } from './TimeLimitSheet';
 import { useRound } from './useRound';
 import { useSwipe } from './useSwipe';
 
@@ -95,7 +101,7 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
     },
     changeSettings,
   };
-  const pick = (d: (typeof settings)['difficulty']) => {
+  const pick = (d: Difficulty) => {
     close();
     prefs.startGame(withDifficulty(settings, d));
   };
@@ -140,12 +146,12 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
         visible={sheet === 'mode'}
         onClose={close}
         mode={settings.mode}
-        difficulty={settings.difficulty}
+        difficulties={settings.difficulties}
         onPick={pick}
         onRestart={chrome.restart}
         onNewGame={changeSettings}
       />
-      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulty={settings.difficulty} categories={settings.categories} onPick={pick} />
+      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulties={settings.difficulties} categories={settings.categories} onPick={pick} />
       {prefs.tourOpen ? <HowToPlay targets={targets} theme={theme} insets={insets} onClose={prefs.closeTour} /> : null}
     </View>
   );
@@ -155,6 +161,8 @@ type SwipeProps = { state: SwipeRoundState; dispatch: Dispatch<RoundAction>; chr
 
 // Classic, Endless, Time Attack, Escalate, Hot Potato.
 function SwipeRound({ state, dispatch, chrome }: SwipeProps) {
+  const prefs = usePrefs();
+  const [changingTime, setChangingTime] = useState(false);
   const model = playModel(state);
   const summary = swipeSummary(state, roundCopy);
   const swipe = useSwipe({
@@ -164,6 +172,8 @@ function SwipeRound({ state, dispatch, chrome }: SwipeProps) {
     drag: cardSwipes(chrome.theme.style),
   });
   const { page, insets } = chrome;
+  // The settings the next turn plays: this round's until the time limit is changed.
+  const next = prefs.settings;
   return (
     <View style={styles.fill}>
       <PlayView theme={chrome.theme} model={model} insets={insets} handlers={{ ...chrome.handlers, onPause: () => dispatch({ type: 'pause' }), swipe }} />
@@ -177,6 +187,30 @@ function SwipeRound({ state, dispatch, chrome }: SwipeProps) {
           insets={insets}
           clock={model.clock?.label ?? null}
           status={pausedStatus(state, roundCopy)}
+          timeLimit={
+            hasTimerSetting(state.settings.mode)
+              ? {
+                  value: hasTimeLimit(next) ? formatClock(next.roundSeconds) : en.paused.noLimit,
+                  pending: timeLimitDiffers(state.settings, next),
+                  onPress: () => setChangingTime(true),
+                }
+              : undefined
+          }
+          sheet={
+            hasTimerSetting(state.settings.mode) ? (
+              <TimeLimitSheet
+                visible={changingTime}
+                onClose={() => setChangingTime(false)}
+                value={next}
+                clock={model.clock?.label ?? null}
+                onSave={(limit) => {
+                  // Saved for the next turn (Play again, Restart or a new game); this turn keeps its clock.
+                  prefs.saveSettings({ ...next, ...limit });
+                  setChangingTime(false);
+                }}
+              />
+            ) : null
+          }
           onResume={() => dispatch({ type: 'resume' })}
           onSettings={chrome.changeSettings}
           onNewGame={chrome.restart}
