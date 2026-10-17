@@ -19,7 +19,7 @@ import {
 import { cardSwipes, type RegionColors, type Theme } from '@unspoken/design-tokens';
 import { router, useIsFocused } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useEffect, useState, type Dispatch, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type Dispatch, type ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -36,6 +36,7 @@ import { TargetsProvider, useTargets } from './spotlight';
 import { TimeLimitSheet } from './TimeLimitSheet';
 import { useRound } from './useRound';
 import { useSwipe } from './useSwipe';
+import { VersusRound } from './VersusRound';
 
 // The play screen: one round of the saved settings. Starting a game or restarting changes the
 // game id, which remounts the round with fresh state.
@@ -79,7 +80,21 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
   const pause = state.kind === 'swipe' ? state.pause : null;
   const mindReaderPaused = state.kind === 'mindReader' ? state.paused : false;
   const mindReaderPhase = state.kind === 'mindReader' ? state.phase : null;
+  // Versus resumes by itself only after a pause it made itself; the pause button's waits for Resume.
+  const versusPaused = state.kind === 'versus' ? state.paused : false;
+  const autoPaused = useRef(false);
   useEffect(() => {
+    if (state.kind === 'versus') {
+      if (halted && !versusPaused) {
+        autoPaused.current = true;
+        dispatch({ type: 'pause' });
+      }
+      if (!halted && versusPaused && autoPaused.current) {
+        autoPaused.current = false;
+        dispatch({ type: 'resume' });
+      }
+      return;
+    }
     if (state.kind === 'mindReader') {
       if (halted && !mindReaderPaused) dispatch({ type: 'pause' });
       if (!halted && mindReaderPaused) dispatch({ type: 'resume' });
@@ -88,7 +103,7 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
     if (state.kind !== 'swipe') return;
     if (halted && pause === null) dispatch({ type: 'pause', reason: sheet === 'menu' ? 'menu' : 'sheet' });
     if (!halted && (pause === 'menu' || pause === 'sheet')) dispatch({ type: 'resume' });
-  }, [state.kind, halted, pause, mindReaderPaused, mindReaderPhase, sheet, dispatch]);
+  }, [state.kind, halted, pause, mindReaderPaused, mindReaderPhase, versusPaused, sheet, dispatch]);
 
   const close = () => setSheet(null);
   const changeSettings = () => {
@@ -121,6 +136,9 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
       break;
     case 'mindReader':
       body = <MindReaderRound state={state} dispatch={dispatch} chrome={chrome} onSheet={onRoundSheet} />;
+      break;
+    case 'versus':
+      body = <VersusRound state={state} dispatch={dispatch} chrome={chrome} onSheet={onRoundSheet} />;
       break;
   }
 

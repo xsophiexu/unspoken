@@ -198,6 +198,15 @@ export const layout = {
     // The team dot on the Scores and Results standings.
     standingDot: space[4],
   },
+  // Versus: the turn recap's big +N beside "{Team} scored", the small dots in its counts line, each
+  // word's row and its status pill, and the guesser buttons under "Tap who got it".
+  versus: {
+    totalSize: 34,
+    countDot: space[2],
+    recapRow: 48,
+    statusPill: 26,
+    guesserButton: 36,
+  },
   control: {
     // The round pause button beside a clock (the ring's gap label is the same height).
     pause: 32,

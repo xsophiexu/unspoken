@@ -43,6 +43,10 @@ type Props = {
   labels?: ControlLabels;
   // The height the screen is drawn at, when it isn't the window's (thumbnails).
   height?: number;
+  // A mode's own header in place of the style's (Versus: the round and its role cards), and its own
+  // controls in place of Skip and Correct (Versus: tap who got it).
+  header?: ReactNode;
+  controls?: ReactNode;
 };
 
 const NO_INSETS: Insets = { top: 0, bottom: 0, left: 0, right: 0 };
@@ -63,9 +67,11 @@ type Frame = {
   word: RegionColors;
   lower: RegionColors;
   footer: RegionColors;
+  header?: ReactNode;
+  controls?: ReactNode;
 };
 
-export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, height }: Props) {
+export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, height, header, controls }: Props) {
   const window = useWindowDimensions();
   const { regions: r, style } = theme;
   const page = r[style.regions.page];
@@ -83,6 +89,8 @@ export function PlayView({ theme, model, handlers, insets = NO_INSETS, labels, h
     word: style.regions.word ? r[style.regions.word] : page,
     lower,
     footer: style.regions.controls ? r[style.regions.controls] : panel ? lower : page,
+    header,
+    controls,
   };
   switch (style.arrangement) {
     case 'ringCard':
@@ -132,6 +140,7 @@ export function PlayHeader({ theme, model, clock, handlers: h }: { theme: Theme;
 // --- Zones ---------------------------------------------------------------------------------
 
 function header(f: Frame) {
+  if (f.header) return f.header;
   return <PlayHeader theme={f.theme} model={f.model} clock={f.model.clock} handlers={f.h} />;
 }
 
@@ -308,7 +317,7 @@ function Footer({ f, separate }: { f: Frame; separate: boolean }) {
       {model.note}
     </Txt>
   ) : null;
-  const controls = (
+  const controls = f.controls ?? (
     <Controls
       slot={slot}
       colors={colors}

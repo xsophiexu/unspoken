@@ -567,7 +567,7 @@ function ToughBox({ prompt, colors, onSwitch }: { prompt: { title: string; body:
 }
 
 // Teams (or players) by total, the leader on a white row.
-function Standings({ rows, chrome }: { rows: readonly ScoreRow[]; chrome: Chrome }) {
+export function Standings({ rows, chrome }: { rows: readonly ScoreRow[]; chrome: Chrome }) {
   const { page, theme } = chrome;
   const raised = theme.regions.raised;
   return (

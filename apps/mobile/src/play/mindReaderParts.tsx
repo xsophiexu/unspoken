@@ -38,7 +38,7 @@ export function MRFrame({ chrome, header, children, footer, center = false }: { 
 // The header row placed as the play screen's is in the player's style (Classic's header): its side
 // and top margins and title size. The content under it keeps the setup screens' side margin, so
 // the row is inset by the difference.
-function headerPlacement(chrome: Chrome) {
+export function headerPlacement(chrome: Chrome) {
   const { header } = chrome.theme.style;
   const margins = playMargins(chrome.theme.style);
   // Styles whose play header is a title (Card) set its size; pill headers have no title to match.
@@ -46,7 +46,7 @@ function headerPlacement(chrome: Chrome) {
   return { inset: margins.paddingX - layout.screen.paddingX, top: margins.paddingTop, size };
 }
 
-function MenuDots({ colors, onPress }: { colors: RegionColors; onPress: () => void }) {
+export function MenuDots({ colors, onPress }: { colors: RegionColors; onPress: () => void }) {
   const box = layout.header.menuButton;
   return (
     <Press onPress={onPress} accessibilityLabel={en.a11y.menu} hitSlop={slopFor(box)} style={[styles.menu, { width: box, height: box, backgroundColor: colors.chip }]}>
