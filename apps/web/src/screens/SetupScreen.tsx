@@ -27,7 +27,7 @@ import { Button } from '@/components/ui/Button';
 import { Choice } from '@/components/ui/Choice';
 import { Grid } from '@/components/ui/Grid';
 import { Screen } from '@/components/ui/Screen';
-import { SwitchRow } from '@/components/ui/SwitchRow';
+import { InlineSwitch } from '@/components/ui/InlineSwitch';
 import { Section } from '@/components/ui/Section';
 import { routes } from '@/lib/routes';
 import { toggleCategory } from '@/lib/settings';
@@ -112,16 +112,19 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
       </Section>
 
       {hasTimerSetting(mode) && (
-        <Section label={copy.timer} aside={format(copy.timerRange, limits)}>
+        <Section
+          label={copy.timer}
+          aside={<InlineSwitch label={copy.noLimit} name={en.a11y.noTimeLimit} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />}
+        >
           <TimerInput
             seconds={roundSeconds}
             invalid={timeOutOfRange}
             disabled={noTimeLimit}
+            range={format(copy.timerRange, limits)}
             onFocusChange={setTimerFocused}
             onChange={(seconds) => update({ roundSeconds: seconds })}
           />
           {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
-          <SwitchRow title={copy.noTimeLimit} detail={copy.noTimeLimitDetail} checked={noTimeLimit} onChange={(on) => update({ noTimeLimit: on })} />
         </Section>
       )}
 

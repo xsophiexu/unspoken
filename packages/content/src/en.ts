@@ -219,14 +219,16 @@ export const en = {
     themesHint: 'Pick one or more',
     smallDeck: 'Only {cards}, words will repeat',
     timer: 'TIME LIMIT',
-    // At the right of the label: the times setup accepts.
+    // Inside the box under min : sec: the times setup accepts.
     timerRange: '{min} to {max}',
     // Under the box when the typed time is outside that range; Start waits until it is fixed.
     timerOutOfRange: 'Choose between {min} and {max}.',
     timerUnit: 'min : sec',
-    // The switch under the time limit box: the round has no clock and ends from the menu.
-    noTimeLimit: 'No time limit',
-    noTimeLimitDetail: 'Turns end when you choose',
+    // The switch at the right of the TIME LIMIT label: the round has no clock and ends from the menu.
+    // Screen readers hear a11y.noTimeLimit instead.
+    noLimit: 'No limit',
+    // Inside the greyed box while No limit is on.
+    noClock: 'No clock this game',
     skips: 'SKIPS PER ROUND',
     skipsHint: '∞ = unlimited',
     unlimited: '∞',
@@ -372,6 +374,7 @@ export const en = {
 
   // --- Accessibility labels ------------------------------------------------------------------
   a11y: {
+    noTimeLimit: 'No time limit',
     menu: 'Menu',
     customize: 'Customize',
     pause: 'Pause',

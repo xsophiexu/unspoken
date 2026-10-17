@@ -16,11 +16,13 @@ type TimerInputProps = {
   invalid?: boolean;
   // No time limit is on: the box greys out but keeps its time for when the switch goes off.
   disabled?: boolean;
+  // The accepted range, shown under min : sec.
+  range?: string;
 };
 
 // The time limit, typed like a microwave: digits fill from the right, so 1, 4, 5 reads 1:45.
 // Seconds over 59 roll into minutes when the box loses focus (1:75 reads 2:15).
-export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, disabled = false }: TimerInputProps) {
+export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, disabled = false, range }: TimerInputProps) {
   const [digits, setDigits] = useState(() => secondsToTimerDigits(seconds));
   const [focused, setFocused] = useState(false);
   // A new difficulty moves a default time with it; show that new time.
@@ -48,9 +50,16 @@ export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, 
           onChange(timerDigitsToSeconds(next));
         }}
       />
-      <span className={cx(styles.unit, text('label'))} aria-hidden="true">
-        {en.setup.timerUnit}
-      </span>
+      {disabled ? (
+        <span className={cx(styles.side, text('label'))}>{en.setup.noClock}</span>
+      ) : (
+        <span className={styles.side}>
+          <span className={cx(styles.unit, text('label'))} aria-hidden="true">
+            {en.setup.timerUnit}
+          </span>
+          {range !== undefined && <span className={cx(styles.unit, text('small'))}>{range}</span>}
+        </span>
+      )}
     </label>
   );
 }

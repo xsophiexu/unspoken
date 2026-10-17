@@ -118,7 +118,7 @@ describe('New game setup', () => {
     });
   });
 
-  it('No time limit greys out the box, keeps its time for later and saves the choice', async () => {
+  it('No limit greys out the box, keeps its time for later and saves the choice', async () => {
     const user = userEvent.setup();
     renderApp(<SetupScreen mode="classic" />);
     const timer = screen.getByRole('textbox', { name: /Time limit/ });
@@ -131,12 +131,15 @@ describe('New game setup', () => {
     await user.click(screen.getByRole('switch', { name: /No time limit/ }));
     expect(timer).toBeDisabled();
     expect(timer).toHaveValue('12:00');
+    expect(screen.getByText(copy.noClock)).toBeInTheDocument();
+    expect(screen.queryByText('0:30 to 10:00')).not.toBeInTheDocument();
     expect(screen.queryByText('Choose between 0:30 and 10:00.')).not.toBeInTheDocument();
     expect(start).toBeEnabled();
 
     await user.click(screen.getByRole('switch', { name: /No time limit/ }));
     expect(timer).toBeEnabled();
     expect(timer).toHaveValue('12:00');
+    expect(screen.queryByText(copy.noClock)).not.toBeInTheDocument();
     expect(start).toBeDisabled();
 
     await user.click(screen.getByRole('switch', { name: /No time limit/ }));

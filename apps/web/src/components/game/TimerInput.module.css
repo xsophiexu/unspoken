@@ -64,3 +64,12 @@
 .disabled .unit {
   color: inherit;
 }
+
+/* Right of the digits: min : sec over the range, or No clock this game while No limit is on. */
+.side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  max-width: 45%;
+  text-align: end;
+}

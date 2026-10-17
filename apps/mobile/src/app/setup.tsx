@@ -34,7 +34,7 @@ import { Button, LinkButton } from '../ui/Button';
 import { Chip } from '../ui/Chip';
 import { Grid } from '../ui/Grid';
 import { Icon } from '../ui/Icon';
-import { Press } from '../ui/Press';
+import { Press, slopFor } from '../ui/Press';
 import { Screen, ScreenTitle, ScreenTop, SectionLabel } from '../ui/Screen';
 import { Tile } from '../ui/Tile';
 import { Txt } from '../ui/Txt';
@@ -174,8 +174,8 @@ const LIMITS = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(
 
 // The time limit fills from the right as digits are typed, like a microwave: 1, 4, 5 reads 1:45.
 // Once the box loses focus, seconds over 59 roll into minutes (1:75 reads 2:15) and a time outside
-// the accepted range shows a calm note; Start waits until it is fixed. No time limit greys the box
-// out and keeps its time, so turning the switch off brings it back.
+// the accepted range shows a calm note; Start waits until it is fixed. The No limit switch sits on
+// the label row; on, it greys the box out and keeps its time, so turning it off brings it back.
 function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: TimerProps) {
   const { theme } = usePrefs();
   const field = theme.regions.raised;
@@ -192,7 +192,27 @@ function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: T
 
   return (
     <View style={styles.section}>
-      <SectionLabel label={s.timer} aside={format(s.timerRange, LIMITS)} colors={colors} />
+      <View style={styles.timerHead}>
+        <Txt variant="overline" color={colors.muted} accessibilityRole="header">
+          {s.timer}
+        </Txt>
+        <Press
+          onPress={() => onNoTimeLimit(!noTimeLimit)}
+          accessibilityRole="switch"
+          accessibilityLabel={en.a11y.noTimeLimit}
+          accessibilityState={{ checked: noTimeLimit }}
+          hitSlop={slopFor(space[4.5])}
+          style={styles.noLimit}
+        >
+          <Txt variant="subline" color={colors.muted}>
+            {s.noLimit}
+          </Txt>
+          {/* Drawn rather than the platform Switch, so it looks the same on iOS, Android and web. */}
+          <View style={[styles.track, noTimeLimit ? styles.trackOn : null, { backgroundColor: noTimeLimit ? colors.accent : colors.track }]}>
+            <View style={[styles.thumb, { backgroundColor: field.bg }]} />
+          </View>
+        </Press>
+      </View>
       <Press
         onPress={() => input.current?.focus()}
         disabled={noTimeLimit}
@@ -208,9 +228,20 @@ function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: T
         <Txt variant="headline" color={ink} style={styles.tabular}>
           {label}
         </Txt>
-        <Txt variant="hint" color={unitInk}>
-          {s.timerUnit}
-        </Txt>
+        {noTimeLimit ? (
+          <Txt variant="hint" color={unitInk} style={styles.timerSide}>
+            {s.noClock}
+          </Txt>
+        ) : (
+          <View style={styles.timerSide}>
+            <Txt variant="hint" color={unitInk} style={styles.end}>
+              {s.timerUnit}
+            </Txt>
+            <Txt variant="small" color={unitInk} style={styles.end}>
+              {format(s.timerRange, LIMITS)}
+            </Txt>
+          </View>
+        )}
       </Press>
       <TextInput
         ref={input}
@@ -230,27 +261,6 @@ function TimerField({ seconds, noTimeLimit, colors, onChange, onNoTimeLimit }: T
         importantForAccessibility="no"
       />
       {outOfRange ? <Note text={format(s.timerOutOfRange, LIMITS)} colors={colors} /> : null}
-      <Press
-        onPress={() => onNoTimeLimit(!noTimeLimit)}
-        accessibilityRole="switch"
-        accessibilityLabel={s.noTimeLimit}
-        accessibilityHint={s.noTimeLimitDetail}
-        accessibilityState={{ checked: noTimeLimit }}
-        style={[styles.switchRow, { backgroundColor: field.bg }]}
-      >
-        <View style={styles.switchText}>
-          <Txt variant="optionTitle" color={field.ink}>
-            {s.noTimeLimit}
-          </Txt>
-          <Txt variant="subline" color={field.muted}>
-            {s.noTimeLimitDetail}
-          </Txt>
-        </View>
-        {/* Drawn rather than the platform Switch, so it looks the same on iOS, Android and web. */}
-        <View style={[styles.track, noTimeLimit ? styles.trackOn : null, { backgroundColor: noTimeLimit ? colors.accent : colors.track }]}>
-          <View style={[styles.thumb, { backgroundColor: field.bg }]} />
-        </View>
-      </Press>
     </View>
   );
 }
@@ -283,17 +293,12 @@ const styles = StyleSheet.create({
   hiddenInput: { position: 'absolute', width: 1, height: 1, opacity: 0 },
   note: { flexDirection: 'row', alignItems: 'center', gap: space[2], borderRadius: radius.md, paddingHorizontal: space[3.5], paddingVertical: space[2.5] },
   noteText: { flex: 1 },
-  switchRow: {
-    minHeight: layout.minTouch,
-    borderRadius: radius.xl,
-    paddingHorizontal: space[4],
-    paddingVertical: space[3],
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: space[3],
-  },
-  switchText: { flex: 1, gap: space[0.5] },
-  track: { width: space[10], height: space[6], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
+  timerHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: space[3] },
+  noLimit: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
+  timerSide: { flexShrink: 1, maxWidth: '45%', alignItems: 'flex-end', textAlign: 'right' },
+  end: { textAlign: 'right' },
+  // The No limit switch, small enough to sit on the label row.
+  track: { width: space[8], height: space[4.5], borderRadius: radius.pill, padding: space[0.5], alignItems: 'flex-start' },
   trackOn: { alignItems: 'flex-end' },
-  thumb: { width: space[5], height: space[5], borderRadius: radius.pill },
+  thumb: { width: space[3.5], height: space[3.5], borderRadius: radius.pill },
 });

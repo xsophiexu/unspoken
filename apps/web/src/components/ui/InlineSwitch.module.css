@@ -1,0 +1,42 @@
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  /* The touch area reaches the minimum without making the label row taller. */
+  margin-block: calc((var(--un-space-4-5) - var(--un-layout-min-touch)) / 2);
+  min-height: var(--un-layout-min-touch);
+  color: var(--region-muted);
+  cursor: pointer;
+}
+
+.switch:has(:focus-visible) .track {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.track {
+  flex: none;
+  position: relative;
+  width: var(--un-space-8);
+  height: var(--un-space-4-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-track);
+}
+
+.thumb {
+  position: absolute;
+  top: var(--un-space-0-5);
+  left: var(--un-space-0-5);
+  width: var(--un-space-3-5);
+  height: var(--un-space-3-5);
+  border-radius: var(--un-radius-pill);
+  background: var(--un-color-surface-raised);
+}
+
+.on {
+  background: var(--region-accent);
+}
+
+.on .thumb {
+  transform: translateX(calc(var(--un-space-8) - var(--un-space-3-5) - 2 * var(--un-space-0-5)));
+}
