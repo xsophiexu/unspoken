@@ -155,8 +155,9 @@ export const layout = {
   // keeps that shape on narrower screens (ringCardSize). floatingHeight: the Deck card's height,
   // which shrinks on shorter screens. ringScale: the Card ring and its tile are drawn this much
   // larger than the space inside the side margins (and than maxWidth × maxHeight), reaching into the
-  // margins, while the header, status line and controls keep their places.
-  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
+  // margins, while the header, status line and controls keep their places. ringMargin: the ring
+  // never comes closer than this to the screen edge (Kurt: standard mobile side margins).
+  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, ringMargin: 24, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
   // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
   // the height of a compact tile or band.

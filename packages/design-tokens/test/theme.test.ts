@@ -185,20 +185,19 @@ describe('play screen margins', () => {
 });
 
 describe('ringCardSize', () => {
-  const { maxWidth, maxHeight, ringScale } = layout.card;
+  const { maxWidth, maxHeight, ringScale, ringMargin } = layout.card;
+  const ringOn = (screen: number) => ringCardSize(screen - 2 * layout.play.paddingX, 2000);
 
   it('draws the ring a little larger than the space inside the side margins, keeping its shape', () => {
     const width = layout.referenceScreen.width - 2 * layout.play.paddingX;
     const ring = ringCardSize(width, layout.referenceScreen.height);
-    expect(ring.width).toBeGreaterThan(width * 1.08);
-    expect(ring.width).toBeLessThan(width * 1.12);
+    expect(ring.width).toBeGreaterThan(width);
     expect(ring.height / ring.width).toBeCloseTo(maxHeight / maxWidth);
   });
 
-  it('reaches into the side margins but never past the screen edges', () => {
-    for (const screen of [320, 360, 390, 430, 480]) {
-      const ring = ringCardSize(screen - 2 * layout.play.paddingX, 2000);
-      expect(ring.width).toBeLessThan(screen);
+  it('keeps at least the ring margin from the screen edges on phones', () => {
+    for (const screen of [320, 360, 390, 412, 430]) {
+      expect((screen - ringOn(screen).width) / 2).toBeGreaterThanOrEqual(ringMargin - 0.001);
     }
   });
 
