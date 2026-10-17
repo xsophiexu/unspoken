@@ -125,7 +125,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding-block: var(--un-space-4) var(--un-space-2);
+  /* The larger bottom gap keeps the card, tilted or not, clear of Skip and Correct. */
+  padding-block: var(--un-space-4) var(--un-space-12);
 }
 
 .ringArea > .swipeCard {
