@@ -44,14 +44,27 @@ describe('dealDeck', () => {
     expect(sent(fetch)).toEqual({
       url: 'https://api.example.test/v1/decks',
       method: 'POST',
-      body: { difficulty: 'Normal', categories: [], seed: 7 },
+      body: { difficulty: 'Normal', difficulties: ['Normal'], categories: [], seed: 7 },
     });
+  });
+
+  it('sends several difficulties, and the first as the single difficulty older servers read', async () => {
+    const { api, fetch } = clientAnswering(json(200, dealFromBank(bank, { difficulty: 'Normal', categories: [], seed: 7 })));
+    await api.dealDeck({ difficulties: ['Tricky', 'Legend'], seed: 7 });
+    expect(sent(fetch).body).toMatchObject({ difficulty: 'Tricky', difficulties: ['Tricky', 'Legend'] });
+  });
+
+  it('refuses a request that names no difficulty without calling the server', async () => {
+    const { api, fetch } = clientAnswering(json(200, {}));
+    const error = await api.dealDeck({ seed: 7 } as never).catch((e: unknown) => e);
+    expect(error).toMatchObject({ status: 0, code: 'invalid_request', issues: [expect.objectContaining({ path: ['difficulty'] })] });
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('sends an old level name from an older client as the level that replaced it', async () => {
     const { api, fetch } = clientAnswering(json(200, dealFromBank(bank, { difficulty: 'Normal', categories: [], seed: 7 })));
     await api.dealDeck({ difficulty: 'Expert 1', seed: 7 });
-    expect(sent(fetch).body).toMatchObject({ difficulty: 'Hard' });
+    expect(sent(fetch).body).toMatchObject({ difficulty: 'Hard', difficulties: ['Hard'] });
   });
 
   it('refuses an unknown difficulty without calling the server', async () => {

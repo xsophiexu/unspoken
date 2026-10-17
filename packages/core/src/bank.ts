@@ -59,22 +59,31 @@ export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
   });
 }
 
-// The cards a game draws from. All cards (no categories) leaves out names and jargon and weights the
-// rest to balance themes; chosen themes use every card in them evenly.
-export function cardsFor(bank: readonly BankEntry[], difficulty: Difficulty, categories: readonly Category[]): Card[] {
+// The cards a game draws from: every card at any of the picked difficulties. All cards (no
+// categories) leaves out names and jargon and weights the rest to balance themes; chosen themes use
+// every card in them evenly.
+export function cardsFor(bank: readonly BankEntry[], difficulty: Difficulty | readonly Difficulty[], categories: readonly Category[]): Card[] {
+  const picks: readonly Difficulty[] = typeof difficulty === 'string' ? [difficulty] : difficulty;
+  const atPicks = (c: BankEntry) => picks.includes(c.difficulty);
   if (categories.length === 0) {
     return bank
-      .filter((c) => c.difficulty === difficulty && c.inAll && c.allWeight > 0)
+      .filter((c) => atPicks(c) && c.inAll && c.allWeight > 0)
       .map(({ id, word, banned, allWeight }) => ({ id, word, banned, weight: allWeight }));
   }
   return bank
-    .filter((c) => c.difficulty === difficulty && c.categories.some((t) => categories.includes(t)))
+    .filter((c) => atPicks(c) && c.categories.some((t) => categories.includes(t)))
     .map(({ id, word, banned }) => ({ id, word, banned }));
 }
 
 // How many cards a difficulty and theme choice draws from (setup shows these counts).
-export function deckSize(bank: readonly BankEntry[], difficulty: Difficulty, categories: readonly Category[]): number {
+export function deckSize(bank: readonly BankEntry[], difficulty: Difficulty | readonly Difficulty[], categories: readonly Category[]): number {
   return cardsFor(bank, difficulty, categories).length;
+}
+
+// Whether Start game should ask first: the picks draw from so few cards that words are likely to
+// repeat before the game ends.
+export function isSmallDeck(cards: number, config: GameConfig = gameConfig): boolean {
+  return cards < config.smallDeckCards;
 }
 
 // Themes that have at least one card in this bank, in catalog order.
@@ -90,8 +99,11 @@ export function playableCards(mode: ModeId, cards: readonly Card[], config: Game
   return full.length >= config.escalate.minFullCards ? full : cards;
 }
 
-export type DealRequest = {
-  difficulty: Difficulty;
+export type DealRequest = (
+  | { difficulty: Difficulty; difficulties?: undefined }
+  // Several difficulties (newer clients); cards come from all of them.
+  | { difficulties: readonly Difficulty[]; difficulty?: Difficulty }
+) & {
   // Empty means All cards.
   categories: readonly Category[];
   // The mode the deck is for; Escalate only plays cards with every banned word. Defaults to Classic.
@@ -111,7 +123,7 @@ export type DealtDeck = {
 // Deal a deck straight from the bank: the same seed and request always give the same cards, so the
 // service and offline clients agree. This is what POST /v1/decks runs.
 export function dealFromBank(bank: readonly BankEntry[], request: DealRequest, config: GameConfig = gameConfig): DealtDeck {
-  const pool = playableCards(request.mode ?? 'classic', cardsFor(bank, request.difficulty, request.categories), config);
+  const pool = playableCards(request.mode ?? 'classic', cardsFor(bank, request.difficulties ?? [request.difficulty], request.categories), config);
   const deck = dealDeck(pool, seededRandom(request.seed).random);
   const count = request.count === undefined ? deck.length : Math.max(0, Math.floor(request.count));
   return { seed: request.seed >>> 0, total: pool.length, cards: deck.slice(0, count) };

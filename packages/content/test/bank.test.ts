@@ -2,7 +2,7 @@ import { CATEGORY_IDS, DIFFICULTY_IDS, LEGACY_DIFFICULTIES, cardsFor, categories
 import { describe, expect, it } from 'vitest';
 
 import raw from '../data/word-banks.json';
-import { bank } from '../src';
+import { bank, en } from '../src';
 
 // Checks on the shipped word bank, so a bad edit to data/word-banks.json fails before it ships.
 describe('shipped word bank', () => {
@@ -54,5 +54,14 @@ describe('shipped word bank', () => {
   it('deals a full Escalate deck at the default level', () => {
     const dealt = dealFromBank(bank, { difficulty: 'Hard', categories: [], mode: 'escalate', seed: 1, count: 30 });
     expect(dealt.cards).toHaveLength(30);
+  });
+});
+
+describe('Difficulty info examples', () => {
+  it('names a word from the bank at each difficulty, so the ladder matches what players draw', () => {
+    const misplaced = en.difficultyInfo.examples.flatMap(({ words }) =>
+      DIFFICULTY_IDS.filter((d) => !bank.some((c) => c.word === words[d] && c.difficulty === d)).map((d) => `${words[d]} (${d})`),
+    );
+    expect(misplaced).toEqual([]);
   });
 });

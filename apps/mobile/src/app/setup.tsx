@@ -55,9 +55,9 @@ export default function SetupScreen() {
   const s = en.setup;
 
   const counts = useMemo(() => DIFFICULTY_IDS.map((d) => deckSize(bank, d, draft.categories)), [draft.categories]);
-  const themeCounts = useMemo(() => THEMES.map((c) => deckSize(bank, draft.difficulty, [c])), [draft.difficulty]);
-  const allCount = deckSize(bank, draft.difficulty, []);
-  const cards = deckSize(bank, draft.difficulty, draft.categories);
+  const themeCounts = useMemo(() => THEMES.map((c) => deckSize(bank, draft.difficulties, [c])), [draft.difficulties]);
+  const allCount = deckSize(bank, draft.difficulties, []);
+  const cards = deckSize(bank, draft.difficulties, draft.categories);
 
   const start = () => {
     if (!canStart(settings)) return;
@@ -92,7 +92,7 @@ export default function SetupScreen() {
                   title={en.difficulties[d].name}
                   detail={plural(counts[i] ?? 0, en.units.cards)}
                   colors={colors}
-                  selected={d === draft.difficulty}
+                  selected={draft.difficulties.includes(d)}
                   onPress={() => setDraft((cur) => withDifficulty(cur, d))}
                 />
               ))}

@@ -34,7 +34,7 @@ type GameAction = { type: 'play'; action: RoundAction } | { type: 'newGame'; set
 
 function startRound(settings: GameSettings, seed: number, introSeen: GameState['introSeen']): RoundState {
   return createRound(settings, {
-    cards: cardsFor(bank, settings.difficulty, settings.categories),
+    cards: cardsFor(bank, settings.difficulties, settings.categories),
     seed,
     showIntro: !introSeen[modeRules(settings.mode).play],
   });

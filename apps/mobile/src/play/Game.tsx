@@ -5,6 +5,7 @@ import {
   pausedStatus,
   swipeSummary,
   withDifficulty,
+  type Difficulty,
   type RoundAction,
   type SwipeRoundState,
 } from '@unspoken/core';
@@ -85,7 +86,7 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
     },
     changeSettings,
   };
-  const pick = (d: (typeof settings)['difficulty']) => {
+  const pick = (d: Difficulty) => {
     close();
     prefs.startGame(withDifficulty(settings, d));
   };
@@ -130,12 +131,12 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
         visible={sheet === 'mode'}
         onClose={close}
         mode={settings.mode}
-        difficulty={settings.difficulty}
+        difficulties={settings.difficulties}
         onPick={pick}
         onRestart={chrome.restart}
         onNewGame={changeSettings}
       />
-      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulty={settings.difficulty} categories={settings.categories} onPick={pick} />
+      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulties={settings.difficulties} categories={settings.categories} onPick={pick} />
       {prefs.tourOpen ? <HowToPlay targets={targets} theme={theme} insets={insets} onClose={prefs.closeTour} /> : null}
     </View>
   );

@@ -102,6 +102,8 @@ export const motion = {
     labelWidthPx: 56,
     labelGapPx: 4,
   },
+  // Two taps closer together than this are a double-tap (All cards in Choose categories).
+  doubleTapMs: 300,
   // How to play: the spotlight glides between targets; steps change only on a tap or a swipe.
   spotlight: { moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
 } as const;

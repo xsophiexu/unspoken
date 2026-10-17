@@ -9,7 +9,8 @@ import { Grid } from '@/components/ui/Grid';
 
 type DifficultyGridProps = {
   columns: number;
-  current: Difficulty;
+  // The picks, each shown selected.
+  current: readonly Difficulty[];
   onPick: (difficulty: Difficulty) => void;
   // pick: a radio group that only selects (setup). act: buttons that start a new round (sheets).
   kind: 'pick' | 'act';
@@ -25,11 +26,11 @@ export function DifficultyGrid({ columns, current, onPick, kind, label, detail }
       {DIFFICULTY_IDS.map((id) => {
         const name = <FittedText text={en.difficulties[id].name} max={textStyles.optionTitle.size} min={textStyles.small.size} />;
         return kind === 'pick' ? (
-          <Choice key={id} type="radio" name="difficulty" look="tile" checked={id === current} onChange={() => onPick(id)} detail={detail?.(id)}>
+          <Choice key={id} type="radio" name="difficulty" look="tile" checked={current.includes(id)} onChange={() => onPick(id)} detail={detail?.(id)}>
             {name}
           </Choice>
         ) : (
-          <Tile key={id} title={name} detail={detail?.(id)} selected={id === current} onClick={() => onPick(id)} label={en.difficulties[id].name} />
+          <Tile key={id} title={name} detail={detail?.(id)} selected={current.includes(id)} onClick={() => onPick(id)} label={en.difficulties[id].name} />
         );
       })}
     </Grid>

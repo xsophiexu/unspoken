@@ -56,6 +56,17 @@ describe('Play', () => {
     expect(JSON.parse(localStorage.getItem(THEME_STORAGE_KEY) ?? '{}')).toMatchObject({ style: 'split' });
   });
 
+  it('names several picked difficulties by the easiest one and a plus', () => {
+    saved({
+      [TOUR_STORAGE_KEY]: en.howToPlay.version,
+      [SETTINGS_STORAGE_KEY]: { ...classic, difficulty: undefined, difficulties: ['Expert', 'Hard', 'Tough'] },
+      [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' },
+    });
+    const { game } = renderPlay();
+    const badge = game.getByRole('button', { name: 'Difficulty Hard+. Tap to change.' });
+    expect(badge).toHaveTextContent('HARD+');
+  });
+
   it('starts a new round when a difficulty is picked on the mode sheet', async () => {
     const user = userEvent.setup();
     saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
@@ -72,7 +83,7 @@ describe('Play', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(game.getByRole('button', { name: 'Classic, Expert. Tap to change.' })).toBeInTheDocument();
     expect(game.getByText('3 skips left')).toBeInTheDocument();
-    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulty: 'Expert' });
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Expert'] });
   });
 
   it('runs the clock, stops it while the menu is open, and answers from the keyboard', () => {

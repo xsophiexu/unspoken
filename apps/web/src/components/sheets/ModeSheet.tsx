@@ -36,7 +36,7 @@ export function ModeSheet({ round, onClose, onPick, onRestart, onLeave }: ModeSh
           kind="act"
           label={en.modeSheet.difficulty}
           columns={layout.grid.sheetDifficulty}
-          current={round.settings.difficulty}
+          current={round.settings.difficulties}
           onPick={onPick}
         />
       </Section>

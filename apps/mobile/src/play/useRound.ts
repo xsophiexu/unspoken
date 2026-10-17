@@ -9,7 +9,7 @@ import { usePrefs } from '../state/prefs';
 export function useRound(settings: GameSettings) {
   const { introSeen } = usePrefs();
   const [state, dispatch] = useReducer(roundReducer, settings, (s): RoundState => {
-    const cards = cardsFor(bank, s.difficulty, s.categories);
+    const cards = cardsFor(bank, s.difficulties, s.categories);
     return createRound(s, { cards, seed: newSeed(), showIntro: !introSeen(modeRules(s.mode).play) });
   });
 

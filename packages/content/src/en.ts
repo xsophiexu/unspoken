@@ -27,6 +27,26 @@ const difficulties: Record<Difficulty, { name: string; badge: string }> = {
   Legend: { name: 'Legend', badge: 'LEGEND' },
 };
 
+// Several difficulties picked: the easiest one's name or badge, then "+" ("HARD+", "Hard+").
+const difficultyMixed = '{easiest}+';
+
+// The Difficulty info sheet on New game: the same category at each difficulty, every word from the
+// word bank at that difficulty.
+const difficultyExamples: { category: string; words: Record<Difficulty, string> }[] = [
+  {
+    category: 'FOOD',
+    words: { Normal: 'Leftovers', Tricky: 'Appetizer', Hard: 'Al dente', Tough: 'Umami', Expert: 'Fermentation', Elite: 'Sous vide', Master: 'Mise en place', Legend: 'Roux' },
+  },
+  {
+    category: 'BOOKS',
+    words: { Normal: 'Rhyme', Tricky: 'Cliffhanger', Hard: 'Prologue', Tough: 'Cliché', Expert: 'Pseudonym', Elite: 'Loanword', Master: 'Allusion', Legend: 'In medias res' },
+  },
+  {
+    category: 'WEATHER',
+    words: { Normal: 'Cloud', Tricky: 'Humidity', Hard: 'Typhoon', Tough: 'Cold front', Expert: 'Trade winds', Elite: 'Wind shear', Master: 'Rain shadow', Legend: 'Katabatic wind' },
+  },
+];
+
 // Category ids are already English; translations map them here.
 const categories: Record<Category, string> = {
   'Inner World': 'Inner World',
@@ -104,6 +124,7 @@ export const en = {
   },
   modes,
   difficulties,
+  difficultyMix: difficultyMixed,
   categories,
 
   // --- Shared units and status lines (RoundCopy in @unspoken/core) ---------------------------
@@ -113,6 +134,7 @@ export const en = {
     skips: { one: '{n} skip', other: '{n} skips' },
     words: { one: '{n} word', other: '{n} words' },
     cards: { one: '{n} card', other: '{n} cards' },
+    difficulties: { one: '{n} difficulty', other: '{n} difficulties' },
     cardsLabel: { one: 'card', other: 'cards' },
     bannedWords: { one: '{n} banned word', other: '{n} banned words' },
     letters: { one: '{n} letter', other: '{n} letters' },
@@ -214,7 +236,13 @@ export const en = {
   setup: {
     back: '← Modes',
     title: 'New game',
+    // The Categories box above DIFFICULTY: its title, and the picks with their card count.
+    categories: 'Categories',
+    categoriesDetail: '{summary} · {cards}',
     difficulty: 'DIFFICULTY',
+    // At the right of the DIFFICULTY label: the hint with one pick, the count and cards with more.
+    difficultyHint: 'Pick one or more',
+    difficultyPicked: '{difficulties} · {cards}',
     themes: 'CATEGORIES',
     themesHint: 'Pick one or more',
     smallDeck: 'Only {cards}, words will repeat',
@@ -233,6 +261,28 @@ export const en = {
     skipsHint: '∞ = unlimited',
     unlimited: '∞',
     start: 'Start game',
+  },
+
+  // The pull-up sheet from the Categories box on New game.
+  categoriesSheet: {
+    title: 'Choose categories',
+    hint: 'Double-tap All cards to highlight all',
+    // While every category is highlighted.
+    hintAll: 'Double-tap All cards to unhighlight all',
+    done: 'Done',
+  },
+  // The (i) at the right of DIFFICULTY on New game.
+  difficultyInfo: {
+    title: 'Difficulty',
+    body: 'Tap to select one or more difficulties. The examples below show the same category at each difficulty.',
+    examples: difficultyExamples,
+  },
+  // Start game with few cards to draw from.
+  smallDeck: {
+    title: 'Only {cards} match',
+    body: 'Cards are likely to repeat. Try adding categories or difficulties.',
+    playAnyway: 'Play anyway',
+    back: 'Go back',
   },
 
   // --- Customize -----------------------------------------------------------------------------
@@ -384,6 +434,8 @@ export const en = {
     closeSheet: 'Close',
     timer: 'Time limit {clock}. Tap to type a new time.',
     unlimitedSkips: 'Unlimited skips',
+    difficultyInfo: 'About difficulties',
+    categories: 'Categories: {summary}. Tap to choose.',
   },
 };
 

@@ -47,8 +47,8 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
   const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
   const [timerFocused, setTimerFocused] = useState(false);
   const update = (change: Partial<GameSettings>) => setSettings((current) => ({ ...current, ...change }));
-  const { difficulty, categories, roundSeconds, skips, noTimeLimit } = settings;
-  const cards = deckSize(bank, difficulty, categories);
+  const { difficulties, categories, roundSeconds, skips, noTimeLimit } = settings;
+  const cards = deckSize(bank, difficulties, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
 
   const start = () => {
@@ -79,7 +79,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
           kind="pick"
           label={copy.difficulty}
           columns={layout.grid.setupDifficulty}
-          current={difficulty}
+          current={difficulties}
           onPick={(next) => setSettings((current) => withDifficulty(current, next))}
           detail={(level) => cardsLabel(deckSize(bank, level, categories))}
         />
@@ -87,7 +87,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
 
       <Section label={copy.themes} aside={copy.themesHint}>
         <div className={styles.chips} role="group" aria-label={copy.themes}>
-          <Choice type="checkbox" name="themes" look="chip" checked={categories.length === 0} onChange={() => update({ categories: [] })} detail={deckSize(bank, difficulty, [])}>
+          <Choice type="checkbox" name="themes" look="chip" checked={categories.length === 0} onChange={() => update({ categories: [] })} detail={deckSize(bank, difficulties, [])}>
             {en.themes.all}
           </Choice>
           {themes.map((theme) => (
@@ -98,7 +98,7 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
               look="chip"
               checked={categories.includes(theme)}
               onChange={() => update({ categories: toggleCategory(categories, theme) })}
-              detail={deckSize(bank, difficulty, [theme])}
+              detail={deckSize(bank, difficulties, [theme])}
             >
               {en.categories[theme]}
             </Choice>

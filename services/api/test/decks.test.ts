@@ -24,6 +24,14 @@ describe('POST /v1/decks', () => {
     expect(keptOut.filter((entry) => dealt.has(entry.id))).toEqual([]);
   });
 
+  it('deals from every difficulty a request names', async () => {
+    const deck = await api.dealDeck({ difficulties: ['Normal', 'Legend'], seed: 11 });
+    expect(new Set(entriesOf(deck.cards).map((e) => e.difficulty))).toEqual(new Set(['Normal', 'Legend']));
+    const normal = await api.dealDeck({ difficulty: 'Normal', seed: 11 });
+    const legend = await api.dealDeck({ difficulty: 'Legend', seed: 11 });
+    expect(deck.total).toBe(normal.total + legend.total);
+  });
+
   it('accepts an old level name and deals from the level that replaced it', async () => {
     // Sent raw, as an older client would, without the typed client mapping it first.
     const response = await post('/v1/decks', { difficulty: 'Master 1', seed: 11 });

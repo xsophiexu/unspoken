@@ -2,7 +2,7 @@
 // show to start; each extra clue makes the word worth a point less. No timer.
 
 import { gameConfig, type GameConfig } from '../config';
-import { bannedCountFor, modeRules } from '../rules';
+import { bannedCountFor, hardestDifficulty, modeRules } from '../rules';
 import type { Card, GameSettings } from '../types';
 import { advance, currentCard, newDeck, type DeckState } from './deck';
 import type { RoundOptions } from './swipe';
@@ -71,7 +71,7 @@ export type ReverseCardView = {
 export function reverseCard(state: ReverseRoundState): ReverseCardView | null {
   const card = currentCard(state.deck);
   if (!card) return null;
-  const clues = card.banned.slice(0, bannedCountFor(state.settings.difficulty, state.config));
+  const clues = card.banned.slice(0, bannedCountFor(hardestDifficulty(state.settings.difficulties, state.config), state.config));
   const revealed = Math.min(state.revealed, clues.length);
   return {
     card,

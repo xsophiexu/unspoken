@@ -109,7 +109,7 @@ describe('New game setup', () => {
     expect(router.push).toHaveBeenCalledWith('/');
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toEqual({
       mode: 'classic',
-      difficulty: 'Elite',
+      difficulties: ['Elite'],
       categories: ['Society'],
       // The timer was on Hard's default, so it follows the new level.
       roundSeconds: 240,
