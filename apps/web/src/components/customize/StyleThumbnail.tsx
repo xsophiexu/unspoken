@@ -9,8 +9,9 @@ import { PlayFrame } from '@/components/play/PlayFrame';
 
 import styles from './StyleThumbnail.module.css';
 
-// Any fixed seed: every visit deals the same sample card.
+// Any fixed seed, and the same sample card as the Android thumbnails.
 const PREVIEW_SEED = 1;
+const PREVIEW_CARD_ID = 'road-trip';
 
 let sample: PlayModel | undefined;
 
@@ -19,7 +20,9 @@ function sampleModel(): PlayModel {
   if (sample) return sample;
   const mode = gameConfig.modes.find((m) => m.available && m.play === 'swipe' && m.clock === 'visible');
   const settings = { ...defaultSettings(), mode: mode?.id ?? gameConfig.defaults.mode };
-  const round = createRound(settings, { cards: cardsFor(bank, settings.difficulty, settings.categories), seed: PREVIEW_SEED });
+  const card = bank.find((c) => c.id === PREVIEW_CARD_ID);
+  const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulty, settings.categories);
+  const round = createRound(settings, { cards, seed: PREVIEW_SEED });
   sample = swipeModel(round as SwipeRoundState);
   return sample;
 }

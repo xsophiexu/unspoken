@@ -66,9 +66,9 @@ export function playModel(state: SwipeRoundState): PlayModel {
 }
 
 // The sample round on Customize thumbnails, as the designs show it: Classic at Expert 1, 7 points,
-// one skip left and 1:42 on the clock, with the word Hangover. It is a real round played through
+// one skip left and 1:42 on the clock, with the word Road trip. It is a real round played through
 // the reducer, so thumbnails can never drift from the game.
-const SAMPLE = { cardId: 'hangover', correct: 7, skipped: 2, elapsedSeconds: 48 } as const;
+const SAMPLE = { cardId: 'road-trip', correct: 7, skipped: 2, elapsedSeconds: 48 } as const;
 
 export function previewModel(): PlayModel {
   const settings: GameSettings = { ...defaultSettings(), mode: 'classic', skips: SAMPLE.skipped + 1 };

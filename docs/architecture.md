@@ -46,7 +46,7 @@ Time and randomness are injected. Rounds take a `seed` (apps use `newSeed()`, te
 
 ### @unspoken/content
 
-- `bank`: the normalized word bank (`data/word-banks.json`, 5,016 cards, 10 banned words each, unique ids). Add cards in the JSON. Apps import it for offline play. The service imports it to deal.
+- `bank`: the normalized word bank (`data/word-banks.json`, 4,996 cards, 10 banned words each, unique ids). Add cards in the JSON. Apps import it for offline play. The service imports it to deal.
 - `en`: every user-facing string, keyed by core and design-token ids, with `{placeholder}` slots. `roundCopy` is the same object typed as `RoundCopy`. `CopyCatalog` is its type: a new locale is a copy of `en.ts` typed as `CopyCatalog`, plus a locale switch where the apps read `en`.
 - Known data issue: two words appear twice in accented and plain spellings at different levels (Smörgåsbord / Smorgasbord, Ragnarök / Ragnarok). Ids stay unique (the second gets its difficulty appended), but the content owner should choose one spelling each.
 

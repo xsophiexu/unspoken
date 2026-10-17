@@ -3290,29 +3290,6 @@
   "allCardsWeight": 0.0082
  },
  {
-  "word": "Happy hour",
-  "banned": [
-   "Drinks",
-   "Bar",
-   "After work",
-   "Cheap",
-   "Discount",
-   "Deal",
-   "Beer",
-   "Five o'clock",
-   "Specials",
-   "Coworkers"
-  ],
-  "difficulty": "Normal",
-  "score": 2,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0082
- },
- {
   "word": "Hot sauce",
   "banned": [
    "Spicy",
@@ -20062,29 +20039,6 @@
   "allCardsWeight": 0.00962
  },
  {
-  "word": "Beer pong",
-  "banned": [
-   "Cups",
-   "Ball",
-   "Table",
-   "Party",
-   "College",
-   "Throw",
-   "Drink",
-   "Frat",
-   "Ping",
-   "Game"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
   "word": "Bloody Mary",
   "banned": [
    "Tomato",
@@ -20959,29 +20913,6 @@
   "allCardsWeight": 0.00962
  },
  {
-  "word": "Hangover",
-  "banned": [
-   "Headache",
-   "Alcohol",
-   "Drink",
-   "Morning",
-   "Party",
-   "Sick",
-   "Advil",
-   "Regret",
-   "Dehydrated",
-   "Greasy"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
   "word": "Hangry",
   "banned": [
    "Hungry",
@@ -21672,29 +21603,6 @@
   "allCardsWeight": 0.00962
  },
  {
-  "word": "Open bar",
-  "banned": [
-   "Free",
-   "Drinks",
-   "Wedding",
-   "Unlimited",
-   "Alcohol",
-   "Paid",
-   "Event",
-   "Bartender",
-   "Tab",
-   "Reception"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
   "word": "Open house",
   "banned": [
    "Real estate",
@@ -21822,29 +21730,6 @@
    "Stall",
    "Last minute",
    "Distraction"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Pub crawl",
-  "banned": [
-   "Bars",
-   "Drinking",
-   "Night",
-   "Stop",
-   "Walk",
-   "Route",
-   "Group",
-   "Tour",
-   "Hop",
-   "Bachelor"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -22075,29 +21960,6 @@
    "Path",
    "Skip",
    "Control"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.00962
- },
- {
-  "word": "Shot glass",
-  "banned": [
-   "Tequila",
-   "Small",
-   "Drink",
-   "Liquor",
-   "Down",
-   "Souvenir",
-   "Ounce",
-   "Whiskey",
-   "Toss",
-   "Vodka"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -25331,29 +25193,6 @@
   "allCardsWeight": 0.01408
  },
  {
-  "word": "Friends with benefits",
-  "banned": [
-   "Casual",
-   "Hookup",
-   "No strings",
-   "Buddy",
-   "Physical",
-   "Relationship",
-   "Arrangement",
-   "Situationship",
-   "Commitment",
-   "Platonic"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01408
- },
- {
   "word": "Friendship bracelet",
   "banned": [
    "Thread",
@@ -26287,29 +26126,6 @@
    "Tables",
    "Match",
    "Questions"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01408
- },
- {
-  "word": "Sugar daddy",
-  "banned": [
-   "Rich",
-   "Older",
-   "Money",
-   "Gifts",
-   "Younger",
-   "Spoil",
-   "Wealthy",
-   "Gold digger",
-   "Allowance",
-   "Baby"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -28196,29 +28012,6 @@
    "Secret",
    "Undercover",
    "Loyal"
-  ],
-  "difficulty": "Harder",
-  "score": 3,
-  "theme": "Law and Diplomacy",
-  "themes": [
-   "Law and Diplomacy"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.0125
- },
- {
-  "word": "Drug dealer",
-  "banned": [
-   "Sell",
-   "Narcotics",
-   "Pusher",
-   "Cocaine",
-   "Corner",
-   "Street",
-   "Supplier",
-   "Weed",
-   "Crime",
-   "Cartel"
   ],
   "difficulty": "Harder",
   "score": 3,
@@ -43253,29 +43046,6 @@
   "allCardsWeight": 0.01562
  },
  {
-  "word": "Dive bar",
-  "banned": [
-   "Cheap",
-   "Seedy",
-   "Pub",
-   "Grungy",
-   "Neighborhood",
-   "Beer",
-   "Jukebox",
-   "Dark",
-   "Locals",
-   "Pool table"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
   "word": "Dry January",
   "banned": [
    "Sober",
@@ -43817,52 +43587,6 @@
    "Shaker",
    "Garnish",
    "Craft"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Moonshine",
-  "banned": [
-   "Illegal",
-   "Corn",
-   "Whiskey",
-   "Still",
-   "Appalachia",
-   "Homemade",
-   "Jar",
-   "Prohibition",
-   "Bootleg",
-   "Strong"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Everyday Life",
-  "themes": [
-   "Everyday Life"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01562
- },
- {
-  "word": "Munchies",
-  "banned": [
-   "Hungry",
-   "Stoned",
-   "Weed",
-   "Snacks",
-   "Craving",
-   "High",
-   "Late night",
-   "Chips",
-   "Marijuana",
-   "Eat"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -47210,29 +46934,6 @@
   "allCardsWeight": 0.01273
  },
  {
-  "word": "Streaker",
-  "banned": [
-   "Naked",
-   "Run",
-   "Field",
-   "Nude",
-   "Fan",
-   "Security",
-   "Stadium",
-   "Dare",
-   "Tackle",
-   "Flash"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Sports and Games",
-  "themes": [
-   "Sports and Games"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01273
- },
- {
   "word": "Sucker punch",
   "banned": [
    "Surprise",
@@ -49638,29 +49339,6 @@
    "Donate",
    "Register",
    "Save"
-  ],
-  "difficulty": "Expert 1",
-  "score": 4,
-  "theme": "Health and Body",
-  "themes": [
-   "Health and Body"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01818
- },
- {
-  "word": "Overdose",
-  "banned": [
-   "Too much",
-   "Drugs",
-   "Pills",
-   "OD",
-   "Fatal",
-   "Narcan",
-   "Dose",
-   "Emergency",
-   "Accidental",
-   "Opioid"
   ],
   "difficulty": "Expert 1",
   "score": 4,
@@ -61294,29 +60972,6 @@
   "allCardsWeight": 0.01923
  },
  {
-  "word": "Innuendo",
-  "banned": [
-   "Suggestive",
-   "Double entendre",
-   "Hint",
-   "Imply",
-   "Dirty",
-   "Joke",
-   "Wink",
-   "Insinuate",
-   "That's what she said",
-   "Subtle"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Literature and Language",
-  "themes": [
-   "Literature and Language"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.01923
- },
- {
   "word": "Jargon",
   "banned": [
    "Lingo",
@@ -68450,29 +68105,6 @@
   "allCardsWeight": 0.04
  },
  {
-  "word": "Mistress",
-  "banned": [
-   "Affair",
-   "Lover",
-   "Cheating",
-   "Married",
-   "Other woman",
-   "Secret",
-   "Husband",
-   "Kept",
-   "Courtesan",
-   "Infidelity"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
   "word": "Monogamy",
   "banned": [
    "One",
@@ -68508,29 +68140,6 @@
    "Philosophy",
    "Ideal",
    "Close"
-  ],
-  "difficulty": "Expert 2",
-  "score": 5,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.04
- },
- {
-  "word": "Polyamory",
-  "banned": [
-   "Multiple",
-   "Partners",
-   "Open",
-   "Lovers",
-   "Monogamy",
-   "Many",
-   "Consensual",
-   "Relationships",
-   "Throuple",
-   "Compersion"
   ],
   "difficulty": "Expert 2",
   "score": 5,
@@ -83798,29 +83407,6 @@
   "allCardsWeight": 0.02381
  },
  {
-  "word": "Cuckold",
-  "banned": [
-   "Cheated",
-   "Wife",
-   "Unfaithful",
-   "Betrayed",
-   "Horns",
-   "Husband",
-   "Affair",
-   "Fool",
-   "Shakespeare",
-   "Bird"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02381
- },
- {
   "word": "Cuffing season",
   "banned": [
    "Winter",
@@ -83879,29 +83465,6 @@
    "Tradition",
    "Inheritance",
    "Groom"
-  ],
-  "difficulty": "Master 1",
-  "score": 6,
-  "theme": "Love and Relationships",
-  "themes": [
-   "Love and Relationships"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.02381
- },
- {
-  "word": "Emotional affair",
-  "banned": [
-   "Cheating",
-   "Connection",
-   "Intimate",
-   "Unfaithful",
-   "Close",
-   "Texting",
-   "Coworker",
-   "Betrayal",
-   "Secret",
-   "Non-physical"
   ],
   "difficulty": "Master 1",
   "score": 6,
@@ -94193,29 +93756,6 @@
   ],
   "allCards": false,
   "allCardsWeight": 0
- },
- {
-  "word": "Courtesan",
-  "banned": [
-   "Mistress",
-   "Companion",
-   "Wealthy",
-   "Royal court",
-   "Kept woman",
-   "Paid",
-   "Elegant",
-   "Geisha",
-   "Lover",
-   "Renaissance"
-  ],
-  "difficulty": "Master 2",
-  "score": 7,
-  "theme": "History and Myth",
-  "themes": [
-   "History and Myth"
-  ],
-  "allCards": true,
-  "allCardsWeight": 0.024
  },
  {
   "word": "Divine right of kings",
