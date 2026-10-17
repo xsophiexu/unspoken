@@ -114,7 +114,7 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
       break;
     case 'clues':
       body = (
-        <GameCard colors={colors}>
+        <GameCard colors={colors} scroll>
           <Txt variant="subline" color={colors.muted}>
             {m.clueKicker}
           </Txt>
@@ -135,7 +135,7 @@ export function MindReaderRound({ state, dispatch, chrome }: { state: MindReader
       break;
     case 'reveal':
       body = (
-        <GameCard colors={colors}>
+        <GameCard colors={colors} scroll>
           <Txt variant="subline" color={colors.muted}>
             {state.guessed ? m.guessed : m.passed}
           </Txt>

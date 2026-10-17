@@ -11,12 +11,12 @@ import { PlayHeader } from './PlayView';
 // at the bottom, in the game column.
 export function RoundFrame({ chrome, model, children, footer }: { chrome: Chrome; model: HeaderModel; children: ReactNode; footer: ReactNode }) {
   const { insets, page } = chrome;
+  // The bottom margin sits on the column, not on the KeyboardAvoidingView: with behavior="padding"
+  // it sets its own paddingBottom (0 with the keyboard closed) over the style's on Android and iOS,
+  // which put the buttons under the navigation bar.
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      style={[styles.page, { backgroundColor: page.bg, paddingTop: insets.top + layout.screen.paddingTop, paddingBottom: insets.bottom + layout.screen.paddingBottom }]}
-    >
-      <View style={styles.column}>
+    <KeyboardAvoidingView behavior="padding" style={[styles.page, { backgroundColor: page.bg, paddingTop: insets.top + layout.screen.paddingTop }]}>
+      <View style={[styles.column, { paddingBottom: insets.bottom + layout.screen.paddingBottom }]}>
         <PlayHeader theme={chrome.theme} model={model} clock={null} handlers={chrome.handlers} />
         <View style={styles.middle}>{children}</View>
         <View style={styles.footer}>{footer}</View>
