@@ -18,6 +18,8 @@ type Prefs = {
   setLook: (patch: Partial<ThemeSelection>) => void;
   // Save these settings and start a new round with them.
   startGame: (settings: GameSettings) => void;
+  // Save these settings for the next round, leaving the round in progress as it is.
+  saveSettings: (settings: GameSettings) => void;
   // A new round with the same settings.
   restart: () => void;
   openTour: () => void;
@@ -84,6 +86,7 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
         update((p) => ({ ...p, settings }));
         setGameId((id) => id + 1);
       },
+      saveSettings: (settings) => update((p) => ({ ...p, settings })),
       restart: () => setGameId((id) => id + 1),
       openTour: () => setTourOpen(true),
       closeTour: () => {

@@ -55,6 +55,7 @@ export const gameConfigSchema = z.object({
   skipOptions: z.array(whole.nullable()),
   minRoundSeconds: whole,
   maxRoundSeconds: whole,
+  timeLimitStepSeconds: whole,
   smallDeckCards: whole,
   namedCategories: whole,
   badgeMaxChars: whole,

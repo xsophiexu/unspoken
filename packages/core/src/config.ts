@@ -53,6 +53,8 @@ export type GameConfig = {
   minRoundSeconds: number;
   // The longest time limit setup accepts.
   maxRoundSeconds: number;
+  // How far the − and + buttons on the Paused screen's time limit changer move the time.
+  timeLimitStepSeconds: number;
   // Below this many cards, Start game asks first: words are likely to repeat before the game ends.
   smallDeckCards: number;
   // The Categories row on New game names this many picks at most, then counts them.
@@ -108,6 +110,8 @@ export const gameConfig: GameConfig = {
   // Time limits run from 0:30 to 10:00.
   minRoundSeconds: 30,
   maxRoundSeconds: 10 * 60,
+  // The time limit changer's − and + move it 15 seconds.
+  timeLimitStepSeconds: 15,
   // A quick group gets through about a card every 12 seconds, about 12 cards in a 2:30 round; five
   // rounds (a short game night) use about 60.
   smallDeckCards: 60,

@@ -1,4 +1,5 @@
 import { en } from '@unspoken/content';
+import { format, gameConfig, plural } from '@unspoken/core';
 import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -250,5 +251,116 @@ describe('Game paused', () => {
     const user = userEvent.setup();
     const { menu } = await openMenu(user);
     expect(within(menu).getByRole('link', { name: new RegExp(en.menu.changeSettings.title) })).toHaveTextContent(/starts a new game/);
+  });
+});
+
+describe('Changing the time limit on the Paused screen', () => {
+  const step = plural(gameConfig.timeLimitStepSeconds, en.units.seconds);
+  const rowName = (value: string) => format(en.a11y.changeTimeLimit, { value });
+  const note = format(en.setup.timerOutOfRange, { min: '0:30', max: '10:00' });
+  const savedSettings = () => JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}');
+
+  // Classic at Hard (2:30), paused by the player 9 seconds in.
+  function pauseClassic() {
+    vi.useFakeTimers();
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: { ...classic, roundSeconds: 150 } });
+    const view = renderPlay();
+    act(() => vi.advanceTimersByTime(9000));
+    fireEvent.click(view.game.getByRole('button', { name: en.a11y.pause }));
+    const paused = screen.getByRole('dialog', { name: en.paused.label });
+    return { ...view, paused: within(paused) };
+  }
+  const openChanger = (paused: ReturnType<typeof within>, value = '2:30') => {
+    fireEvent.click(paused.getByRole('button', { name: rowName(value) }));
+    return within(screen.getByRole('dialog', { name: en.timeLimit.title }));
+  };
+  const typeTime = (sheet: ReturnType<typeof within>, from: string, digits: string) => {
+    const box = sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: from }) });
+    fireEvent.focus(box);
+    fireEvent.change(box, { target: { value: digits } });
+    fireEvent.blur(box);
+  };
+
+  it('saves a longer time for the next turn while this turn keeps its time left', () => {
+    const { game, paused } = pauseClassic();
+    expect(paused.getByText('2:21')).toBeInTheDocument();
+    const sheet = openChanger(paused);
+    expect(sheet.getByText(format(en.timeLimit.keepsClock, { clock: '2:21' }))).toBeInTheDocument();
+
+    for (let i = 0; i < 3; i++) fireEvent.click(sheet.getByRole('button', { name: format(en.a11y.longer, { step }) }));
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '3:15' }) })).toBeInTheDocument();
+    fireEvent.click(sheet.getByRole('button', { name: en.timeLimit.save }));
+
+    expect(screen.queryByRole('dialog', { name: en.timeLimit.title })).not.toBeInTheDocument();
+    expect(paused.getByRole('button', { name: rowName('3:15') })).toHaveTextContent(en.paused.startsNextTurn);
+    expect(paused.getByText('2:21')).toBeInTheDocument();
+    expect(savedSettings()).toMatchObject({ roundSeconds: 195, noTimeLimit: false });
+
+    // Resume carries on from 2:21; the next turn starts at 3:15.
+    fireEvent.click(paused.getByRole('button', { name: en.paused.resume }));
+    act(() => vi.advanceTimersByTime(1000));
+    expect(game.getByRole('timer')).toHaveAccessibleName('2:20');
+    fireEvent.click(game.getByRole('button', { name: en.a11y.pause }));
+    fireEvent.click(screen.getByRole('button', { name: en.paused.newGame }));
+    expect(game.getByRole('timer')).toHaveAccessibleName('3:15');
+  });
+
+  it('moves the time with the slider', () => {
+    const { paused } = pauseClassic();
+    const sheet = openChanger(paused);
+    fireEvent.change(sheet.getByRole('slider', { name: en.a11y.timeLimitSlider }), { target: { value: '600' } });
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '10:00' }) })).toBeInTheDocument();
+    expect(sheet.getByRole('button', { name: format(en.a11y.longer, { step }) })).toBeDisabled();
+  });
+
+  it('takes a typed time with seconds rolling into minutes, and waits for one from 0:30 to 10:00', () => {
+    const { paused } = pauseClassic();
+    const sheet = openChanger(paused);
+
+    typeTime(sheet, '2:30', '1275');
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '13:15' }) })).toBeInTheDocument();
+    expect(sheet.getByText(note)).toBeInTheDocument();
+    expect(sheet.getByRole('button', { name: en.timeLimit.save })).toBeDisabled();
+
+    // − brings it back inside the range.
+    fireEvent.click(sheet.getByRole('button', { name: format(en.a11y.shorter, { step }) }));
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '9:45' }) })).toBeInTheDocument();
+    expect(sheet.queryByText(note)).not.toBeInTheDocument();
+
+    typeTime(sheet, '9:45', '20');
+    expect(sheet.getByText(note)).toBeInTheDocument();
+    typeTime(sheet, '0:20', '175');
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '2:15' }) })).toBeInTheDocument();
+    fireEvent.click(sheet.getByRole('button', { name: en.timeLimit.save }));
+    expect(savedSettings()).toMatchObject({ roundSeconds: 135 });
+  });
+
+  it('turns the time limit off from the next turn; this turn still runs out', () => {
+    const { game, paused } = pauseClassic();
+    const sheet = openChanger(paused);
+    fireEvent.click(sheet.getByRole('switch', { name: en.a11y.noTimeLimit }));
+    expect(sheet.getByText(en.setup.noClock)).toBeInTheDocument();
+    // The time stays, greyed, for when the switch goes off.
+    expect(sheet.getByRole('textbox', { name: format(en.a11y.timer, { clock: '2:30' }) })).toBeDisabled();
+    expect(sheet.getByRole('slider', { name: en.a11y.timeLimitSlider })).toBeDisabled();
+    fireEvent.click(sheet.getByRole('button', { name: en.timeLimit.save }));
+
+    expect(paused.getByRole('button', { name: rowName(en.paused.noLimit) })).toBeInTheDocument();
+    expect(savedSettings()).toMatchObject({ noTimeLimit: true, roundSeconds: 150 });
+
+    fireEvent.click(paused.getByRole('button', { name: en.paused.resume }));
+    act(() => vi.advanceTimersByTime(141_000));
+    fireEvent.click(screen.getByRole('button', { name: en.over.playAgain }));
+    expect(game.queryByRole('timer')).not.toBeInTheDocument();
+  });
+
+  it('leaves the time limit as it was when the changer is closed without saving', () => {
+    const { paused } = pauseClassic();
+    const sheet = openChanger(paused);
+    fireEvent.click(sheet.getByRole('button', { name: format(en.a11y.longer, { step }) }));
+    fireEvent.click(sheet.getByRole('button', { name: en.a11y.closeMenu }));
+
+    expect(paused.getByRole('button', { name: rowName('2:30') })).not.toHaveTextContent(en.paused.startsNextTurn);
+    expect(savedSettings()).toMatchObject({ roundSeconds: 150 });
   });
 });

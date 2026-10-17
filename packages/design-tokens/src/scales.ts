@@ -190,6 +190,9 @@ export const layout = {
     iconBadge: 36,
     stepNumber: 30,
     heroBadge: 72,
+    // The Paused screen's time limit changer: the round − and + beside the big time, and the
+    // slider's track and thumb under it.
+    timeLimit: { stepper: 48, track: 6, thumb: 26 },
   },
 } as const;
 

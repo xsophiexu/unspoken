@@ -138,6 +138,7 @@ export const en = {
     cardsLabel: { one: 'card', other: 'cards' },
     bannedWords: { one: '{n} banned word', other: '{n} banned words' },
     letters: { one: '{n} letter', other: '{n} letters' },
+    seconds: { one: '{n} second', other: '{n} seconds' },
   },
   themes: { all: 'All cards', many: { one: '{n} category', other: '{n} categories' } },
   status: {
@@ -189,6 +190,21 @@ export const en = {
     resume: 'Resume',
     changeSettings: 'Change settings',
     newGame: 'New game',
+    // The row above Resume that opens the time limit changer, with the next turn's time at the right
+    // (or noLimit) and, once it differs from this turn's, startsNextTurn under the title.
+    changeTimeLimit: 'Change time limit',
+    noLimit: 'No limit',
+    startsNextTurn: 'Starts next turn',
+  },
+  // The time limit changer on the Paused screen: the same rules and words as setup's TIME LIMIT
+  // (0:30 to 10:00, typed min : sec, a calm note outside the range, the No limit switch on the title
+  // row and No clock this game while it is on), with − and + beside the big time and a slider under
+  // it. A saved change starts next turn; this turn keeps its time left.
+  timeLimit: {
+    title: 'Time limit',
+    keepsClock: 'Starts next turn · this turn keeps its {clock}',
+    startsNextTurn: 'Starts next turn',
+    save: 'Save',
   },
   pass: {
     label: 'PASS THE PHONE',
@@ -430,6 +446,12 @@ export const en = {
     closeMenu: 'Close menu',
     closeSheet: 'Close',
     timer: 'Time limit {clock}. Tap to type a new time.',
+    // The time limit changer's − and +, and its slider.
+    shorter: 'Shorter by {step}',
+    longer: 'Longer by {step}',
+    timeLimitSlider: 'Time limit',
+    // The Paused screen's Change time limit row, with the next turn's time limit.
+    changeTimeLimit: 'Change time limit, {value}',
     unlimitedSkips: 'Unlimited skips',
     difficultyInfo: 'About difficulties',
     categories: 'Categories: {summary}. Tap to choose.',

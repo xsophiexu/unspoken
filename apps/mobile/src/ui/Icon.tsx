@@ -22,6 +22,8 @@ export type IconName =
   | 'sun'
   | 'moon'
   | 'info'
+  | 'timer'
+  | 'minus'
   | 'plus';
 
 type Props = { name: IconName; size: number; color: string; background?: string };
@@ -109,5 +111,9 @@ function glyph(name: IconName, color: string, background: string) {
       return <Path d="M16.5 12.5A7 7 0 0 1 7.5 3.5a7 7 0 1 0 9 9z" {...stroke} strokeWidth={1.8} />;
     case 'info':
       return <Path d="M10 2.5a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15zM10 9.2v4.6M10 6.3h.01" {...stroke} strokeWidth={1.7} />;
+    case 'timer':
+      return <Path d="M10 4.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM10 7.5V11l2 1.5M8 2h4" {...stroke} strokeWidth={1.8} />;
+    case 'minus':
+      return <Path d="M4.5 10h11" {...stroke} strokeWidth={2.4} />;
   }
 }

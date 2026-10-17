@@ -17,12 +17,14 @@ type OverlayProps = {
   sub?: ReactNode;
   // A note in the top corner, such as "Timer paused".
   corner?: ReactNode;
+  // A control above the buttons, such as the Paused screen's Change time limit row.
+  extra?: ReactNode;
   // Buttons; the first gets focus.
   actions: ReactNode;
 };
 
 // A full-screen layer over the play screen: Paused, Pass the phone and the end of a round.
-export function Overlay({ tone, label, title, big = false, sub, corner, actions }: OverlayProps) {
+export function Overlay({ tone, label, title, big = false, sub, corner, extra, actions }: OverlayProps) {
   const id = useId();
   const actionsRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -39,6 +41,7 @@ export function Overlay({ tone, label, title, big = false, sub, corner, actions 
           <h2 className={cx(styles.title, text(big ? 'score' : 'headline'))}>{title}</h2>
           {sub && <p className={cx(styles.sub, text('hint'))}>{sub}</p>}
         </div>
+        {extra && <div className={styles.extra}>{extra}</div>}
         <div ref={actionsRef} className={styles.actions}>
           {actions}
         </div>
