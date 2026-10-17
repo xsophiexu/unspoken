@@ -83,6 +83,14 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
   const rect = placed?.id === step.id ? placed.rect : null;
   const ready = placed?.id === step.id;
 
+  // A step whose element never reports a size (or whose measurement never comes back) still gets
+  // its caption: after one glide it shows in the middle, as for a step with nothing to point at.
+  useEffect(() => {
+    if (ready) return;
+    const id = setTimeout(() => setPlaced((prev) => (prev?.id === step.id ? prev : { id: step.id, rect: null })), moveMs);
+    return () => clearTimeout(id);
+  }, [ready, step.id]);
+
   // Glide the cut-out onto the measured element, or close it to a point.
   useEffect(() => {
     if (!ready) return;
@@ -97,17 +105,21 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
     return () => move.stop();
   }, [ready, rect, frame, reduce, box]);
 
-  // A new step's caption fades in once its cut-out is in place.
+  // A new step's caption fades in once its cut-out is in place. The fade runs on the native driver
+  // and its view always takes the animated value: switching the same view's opacity between a
+  // plain 0 and a JS-driven value on every step left every caption after the first at 0 on Android.
+  // Whether the step is measured yet (ready) is a plain opacity on a view around it.
   useEffect(() => {
+    if (!ready) return;
     if (reduce) {
       shown.setValue(1);
       return;
     }
     shown.setValue(0);
-    const fade = Animated.timing(shown, { toValue: 1, duration: motion.duration.base, delay: moveMs / 2, useNativeDriver: false });
+    const fade = Animated.timing(shown, { toValue: 1, duration: motion.duration.base, delay: moveMs / 2, useNativeDriver: true });
     fade.start();
     return () => fade.stop();
-  }, [index, reduce, shown]);
+  }, [index, ready, reduce, shown]);
 
   useEffect(() => {
     if (reduce) return;
@@ -169,47 +181,49 @@ export function HowToPlay({ targets, theme, insets, onClose }: { targets: Target
         }}
       />
 
-      <Animated.View
+      <View
         pointerEvents="none"
         style={[
           styles.caption,
-          place ? { left: place.left, right: place.right, top: place.top, bottom: place.bottom, alignItems: place.align === 'end' ? 'flex-end' : 'flex-start' } : styles.centered,
-          { opacity: ready ? shown : 0 },
+          place ? { left: place.left, right: place.right, top: place.top, bottom: place.bottom } : styles.centered,
+          { opacity: ready ? 1 : 0 },
         ]}
       >
-        {!hole && step.art === 'logo' ? (
-          <Txt variant="wordmark" color={spotlight.caption} accessibilityRole="header">
-            {en.app.name.toLowerCase()}
+        <Animated.View style={[styles.captionInner, place && { alignItems: place.align === 'end' ? 'flex-end' : 'flex-start' }, { opacity: shown }]}>
+          {!hole && step.art === 'logo' ? (
+            <Txt variant="wordmark" color={spotlight.caption} accessibilityRole="header">
+              {en.app.name.toLowerCase()}
+            </Txt>
+          ) : null}
+          {!hole && step.art === 'mic' ? (
+            <View style={styles.mic}>
+              <Icon name="mic" size={layout.icon.md} color={spotlight.caption} />
+            </View>
+          ) : null}
+          <Txt
+            variant={step.art === 'logo' ? 'lead' : 'caption'}
+            color={step.art === 'logo' ? spotlight.lead : spotlight.caption}
+            style={[place ? { textAlign: place.align === 'end' ? 'right' : 'left' } : styles.centerText, styles.shadow]}
+            accessibilityLiveRegion="polite"
+          >
+            {step.text}
           </Txt>
-        ) : null}
-        {!hole && step.art === 'mic' ? (
-          <View style={styles.mic}>
-            <Icon name="mic" size={layout.icon.md} color={spotlight.caption} />
-          </View>
-        ) : null}
-        <Txt
-          variant={step.art === 'logo' ? 'lead' : 'caption'}
-          color={step.art === 'logo' ? spotlight.lead : spotlight.caption}
-          style={[place ? { textAlign: place.align === 'end' ? 'right' : 'left' } : styles.centerText, styles.shadow]}
-          accessibilityLiveRegion="polite"
-        >
-          {step.text}
-        </Txt>
-        {step.rules ? (
-          <View style={styles.rules}>
-            {step.rules.map((rule) => (
-              <View key={rule} style={styles.rule}>
-                <Txt variant="rule" color={spotlight.lead}>
-                  {'•'}
-                </Txt>
-                <Txt variant="rule" color={spotlight.lead} style={styles.ruleText}>
-                  {rule}
-                </Txt>
-              </View>
-            ))}
-          </View>
-        ) : null}
-      </Animated.View>
+          {step.rules ? (
+            <View style={styles.rules}>
+              {step.rules.map((rule) => (
+                <View key={rule} style={styles.rule}>
+                  <Txt variant="rule" color={spotlight.lead}>
+                    {'•'}
+                  </Txt>
+                  <Txt variant="rule" color={spotlight.lead} style={styles.ruleText}>
+                    {rule}
+                  </Txt>
+                </View>
+              ))}
+            </View>
+          ) : null}
+        </Animated.View>
+      </View>
 
       <View
         pointerEvents="box-none"
@@ -249,9 +263,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: layout.screen.paddingX,
     right: layout.screen.paddingX,
-    alignItems: 'center',
-    gap: space[4],
   },
+  captionInner: { alignItems: 'center', gap: space[4] },
   centered: { top: 0, bottom: 0, justifyContent: 'center' },
   centerText: { textAlign: 'center', maxWidth: maxWidth.prose },
   shadow: { textShadowColor: 'rgba(0, 0, 0, 0.25)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 8 },
