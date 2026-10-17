@@ -12,6 +12,7 @@ import {
   hasTimerSetting,
   hiddenRoundSeconds,
   hotPotatoRange,
+  isTimeLimitInRange,
   parseSettings,
   toDifficulty,
   toggleCategory,
@@ -80,9 +81,18 @@ describe('Hot Potato hidden length', () => {
 });
 
 describe('canStart', () => {
-  it('needs at least 0:10 on a visible clock', () => {
-    expect(canStart(settingsFor('classic', { roundSeconds: 9 }))).toBe(false);
-    expect(canStart(settingsFor('classic', { roundSeconds: 10 }))).toBe(true);
+  it('needs a time limit from 0:30 to 10:00 on a visible clock', () => {
+    expect(canStart(settingsFor('classic', { roundSeconds: 29 }))).toBe(false);
+    expect(canStart(settingsFor('classic', { roundSeconds: 30 }))).toBe(true);
+    expect(canStart(settingsFor('classic', { roundSeconds: 600 }))).toBe(true);
+    expect(canStart(settingsFor('classic', { roundSeconds: 601 }))).toBe(false);
+  });
+
+  it('takes its time limits from the config', () => {
+    const config = { ...gameConfig, minRoundSeconds: 60, maxRoundSeconds: 120 };
+    expect(isTimeLimitInRange(59, config)).toBe(false);
+    expect(isTimeLimitInRange(120, config)).toBe(true);
+    expect(canStart(settingsFor('classic', { roundSeconds: 45 }), config)).toBe(false);
   });
 
   it('ignores the round timer for modes without one', () => {
@@ -115,12 +125,18 @@ describe('parseSettings', () => {
   });
 
   it('defaults fields that are missing, unknown or out of range, and never starts an unavailable mode', () => {
-    expect(parseSettings({ mode: 'teams', difficulty: 'Impossible', categories: ['Society', 'Nope', 'Society'], roundSeconds: 5, skips: 99 })).toEqual({
+    expect(parseSettings({ mode: 'teams', difficulty: 'Impossible', categories: ['Society', 'Nope', 'Society'], roundSeconds: 'soon', skips: 99 })).toEqual({
       ...defaultSettings(),
       categories: ['Society'],
     });
     expect(parseSettings({ difficulty: 'Legend' }).roundSeconds).toBe(defaultRoundSeconds('Legend'));
     expect(parseSettings('garbage')).toEqual(defaultSettings());
+  });
+
+  it('moves a time saved under the older, wider limits to the nearest limit', () => {
+    expect(parseSettings({ mode: 'classic', roundSeconds: 15 }).roundSeconds).toBe(30);
+    expect(parseSettings({ mode: 'classic', roundSeconds: 15 * 60 }).roundSeconds).toBe(600);
+    expect(parseSettings({ mode: 'classic', roundSeconds: 0, difficulty: 'Hard' }).roundSeconds).toBe(defaultRoundSeconds('Hard'));
   });
 
   it('moves a level saved under its old name to the level that replaced it', () => {

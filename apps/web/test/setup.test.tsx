@@ -13,12 +13,12 @@ const copy = en.setup;
 describe('New game setup', () => {
   it('offers a timer and skips only where the mode has them', () => {
     const { unmount } = renderApp(<SetupScreen mode="classic" />);
-    expect(screen.getByRole('textbox', { name: /Round timer 1:30/ })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Time limit 1:30/ })).toBeInTheDocument();
     expect(screen.getByRole('radiogroup', { name: copy.skips })).toBeInTheDocument();
     unmount();
 
     renderApp(<SetupScreen mode="hotPotato" />);
-    expect(screen.queryByRole('textbox', { name: /Round timer/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('textbox', { name: /Time limit/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('radiogroup', { name: copy.skips })).not.toBeInTheDocument();
   });
 
@@ -38,17 +38,54 @@ describe('New game setup', () => {
     expect(technology).not.toBeChecked();
   });
 
-  it('types the timer like a microwave and needs the shortest round to start', async () => {
+  it('types the time limit like a microwave and shows the accepted range', async () => {
     const user = userEvent.setup();
     renderApp(<SetupScreen mode="classic" />);
-    const timer = screen.getByRole('textbox', { name: /Round timer/ });
+    expect(screen.getByText('0:30 to 10:00')).toBeInTheDocument();
+    const timer = screen.getByRole('textbox', { name: /Time limit/ });
     await user.clear(timer);
     await user.type(timer, '5');
     expect(timer).toHaveValue('0:05');
-    expect(screen.getByRole('button', { name: copy.start })).toBeDisabled();
     await user.type(timer, '45');
     expect(timer).toHaveValue('5:45');
     expect(screen.getByRole('button', { name: copy.start })).toBeEnabled();
+  });
+
+  it('notes a time outside 0:30 to 10:00 once the box loses focus, and holds Start until it is fixed', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    const timer = screen.getByRole('textbox', { name: /Time limit/ });
+    const start = screen.getByRole('button', { name: copy.start });
+    await user.clear(timer);
+    await user.type(timer, '1200');
+    // Still typing: no note yet.
+    expect(screen.queryByText('Choose between 0:30 and 10:00.')).not.toBeInTheDocument();
+    await user.tab();
+    expect(screen.getByText('Choose between 0:30 and 10:00.')).toBeInTheDocument();
+    expect(start).toBeDisabled();
+
+    await user.clear(timer);
+    await user.type(timer, '20');
+    await user.tab();
+    expect(screen.getByText('Choose between 0:30 and 10:00.')).toBeInTheDocument();
+    expect(start).toBeDisabled();
+
+    await user.clear(timer);
+    await user.type(timer, '245');
+    await user.tab();
+    expect(screen.queryByText('Choose between 0:30 and 10:00.')).not.toBeInTheDocument();
+    expect(start).toBeEnabled();
+  });
+
+  it('rolls typed seconds over 59 into minutes when the box loses focus', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    const timer = screen.getByRole('textbox', { name: /Time limit/ });
+    await user.clear(timer);
+    await user.type(timer, '175');
+    expect(timer).toHaveValue('1:75');
+    await user.tab();
+    expect(timer).toHaveValue('2:15');
   });
 
   it('picks the renamed level for a player who saved an old level name', () => {
@@ -56,7 +93,7 @@ describe('New game setup', () => {
     renderApp(<SetupScreen mode="classic" />);
     expect(screen.getByRole('radio', { name: /^Elite/ })).toBeChecked();
     // No time was saved, so the timer follows the renamed level's default (4:00).
-    expect(screen.getByRole('textbox', { name: /Round timer 4:00/ })).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /Time limit 4:00/ })).toBeInTheDocument();
   });
 
   it('starts the game it was set up for and opens Play', async () => {

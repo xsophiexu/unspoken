@@ -218,9 +218,11 @@ export const en = {
     themes: 'CATEGORIES',
     themesHint: 'Pick one or more',
     smallDeck: 'Only {cards}, words will repeat',
-    timer: 'ROUND TIMER',
-    timerMin: 'At least {min}',
-    timerDefault: 'Default for {difficulty}',
+    timer: 'TIME LIMIT',
+    // At the right of the label: the times setup accepts.
+    timerRange: '{min} to {max}',
+    // Under the box when the typed time is outside that range; Start waits until it is fixed.
+    timerOutOfRange: 'Choose between {min} and {max}.',
     timerUnit: 'min : sec',
     skips: 'SKIPS PER ROUND',
     skipsHint: '∞ = unlimited',
@@ -374,7 +376,7 @@ export const en = {
     modeAndDifficulty: '{mode}, {difficulty}. Tap to change.',
     closeMenu: 'Close menu',
     closeSheet: 'Close',
-    timer: 'Round timer {clock}. Tap to type a new time.',
+    timer: 'Time limit {clock}. Tap to type a new time.',
     unlimitedSkips: 'Unlimited skips',
   },
 };

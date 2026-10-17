@@ -57,12 +57,10 @@ export function sanitizeTimerDigits(input: string): string {
   return input.replace(/\D/g, '').replace(/^0+/, '').slice(0, 4);
 }
 
-// Timer digits to seconds. Seconds past 59 are capped: "199" is 1:59.
+// Timer digits to seconds. Seconds past 59 roll into minutes: "175" is 2:15.
 export function timerDigitsToSeconds(digits: string): number {
   const padded = digits.padStart(3, '0');
-  const m = Number(padded.slice(0, -2));
-  const s = Math.min(59, Number(padded.slice(-2)));
-  return m * 60 + s;
+  return Number(padded.slice(0, -2)) * 60 + Number(padded.slice(-2));
 }
 
 // Seconds to timer digits: 150 → "230".

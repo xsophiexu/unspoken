@@ -4,13 +4,13 @@ import {
   MODE_IDS,
   canStart,
   categoriesInBank,
-  defaultRoundSeconds,
   deckSize,
   format,
   formatClock,
   gameConfig,
   hasSkipSetting,
   hasTimerSetting,
+  isTimeLimitInRange,
   modeRules,
   plural,
   sanitizeTimerDigits,
@@ -32,6 +32,7 @@ import { usePrefs } from '../state/prefs';
 import { Button, LinkButton } from '../ui/Button';
 import { Chip } from '../ui/Chip';
 import { Grid } from '../ui/Grid';
+import { Icon } from '../ui/Icon';
 import { Press } from '../ui/Press';
 import { Screen, ScreenTitle, ScreenTop, SectionLabel } from '../ui/Screen';
 import { Tile } from '../ui/Tile';
@@ -58,6 +59,7 @@ export default function SetupScreen() {
   const cards = deckSize(bank, draft.difficulty, draft.categories);
 
   const start = () => {
+    if (!canStart(settings)) return;
     prefs.startGame(settings);
     backToGame();
   };
@@ -125,7 +127,7 @@ export default function SetupScreen() {
           </View>
 
           {hasTimerSetting(mode) ? (
-            <TimerField seconds={draft.roundSeconds} difficulty={draft.difficulty} colors={colors} onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))} />
+            <TimerField seconds={draft.roundSeconds} colors={colors} onChange={(roundSeconds) => setDraft((cur) => ({ ...cur, roundSeconds }))} />
           ) : null}
 
           {hasSkipSetting(mode) ? (
@@ -153,34 +155,32 @@ export default function SetupScreen() {
   );
 }
 
-type TimerProps = { seconds: number; difficulty: GameSettings['difficulty']; colors: RegionColors; onChange: (seconds: number) => void };
+type TimerProps = { seconds: number; colors: RegionColors; onChange: (seconds: number) => void };
 
-// The round timer fills from the right as digits are typed, like a microwave: 1, 4, 5 reads 1:45.
-function TimerField({ seconds, difficulty, colors, onChange }: TimerProps) {
+const LIMITS = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
+
+// The time limit fills from the right as digits are typed, like a microwave: 1, 4, 5 reads 1:45.
+// Once the box loses focus, seconds over 59 roll into minutes (1:75 reads 2:15) and a time outside
+// the accepted range shows a calm note; Start waits until it is fixed.
+function TimerField({ seconds, colors, onChange }: TimerProps) {
   const { theme } = usePrefs();
   const field = theme.regions.raised;
   const input = useRef<TextInput>(null);
   const [digits, setDigits] = useState(() => secondsToTimerDigits(seconds));
   const [focused, setFocused] = useState(false);
-  const typed = timerDigitsToSeconds(digits);
   const label = timerDigitsLabel(digits);
   const s = en.setup;
-  const aside =
-    typed < gameConfig.minRoundSeconds
-      ? format(s.timerMin, { min: formatClock(gameConfig.minRoundSeconds) })
-      : seconds === defaultRoundSeconds(difficulty)
-        ? format(s.timerDefault, { difficulty: en.difficulties[difficulty].name })
-        : undefined;
-  // A new level moves a default timer with it; show that new time.
-  if (!focused && timerDigitsToSeconds(digits) !== seconds) setDigits(secondsToTimerDigits(seconds));
+  const outOfRange = !focused && !isTimeLimitInRange(seconds);
+  // A new difficulty moves a default time with it, and a typed 1:75 settles as 2:15; show that time.
+  if (!focused && digits !== secondsToTimerDigits(seconds)) setDigits(secondsToTimerDigits(seconds));
 
   return (
     <View style={styles.section}>
-      <SectionLabel label={s.timer} aside={aside} colors={colors} />
+      <SectionLabel label={s.timer} aside={format(s.timerRange, LIMITS)} colors={colors} />
       <Press
         onPress={() => input.current?.focus()}
         accessibilityLabel={format(en.a11y.timer, { clock: label })}
-        style={[styles.timer, { backgroundColor: field.bg, borderColor: focused ? colors.accent : field.bg }]}
+        style={[styles.timer, { backgroundColor: field.bg, borderColor: focused ? colors.accent : outOfRange ? colors.ink : field.bg }]}
       >
         <Txt variant="headline" color={field.ink} style={styles.tabular}>
           {label}
@@ -205,6 +205,19 @@ function TimerField({ seconds, difficulty, colors, onChange }: TimerProps) {
         accessibilityElementsHidden
         importantForAccessibility="no"
       />
+      {outOfRange ? <Note text={format(s.timerOutOfRange, LIMITS)} colors={colors} /> : null}
+    </View>
+  );
+}
+
+// A calm note: muted ink on a soft grey row with a small info icon. Never red.
+function Note({ text, colors }: { text: string; colors: RegionColors }) {
+  return (
+    <View style={[styles.note, { backgroundColor: colors.chip }]} accessibilityRole="alert" accessibilityLiveRegion="polite">
+      <Icon name="info" size={layout.icon.sm} color={colors.muted} />
+      <Txt variant="hint" color={colors.muted} style={styles.noteText}>
+        {text}
+      </Txt>
     </View>
   );
 }
@@ -223,4 +236,6 @@ const styles = StyleSheet.create({
   },
   tabular: { fontVariant: ['tabular-nums'] },
   hiddenInput: { position: 'absolute', width: 1, height: 1, opacity: 0 },
+  note: { flexDirection: 'row', alignItems: 'center', gap: space[2], borderRadius: radius.md, paddingHorizontal: space[3.5], paddingVertical: space[2.5] },
+  noteText: { flex: 1 },
 });

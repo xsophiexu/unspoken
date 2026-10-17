@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, MODE_IDS, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, toDifficulty, type Category, type GameSettings } from '@unspoken/core';
+import { CATEGORY_IDS, MODE_IDS, clampTimeLimit, defaultRoundSeconds, defaultSettings, gameConfig, modeRules, toDifficulty, type Category, type GameSettings } from '@unspoken/core';
 import { z } from 'zod';
 
 export const SETTINGS_STORAGE_KEY = 'unspoken.settings';
@@ -15,7 +15,14 @@ export function parseSettings(value: unknown, config = gameConfig): GameSettings
       .catch(fallback.mode),
     difficulty: z.unknown().optional().transform((value) => toDifficulty(value, config) ?? fallback.difficulty),
     categories: z.array(z.enum(CATEGORY_IDS)).catch([...fallback.categories]),
-    roundSeconds: z.number().int().min(config.minRoundSeconds).max(config.maxRoundSeconds).optional().catch(undefined),
+    // A time saved under older, wider limits moves to the nearest limit (15:00 → 10:00).
+    roundSeconds: z
+      .number()
+      .int()
+      .positive()
+      .transform((seconds) => clampTimeLimit(seconds, config))
+      .optional()
+      .catch(undefined),
     skips: z
       .number()
       .int()

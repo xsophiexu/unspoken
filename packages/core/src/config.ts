@@ -46,9 +46,10 @@ export type GameConfig = {
   defaults: Omit<GameSettings, 'roundSeconds'>;
   // Choices on the "Skips per round" grid; null is unlimited (∞).
   skipOptions: readonly (number | null)[];
-  // The shortest round a player can type.
+  // The shortest time limit setup accepts. The box takes any four digits; outside this range setup
+  // shows a note and Start waits until the time is fixed.
   minRoundSeconds: number;
-  // The longest round a player can type (four digits on the microwave-style input: 99:59).
+  // The longest time limit setup accepts.
   maxRoundSeconds: number;
   // Setup warns that words will repeat below this many cards.
   smallDeckCards: number;
@@ -98,8 +99,9 @@ export const gameConfig: GameConfig = {
   // The app opens straight into an Endless game at Normal with All cards.
   defaults: { mode: 'endless', difficulty: 'Normal', categories: [], skips: 3 },
   skipOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null],
-  minRoundSeconds: 10,
-  maxRoundSeconds: 99 * 60 + 59,
+  // Time limits run from 0:30 to 10:00.
+  minRoundSeconds: 30,
+  maxRoundSeconds: 10 * 60,
   smallDeckCards: 20,
   // Escalate starts with 4 banned words and adds one per correct answer. Three correct at 10 wins.
   escalate: { start: 4, max: 10, winAtMax: 3, minFullCards: 20 },

@@ -31,3 +31,24 @@
 .unit {
   color: var(--un-color-muted);
 }
+
+/* Outside the accepted range: an ink outline, never red. */
+.invalid {
+  box-shadow: inset 0 0 0 var(--un-space-0-5) var(--un-color-ink);
+}
+
+/* The calm note under the box: muted ink on a soft grey row with a small info icon. */
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  margin: 0;
+  padding: var(--un-space-2-5) var(--un-space-3-5);
+  border-radius: var(--un-radius-md);
+  background: var(--region-chip);
+  color: var(--region-muted);
+}
+
+.noteIcon {
+  flex: none;
+}

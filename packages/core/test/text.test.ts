@@ -60,8 +60,10 @@ describe('microwave timer input', () => {
     expect(timerDigitsToSeconds('145')).toBe(105);
   });
 
-  it('caps seconds at 59', () => {
-    expect(timerDigitsToSeconds('199')).toBe(119);
+  it('rolls seconds over 59 into minutes', () => {
+    expect(timerDigitsToSeconds('175')).toBe(135);
+    expect(timerDigitsLabel(secondsToTimerDigits(timerDigitsToSeconds('175')))).toBe('2:15');
+    expect(timerDigitsToSeconds('99')).toBe(99);
   });
 
   it('keeps digits only, without leading zeros, up to four', () => {

@@ -75,11 +75,21 @@ export function defaultSettings(config: GameConfig = gameConfig): GameSettings {
   return { ...defaults, categories: [...defaults.categories], roundSeconds: defaultRoundSeconds(defaults.difficulty, config) };
 }
 
-// Whether settings can start a game: a visible timer needs at least the minimum round length.
+// Whether a time limit is one setup accepts (0:30 to 10:00).
+export function isTimeLimitInRange(seconds: number, config: GameConfig = gameConfig): boolean {
+  return seconds >= config.minRoundSeconds && seconds <= config.maxRoundSeconds;
+}
+
+// A time moved into the accepted range, for times saved under older limits.
+export function clampTimeLimit(seconds: number, config: GameConfig = gameConfig): number {
+  return Math.min(config.maxRoundSeconds, Math.max(config.minRoundSeconds, seconds));
+}
+
+// Whether settings can start a game: a visible timer needs a time limit in range.
 export function canStart(settings: GameSettings, config: GameConfig = gameConfig): boolean {
   if (!modeRules(settings.mode, config).available) return false;
   if (!hasTimerSetting(settings.mode, config)) return true;
-  return settings.roundSeconds >= config.minRoundSeconds && settings.roundSeconds <= config.maxRoundSeconds;
+  return isTimeLimitInRange(settings.roundSeconds, config);
 }
 
 // A level id from saved data: a current id, or an old name mapped to its level (Expert 1 → Hard).
@@ -92,6 +102,7 @@ export function toDifficulty(value: unknown, config: GameConfig = gameConfig): D
 
 // Reads saved settings (from device storage or a request), keeping each valid field and defaulting
 // the rest. A mode that is not available falls back to the default mode; an old level name maps to its level.
+// A whole-second time saved under older, wider limits moves to the nearest limit (15:00 → 10:00).
 export function parseSettings(value: unknown, config: GameConfig = gameConfig): GameSettings {
   const fallback = defaultSettings(config);
   const v = (typeof value === 'object' && value !== null ? value : {}) as Partial<Record<keyof GameSettings, unknown>>;
@@ -101,8 +112,8 @@ export function parseSettings(value: unknown, config: GameConfig = gameConfig): 
   const categories = config.categories.filter((c) => saved.includes(c));
   const seconds = v.roundSeconds;
   const roundSeconds =
-    typeof seconds === 'number' && Number.isInteger(seconds) && seconds >= config.minRoundSeconds && seconds <= config.maxRoundSeconds
-      ? seconds
+    typeof seconds === 'number' && Number.isInteger(seconds) && seconds > 0
+      ? clampTimeLimit(seconds, config)
       : defaultRoundSeconds(difficulty, config);
   const skips = config.skipOptions.find((n) => n === v.skips);
   return { mode, difficulty, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips };

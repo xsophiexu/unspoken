@@ -5,12 +5,12 @@ import {
   canStart,
   categoriesInBank,
   deckSize,
-  defaultRoundSeconds,
   format,
   formatClock,
   gameConfig,
   hasSkipSetting,
   hasTimerSetting,
+  isTimeLimitInRange,
   plural,
   withDifficulty,
   type GameSettings,
@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 import { DifficultyGrid } from '@/components/game/DifficultyGrid';
-import { TimerInput } from '@/components/game/TimerInput';
+import { TimerInput, TimerNote } from '@/components/game/TimerInput';
 import { Button } from '@/components/ui/Button';
 import { Choice } from '@/components/ui/Choice';
 import { Grid } from '@/components/ui/Grid';
@@ -43,22 +43,21 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
   const game = useGame();
   const router = useRouter();
   const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
+  const [timerFocused, setTimerFocused] = useState(false);
   const update = (change: Partial<GameSettings>) => setSettings((current) => ({ ...current, ...change }));
   const { difficulty, categories, roundSeconds, skips } = settings;
   const cards = deckSize(bank, difficulty, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
 
   const start = () => {
+    if (!canStart(settings)) return;
     game.newGame(settings);
     router.push(routes.play);
   };
 
-  const timerAside =
-    roundSeconds < gameConfig.minRoundSeconds
-      ? format(copy.timerMin, { min: formatClock(gameConfig.minRoundSeconds) })
-      : roundSeconds === defaultRoundSeconds(difficulty)
-        ? format(copy.timerDefault, { difficulty: en.difficulties[difficulty].name })
-        : undefined;
+  const limits = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
+  // The time is checked once the box loses focus; Start waits while it is out of range.
+  const timeOutOfRange = hasTimerSetting(mode) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
 
   return (
     <Screen
@@ -111,8 +110,14 @@ export function SetupScreen({ mode }: { mode: ModeId }) {
       </Section>
 
       {hasTimerSetting(mode) && (
-        <Section label={copy.timer} aside={timerAside}>
-          <TimerInput seconds={roundSeconds} onChange={(seconds) => update({ roundSeconds: seconds })} />
+        <Section label={copy.timer} aside={format(copy.timerRange, limits)}>
+          <TimerInput
+            seconds={roundSeconds}
+            invalid={timeOutOfRange}
+            onFocusChange={setTimerFocused}
+            onChange={(seconds) => update({ roundSeconds: seconds })}
+          />
+          {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
         </Section>
       )}
 
