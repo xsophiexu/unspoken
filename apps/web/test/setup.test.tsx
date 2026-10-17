@@ -1,5 +1,6 @@
-import { en } from '@unspoken/content';
-import { screen } from '@testing-library/react';
+import { bank, en } from '@unspoken/content';
+import { categoriesInBank, defaultRoundSeconds, format, formatClock, plural } from '@unspoken/core';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
@@ -9,6 +10,8 @@ import { SetupScreen } from '@/screens/SetupScreen';
 import { renderApp, saved } from './app';
 
 const copy = en.setup;
+const categoriesRow = () => screen.getByRole('button', { name: /^Categories:/ });
+const themes = categoriesInBank(bank);
 
 describe('New game setup', () => {
   it('offers a timer and skips only where the mode has them', () => {
@@ -27,6 +30,7 @@ describe('New game setup', () => {
   it('keeps All cards exclusive of picked categories', async () => {
     const user = userEvent.setup();
     renderApp(<SetupScreen mode="endless" />);
+    await user.click(categoriesRow());
     const all = screen.getByRole('checkbox', { name: new RegExp(`^${en.themes.all}`) });
     const technology = screen.getByRole('checkbox', { name: /^Technology/ });
     expect(all).toBeChecked();
@@ -93,7 +97,8 @@ describe('New game setup', () => {
   it('picks the renamed level for a player who saved an old level name', () => {
     saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulty: 'Master 2', categories: [], skips: 3 } });
     renderApp(<SetupScreen mode="classic" />);
-    expect(screen.getByRole('radio', { name: /^Elite/ })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: /^Elite/ })).toBeChecked();
+    expect(screen.getAllByRole('checkbox', { checked: true })).toHaveLength(1);
     // No time was saved, so the timer follows the renamed level's default (4:00).
     expect(screen.getByRole('textbox', { name: /Time limit 4:00/ })).toBeInTheDocument();
   });
@@ -101,17 +106,20 @@ describe('New game setup', () => {
   it('starts the game it was set up for and opens Play', async () => {
     const user = userEvent.setup();
     const { router } = renderApp(<SetupScreen mode="classic" />);
-    await user.click(screen.getByRole('radio', { name: /^Elite/ }));
+    await user.click(screen.getByRole('checkbox', { name: /^Elite/ }));
+    await user.click(categoriesRow());
     await user.click(screen.getByRole('checkbox', { name: /^Society/ }));
+    await user.click(screen.getByRole('checkbox', { name: /^Everyday Life/ }));
+    await user.click(screen.getByRole('button', { name: en.categoriesSheet.done }));
     await user.click(screen.getByRole('radio', { name: en.a11y.unlimitedSkips }));
     await user.click(screen.getByRole('button', { name: copy.start }));
 
     expect(router.push).toHaveBeenCalledWith('/');
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toEqual({
       mode: 'classic',
-      difficulties: ['Elite'],
-      categories: ['Society'],
-      // The timer was on Hard's default, so it follows the new level.
+      difficulties: ['Normal', 'Elite'],
+      categories: ['Society', 'Everyday Life'],
+      // The timer was on Normal's default, so it follows the hardest pick.
       roundSeconds: 240,
       skips: null,
       noTimeLimit: false,
@@ -145,5 +153,74 @@ describe('New game setup', () => {
     await user.click(screen.getByRole('switch', { name: /No time limit/ }));
     await user.click(start);
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', noTimeLimit: true, roundSeconds: 720 });
+  });
+
+  it('toggles difficulty tiles, never clears the last one and times the round by the hardest pick', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    const normal = screen.getByRole('checkbox', { name: /^Normal/ });
+    expect(normal).toBeChecked();
+    expect(screen.getByText(copy.difficultyHint)).toBeInTheDocument();
+
+    await user.click(normal);
+    expect(normal).toBeChecked();
+
+    await user.click(screen.getByRole('checkbox', { name: /^Tough/ }));
+    await user.click(screen.getByRole('checkbox', { name: /^Tricky/ }));
+    expect(screen.getByText(new RegExp(`^${plural(3, en.units.difficulties)} · `))).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: new RegExp(`Time limit ${formatClock(defaultRoundSeconds('Tough'))}`) })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('checkbox', { name: /^Tough/ }));
+    expect(screen.getByRole('textbox', { name: new RegExp(`Time limit ${formatClock(defaultRoundSeconds('Tricky'))}`) })).toBeInTheDocument();
+  });
+
+  it('shows the difficulty examples with the current picks highlighted', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    await user.click(screen.getByRole('checkbox', { name: /^Legend/ }));
+    await user.click(screen.getByRole('button', { name: en.a11y.difficultyInfo }));
+    const sheet = screen.getByRole('dialog');
+    expect(within(sheet).getByText(en.difficultyInfo.body)).toBeInTheDocument();
+    const rows = within(sheet).getAllByRole('row').slice(1);
+    const picked = rows.filter((row) => row.getAttribute('aria-current')).map((row) => within(row).getAllByRole('rowheader')[0]!.textContent);
+    expect(picked).toEqual(['Normal', 'Legend']);
+    expect(within(rows[2]!).getByText(en.difficultyInfo.examples[0]!.words.Hard)).toBeInTheDocument();
+  });
+
+  it('double-tapping All cards highlights every category, and again goes back to All cards', async () => {
+    const user = userEvent.setup();
+    renderApp(<SetupScreen mode="classic" />);
+    await user.click(categoriesRow());
+    const all = screen.getByRole('checkbox', { name: new RegExp(`^${en.themes.all}`) });
+
+    await user.dblClick(all);
+    expect(themes.every((t) => screen.getByRole('checkbox', { name: new RegExp(`^${t}`) }).matches(':checked'))).toBe(true);
+    expect(all).not.toBeChecked();
+    expect(screen.getByText(en.categoriesSheet.hintAll)).toBeInTheDocument();
+
+    await user.dblClick(all);
+    expect(all).toBeChecked();
+    expect(themes.some((t) => screen.getByRole('checkbox', { name: new RegExp(`^${t}`) }).matches(':checked'))).toBe(false);
+
+    await user.click(screen.getByRole('button', { name: en.categoriesSheet.done }));
+    expect(categoriesRow()).toHaveAccessibleName(format(en.a11y.categories, { summary: en.themes.all }));
+  });
+
+  it('asks before starting with few cards: Go back stays, Play anyway starts', async () => {
+    const user = userEvent.setup();
+    const { router } = renderApp(<SetupScreen mode="classic" />);
+    await user.click(categoriesRow());
+    await user.click(screen.getByRole('checkbox', { name: /^Inner World/ }));
+    await user.click(screen.getByRole('button', { name: en.categoriesSheet.done }));
+
+    await user.click(screen.getByRole('button', { name: copy.start }));
+    expect(within(screen.getByRole('dialog')).getByText(en.smallDeck.body)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: en.smallDeck.back }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(router.push).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole('button', { name: copy.start }));
+    await user.click(screen.getByRole('button', { name: en.smallDeck.playAnyway }));
+    expect(router.push).toHaveBeenCalledWith('/');
   });
 });

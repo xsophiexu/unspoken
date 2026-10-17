@@ -1,0 +1,77 @@
+.muted {
+  color: var(--region-muted);
+}
+
+/* Room above the Choose categories title, and more below the header before the chips start. */
+.roomyHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-1);
+  padding-block: var(--un-layout-sheet-header-room) var(--un-layout-sheet-header-gap);
+}
+
+.titleLine {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-2);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-control-icon-badge);
+  height: var(--un-layout-control-icon-badge);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  font-size: var(--un-layout-icon-sm);
+  cursor: pointer;
+}
+
+.table {
+  width: 100%;
+  margin-top: var(--un-space-2);
+  border-collapse: separate;
+  border-spacing: 0;
+  color: var(--region-ink);
+  text-align: start;
+}
+
+.table th,
+.table td {
+  padding: var(--un-space-2) var(--un-space-1-5);
+  text-align: start;
+  font-weight: inherit;
+}
+
+.table tbody tr > * {
+  border-top: var(--un-layout-stroke-hairline) solid var(--region-rule);
+}
+
+.picked > * {
+  background: var(--region-chip);
+}
+
+.level {
+  display: inline-block;
+  padding: var(--un-space-0-5) var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  white-space: nowrap;
+}
+
+.picked .level {
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}

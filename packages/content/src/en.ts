@@ -243,9 +243,6 @@ export const en = {
     // At the right of the DIFFICULTY label: the hint with one pick, the count and cards with more.
     difficultyHint: 'Pick one or more',
     difficultyPicked: '{difficulties} · {cards}',
-    themes: 'CATEGORIES',
-    themesHint: 'Pick one or more',
-    smallDeck: 'Only {cards}, words will repeat',
     timer: 'TIME LIMIT',
     // Inside the box under min : sec: the times setup accepts.
     timerRange: '{min} to {max}',
