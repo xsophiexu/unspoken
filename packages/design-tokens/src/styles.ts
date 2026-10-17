@@ -276,9 +276,9 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     stats: { placement: 'belowHeader', emphasis: 'plain' },
     word: { container: 'none', label: false, size: 58, minSize: 24, maxLines: 2, color: 'ink' },
     banned: { variant: 'columns', size: 22, weight: 500, label: true },
-    // Shorter than Ledger's bar, so Skip and Correct sit close to the bottom edge. The labels sit
+    // Shorter than Ledger's bar, so Skip and Correct sit close to the bottom edge (72: Kurt found 64 too small). The labels sit
     // right on the bottom safe area (no paddingBottom); the bar is taps only (swipe: false).
-    controls: { variant: 'splitBar', height: 64, radius: 'none', skip: 'filled', skipWidth: 150 },
+    controls: { variant: 'splitBar', height: 72, radius: 'none', skip: 'filled', skipWidth: 150 },
     swipe: false,
     margins: { paddingBottom: 0 },
     dark: { regions: { lower: 'sunken', skip: 'sunken' }, banned: { labelColor: 'accentText' } },
