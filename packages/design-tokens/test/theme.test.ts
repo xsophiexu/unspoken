@@ -181,18 +181,28 @@ describe('play screen margins', () => {
 });
 
 describe('ringCardSize', () => {
-  const { maxWidth, maxHeight } = layout.card;
+  const { maxWidth, maxHeight, ringScale } = layout.card;
 
-  it('keeps the ring’s shape when the screen is narrower than the ring', () => {
+  it('draws the ring a little larger than the space inside the side margins, keeping its shape', () => {
     const width = layout.referenceScreen.width - 2 * layout.play.paddingX;
     const ring = ringCardSize(width, layout.referenceScreen.height);
-    expect(ring.width).toBe(width);
+    expect(ring.width).toBeGreaterThan(width * 1.08);
+    expect(ring.width).toBeLessThan(width * 1.12);
     expect(ring.height / ring.width).toBeCloseTo(maxHeight / maxWidth);
   });
 
+  it('reaches into the side margins but never past the screen edges', () => {
+    for (const screen of [320, 360, 390, 430, 480]) {
+      const ring = ringCardSize(screen - 2 * layout.play.paddingX, 2000);
+      expect(ring.width).toBeLessThan(screen);
+    }
+  });
+
   it('stops growing at the largest ring and never overflows a short space', () => {
-    expect(ringCardSize(1000, 1000)).toEqual({ width: maxWidth, height: maxHeight });
-    expect(ringCardSize(300, 200)).toEqual({ width: 300, height: 200 });
+    const largest = ringCardSize(1000, 1000);
+    expect(largest.width).toBeCloseTo(maxWidth * ringScale);
+    expect(largest.height).toBeCloseTo(maxHeight * ringScale);
+    expect(ringCardSize(300, 200).height).toBe(200);
   });
 });
 

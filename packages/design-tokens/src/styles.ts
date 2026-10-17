@@ -430,11 +430,13 @@ export function playMargins(style: LayoutStyle): PlayMargins {
   return { ...layout.play, ...style.margins };
 }
 
-// The Card timer ring for the space it can take: as wide as that space, up to
+// The Card timer ring for the space it can take: layout.card.ringScale times as wide as that space
+// (the space inside the side margins, so the ring reaches into them), up to that much more than
 // layout.card.maxWidth, and as tall as the maxWidth × maxHeight shape gives at that width, never
-// taller than the space (326 × 540 on the reference screen with layout.play margins).
+// taller than the space (359 × 594 on the reference screen with layout.play margins).
 export function ringCardSize(width: number, height: number): { width: number; height: number } {
-  const { maxWidth, maxHeight } = layout.card;
-  const w = Math.max(0, Math.min(width, maxWidth));
+  const { maxWidth, maxHeight, ringScale } = layout.card;
+  const w = Math.max(0, Math.min(width, maxWidth) * ringScale);
   return { width: w, height: Math.max(0, Math.min(height, (w * maxHeight) / maxWidth)) };
 }
+

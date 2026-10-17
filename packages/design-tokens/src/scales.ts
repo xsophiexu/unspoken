@@ -151,8 +151,10 @@ export const layout = {
   header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
   // Card style: the word tile inside the timer ring. The ring is at most maxWidth × maxHeight and
   // keeps that shape on narrower screens (ringCardSize). floatingHeight: the Deck card's height,
-  // which shrinks on shorter screens.
-  card: { maxWidth: 350, maxHeight: 580, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
+  // which shrinks on shorter screens. ringScale: the Card ring and its tile are drawn this much
+  // larger than the space inside the side margins (and than maxWidth × maxHeight), reaching into the
+  // margins, while the header, status line and controls keep their places.
+  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
   // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
   // the height of a compact tile or band.
