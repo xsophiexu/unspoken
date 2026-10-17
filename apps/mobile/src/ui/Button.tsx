@@ -1,5 +1,5 @@
 import { buttonPair, layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
 import { Icon, type IconName } from './Icon';

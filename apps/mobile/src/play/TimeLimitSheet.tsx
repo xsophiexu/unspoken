@@ -176,6 +176,8 @@ function Slider({ seconds, disabled, colors, onChange }: { seconds: number; disa
   useEffect(() => {
     live.current = { ...live.current, width, disabled, onChange };
   });
+  // The ref is only read inside the gesture handlers, never while rendering.
+  // eslint-disable-next-line react-hooks/refs
   const [pan] = useState(() => {
     const at = (x: number) => {
       const { width: w } = live.current;
