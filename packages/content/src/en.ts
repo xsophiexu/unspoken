@@ -1,6 +1,6 @@
 import type { Category, Difficulty, FeedbackEntryPoint, FeedbackTopic, ModeId, RoundCopy } from '@unspoken/core';
 
-// English copy for every screen. Keys follow the ids in @unspoken/core (modes, difficulties, themes,
+// English copy for every screen. Keys follow the ids in @unspoken/core (modes, difficulties, categories,
 // feedback topics) and the style and color ids in @unspoken/design-tokens, so a platform never
 // writes user-facing text itself. Placeholders in braces are filled with format() / plural() from
 // @unspoken/core.
@@ -27,7 +27,7 @@ const difficulties: Record<Difficulty, { name: string; badge: string }> = {
   Legend: { name: 'Legend', badge: 'LEGEND' },
 };
 
-// Theme ids are already English; translations map them here.
+// Category ids are already English; translations map them here.
 const categories: Record<Category, string> = {
   'Inner World': 'Inner World',
   'Literature and Language': 'Literature and Language',
@@ -117,7 +117,7 @@ export const en = {
     bannedWords: { one: '{n} banned word', other: '{n} banned words' },
     letters: { one: '{n} letter', other: '{n} letters' },
   },
-  themes: { all: 'All cards', many: { one: '{n} theme', other: '{n} themes' } },
+  themes: { all: 'All cards', many: { one: '{n} category', other: '{n} categories' } },
   status: {
     skipsLeft: '{skips} left',
     tally: '{correct} correct · {skipped} skipped',
@@ -180,7 +180,7 @@ export const en = {
     title: 'Game paused',
     // The i beside the title: its name and, on web, its tooltip.
     howToPlay: { title: 'How to play' },
-    changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and theme · starts a new game' },
+    changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and categories · starts a new game' },
     customize: { title: 'Customize', detail: 'Layout and color · {style} · {color}' },
     feedback: { title: 'Send feedback', detail: 'Ideas for styles, modes or words' },
     // The Restart button shows restartShort, beside Resume or in the header; restart is its name.
@@ -192,14 +192,14 @@ export const en = {
   modeSheet: {
     note: 'Picking a difficulty starts a new round',
     difficulty: 'DIFFICULTY',
-    restart: { title: 'Restart', detail: 'Same mode and level' },
+    restart: { title: 'Restart', detail: 'Same mode and difficulty' },
     newGame: { title: 'New game', detail: 'Choose a different mode' },
     keepPlaying: 'Keep playing',
   },
   // The difficulty picker that opens from the Card header's badge.
   difficultyPicker: {
     title: 'Difficulty',
-    note: 'Picking a new level starts a new game',
+    note: 'Picking a new difficulty starts a new game',
     keepPlaying: 'Keep playing',
   },
 
@@ -215,7 +215,7 @@ export const en = {
     back: '← Modes',
     title: 'New game',
     difficulty: 'DIFFICULTY',
-    themes: 'THEMES',
+    themes: 'CATEGORIES',
     themesHint: 'Pick one or more',
     smallDeck: 'Only {cards}, words will repeat',
     timer: 'ROUND TIMER',

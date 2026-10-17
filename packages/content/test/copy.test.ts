@@ -31,18 +31,18 @@ describe('status lines in English', () => {
     expect(roundSubline(state, roundCopy)).toBe('7 pts · 1 skip left');
   });
 
-  it('Endless counts correct and skipped words, and the menu adds the themes', () => {
+  it('Endless counts correct and skipped words, and the menu adds the categories', () => {
     const state = start(settings({ mode: 'endless' }));
     expect(roundSubline(state, roundCopy)).toBe('0 correct · 0 skipped');
     expect(menuStatus(state, roundCopy)).toBe('0 correct · 0 skipped · All cards');
   });
 
-  it('Classic’s menu shows the clock and the themes chosen', () => {
+  it('Classic’s menu shows the clock and the categories chosen', () => {
     const state = play(start(settings({ mode: 'classic', roundSeconds: 150, categories: ['Society', 'Business'] })), [
       { type: 'tick', seconds: 22 },
       { type: 'correct' },
     ]);
-    expect(menuStatus(state, roundCopy)).toBe('2:08 left · 1 pt · 2 themes');
+    expect(menuStatus(state, roundCopy)).toBe('2:08 left · 1 pt · 2 categories');
   });
 
   it('Escalate shows the banned words climbing, then progress to the win', () => {

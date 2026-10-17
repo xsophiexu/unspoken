@@ -22,7 +22,7 @@ describe('New game setup', () => {
     expect(screen.queryByRole('radiogroup', { name: copy.skips })).not.toBeInTheDocument();
   });
 
-  it('keeps All cards exclusive of picked themes', async () => {
+  it('keeps All cards exclusive of picked categories', async () => {
     const user = userEvent.setup();
     renderApp(<SetupScreen mode="endless" />);
     const all = screen.getByRole('checkbox', { name: new RegExp(`^${en.themes.all}`) });
