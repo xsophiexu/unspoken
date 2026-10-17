@@ -72,6 +72,14 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   const cardsLabel = (n: number) => plural(n, en.units.cards);
   const summary = categoriesSummary(categories, summaryCopy);
   const difficultyRow = difficultyRowDetail(difficulties, cards);
+  const categoriesRow = (
+    <ChevronRow
+      title={copy.categories}
+      detail={format(copy.categoriesDetail, { summary, cards: cardsLabel(cards) })}
+      label={format(en.a11y.categories, { summary })}
+      onClick={() => setOpen('categories')}
+    />
+  );
 
   const play = () => {
     game.newGame(settings, custom ? 'custom' : undefined);
@@ -157,15 +165,15 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
           <VersusSettings />
         </>
       )}
-      {versus && (
-        <ChevronRow title={en.versus.settings.difficulty} detail={difficultyRow.detail} label={difficultyRow.a11y} onClick={() => setOpen('difficulty')} />
+      {versus ? (
+        // WORDS over the Difficulty and Categories rows, like ROUNDS and SCORING.
+        <Section label={en.versus.settings.words}>
+          <ChevronRow title={en.versus.settings.difficulty} detail={difficultyRow.detail} label={difficultyRow.a11y} onClick={() => setOpen('difficulty')} />
+          {categoriesRow}
+        </Section>
+      ) : (
+        categoriesRow
       )}
-      <ChevronRow
-        title={copy.categories}
-        detail={format(copy.categoriesDetail, { summary, cards: cardsLabel(cards) })}
-        label={format(en.a11y.categories, { summary })}
-        onClick={() => setOpen('categories')}
-      />
 
       {!versus && (
         <DifficultyTiles picked={difficulties} categories={categories} onToggle={(next) => setSettings((current) => toggleDifficulty(current, next))} onInfo={() => setOpen('info')} />

@@ -127,6 +127,17 @@ export default function SetupScreen() {
       </View>
     ) : null;
 
+  const categoriesRow = (colors: RegionColors) => (
+    <ChevronRow
+      title={s.categories}
+      detail={format(s.categoriesDetail, { summary, cards: cardsText })}
+      accessibilityLabel={format(en.a11y.categories, { summary })}
+      accessibilityHint={cardsText}
+      colors={colors}
+      onPress={() => setOpen('categories')}
+    />
+  );
+
   return (
     <Screen
       tone="base"
@@ -161,24 +172,22 @@ export default function SetupScreen() {
             </>
           )}
 
+          {/* Versus: WORDS over the Difficulty and Categories rows, like ROUNDS and SCORING. */}
           {versus ? (
-            <ChevronRow
-              title={en.versus.settings.difficulty}
-              detail={difficultyRow.detail}
-              accessibilityLabel={difficultyRow.a11y}
-              colors={colors}
-              onPress={() => setOpen('difficulty')}
-            />
-          ) : null}
-
-          <ChevronRow
-            title={s.categories}
-            detail={format(s.categoriesDetail, { summary, cards: cardsText })}
-            accessibilityLabel={format(en.a11y.categories, { summary })}
-            accessibilityHint={cardsText}
-            colors={colors}
-            onPress={() => setOpen('categories')}
-          />
+            <View style={styles.section}>
+              <SectionLabel label={en.versus.settings.words} colors={colors} />
+              <ChevronRow
+                title={en.versus.settings.difficulty}
+                detail={difficultyRow.detail}
+                accessibilityLabel={difficultyRow.a11y}
+                colors={colors}
+                onPress={() => setOpen('difficulty')}
+              />
+              {categoriesRow(colors)}
+            </View>
+          ) : (
+            categoriesRow(colors)
+          )}
 
           {versus ? null : (
             <DifficultyTiles

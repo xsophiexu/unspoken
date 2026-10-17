@@ -726,6 +726,8 @@ export const en = {
       skipsLabel: 'Skips per turn',
       skipsSub: 'Pass on a card you can’t describe',
       scoring: 'SCORING',
+      // Over the Difficulty and Categories rows.
+      words: 'WORDS',
       penalty: 'Banned word penalty',
       penaltyOff: 'Off: a banned word scores 0',
       penaltyOn: { one: 'Lose {n} point when a banned word is said', other: 'Lose {n} points when a banned word is said' },
