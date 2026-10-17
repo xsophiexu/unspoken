@@ -17,16 +17,17 @@ type Props = {
   height?: number;
 };
 
-// The dashed "Want another mode / style?" card that opens Send feedback.
+// The dashed "Want another mode / style?" card that opens Send feedback. It has no fill, so the page
+// shows through; the icon sits on a chip-colored badge.
 export function SuggestCard({ title, body, action, colors, onPress, shape, width, height }: Props) {
   const row = shape === 'row';
   return (
     <Press
       onPress={onPress}
       accessibilityLabel={`${title} ${action}`}
-      style={[styles.card, row ? styles.row : styles.tile, { borderColor: colors.outline, backgroundColor: colors.chip, width, height }]}
+      style={[styles.card, row ? styles.row : styles.tile, { borderColor: colors.outline, width, height }]}
     >
-      <View style={[styles.badge, { backgroundColor: colors.bg }]}>
+      <View style={[styles.badge, { backgroundColor: colors.chip }]}>
         <Icon name="bubble" size={layout.icon.md} color={colors.accentText} />
       </View>
       <View style={row ? styles.text : styles.tileText}>
@@ -49,7 +50,7 @@ export function SuggestCard({ title, body, action, colors, onPress, shape, width
 }
 
 const styles = StyleSheet.create({
-  card: { borderWidth: layout.stroke.outline, borderStyle: 'dashed', borderRadius: radius.xl },
+  card: { borderWidth: layout.stroke.hairline, borderStyle: 'dashed', borderRadius: radius.xl },
   row: { flexDirection: 'row', alignItems: 'center', gap: space[3], padding: space[3.5] },
   tile: { alignItems: 'center', justifyContent: 'center', gap: space[2.5], padding: space[2], borderRadius: layout.thumbnail.radius },
   badge: { width: layout.control.iconBadge, height: layout.control.iconBadge, borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },

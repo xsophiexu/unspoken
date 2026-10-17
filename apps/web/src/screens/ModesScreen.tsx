@@ -25,7 +25,8 @@ export function ModesScreen() {
             <Tile
               key={id}
               title={en.modes[id].name}
-              detail={available ? en.modes[id].sub : copy.comingSoon}
+              detail={available ? en.modes[id].sub : undefined}
+              status={available ? undefined : copy.comingSoon}
               disabled={!available}
               selected={id === settings.mode}
               href={routes.setup(id)}

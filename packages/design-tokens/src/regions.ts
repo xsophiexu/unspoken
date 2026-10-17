@@ -1,5 +1,6 @@
-import { composite, greyscale, readableGrey, withAlpha } from './color';
+import { composite, readableOn, withAlpha } from './color';
 import type { ColorRole, ColorRoles } from './palettes';
+import { opacity } from './scales';
 
 // A region is a block of the screen with its own background: the page, the Card word tile, Ink's
 // dark lower panel, Sheet's accent top, the Ombre footer in dark. Slot components never pick
@@ -31,17 +32,19 @@ export type RegionColors = {
   progress: string;
   // Big accent numerals and their progress line, for timers that ask for it (timer.vivid).
   vivid: string;
-  // A control that can't be used yet (Coming soon modes): the chip greyed at the same luminance,
-  // and its muted text greyed and kept at AA, so it reads as disabled rather than as a lighter
-  // shade of the accent.
+  // A control that can't be used yet (Coming soon modes), faded rather than greyed: the chip at
+  // opacity.disabled over the region, so the page shows through. disabledInk is muted and
+  // disabledAccent is accentText (the Coming soon pill's text and outline), each kept at its own
+  // hue and moved only as far in lightness as it takes to read at AA on that fill.
   disabled: string;
   disabledInk: string;
+  disabledAccent: string;
 };
 
 export type RegionSlot = keyof RegionColors;
 
 // Slots worked out from the others in regionColors rather than mapped to a palette role.
-type DerivedSlot = 'disabled' | 'disabledInk';
+type DerivedSlot = 'disabled' | 'disabledInk' | 'disabledAccent';
 type MappedSlot = Exclude<RegionSlot, DerivedSlot>;
 
 // A palette role, optionally at an opacity.
@@ -183,9 +186,10 @@ export function regionColors(colors: ColorRoles, tone: RegionTone): RegionColors
   const map = regionTones[tone];
   const out = {} as RegionColors;
   for (const slot of Object.keys(map) as MappedSlot[]) out[slot] = resolveRef(colors, map[slot]);
-  // Chips can be translucent (panel tones), so flatten onto the region before greying.
-  out.disabled = greyscale(composite(out.chip, out.bg));
-  out.disabledInk = readableGrey(out.muted, out.disabled);
+  // Chips can be translucent (panel tones), so flatten onto the region before fading.
+  out.disabled = composite(withAlpha(composite(out.chip, out.bg), opacity.disabled), out.bg);
+  out.disabledInk = readableOn(out.muted, out.disabled);
+  out.disabledAccent = readableOn(out.accentText, out.disabled);
   return out;
 }
 
@@ -204,4 +208,5 @@ export const REGION_TEXT_PAIRS: readonly (readonly [text: RegionSlot, background
   ['chipInk', 'chip'],
   ['chipInk', 'tint'],
   ['disabledInk', 'disabled'],
+  ['disabledAccent', 'disabled'],
 ];

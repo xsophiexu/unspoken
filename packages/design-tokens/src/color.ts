@@ -61,29 +61,66 @@ function unchannel(y: number): number {
   return y <= 0.0031308 ? y * 12.92 : 1.055 * y ** (1 / 2.4) - 0.055;
 }
 
-// The neutral grey with the same WCAG luminance as an opaque color, so contrast between two colors
-// is unchanged when both are greyed (disabled controls).
-export function greyscale(hex: string): string {
-  const v = unchannel(relativeLuminance(hex));
-  return toHex({ r: v, g: v, b: v, a: 1 });
+// OKLab (Björn Ottosson's perceptual space): lightness l from 0 to 1, chroma c and hue h (radians)
+// as OKLCH. Moving l alone keeps a color's hue and saturation as people see them.
+type Oklch = { l: number; c: number; h: number };
+
+function toOklch(hex: string): Oklch {
+  const { r, g, b } = parseHex(hex);
+  const [lr, lg, lb] = [r, g, b].map(channel) as [number, number, number];
+  const l = Math.cbrt(0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb);
+  const m = Math.cbrt(0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb);
+  const s = Math.cbrt(0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb);
+  const L = 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s;
+  const A = 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s;
+  const B = 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s;
+  return { l: L, c: Math.hypot(A, B), h: Math.atan2(B, A) };
 }
 
-// text greyed (greyscale), moved only as far toward black or white as it takes to reach `min`
-// contrast on an opaque background: text that reads, while staying as quiet as allowed.
-export function readableGrey(text: string, background: string, min = AA_TEXT): string {
-  const grey = greyscale(composite(text, background));
-  if (contrastRatio(grey, background) >= min) return grey;
-  const start = parseHex(grey).r * 255;
-  let best = grey;
-  let bestDistance = Infinity;
-  for (let byte = 0; byte <= 255; byte++) {
-    const v = byte / 255;
-    const candidate = toHex({ r: v, g: v, b: v, a: 1 });
-    const distance = Math.abs(byte - start);
-    if (distance < bestDistance && contrastRatio(candidate, background) >= min) {
-      best = candidate;
-      bestDistance = distance;
+// Linear sRGB for an OKLCH color; channels may fall outside 0 to 1 when it is out of gamut.
+function oklchToLinear({ l: L, c, h }: Oklch): [number, number, number] {
+  const A = c * Math.cos(h);
+  const B = c * Math.sin(h);
+  const l = (L + 0.3963377774 * A + 0.2158037573 * B) ** 3;
+  const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
+  const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
+  return [
+    4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s,
+  ];
+}
+
+// An OKLCH color as #RRGGBB, lowering chroma (keeping lightness and hue) until it fits sRGB.
+function fromOklch(color: Oklch): string {
+  const GAMUT_SLACK = 0.0005;
+  const CHROMA_STEP = 0.001;
+  for (let c = color.c; c > 0; c -= CHROMA_STEP) {
+    const rgb = oklchToLinear({ ...color, c });
+    if (rgb.every((v) => v >= -GAMUT_SLACK && v <= 1 + GAMUT_SLACK)) {
+      const [r, g, b] = rgb.map(unchannel) as [number, number, number];
+      return toHex({ r, g, b, a: 1 });
     }
   }
-  return best;
+  const [r, g, b] = oklchToLinear({ ...color, c: 0 }).map(unchannel) as [number, number, number];
+  return toHex({ r, g, b, a: 1 });
+}
+
+// text with its hue and chroma kept, its OKLCH lightness moved away from an opaque background only
+// as far as it takes to reach `min` contrast: text that reads while staying as quiet, and as much
+// its own color, as allowed. Text on a light background darkens; on a dark one it lightens.
+export function readableOn(text: string, background: string, min = AA_TEXT): string {
+  const start = toOklch(composite(text, background));
+  const reads = (hex: string) => contrastRatio(hex, background) >= min;
+  const own = fromOklch(start);
+  if (reads(own)) return own;
+  const darken = contrastRatio('#000000', background) >= contrastRatio('#FFFFFF', background);
+  const LIGHTNESS_STEP = 0.002;
+  for (let shift = LIGHTNESS_STEP; shift <= 1; shift += LIGHTNESS_STEP) {
+    const l = darken ? start.l - shift : start.l + shift;
+    if (l < 0 || l > 1) break;
+    const candidate = fromOklch({ ...start, l });
+    if (reads(candidate)) return candidate;
+  }
+  return darken ? '#000000' : '#FFFFFF';
 }

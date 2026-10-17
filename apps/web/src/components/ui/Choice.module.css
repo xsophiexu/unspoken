@@ -20,7 +20,8 @@
   color: var(--region-on-accent);
 }
 
-/* Coming soon: greyed (the region's disabled colors) rather than a lighter shade of the color. */
+/* Coming soon: faded (the region's disabled colors: the chip at opacity.disabled over the page),
+   with a muted title and an accent pill, rather than a lighter shade of the color. */
 .off {
   cursor: default;
   background: var(--region-disabled);
@@ -33,6 +34,14 @@
 
 .title {
   min-width: 0;
+}
+
+.status {
+  align-self: flex-start;
+  padding: var(--un-space-0-5) var(--un-space-2);
+  border: var(--un-layout-stroke-hairline) solid;
+  border-radius: var(--un-radius-pill);
+  color: var(--region-disabled-accent);
 }
 
 .detail {

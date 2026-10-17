@@ -96,6 +96,8 @@ export const textStyles = {
   small: { size: 12, weight: 500, lineHeight: 1.4 },
   // Section labels: DON'T SAY, STYLE, COLOR, DIFFICULTY.
   overline: { size: 11, weight: 700, lineHeight: 1.3, letterSpacing: 0.08, uppercase: true },
+  // Status pills: Coming soon on a mode tile.
+  pill: { size: 11, weight: 700, lineHeight: 1.3 },
   // The level badge in the Card header.
   badge: { size: 11, weight: 800, lineHeight: 1.3, letterSpacing: 0.055, uppercase: true },
 } as const satisfies Record<string, TextStyleToken>;

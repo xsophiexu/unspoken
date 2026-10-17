@@ -11,8 +11,11 @@ import {
   composite,
   contrastRatio,
   layoutStyleFor,
+  opacity,
   palettes,
+  readableOn,
   regionColors,
+  withAlpha,
   spotlight,
   type LayoutStyle,
   type RegionTone,
@@ -27,6 +30,28 @@ describe('contrast helpers', () => {
   it('flattens translucent colors onto the background', () => {
     expect(composite('#FFFFFF80', '#000000')).toBe('#808080');
     expect(contrastRatio('#00000000', '#FFFFFF')).toBeCloseTo(1);
+  });
+
+  it('leaves text that already reads alone, and moves text that does not just far enough', () => {
+    expect(readableOn('#000000', '#FFFFFF')).toBe('#000000');
+    const darkened = readableOn('#E07050', '#FFFFFF');
+    expect(contrastRatio(darkened, '#FFFFFF')).toBeGreaterThanOrEqual(AA_TEXT);
+    expect(contrastRatio(darkened, '#FFFFFF')).toBeLessThan(AA_TEXT + 0.5);
+    const lightened = readableOn('#803020', '#101010');
+    expect(contrastRatio(lightened, '#101010')).toBeGreaterThanOrEqual(AA_TEXT);
+    expect(contrastRatio(lightened, '#101010')).toBeLessThan(AA_TEXT + 0.5);
+  });
+});
+
+// Coming soon mode tiles on the Modes screen (a base region): the chip (surface) faded to
+// opacity.disabled over the page, with a muted title and an accentText pill that both read at AA.
+describe.each(COLOR_IDS)('Coming soon tile in %s', (color) => {
+  it.each(COLOR_MODES)('fades the chip and keeps its text at AA in %s', (mode) => {
+    const colors = palettes[color][mode];
+    const region = regionColors(colors, 'base');
+    expect(region.disabled).toBe(composite(withAlpha(colors.surface, opacity.disabled), colors.bg));
+    expect(contrastRatio(region.disabledInk, region.disabled), 'title').toBeGreaterThanOrEqual(AA_TEXT);
+    expect(contrastRatio(region.disabledAccent, region.disabled), 'pill').toBeGreaterThanOrEqual(AA_TEXT);
   });
 });
 

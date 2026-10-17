@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   gap: var(--un-space-3);
-  border: var(--un-space-0-5) dashed var(--region-outline);
+  border: var(--un-layout-stroke-hairline) dashed var(--region-outline);
   border-radius: var(--un-radius-xl);
   color: var(--region-ink);
   text-decoration: none;

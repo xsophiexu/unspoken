@@ -30,7 +30,8 @@ export default function ModesScreen() {
                 <Tile
                   key={id}
                   title={en.modes[id].name}
-                  detail={available ? en.modes[id].sub : s.comingSoon}
+                  detail={available ? en.modes[id].sub : undefined}
+                  status={available ? undefined : s.comingSoon}
                   colors={colors}
                   selected={id === settings.mode}
                   disabled={!available}

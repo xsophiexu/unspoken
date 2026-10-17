@@ -39,6 +39,8 @@ export function Choice({ type, name, checked, onChange, look, children, detail, 
 type TileProps = {
   title: ReactNode;
   detail?: ReactNode;
+  // A small outlined pill in place of the detail line (Coming soon).
+  status?: string;
   icon?: IconName;
   // The current choice, shown filled.
   selected?: boolean;
@@ -51,13 +53,14 @@ type TileProps = {
 };
 
 // A tile that acts (starts a round, opens a screen) and looks like a Choice tile.
-export function Tile({ title, detail, icon, selected = false, accent = false, disabled = false, href, onClick, label }: TileProps) {
+export function Tile({ title, detail, status, icon, selected = false, accent = false, disabled = false, href, onClick, label }: TileProps) {
   const className = cx(styles.choice, styles.tile, styles.action, (selected || accent) && styles.on, disabled && styles.off);
   const content = (
     <>
       {icon && <Icon name={icon} className={styles.icon} />}
       <span className={cx(styles.title, text('optionTitle'))}>{title}</span>
       {detail !== undefined && <span className={cx(styles.detail, text('small'))}>{detail}</span>}
+      {status !== undefined && <span className={cx(styles.status, text('pill'))}>{status}</span>}
     </>
   );
   if (href && !disabled) {

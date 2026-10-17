@@ -9,6 +9,8 @@ import { Txt } from './Txt';
 type Props = {
   title: string;
   detail?: string;
+  // A small outlined pill in place of the detail line (Coming soon).
+  status?: string;
   colors: RegionColors;
   selected: boolean;
   onPress: () => void;
@@ -27,16 +29,19 @@ const textHeight = (e: LayoutChangeEvent) => Math.ceil(e.nativeEvent.layout.heig
 
 // A selectable tile: difficulties on Setup and the sheets, modes on Modes. Long names (Grandmaster)
 // shrink to stay on one line.
-export function Tile({ title, detail, colors, selected, onPress, disabled, height, centered, accessibilityLabel, onNaturalHeight }: Props) {
+export function Tile({ title, detail, status, colors, selected, onPress, disabled, height, centered, accessibilityLabel, onNaturalHeight }: Props) {
   const [width, onLayout] = useWidth();
   const [titleHeight, setTitleHeight] = useState(0);
-  const [detailHeight, setDetailHeight] = useState(0);
+  // The detail line or the status pill under the title.
+  const [secondHeight, setSecondHeight] = useState(0);
+  const hasSecond = !!(detail || status);
   const padY = space[3.5];
   useEffect(() => {
-    if (!onNaturalHeight || titleHeight === 0 || (detail && detailHeight === 0)) return;
-    onNaturalHeight(2 * padY + titleHeight + (detail ? space[1.5] + detailHeight : 0));
-  }, [onNaturalHeight, titleHeight, detailHeight, detail, padY]);
-  // Coming soon tiles are greyed (disabled, disabledInk) rather than a lighter shade of the color.
+    if (!onNaturalHeight || titleHeight === 0 || (hasSecond && secondHeight === 0)) return;
+    onNaturalHeight(2 * padY + titleHeight + (hasSecond ? space[1.5] + secondHeight : 0));
+  }, [onNaturalHeight, titleHeight, secondHeight, hasSecond, padY]);
+  // Coming soon tiles are faded (disabled: the chip at opacity.disabled over the page) with a muted
+  // title and an accent pill, rather than a lighter shade of the color.
   const bg = selected ? colors.accent : disabled ? colors.disabled : colors.chip;
   const titleColor = selected ? colors.onAccent : disabled ? colors.disabledInk : colors.chipInk;
   const detailColor = selected ? colors.onAccent : disabled ? colors.disabledInk : colors.muted;
@@ -51,7 +56,7 @@ export function Tile({ title, detail, colors, selected, onPress, disabled, heigh
       fadeDisabled={false}
       accessibilityRole="radio"
       accessibilityState={{ selected }}
-      accessibilityLabel={accessibilityLabel ?? (detail ? `${title}, ${detail}` : title)}
+      accessibilityLabel={accessibilityLabel ?? [title, detail, status].filter(Boolean).join(', ')}
       style={[
         styles.tile,
         { backgroundColor: bg, padding: padY, paddingHorizontal: padX },
@@ -64,18 +69,32 @@ export function Tile({ title, detail, colors, selected, onPress, disabled, heigh
         {title}
       </Txt>
       {detail ? (
-        <Txt variant="small" color={detailColor} onLayout={(e) => setDetailHeight(textHeight(e))}>
+        <Txt variant="small" color={detailColor} onLayout={(e) => setSecondHeight(textHeight(e))}>
           {detail}
         </Txt>
+      ) : null}
+      {status ? (
+        <View style={[styles.status, { borderColor: colors.disabledAccent }]} onLayout={(e) => setSecondHeight(textHeight(e))}>
+          <Txt variant="pill" color={colors.disabledAccent}>
+            {status}
+          </Txt>
+        </View>
       ) : null}
     </Press>
   );
 }
 
 const styles = StyleSheet.create({
-  // Taller tiles (Modes) keep the title at the top and the detail at the bottom.
+  // Taller tiles (Modes) keep the detail right under the title, however many lines it takes.
   // flexGrow: a tile fills its grid cell, so the tiles in a row are the same height.
-  tile: { flexGrow: 1, borderRadius: radius.xl, gap: space[1.5], minHeight: layout.minTouch, justifyContent: 'space-between' },
+  tile: { flexGrow: 1, borderRadius: radius.xl, gap: space[1.5], minHeight: layout.minTouch, justifyContent: 'flex-start' },
+  status: {
+    alignSelf: 'flex-start',
+    paddingVertical: space[0.5],
+    paddingHorizontal: space[2],
+    borderWidth: layout.stroke.hairline,
+    borderRadius: radius.pill,
+  },
   centered: { alignItems: 'center', justifyContent: 'center', paddingVertical: 0 },
   // Measures the tile's width without affecting its layout.
   fill: { ...StyleSheet.absoluteFill },
