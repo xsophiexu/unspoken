@@ -156,7 +156,8 @@ export const layout = {
   // controls (Kurt), shrinking with narrower screens (ringCardSize). ringScale: on wide screens the
   // ring stops growing at this much more than maxWidth × maxHeight. floatingHeight: the Deck card's
   // height, which shrinks on shorter screens.
-  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
+  // shortScreenClearance: how much a height-bound ring shrinks (in proportion) on short web screens.
+  card: { maxWidth: 350, maxHeight: 580, ringScale: 1.1, shortScreenClearance: 32, ringStroke: 8, ringRadius: radius.ring, ringGap: 108, ringInset: 18, paddingX: 22, paddingY: 30, floatingHeight: 430 },
   chip: { paddingX: 15, paddingY: 11, gap: 8, compactPaddingX: 11, compactPaddingY: 8 },
   // Banned lists switch to compact sizes from this many words (Escalate climbs to 10). compactRow:
   // the height of a compact tile or band.

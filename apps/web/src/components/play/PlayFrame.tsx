@@ -261,6 +261,15 @@ export function FrameTop({ layoutStyle: s, model, actions, timer }: FrameTopProp
   );
 }
 
+// On a short screen (a laptop) the height runs out first and the ring would sit right on Skip and
+// Correct: shrink it a little, width and height alike, to leave layout.card.shortScreenClearance.
+function keepCardShape({ width, height }: { width: number; height: number }) {
+  const { maxWidth, maxHeight, shortScreenClearance } = layout.card;
+  if (height >= (width * maxHeight) / maxWidth || height <= shortScreenClearance) return { width, height };
+  const scale = (height - shortScreenClearance) / height;
+  return { width: width * scale, height: height * scale };
+}
+
 type RingCardProps = { layoutStyle: LayoutStyle; model: PlayModel; actions?: PlayActions; word: ReactNode; banned: ReactNode };
 
 // Card: the word tile inside the timer ring. The ring takes the space between the header and the
@@ -270,7 +279,7 @@ function RingCard({ layoutStyle: s, model, actions, word, banned }: RingCardProp
   const areaRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const area = useElementSize(areaRef, { width: layout.card.maxWidth, height: layout.card.maxHeight });
-  const size = ringCardSize(area.width, area.height);
+  const size = keepCardShape(ringCardSize(area.width, area.height));
   const box = useElementSize(cardRef, size);
   const ringed = model.clock !== null && s.timer.variant === 'ring';
   return (
