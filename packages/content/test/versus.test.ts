@@ -1,7 +1,7 @@
 import { addPlayer, createRound, defaultSettings, defaultVersusSetup, emptyLineup, roundReducer, setStyle, versusLineupConfig, type Lineup, type RoundAction, type VersusRoundState, type VersusSetup } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
-import { bank, en, passView, recapView, versusDetails, versusResultsView, versusRoleCards, versusScoresView, versusTitle } from '../src';
+import { bank, bonusNote, difficultyRowDetail, en, passView, recapView, versusDetails, versusResultsView, versusRoleCards, versusScoresView, versusTitle } from '../src';
 
 const named = (...names: string[]): Lineup => names.reduce((l, n) => addPlayer(l, n, versusLineupConfig()), emptyLineup());
 const presets = ['Sharks', 'Owls'].map((name, color) => ({ name, color }));
@@ -111,8 +111,23 @@ describe('Versus screens in English', () => {
     expect(v.scored).toBe('Maya scored');
     expect(v.total).toBe('0');
     const done = play(s, [{ type: 'cycleCard', index: 1 }, { type: 'next' }, ...[1, 2, 3].flatMap((): RoundAction[] => [{ type: 'startTurn' }, { type: 'endTurn' }, { type: 'next' }])]);
-    expect(versusResultsView(done)).toMatchObject({ title: 'Sam wins', sub: '1 point · 0 as Clue Giver, 1 guessing' });
-    expect(versusResultsView(done).rows.find((r) => r.name === 'Maya')).toMatchObject({ total: 0 });
+    // Sam: +1 guessing and +1 bonus; Leo and Ava +1 guessing; Maya +1 − 1.
+    expect(versusResultsView(done)).toMatchObject({ title: 'Sam wins', sub: '2 points · 0 as Clue Giver, 1 guessing, 1 bonus' });
+    expect(versusResultsView(done).rows.map((r) => [r.name, r.total])).toEqual([
+      ['Sam', 2],
+      ['Leo', 1],
+      ['Ava', 1],
+      ['Maya', 0],
+    ]);
+  });
+
+  it('Individual with 3+, bonus off: no guesser on the recap, and the switch says why', () => {
+    const four = named('Maya', 'Sam', 'Leo', 'Ava');
+    const s = play(game(four, { bonus: false }), [{ type: 'startTurn' }, { type: 'correct' }, { type: 'endTurn' }]);
+    expect(recapView(s)!.rows[0]).toMatchObject({ label: 'Correct', who: null, points: '+1' });
+    expect(bonusNote(false)).toBe('Off: every guesser scores the same');
+    expect(bonusNote(true)).toBe('Tap who got it: they get 1 extra point');
+    expect(difficultyRowDetail(['Hard', 'Expert'], 120).detail).toBe('Hard+ · 120 cards');
   });
 
   it('Individual with 2: Clue Giver and Guesser', () => {

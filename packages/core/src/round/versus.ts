@@ -7,6 +7,7 @@ import { modeRules } from '../rules';
 import type { Card, GameSettings } from '../types';
 import {
   canPlayVersus,
+  hasGuesserBonus,
   clampVersusSetup,
   cycleCard,
   endsVersusRound,
@@ -124,9 +125,9 @@ export function versusClockProgress(state: VersusRoundState): number {
   return Math.max(0, Math.min(1, state.clock.left / state.clock.total));
 }
 
-// Individual with 3 or more players: Correct names who got it.
+// Individual with 3 or more players and the bonus on: Correct names who got it.
 export function needsGuesser(state: VersusRoundState): boolean {
-  return state.setup.lineup.style === 'individual' && versusCurrentRoles(state).guessers.length > 1;
+  return hasGuesserBonus(state.setup.lineup, state.setup, state.config) && versusCurrentRoles(state).guessers.length > 1;
 }
 
 export function canVersusAnswer(state: VersusRoundState, answer: 'correct' | 'skip'): boolean {

@@ -71,6 +71,33 @@ describe('Versus', () => {
     expect(settings.getByText(v.settings.pointsLostIndividual)).toBeInTheDocument();
   });
 
+  it('shows Difficulty as a row that opens the difficulty sheet', async () => {
+    const user = userEvent.setup();
+    const { settings } = renderFlow();
+    expect(settings.queryByRole('checkbox', { name: /^Hard/ })).not.toBeInTheDocument();
+    await user.click(settings.getByRole('button', { name: 'Difficulty: Normal. Tap to choose.' }));
+    const sheet = within(screen.getByRole('dialog', { name: en.mindReader.quick.sheetTitle }));
+    expect(sheet.getByText(en.setup.difficultyHint)).toBeInTheDocument();
+    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
+    await user.click(sheet.getByRole('button', { name: v.settings.difficultyDone }));
+    expect(settings.getByRole('button', { name: 'Difficulty: Normal+. Tap to choose.' })).toBeInTheDocument();
+  });
+
+  it('offers the bonus for who guesses it only for Individual with 3 or more', async () => {
+    const user = userEvent.setup();
+    const { players, lineup, settings } = renderFlow();
+    await addNames(user, players, ['Maya', 'Leo']);
+    expect(settings.queryByRole('switch', { name: v.settings.bonus })).not.toBeInTheDocument();
+    await addNames(user, players, ['Sam']);
+    expect(settings.getByRole('switch', { name: v.settings.bonus })).toBeChecked();
+    expect(settings.getByText('Tap who got it: they get 1 extra point')).toBeInTheDocument();
+    await user.click(settings.getByRole('switch', { name: v.settings.bonus }));
+    expect(settings.getByText(v.settings.bonusOff)).toBeInTheDocument();
+    await addNames(user, players, ['Ava']);
+    await user.click(lineup.getByRole('radio', { name: m.lineup.teams }));
+    expect(settings.queryByRole('switch', { name: v.settings.bonus })).not.toBeInTheDocument();
+  });
+
   it('plays a Teams turn: pass, Correct, end the turn, fix a word on the recap', async () => {
     const user = userEvent.setup();
     const { players, lineup, settings, game } = renderFlow();

@@ -1,6 +1,5 @@
-import { bank, en } from '@unspoken/content';
+import { bank, difficultyRowDetail, en } from '@unspoken/content';
 import {
-  DIFFICULTY_IDS,
   MODE_IDS,
   canStart,
   categoriesInBank,
@@ -34,6 +33,8 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { MindReaderRounds } from '../mindReader/MindReaderRounds';
 import { StepTop } from '../mindReader/ui';
 import { backToGame, goBack } from '../nav';
+import { DifficultySheet } from '../mindReader/DifficultySheet';
+import { DifficultyTiles } from '../setup/DifficultyTiles';
 import { CategoriesSheet, DifficultyInfoSheet, SmallDeckSheet } from '../setup/sheets';
 import { usePrefs } from '../state/prefs';
 import { Button, LinkButton } from '../ui/Button';
@@ -53,7 +54,7 @@ function modeParam(value: unknown, fallback: ModeId): ModeId {
   return MODE_IDS.find((id) => id === value && modeRules(id).available) ?? fallback;
 }
 
-type Open = 'categories' | 'info' | 'smallDeck' | null;
+type Open = 'categories' | 'difficulty' | 'info' | 'smallDeck' | null;
 
 // New game: categories, difficulties, and the timer and skips when the mode has them.
 export default function SetupScreen() {
@@ -71,12 +72,12 @@ export default function SetupScreen() {
   const s = en.setup;
   const { difficulties, categories } = draft;
 
-  const counts = useMemo(() => DIFFICULTY_IDS.map((d) => deckSize(bank, d, categories)), [categories]);
   const themeCounts = useMemo(() => THEMES.map((c) => deckSize(bank, difficulties, [c])), [difficulties]);
   const allCount = deckSize(bank, difficulties, []);
   const cards = deckSize(bank, difficulties, categories);
   const cardsText = plural(cards, en.units.cards);
   const summary = categoriesSummary(categories, SUMMARY_COPY);
+  const difficultyRow = difficultyRowDetail(difficulties, cards);
 
   const play = () => {
     setOpen(null);
@@ -160,52 +161,34 @@ export default function SetupScreen() {
             </>
           )}
 
-          <Press
-            onPress={() => setOpen('categories')}
-            accessibilityRole="button"
+          {versus ? (
+            <ChevronRow
+              title={en.versus.settings.difficulty}
+              detail={difficultyRow.detail}
+              accessibilityLabel={difficultyRow.a11y}
+              colors={colors}
+              onPress={() => setOpen('difficulty')}
+            />
+          ) : null}
+
+          <ChevronRow
+            title={s.categories}
+            detail={format(s.categoriesDetail, { summary, cards: cardsText })}
             accessibilityLabel={format(en.a11y.categories, { summary })}
             accessibilityHint={cardsText}
-            style={[styles.categories, { backgroundColor: colors.chip }]}
-          >
-            <View style={styles.categoriesText}>
-              <Txt variant="optionTitle" color={colors.chipInk}>
-                {s.categories}
-              </Txt>
-              <Txt variant="small" color={colors.muted} numberOfLines={2}>
-                {format(s.categoriesDetail, { summary, cards: cardsText })}
-              </Txt>
-            </View>
-            <Icon name="chevronRight" size={layout.icon.md} color={colors.muted} />
-          </Press>
+            colors={colors}
+            onPress={() => setOpen('categories')}
+          />
 
-          <View style={styles.section}>
-            <View style={styles.difficultyHead}>
-              <Txt variant="overline" color={colors.muted} accessibilityRole="header">
-                {s.difficulty}
-              </Txt>
-              <Txt variant="subline" color={colors.muted} style={styles.aside} numberOfLines={1}>
-                {difficulties.length === 1
-                  ? s.difficultyHint
-                  : format(s.difficultyPicked, { difficulties: plural(difficulties.length, en.units.difficulties), cards: cardsText })}
-              </Txt>
-              <Press onPress={() => setOpen('info')} accessibilityRole="button" accessibilityLabel={en.a11y.difficultyInfo} hitSlop={slopFor(layout.icon.md)}>
-                <Icon name="info" size={layout.icon.md} color={colors.muted} />
-              </Press>
-            </View>
-            <Grid columns={layout.grid.setupDifficulty} gap={space[2]}>
-              {DIFFICULTY_IDS.map((d, i) => (
-                <Tile
-                  key={d}
-                  checkbox
-                  title={en.difficulties[d].name}
-                  detail={plural(counts[i] ?? 0, en.units.cards)}
-                  colors={colors}
-                  selected={difficulties.includes(d)}
-                  onPress={() => setDraft((cur) => toggleDifficulty(cur, d))}
-                />
-              ))}
-            </Grid>
-          </View>
+          {versus ? null : (
+            <DifficultyTiles
+              picked={difficulties}
+              categories={categories}
+              colors={colors}
+              onToggle={(d) => setDraft((cur) => toggleDifficulty(cur, d))}
+              onInfo={() => setOpen('info')}
+            />
+          )}
 
           {!custom && !versus ? timer(colors) : null}
 
@@ -240,11 +223,48 @@ export default function SetupScreen() {
             onAllCards={onAllCards}
             onToggle={(c) => setDraft((cur) => ({ ...cur, categories: toggleCategory(cur.categories, c) }))}
           />
-          <DifficultyInfoSheet visible={open === 'info'} onClose={() => setOpen(null)} picked={difficulties} />
+          {/* Versus: info opens over Game settings from the difficulty sheet, and closing it goes back there. */}
+          <DifficultyInfoSheet visible={open === 'info'} onClose={() => setOpen(versus ? 'difficulty' : null)} picked={difficulties} />
+          {versus ? (
+            <DifficultySheet
+              visible={open === 'difficulty'}
+              settings={settings}
+              onClose={() => setOpen((cur) => (cur === 'difficulty' ? null : cur))}
+              onApply={(next) => setDraft((cur) => ({ ...cur, difficulties: next.difficulties }))}
+              onInfo={(next) => {
+                setDraft((cur) => ({ ...cur, difficulties: next.difficulties }));
+                setOpen('info');
+              }}
+            />
+          ) : null}
           <SmallDeckSheet visible={open === 'smallDeck'} cards={cards} onBack={() => setOpen(null)} onPlay={play} />
         </>
       )}
     </Screen>
+  );
+}
+
+// A box with a title, a line of detail and a chevron, that opens a sheet (Categories; Versus's
+// Difficulty).
+function ChevronRow({ title, detail, colors, onPress, accessibilityLabel, accessibilityHint }: { title: string; detail: string; colors: RegionColors; onPress: () => void; accessibilityLabel: string; accessibilityHint?: string }) {
+  return (
+    <Press
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityHint={accessibilityHint}
+      style={[styles.categories, { backgroundColor: colors.chip }]}
+    >
+      <View style={styles.categoriesText}>
+        <Txt variant="optionTitle" color={colors.chipInk}>
+          {title}
+        </Txt>
+        <Txt variant="small" color={colors.muted} numberOfLines={2}>
+          {detail}
+        </Txt>
+      </View>
+      <Icon name="chevronRight" size={layout.icon.md} color={colors.muted} />
+    </Press>
   );
 }
 
@@ -365,8 +385,6 @@ const styles = StyleSheet.create({
   categories: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.lg, paddingHorizontal: space[4], paddingVertical: space[3], minHeight: layout.button.height },
   categoriesText: { flex: 1, gap: space[0.5] },
   // DIFFICULTY, then the hint or the picks pinned right, then the (i) at the far right.
-  difficultyHead: { flexDirection: 'row', alignItems: 'center', gap: space[2] },
-  aside: { flex: 1, textAlign: 'right' },
   timer: {
     minHeight: layout.control.input.height + space[6],
     borderRadius: radius.lg,

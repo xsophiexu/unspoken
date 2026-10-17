@@ -1,7 +1,7 @@
 'use client';
 
-import { en } from '@unspoken/content';
-import { clampVersusSetup, format, gameConfig, plural, type VersusSetup } from '@unspoken/core';
+import { bonusNote, en } from '@unspoken/content';
+import { clampVersusSetup, format, gameConfig, offersGuesserBonus, plural, type VersusSetup } from '@unspoken/core';
 
 import { Stepper } from '@/components/mindReader/parts';
 import { InlineSwitch } from '@/components/ui/InlineSwitch';
@@ -12,7 +12,8 @@ import { useGame } from '@/state/game';
 import styles from './versus.module.css';
 
 // Versus's Game settings under the time limit: Rounds and Skips per turn, then Scoring with the
-// banned word penalty (off by default) and, when it is on, how many points it costs.
+// bonus for who guesses it (Individual with 3+, on by default), the banned word penalty (off by
+// default) and, when it is on, how many points it costs.
 export function VersusSettings() {
   const { versus, setVersus } = useGame();
   const s = en.versus.settings;
@@ -26,13 +27,9 @@ export function VersusSettings() {
         <Stepper label={s.skipsLabel} sub={s.skipsSub} value={versus.skips} min={skips.min} max={skips.max} fill="chip" onChange={(n) => set({ skips: n })} />
       </Section>
       <Section label={s.scoring}>
-        <div className={styles.switchRow}>
-          <div className={styles.grow}>
-            <p className={text('optionTitle')}>{s.penalty}</p>
-            <p className={cx(styles.muted, text('small'))}>{versus.penalty ? plural(versus.penaltyPoints, s.penaltyOn) : s.penaltyOff}</p>
-          </div>
-          <InlineSwitch label="" name={s.penalty} checked={versus.penalty} onChange={(on) => set({ penalty: on })} />
-        </div>
+        {/* Individual with 3 or more players: whoever got the card can score a bonus. */}
+        {offersGuesserBonus(versus.lineup) && <SwitchRow label={s.bonus} sub={bonusNote(versus.bonus)} on={versus.bonus} onChange={(on) => set({ bonus: on })} />}
+        <SwitchRow label={s.penalty} sub={versus.penalty ? plural(versus.penaltyPoints, s.penaltyOn) : s.penaltyOff} on={versus.penalty} onChange={(on) => set({ penalty: on })} />
         {versus.penalty && (
           <Stepper
             label={s.pointsLost}
@@ -47,5 +44,18 @@ export function VersusSettings() {
         )}
       </Section>
     </>
+  );
+}
+
+// A title and line with a switch at the right, in a Stepper row's box.
+function SwitchRow({ label, sub, on, onChange }: { label: string; sub: string; on: boolean; onChange: (on: boolean) => void }) {
+  return (
+    <div className={styles.switchRow}>
+      <div className={styles.grow}>
+        <p className={text('optionTitle')}>{label}</p>
+        <p className={cx(styles.muted, text('small'))}>{sub}</p>
+      </div>
+      <InlineSwitch label="" name={label} checked={on} onChange={onChange} />
+    </div>
   );
 }

@@ -105,13 +105,13 @@ export function VersusRound({ state, dispatch, chrome, onSheet }: Props) {
                   <Txt variant="overline" color={page.muted}>
                     {en.versus.scores.next}
                   </Txt>
-                  <View style={mrStyles.row}>
+                  <View style={[mrStyles.row, styles.centerRow]}>
                     {v.nextColor !== null ? <TeamDot color={v.nextColor} size={space[2]} /> : null}
-                    <Txt variant="label" color={page.ink} style={mrStyles.grow}>
+                    <Txt variant="label" color={page.ink} style={styles.nextLine}>
                       {v.next}
                     </Txt>
                   </View>
-                  <Txt variant="small" color={page.muted}>
+                  <Txt variant="small" color={page.muted} style={styles.centerText}>
                     {v.hand}
                   </Txt>
                 </View>
@@ -424,7 +424,10 @@ const styles = StyleSheet.create({
   list: { paddingVertical: space[0.5] },
   passRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space[3], minHeight: layout.mindReader.logRow },
   passValue: { flexShrink: 1, textAlign: 'right' },
-  nextBox: { borderRadius: radius.xl, padding: space[4], gap: space[1.5] },
+  // Centred: the kicker, the next line with its dot, and who to hand the phone to.
+  nextBox: { borderRadius: radius.xl, padding: space[4], gap: space[1.5], alignItems: 'center' },
+  centerRow: { justifyContent: 'center' },
+  nextLine: { flexShrink: 1, textAlign: 'center' },
   endTurn: { gap: space[1], alignItems: 'center' },
   guessRow: { flexDirection: 'row', alignItems: 'flex-end', gap: space[4], minHeight: layout.minTouch },
   skip: { gap: space[1.5], minWidth: '25%' },

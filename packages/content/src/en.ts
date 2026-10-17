@@ -733,6 +733,16 @@ export const en = {
       pointsLostTeams: 'Taken from the team’s score',
       pointsLostIndividual: 'Only the Clue Giver loses them',
       pointsLostValue: '−{n}',
+      // Individual with 3 or more players: whoever got the card scores extra (picked with "Tap who
+      // got it"). Off, every guesser scores the same.
+      bonus: 'Bonus for who guesses it',
+      bonusOn: { one: 'Tap who got it: they get {n} extra point', other: 'Tap who got it: they get {n} extra points' },
+      bonusOff: 'Off: every guesser scores the same',
+      // The compact Difficulty row above Categories: its title and the picks with their card count.
+      // It opens the difficulty sheet.
+      difficulty: 'Difficulty',
+      difficultyDetail: '{name} · {cards}',
+      difficultyDone: 'Done',
     },
 
     // --- The header on a turn ---
@@ -821,6 +831,7 @@ export const en = {
       banned: { one: '{n} banned word', other: '{n} banned words' },
       asClueGiver: '{n} as Clue Giver',
       guessing: '{n} guessing',
+      bonus: '{n} bonus',
       penalty: { one: '−{n} banned word', other: '−{n} banned words' },
       playAgain: 'Play again',
       newGame: 'New game',
@@ -856,6 +867,7 @@ export const en = {
     unlimitedSkips: 'Unlimited skips',
     difficultyInfo: 'About difficulties',
     categories: 'Categories: {summary}. Tap to choose.',
+    difficultyRow: 'Difficulty: {name}. Tap to choose.',
     gotIt: '{name} got it',
   },
 };

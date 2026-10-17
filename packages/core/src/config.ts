@@ -100,8 +100,12 @@ export type GameConfig = {
     turnSeconds: number;
     // The Skips per turn stepper.
     skips: { default: number; min: number; max: number };
-    // Points for each correct card: to the team, or to the Clue Giver and the guesser in Individual.
+    // Teams: points to the team for each correct card.
     correctPoints: number;
+    // Individual: each correct card gives the Clue Giver and every guesser their points. With the
+    // "Bonus for who guesses it" switch on (shown from bonus.minPlayers players), the player who got
+    // it scores bonus.points more.
+    individual: { clueGiverPoints: number; guesserPoints: number; bonus: { on: boolean; points: number; minPlayers: number } };
     // The Banned word penalty switch starts off; on, each banned word costs `points` (a stepper).
     penalty: { on: boolean; points: { default: number; min: number; max: number } };
   };
@@ -178,6 +182,9 @@ export const gameConfig: GameConfig = {
     turnSeconds: 60,
     skips: { default: 3, min: 0, max: 10 },
     correctPoints: 1,
+    // Individual: +1 to the Clue Giver and to every guesser; the bonus (on to start, from 3
+    // players) gives whoever got it +1 more, so 2.
+    individual: { clueGiverPoints: 1, guesserPoints: 1, bonus: { on: true, points: 1, minPlayers: 3 } },
     penalty: { on: false, points: { default: 1, min: 1, max: 5 } },
   },
 };

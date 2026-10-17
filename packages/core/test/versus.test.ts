@@ -8,6 +8,7 @@ import {
   emptyLineup,
   gameConfig,
   nextOutcome,
+  offersGuesserBonus,
   resumableSettings,
   roundReducer,
   setStyle,
@@ -94,8 +95,8 @@ describe('Versus rotation', () => {
 
 describe('Versus scoring', () => {
   const turn = (lineup: Lineup, t: number, cards: PlayedCard[]): VersusTurn => ({ roles: versusRoles(lineup, t), cards });
-  const off = { penalty: false, penaltyPoints: 1 };
-  const on = { penalty: true, penaltyPoints: 2 };
+  const off = { penalty: false, penaltyPoints: 1, bonus: true };
+  const on = { penalty: true, penaltyPoints: 2, bonus: true };
 
   it('Teams: +1 a correct card for the team; a banned word costs the penalty only when it is on', () => {
     const t = turn(twoTeams, 0, [card('correct'), card('correct'), card('notGuessed'), card('banned')]);
@@ -103,16 +104,34 @@ describe('Versus scoring', () => {
     expect(Object.fromEntries(turnScores(twoTeams, t, on))).toEqual({ t1: 0 });
   });
 
-  it('Individual with 3+: the Clue Giver and the guesser each get +1; only the Clue Giver loses for a banned word', () => {
-    const [maya, sam, leo] = ['Maya', 'Sam', 'Leo'].map((n) => idOf(four, n));
+  it('Individual with 3+, bonus on: the Clue Giver and every guesser get +1, and whoever got it +1 more', () => {
+    const [maya, sam, leo, ava] = ['Maya', 'Sam', 'Leo', 'Ava'].map((n) => idOf(four, n));
     const t = turn(four, 0, [card('correct', sam!), card('correct', leo!), card('correct', sam!), card('banned')]);
-    expect(Object.fromEntries(turnScores(four, t, on))).toEqual({ [maya!]: 1, [sam!]: 2, [leo!]: 1 });
+    // 3 correct: Maya 3 − 2 for the banned word; Sam 3 + 2 bonus; Leo 3 + 1; Ava 3.
+    expect(Object.fromEntries(turnScores(four, t, on))).toEqual({ [maya!]: 1, [sam!]: 5, [leo!]: 4, [ava!]: 3 });
+    // Correct with nobody picked: everyone still gets +1, nobody the bonus.
+    expect(Object.fromEntries(turnScores(four, turn(four, 0, [card('correct')]), off))).toEqual({ [maya!]: 1, [sam!]: 1, [leo!]: 1, [ava!]: 1 });
   });
 
-  it('Individual with 2: a correct card is +1 for both; a banned word with the penalty on costs the Clue Giver', () => {
+  it('Individual with 3+, bonus off: the Clue Giver and every guesser get +1, and Correct asks nobody', () => {
+    const [maya, sam, leo, ava] = ['Maya', 'Sam', 'Leo', 'Ava'].map((n) => idOf(four, n));
+    const t = turn(four, 0, [card('correct', sam!), card('correct', leo!), card('banned')]);
+    expect(Object.fromEntries(turnScores(four, t, { ...on, bonus: false }))).toEqual({ [maya!]: 0, [sam!]: 2, [leo!]: 2, [ava!]: 2 });
+    const s = play(start(four, { bonus: false }), [{ type: 'startTurn' }, { type: 'correct' }, { type: 'endTurn' }]);
+    expect(s.turns[0]!.cards[0]).toMatchObject({ outcome: 'correct', guesser: null });
+    // With the bonus on, Correct waits for who got it.
+    const waiting = play(start(four), [{ type: 'startTurn' }]);
+    expect(play(waiting, [{ type: 'correct' }])).toBe(waiting);
+  });
+
+  it('Individual with 2: a correct card is +1 for both, never a bonus; a banned word with the penalty on costs the Clue Giver', () => {
     const [maya, leo] = ['Maya', 'Leo'].map((n) => idOf(pair, n));
     const t = turn(pair, 0, [card('correct', leo!), card('banned')]);
-    expect(Object.fromEntries(turnScores(pair, t, { penalty: true, penaltyPoints: 1 }))).toEqual({ [maya!]: 0, [leo!]: 1 });
+    expect(Object.fromEntries(turnScores(pair, t, { penalty: true, penaltyPoints: 1, bonus: true }))).toEqual({ [maya!]: 0, [leo!]: 1 });
+  });
+
+  it('offers the bonus switch only for Individual with 3 or more players', () => {
+    expect([pair, named('Maya', 'Sam', 'Leo'), four, twoTeams].map((l) => offersGuesserBonus(l))).toEqual([false, true, true, false]);
   });
 
   it('adds up standings with the latest round’s points, and the split for Individual results', () => {
@@ -120,8 +139,9 @@ describe('Versus scoring', () => {
     const turns = [turn(four, 0, [card('correct', sam!), card('banned')]), turn(four, 4, [card('correct', sam!)])];
     const rows = versusStandings(setup(four, on), turns);
     const m = rows.find((r) => r.side === maya)!;
-    expect(m).toMatchObject({ total: 0, last: 1, correct: 2, banned: 1, asClueGiver: 2, guessing: 0, penalty: 2 });
-    expect(rows[0]).toMatchObject({ side: sam, total: 2, guessing: 2 });
+    expect(m).toMatchObject({ total: 0, last: 1, correct: 2, banned: 1, asClueGiver: 2, guessing: 0, bonus: 0, penalty: 2 });
+    // Sam: +1 guessing on Maya's 2 correct cards, +1 bonus for each.
+    expect(rows[0]).toMatchObject({ side: sam, total: 4, guessing: 2, bonus: 2 });
     expect(versusWinners(rows)).toEqual([sam]);
   });
 });
@@ -137,13 +157,14 @@ describe('Versus recap', () => {
     const recap = play(start(four), [{ type: 'startTurn' }, { type: 'correct', guesser: idOf(four, 'Leo') }, { type: 'endTurn' }]);
     const leo = idOf(four, 'Leo');
     const totalOf = (s: VersusRoundState, id: string) => versusStandings(s.setup, s.turns).find((r) => r.side === id)!.total;
-    expect(totalOf(recap, leo)).toBe(1);
+    // +1 guessing, +1 bonus.
+    expect(totalOf(recap, leo)).toBe(2);
     const changed = play(recap, [{ type: 'cycleCard', index: 0 }]);
     expect(changed.turns[0]!.cards[0]!.outcome).toBe('notGuessed');
     expect(totalOf(changed, leo)).toBe(0);
     const back = play(changed, [{ type: 'cycleCard', index: 0 }, { type: 'cycleCard', index: 0 }]);
     expect(back.turns[0]!.cards[0]).toMatchObject({ outcome: 'correct', guesser: leo });
-    expect(totalOf(back, leo)).toBe(1);
+    expect(totalOf(back, leo)).toBe(2);
   });
 
   it('with 2 players, a skipped card made Correct credits the guesser', () => {

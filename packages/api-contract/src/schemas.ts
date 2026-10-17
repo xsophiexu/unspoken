@@ -82,6 +82,7 @@ export const gameConfigSchema = z.object({
       turnSeconds: whole,
       skips: z.object({ default: whole, min: whole, max: whole }),
       correctPoints: whole,
+      individual: z.object({ clueGiverPoints: whole, guesserPoints: whole, bonus: z.object({ on: z.boolean(), points: whole, minPlayers: whole }) }),
       penalty: z.object({ on: z.boolean(), points: z.object({ default: whole, min: whole, max: whole }) }),
     })
     .default(gameConfig.versus),

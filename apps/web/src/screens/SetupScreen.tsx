@@ -1,6 +1,6 @@
 'use client';
 
-import { bank, en } from '@unspoken/content';
+import { bank, difficultyRowDetail, en } from '@unspoken/content';
 import {
   canStart,
   categoriesInBank,
@@ -26,7 +26,8 @@ import { layout, motion } from '@unspoken/design-tokens';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
-import { DifficultyGrid } from '@/components/game/DifficultyGrid';
+import { DifficultyTiles } from '@/components/game/DifficultyTiles';
+import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { CategoriesSheet, DifficultyInfoSheet, SmallDeckSheet } from '@/components/setup/SetupSheets';
 import { TimerInput, TimerNote } from '@/components/game/TimerInput';
 import { Button } from '@/components/ui/Button';
@@ -50,7 +51,7 @@ const copy = en.setup;
 const themes = categoriesInBank(bank);
 const summaryCopy = { all: en.themes.all, names: en.categories, many: en.themes.many };
 
-type Open = 'categories' | 'info' | 'smallDeck' | null;
+type Open = 'categories' | 'difficulty' | 'info' | 'smallDeck' | null;
 
 // New game: categories, difficulties, and the timer and skips where the mode has them. Starts from
 // the current settings with the chosen mode. custom: step 3 of a Custom Mind Reader game, with the
@@ -70,6 +71,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   const cards = deckSize(bank, difficulties, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
   const summary = categoriesSummary(categories, summaryCopy);
+  const difficultyRow = difficultyRowDetail(difficulties, cards);
 
   const play = () => {
     game.newGame(settings, custom ? 'custom' : undefined);
@@ -155,42 +157,19 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
           <VersusSettings />
         </>
       )}
-      <button
-        type="button"
-        className={styles.categoriesRow}
+      {versus && (
+        <ChevronRow title={en.versus.settings.difficulty} detail={difficultyRow.detail} label={difficultyRow.a11y} onClick={() => setOpen('difficulty')} />
+      )}
+      <ChevronRow
+        title={copy.categories}
+        detail={format(copy.categoriesDetail, { summary, cards: cardsLabel(cards) })}
+        label={format(en.a11y.categories, { summary })}
         onClick={() => setOpen('categories')}
-        aria-label={format(en.a11y.categories, { summary })}
-        aria-haspopup="dialog"
-      >
-        <span className={styles.categoriesText}>
-          <span className={text('optionTitle')}>{copy.categories}</span>
-          <span className={cx(styles.muted, text('small'))}>{format(copy.categoriesDetail, { summary, cards: cardsLabel(cards) })}</span>
-        </span>
-        <Icon name="chevronRight" className={styles.muted} />
-      </button>
+      />
 
-      <Section
-        label={copy.difficulty}
-        aside={
-          <span className={styles.difficultyAside}>
-            {difficulties.length === 1
-              ? copy.difficultyHint
-              : format(copy.difficultyPicked, { difficulties: plural(difficulties.length, en.units.difficulties), cards: cardsLabel(cards) })}
-            <button type="button" className={styles.infoButton} onClick={() => setOpen('info')} aria-label={en.a11y.difficultyInfo} aria-haspopup="dialog">
-              <Icon name="info" />
-            </button>
-          </span>
-        }
-      >
-        <DifficultyGrid
-          kind="pick"
-          label={copy.difficulty}
-          columns={layout.grid.setupDifficulty}
-          current={difficulties}
-          onPick={(next) => setSettings((current) => toggleDifficulty(current, next))}
-          detail={(level) => cardsLabel(deckSize(bank, level, categories))}
-        />
-      </Section>
+      {!versus && (
+        <DifficultyTiles picked={difficulties} categories={categories} onToggle={(next) => setSettings((current) => toggleDifficulty(current, next))} onInfo={() => setOpen('info')} />
+      )}
 
       {!custom && timerSection}
 
@@ -226,8 +205,34 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
           onToggle={(theme) => update({ categories: toggleCategory(categories, theme) })}
         />
       )}
-      {open === 'info' && <DifficultyInfoSheet onClose={() => setOpen(null)} picked={difficulties} />}
+      {/* Versus: info opens from the difficulty sheet, and closing it goes back there. */}
+      {open === 'info' && <DifficultyInfoSheet onClose={() => setOpen(versus ? 'difficulty' : null)} picked={difficulties} />}
+      {open === 'difficulty' && (
+        <DifficultySheet
+          settings={settings}
+          onClose={() => setOpen((current) => (current === 'difficulty' ? null : current))}
+          onApply={(next) => setSettings((current) => ({ ...current, difficulties: next.difficulties }))}
+          onInfo={(next) => {
+            setSettings((current) => ({ ...current, difficulties: next.difficulties }));
+            setOpen('info');
+          }}
+        />
+      )}
       {open === 'smallDeck' && <SmallDeckSheet cards={cards} onBack={() => setOpen(null)} onPlay={play} />}
     </Screen>
+  );
+}
+
+// A box with a title, a line of detail and a chevron, that opens a sheet (Categories; Versus's
+// Difficulty).
+function ChevronRow({ title, detail, label, onClick }: { title: string; detail: string; label: string; onClick: () => void }) {
+  return (
+    <button type="button" className={styles.categoriesRow} onClick={onClick} aria-label={label} aria-haspopup="dialog">
+      <span className={styles.categoriesText}>
+        <span className={text('optionTitle')}>{title}</span>
+        <span className={cx(styles.muted, text('small'))}>{detail}</span>
+      </span>
+      <Icon name="chevronRight" className={styles.muted} />
+    </button>
   );
 }

@@ -212,3 +212,14 @@
 .recapRow[data-outcome='notGuessed'] .points {
   color: var(--region-muted);
 }
+
+/* Scores: the Next turn box, centred (kicker, the line with its dot, who to hand the phone to). */
+
+.nextCentered {
+  align-items: center;
+  text-align: center;
+}
+
+.nextLine {
+  justify-content: center;
+}

@@ -19,6 +19,9 @@ export type VersusSetup = {
   // The banned word penalty: off, a banned word scores 0; on, it costs penaltyPoints.
   penalty: boolean;
   penaltyPoints: number;
+  // Individual with 3 or more players: the player who got a card scores a bonus (and is picked
+  // with "Tap who got it"). Off, every guesser scores the same and Correct needs no pick.
+  bonus: boolean;
 };
 
 export function defaultVersusSetup(lineup: Lineup, config: GameConfig = gameConfig): VersusSetup {
@@ -31,6 +34,7 @@ export function defaultVersusSetup(lineup: Lineup, config: GameConfig = gameConf
     skips: v.skips.default,
     penalty: v.penalty.on,
     penaltyPoints: v.penalty.points.default,
+    bonus: v.individual.bonus.on,
   };
 }
 
@@ -171,34 +175,68 @@ export function outcomeCounts(cards: readonly PlayedCard[]): OutcomeCounts {
   return counts;
 }
 
-export type ScoringRules = Pick<VersusSetup, 'penalty' | 'penaltyPoints'>;
+export type ScoringRules = Pick<VersusSetup, 'penalty' | 'penaltyPoints' | 'bonus'>;
 
-// What one card is worth to the side giving clues: +correctPoints, 0, or −penalty when it is on.
-export function cardPoints(outcome: CardOutcome, rules: ScoringRules, config: GameConfig = gameConfig): number {
-  if (outcome === 'correct') return config.versus.correctPoints;
+// Whether Game settings offers the "Bonus for who guesses it" switch: Individual with enough
+// players for several guessers.
+export function offersGuesserBonus(lineup: Lineup, config: GameConfig = gameConfig): boolean {
+  return lineup.style === 'individual' && lineup.players.length >= config.versus.individual.bonus.minPlayers;
+}
+
+// Whether the player who got a card scores the bonus (and Correct asks who got it).
+export function hasGuesserBonus(lineup: Lineup, rules: Pick<ScoringRules, 'bonus'>, config: GameConfig = gameConfig): boolean {
+  return rules.bonus && offersGuesserBonus(lineup, config);
+}
+
+// What one card is worth to the side giving clues (the team, or the Clue Giver): its correct
+// points, 0, or −penalty for a banned word when the penalty is on.
+export function cardPoints(lineup: Lineup, outcome: CardOutcome, rules: ScoringRules, config: GameConfig = gameConfig): number {
+  if (outcome === 'correct') return lineup.style === 'teams' ? config.versus.correctPoints : config.versus.individual.clueGiverPoints;
   if (outcome === 'banned' && rules.penalty) return -rules.penaltyPoints;
   return 0;
 }
 
+// One side's points from a turn, split the way the results explain them.
+export type VersusTurnPoints = { clueGiver: number; guessing: number; bonus: number; penalty: number };
+
+const sideGiving = (lineup: Lineup, turn: VersusTurn) => (lineup.style === 'teams' ? (turn.roles.teamId ?? '') : turn.roles.clueGiver);
+
 // Who scores what for one turn, keyed by side (team id in Teams, player id in Individual).
-// Teams: the team takes every card's points. Individual: the Clue Giver takes every card's points
-// (Correct and the banned word penalty), and each guesser gets correctPoints for a card they got.
-export function turnScores(lineup: Lineup, turn: VersusTurn, rules: ScoringRules, config: GameConfig = gameConfig): Map<string, number> {
-  const out = new Map<string, number>();
-  const add = (side: string, n: number) => out.set(side, (out.get(side) ?? 0) + n);
-  const giver = lineup.style === 'teams' ? (turn.roles.teamId ?? '') : turn.roles.clueGiver;
-  add(giver, 0);
+// Teams: the team takes every card's points. Individual: a correct card gives the Clue Giver and
+// every guesser their points, plus the bonus to whoever got it when the bonus is on; a banned word
+// with the penalty on costs only the Clue Giver.
+export function turnBreakdown(lineup: Lineup, turn: VersusTurn, rules: ScoringRules, config: GameConfig = gameConfig): Map<string, VersusTurnPoints> {
+  const out = new Map<string, VersusTurnPoints>();
+  const row = (side: string) => {
+    let r = out.get(side);
+    if (!r) out.set(side, (r = { clueGiver: 0, guessing: 0, bonus: 0, penalty: 0 }));
+    return r;
+  };
+  const giver = row(sideGiving(lineup, turn));
+  const individual = lineup.style === 'individual';
+  const bonus = hasGuesserBonus(lineup, rules, config);
+  const { guesserPoints, bonus: extra } = config.versus.individual;
   for (const card of turn.cards) {
-    add(giver, cardPoints(card.outcome, rules, config));
-    if (lineup.style === 'individual' && card.outcome === 'correct' && card.guesser) add(card.guesser, config.versus.correctPoints);
+    const points = cardPoints(lineup, card.outcome, rules, config);
+    if (card.outcome === 'banned') giver.penalty -= points;
+    if (card.outcome !== 'correct') continue;
+    giver.clueGiver += points;
+    if (!individual) continue;
+    for (const g of turn.roles.guessers) row(g).guessing += guesserPoints;
+    if (bonus && card.guesser && turn.roles.guessers.includes(card.guesser)) row(card.guesser).bonus += extra.points;
   }
   return out;
 }
 
+const totalOf = (p: VersusTurnPoints) => p.clueGiver + p.guessing + p.bonus - p.penalty;
+
+export function turnScores(lineup: Lineup, turn: VersusTurn, rules: ScoringRules, config: GameConfig = gameConfig): Map<string, number> {
+  return new Map([...turnBreakdown(lineup, turn, rules, config)].map(([side, p]) => [side, totalOf(p)]));
+}
+
 // The points the side giving clues made this turn (the recap's "+3").
 export function turnTotal(lineup: Lineup, turn: VersusTurn, rules: ScoringRules, config: GameConfig = gameConfig): number {
-  const side = lineup.style === 'teams' ? (turn.roles.teamId ?? '') : turn.roles.clueGiver;
-  return turnScores(lineup, turn, rules, config).get(side) ?? 0;
+  return turnScores(lineup, turn, rules, config).get(sideGiving(lineup, turn)) ?? 0;
 }
 
 // --- Standings ---------------------------------------------------------------------------------
@@ -211,9 +249,10 @@ export type VersusStanding = {
   // Cards guessed and banned words said while this side gave clues.
   correct: number;
   banned: number;
-  // Individual: points as Clue Giver, points guessing, and points lost to banned words.
+  // Points as Clue Giver, guessing, from the bonus and lost to banned words; they add up to total.
   asClueGiver: number;
   guessing: number;
+  bonus: number;
   penalty: number;
 };
 
@@ -225,24 +264,25 @@ function sidesOf(lineup: Lineup): string[] {
 // counts the turns of the latest round played.
 export function versusStandings(setup: VersusSetup, turns: readonly VersusTurn[], config: GameConfig = gameConfig): VersusStanding[] {
   const { lineup } = setup;
-  const rows = new Map(sidesOf(lineup).map((side) => [side, { side, total: 0, last: 0, correct: 0, banned: 0, asClueGiver: 0, guessing: 0, penalty: 0 }]));
+  const rows = new Map(sidesOf(lineup).map((side) => [side, { side, total: 0, last: 0, correct: 0, banned: 0, asClueGiver: 0, guessing: 0, bonus: 0, penalty: 0 }]));
   const latestRound = turns.length > 0 ? turns[turns.length - 1]!.roles.round : 0;
   for (const turn of turns) {
-    const giver = lineup.style === 'teams' ? (turn.roles.teamId ?? '') : turn.roles.clueGiver;
     const counts = outcomeCounts(turn.cards);
-    const giverRow = rows.get(giver);
+    const giverRow = rows.get(sideGiving(lineup, turn));
     if (giverRow) {
       giverRow.correct += counts.correct;
       giverRow.banned += counts.banned;
-      giverRow.asClueGiver += counts.correct * config.versus.correctPoints;
-      giverRow.penalty += counts.banned * -cardPoints('banned', setup, config);
     }
-    for (const [side, points] of turnScores(lineup, turn, setup, config)) {
+    for (const [side, points] of turnBreakdown(lineup, turn, setup, config)) {
       const row = rows.get(side);
       if (!row) continue;
-      row.total += points;
-      if (turn.roles.round === latestRound) row.last += points;
-      if (side !== giver) row.guessing += points;
+      const total = totalOf(points);
+      row.total += total;
+      if (turn.roles.round === latestRound) row.last += total;
+      row.asClueGiver += points.clueGiver;
+      row.guessing += points.guessing;
+      row.bonus += points.bonus;
+      row.penalty += points.penalty;
     }
   }
   return [...rows.values()].sort((a, b) => b.total - a.total);

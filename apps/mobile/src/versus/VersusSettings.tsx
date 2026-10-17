@@ -1,6 +1,7 @@
-import { en } from '@unspoken/content';
-import { clampVersusSetup, format, gameConfig, plural, type VersusSetup } from '@unspoken/core';
+import { bonusNote, en } from '@unspoken/content';
+import { clampVersusSetup, format, gameConfig, offersGuesserBonus, plural, type VersusSetup } from '@unspoken/core';
 import { radius, space, type RegionColors } from '@unspoken/design-tokens';
+import type { ReactNode } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { mrStyles, Stepper } from '../mindReader/ui';
@@ -11,7 +12,8 @@ import { ToggleTrack } from '../ui/Toggle';
 import { Txt } from '../ui/Txt';
 
 // Versus's Game settings under the time limit: Rounds and Skips per turn, then Scoring with the
-// banned word penalty (off by default) and, when it is on, how many points it costs.
+// bonus for who guesses it (Individual with 3+, on by default), the banned word penalty (off by
+// default) and, when it is on, how many points it costs.
 export function VersusSettings({ colors }: { colors: RegionColors }) {
   const { versus, setVersus, theme } = usePrefs();
   const s = en.versus.settings;
@@ -36,23 +38,18 @@ export function VersusSettings({ colors }: { colors: RegionColors }) {
       </View>
       <View style={mrStyles.section}>
         <SectionLabel label={s.scoring} colors={colors} />
-        <Press
-          onPress={() => set({ penalty: !versus.penalty })}
-          accessibilityRole="switch"
-          accessibilityLabel={s.penalty}
-          accessibilityState={{ checked: versus.penalty }}
-          style={[styles.row, { backgroundColor: colors.chip }]}
-        >
-          <View style={styles.grow}>
-            <Txt variant="optionTitle" color={colors.ink}>
-              {s.penalty}
-            </Txt>
-            <Txt variant="small" color={colors.muted}>
-              {versus.penalty ? plural(versus.penaltyPoints, s.penaltyOn) : s.penaltyOff}
-            </Txt>
-          </View>
-          <ToggleTrack on={versus.penalty} colors={colors} knob={theme.regions.raised.bg} />
-        </Press>
+        {/* Individual with 3 or more players: whoever got the card can score a bonus. */}
+        {offersGuesserBonus(versus.lineup) ? (
+          <SwitchRow label={s.bonus} sub={bonusNote(versus.bonus)} on={versus.bonus} onChange={(on) => set({ bonus: on })} colors={colors} knob={theme.regions.raised.bg} />
+        ) : null}
+        <SwitchRow
+          label={s.penalty}
+          sub={versus.penalty ? plural(versus.penaltyPoints, s.penaltyOn) : s.penaltyOff}
+          on={versus.penalty}
+          onChange={(on) => set({ penalty: on })}
+          colors={colors}
+          knob={theme.regions.raised.bg}
+        />
         {versus.penalty ? (
           <Stepper
             label={s.pointsLost}
@@ -68,6 +65,23 @@ export function VersusSettings({ colors }: { colors: RegionColors }) {
         ) : null}
       </View>
     </>
+  );
+}
+
+// A title and line with a switch at the right, in a Stepper row's box.
+function SwitchRow({ label, sub, on, onChange, colors, knob }: { label: string; sub: ReactNode; on: boolean; onChange: (on: boolean) => void; colors: RegionColors; knob: string }) {
+  return (
+    <Press onPress={() => onChange(!on)} accessibilityRole="switch" accessibilityLabel={label} accessibilityState={{ checked: on }} style={[styles.row, { backgroundColor: colors.chip }]}>
+      <View style={styles.grow}>
+        <Txt variant="optionTitle" color={colors.ink}>
+          {label}
+        </Txt>
+        <Txt variant="small" color={colors.muted}>
+          {sub}
+        </Txt>
+      </View>
+      <ToggleTrack on={on} colors={colors} knob={knob} />
+    </Press>
   );
 }
 

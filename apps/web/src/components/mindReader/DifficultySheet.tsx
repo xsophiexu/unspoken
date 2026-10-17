@@ -1,15 +1,13 @@
 'use client';
 
-import { bank, difficultyApplyLabel, difficultyPickNote, en } from '@unspoken/content';
-import { deckSize, plural, toggleDifficulty, type GameSettings } from '@unspoken/core';
-import { layout } from '@unspoken/design-tokens';
+import { difficultyApplyLabel, en } from '@unspoken/content';
+import { toggleDifficulty, type GameSettings } from '@unspoken/core';
 import { useId, useState } from 'react';
 
-import { DifficultyGrid } from '@/components/game/DifficultyGrid';
+import { DifficultyTiles } from '@/components/game/DifficultyTiles';
 import { SheetHead } from '@/components/sheets/SheetHead';
 import sheetStyles from '@/components/sheets/sheets.module.css';
 import { Button } from '@/components/ui/Button';
-import { Section } from '@/components/ui/Section';
 import { Sheet } from '@/components/ui/Sheet';
 import { cx } from '@/lib/ui';
 
@@ -20,46 +18,52 @@ type Props = {
   onClose: () => void;
   // Plays the picked difficulties (Quick Play starts a new word with them).
   onApply: (settings: GameSettings) => void;
-  // Custom settings: the Custom game setup.
-  customHref: string;
-  onCustom: () => void;
+  // Custom settings: the Custom game setup. Left out (Versus's Game settings), the sheet has one
+  // button that keeps the picks.
+  customHref?: string;
+  onCustom?: () => void;
+  // The i beside "Pick one or more", with the picks so far (Versus's Game settings).
+  onInfo?: (settings: GameSettings) => void;
 };
 
-// Quick Play's difficulty-only sheet: New game's multi-select difficulty tiles, Custom settings on
-// the left and Apply difficulty on the right. Render it while open.
-export function DifficultySheet({ settings, onClose, onApply, customHref, onCustom }: Props) {
+// The difficulty-only sheet: New game's multi-select difficulty tiles. Quick Play has Custom
+// settings on the left and Apply difficulty on the right; Versus's Game settings has Done. Render
+// it while open.
+export function DifficultySheet({ settings, onClose, onApply, customHref, onCustom, onInfo }: Props) {
   const id = useId();
   const q = en.mindReader.quick;
   const [draft, setDraft] = useState(settings);
   const { difficulties, categories } = draft;
-  const cards = deckSize(bank, difficulties, categories);
+  const apply = () => {
+    onApply(draft);
+    onClose();
+  };
   return (
     <Sheet labelledBy={id} onClose={onClose}>
       <SheetHead id={id} title={q.sheetTitle} />
-      <Section className={styles.tiles} label={en.setup.difficulty} aside={difficultyPickNote(difficulties, cards)}>
-        <DifficultyGrid
-          kind="pick"
-          label={en.setup.difficulty}
-          columns={layout.grid.setupDifficulty}
-          current={difficulties}
-          onPick={(next) => setDraft((current) => toggleDifficulty(current, next))}
-          detail={(level) => plural(deckSize(bank, level, categories), en.units.cards)}
-        />
-      </Section>
-      <div className={cx(sheetStyles.buttonPair, styles.footer)}>
-        <Button size="large" variant="secondary" href={customHref} onClick={onCustom}>
-          {q.custom}
-        </Button>
-        <Button
-          size="large"
-          onClick={() => {
-            onApply(draft);
-            onClose();
-          }}
-        >
-          {difficultyApplyLabel(difficulties)}
-        </Button>
-      </div>
+      <DifficultyTiles
+        className={styles.tiles}
+        picked={difficulties}
+        categories={categories}
+        onToggle={(next) => setDraft((current) => toggleDifficulty(current, next))}
+        onInfo={onInfo ? () => onInfo(draft) : undefined}
+      />
+      {customHref ? (
+        <div className={cx(sheetStyles.buttonPair, styles.footer)}>
+          <Button size="large" variant="secondary" href={customHref} onClick={onCustom}>
+            {q.custom}
+          </Button>
+          <Button size="large" onClick={apply}>
+            {difficultyApplyLabel(difficulties)}
+          </Button>
+        </div>
+      ) : (
+        <div className={styles.footer}>
+          <Button size="large" onClick={apply}>
+            {en.versus.settings.difficultyDone}
+          </Button>
+        </div>
+      )}
     </Sheet>
   );
 }

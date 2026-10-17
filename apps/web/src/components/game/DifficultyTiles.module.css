@@ -1,0 +1,26 @@
+/* Every value is a design token from /theme.css. */
+
+/* The hint or the picks, then the i pinned at the far right of the DIFFICULTY row. Its touch target
+   is the full minimum size without making the row taller. */
+.difficultyAside {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1);
+}
+
+.infoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-min-touch);
+  height: var(--un-layout-min-touch);
+  margin-block: calc((var(--un-layout-icon-md) - var(--un-layout-min-touch)) / 2);
+  margin-inline: calc((var(--un-layout-icon-md) - var(--un-layout-min-touch)) / 2);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: none;
+  color: var(--region-muted);
+  font-size: var(--un-layout-icon-md);
+  cursor: pointer;
+}

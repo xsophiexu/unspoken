@@ -1,6 +1,7 @@
 import {
   cardPoints,
   endsVersusRound,
+  hasGuesserBonus,
   format,
   outcomeCounts,
   playerName,
@@ -13,14 +14,17 @@ import {
   versusStandingsNow,
   versusWinners,
   isVersusOver,
+  gameConfig,
   type CardOutcome,
+  type Difficulty,
+  type GameConfig,
   type Lineup,
   type VersusRoles,
   type VersusRoundState,
 } from '@unspoken/core';
 
 import { en, listNames, possessive } from './en';
-import type { DetailsSection, MindReaderSide, RoleCard, ScoreRow } from './mindReader';
+import { difficultyName, type DetailsSection, type MindReaderSide, type RoleCard, type ScoreRow } from './mindReader';
 
 // What each Versus screen says, from the round state and the copy catalog, so the app and the web
 // site show the same words. Team colors are indexes into the design tokens' team colors.
@@ -55,6 +59,19 @@ export function signedPoints(n: number): string {
 // The other teams, as one name or several ("Sharks", "Sharks and Foxes").
 function watchingTeams(lineup: Lineup, roles: VersusRoles): string {
   return listNames(lineup.teams.filter((t) => t.id !== roles.teamId).map((t) => t.name));
+}
+
+// --- Game settings -------------------------------------------------------------------------------
+
+// The Difficulty row: "Normal · 638 cards", or "Hard+ · 1,743 cards" for several.
+export function difficultyRowDetail(difficulties: readonly Difficulty[], cards: number): { detail: string; a11y: string } {
+  const name = difficultyName(difficulties);
+  return { detail: format(v.settings.difficultyDetail, { name, cards: plural(cards, en.units.cards) }), a11y: format(en.a11y.difficultyRow, { name }) };
+}
+
+// The bonus switch's line: what whoever got it gets on top, or that every guesser scores the same.
+export function bonusNote(on: boolean, config: GameConfig = gameConfig): string {
+  return on ? plural(config.versus.individual.bonus.points, v.settings.bonusOn) : v.settings.bonusOff;
 }
 
 // --- Header ----------------------------------------------------------------------------------
@@ -178,7 +195,7 @@ export function recapView(state: VersusRoundState): RecapView | null {
   const side = givingSide(lineup, roles);
   const counts = outcomeCounts(turn.cards);
   const individual = lineup.style === 'individual';
-  const many = roles.guessers.length > 1;
+  const bonus = hasGuesserBonus(lineup, state.setup, state.config) && roles.guessers.length > 1;
   const next = versusNextRoles(state);
   const ending = isVersusOver(state) ? r.seeResults : endsVersusRound(lineup, roles.turn) ? r.seeScores : null;
   const nextSide = next ? givingSide(lineup, next) : null;
@@ -191,9 +208,9 @@ export function recapView(state: VersusRoundState): RecapView | null {
     counts: (['correct', 'notGuessed', 'banned'] as const).map((outcome) => ({ outcome, label: plural(counts[outcome], r[outcome]) })),
     hint: r.hint,
     rows: turn.cards.map((card, index) => {
-      const points = signedPoints(cardPoints(card.outcome, state.setup, state.config));
+      const points = signedPoints(cardPoints(lineup, card.outcome, state.setup, state.config));
       const label = r.outcomes[card.outcome];
-      const who = card.outcome === 'correct' && individual && many && card.guesser ? playerName(lineup, card.guesser) : card.outcome === 'notGuessed' && card.ended === 'timeUp' ? r.timeUp : null;
+      const who = card.outcome === 'correct' && bonus && card.guesser ? playerName(lineup, card.guesser) : card.outcome === 'notGuessed' && card.ended === 'timeUp' ? r.timeUp : null;
       return { index, word: card.word, who, outcome: card.outcome, label, points, a11y: format(r.rowLabel, { word: card.word, outcome: label, points }) };
     }),
     button: ending ?? format(r.next, { whose: possessive(nextSide?.name ?? '') }),
@@ -253,7 +270,12 @@ export function versusResultsView(state: VersusRoundState): VersusResultsView {
     ? []
     : teams
       ? [plural(best.correct, r.correct), ...(best.banned > 0 ? [plural(best.banned, r.banned)] : [])]
-      : [format(r.asClueGiver, { n: best.asClueGiver }), format(r.guessing, { n: best.guessing }), ...(best.penalty > 0 ? [plural(best.penalty, r.penalty)] : [])];
+      : [
+          format(r.asClueGiver, { n: best.asClueGiver }),
+          format(r.guessing, { n: best.guessing }),
+          ...(best.bonus > 0 ? [format(r.bonus, { n: best.bonus })] : []),
+          ...(best.penalty > 0 ? [plural(best.penalty, r.penalty)] : []),
+        ];
   return {
     kicker: plural(state.setup.rounds, r.kicker),
     title: winner ? format(teams ? r.winTeam : r.winPlayer, { team: winner.name, name: winner.name }) : r.tie,
