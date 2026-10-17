@@ -7,6 +7,7 @@ import {
   practiceStep,
   predictionChips,
   predictView,
+  difficultyBadge,
   quickOverView,
   resultsView,
   roleCards,
@@ -18,7 +19,7 @@ import {
   turnTitle,
   type ScoreRow,
 } from '@unspoken/content';
-import { correctPredictions, format, lastTurn, mindReaderCard, mindReaderClockProgress, type MindReaderRoundState, type RoundAction } from '@unspoken/core';
+import { correctPredictions, format, lastTurn, quickPlaySettings, mindReaderCard, mindReaderClockProgress, type MindReaderRoundState, type RoundAction } from '@unspoken/core';
 import { layout, nativeTextStyle, radius, space } from '@unspoken/design-tokens';
 import { router } from 'expo-router';
 import { useEffect, useRef, useState, type Dispatch } from 'react';
@@ -30,7 +31,8 @@ import { Button, LinkButton } from '../ui/Button';
 import { Press } from '../ui/Press';
 import { Txt } from '../ui/Txt';
 import type { Chrome } from './Game';
-import { BigWord, CoachCard, DetailsSheet, FixSheet, LabelRow, MRFrame, PracticeHeader, SpokenList, TurnHeader, WordCard } from './mindReaderParts';
+import { DifficultySheet } from '../mindReader/DifficultySheet';
+import { BigWord, CoachCard, DetailsSheet, DifficultyChip, FixSheet, LabelRow, MRFrame, PracticeHeader, SpokenList, TurnHeader, WordCard } from './mindReaderParts';
 
 type Props = { state: MindReaderRoundState; dispatch: Dispatch<RoundAction>; chrome: Chrome; onSheet: (open: boolean) => void };
 
@@ -38,7 +40,7 @@ type Props = { state: MindReaderRoundState; dispatch: Dispatch<RoundAction>; chr
 // the winner (Custom); word after word in Quick play; one guided turn in Practice.
 export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
   const prefs = usePrefs();
-  const [sheet, setSheet] = useState<'details' | 'fix' | null>(null);
+  const [sheet, setSheet] = useState<'details' | 'fix' | 'difficulty' | null>(null);
   const inputs = useRef<(TextInput | null)[]>([]);
   const { page, theme } = chrome;
   const raised = theme.regions.raised;
@@ -48,10 +50,18 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
   const step = practiceStep(state);
 
   useEffect(() => onSheet(sheet !== null), [sheet, onSheet]);
-  const open = (kind: 'details' | 'fix') => setSheet(kind);
+  const open = (kind: 'details' | 'fix' | 'difficulty') => setSheet(kind);
   const close = () => setSheet(null);
   const toStart = () => router.push('/mind-reader');
-  const startHere = (play: 'quick' | 'practice') => prefs.startGame({ ...prefs.settings, mode: 'mindReader' }, play);
+  const toCustom = () => router.push('/mind-reader/players');
+  const startHere = (play: 'quick' | 'practice') =>
+    prefs.startGame(play === 'quick' ? quickPlaySettings(prefs.settings) : { ...prefs.settings, mode: 'mindReader' }, play);
+  // Quick play and Practice keep their few lines in the middle of the screen.
+  const centered = !custom;
+  // Quick play: "Quick play", the difficulty chip and the menu.
+  const quickHeader = (
+    <TurnHeader chrome={chrome} title={turnTitle(state)} chip={<DifficultyChip label={difficultyBadge(state.settings.difficulties)} colors={page} onPress={() => open('difficulty')} />} />
+  );
 
   const details = detailsSheet(state);
   // Custom turns: the round and Details, with the role cards where the board shows them.
@@ -68,7 +78,7 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
     case 'roles': {
       const v = rolesView(state);
       screen = (
-        <MRFrame chrome={chrome} center footer={<Button kind="primary" label={v.button} colors={page} onPress={() => dispatch({ type: 'showWord' })} />}>
+        <MRFrame chrome={chrome} center header={custom ? undefined : quickHeader} footer={<Button kind="primary" label={v.button} colors={page} onPress={() => dispatch({ type: 'showWord' })} />}>
           <View style={styles.centerHead}>
             <Txt variant="overline" color={page.muted}>
               {v.kicker}
@@ -100,12 +110,11 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
     }
     case 'predict': {
       const v = predictView(state);
-      // Quick play's Predict has no round heading: a quiet label beside the menu.
-      const header = practice || custom ? turnHeader(true) : <TurnHeader chrome={chrome} title={null} label={en.mindReader.predict.quickLabel} />;
       screen = (
         <MRFrame
           chrome={chrome}
-          header={header}
+          center={centered}
+          header={practice || custom ? turnHeader(true) : quickHeader}
           footer={
             <>
               {coach}
@@ -157,7 +166,7 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
         <MRFrame
           chrome={chrome}
           center
-          header={practice || custom ? turnHeader(true) : <TurnHeader chrome={chrome} title={turnTitle(state)} />}
+          header={practice || custom ? turnHeader(true) : quickHeader}
           footer={
             <>
               {coach}
@@ -190,7 +199,8 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
       screen = (
         <MRFrame
           chrome={chrome}
-          header={practice ? turnHeader(false) : <TurnHeader chrome={chrome} title={turnTitle(state)} onDetails={custom ? () => open('details') : undefined} />}
+          center={centered}
+          header={practice ? turnHeader(false) : custom ? <TurnHeader chrome={chrome} title={turnTitle(state)} onDetails={() => open('details')} /> : quickHeader}
           footer={
             <>
               {coach}
@@ -263,12 +273,16 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
           <MRFrame
             chrome={chrome}
             center
-            header={<TurnHeader chrome={chrome} title={turnTitle(state)} />}
+            header={quickHeader}
             footer={
               <>
                 <Button kind="primary" label={en.mindReader.quickOver.next} colors={page} onPress={() => dispatch({ type: 'next' })} />
-                <View style={styles.link}>
+                <View style={styles.links}>
                   <LinkButton label={en.mindReader.quickOver.end} colors={page} onPress={toStart} />
+                  <Txt variant="link" color={page.muted} accessibilityElementsHidden importantForAccessibility="no">
+                    ·
+                  </Txt>
+                  <LinkButton label={en.mindReader.quickOver.custom} colors={page} onPress={toCustom} />
                 </View>
               </>
             }
@@ -289,6 +303,15 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
                 </Txt>
               ) : null}
             </Card>
+            {/* A word that wasn't guessed offers an easier difficulty. */}
+            {!state.guessed ? (
+              <View style={[styles.tough, { backgroundColor: page.chip }]}>
+                <Txt variant="label" color={page.chipInk} style={styles.grow}>
+                  {`${en.mindReader.quickOver.tough}\n${en.mindReader.quickOver.lower}`}
+                </Txt>
+                <Button label={en.mindReader.quickOver.switch} colors={page} onPress={() => open('difficulty')} size="compact" />
+              </View>
+            ) : null}
             <Txt variant="hint" color={page.muted} style={styles.centerText}>
               {en.mindReader.quickOver.pass}
             </Txt>
@@ -444,12 +467,13 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
       screen = (
         <MRFrame
           chrome={chrome}
+          center
           header={<PracticeHeader chrome={chrome} overline={step.overline} title={sc.scoring.title} onSkip={toStart} />}
           footer={
             <>
               <View style={styles.pair}>
                 <Button kind="primary" label={sc.quick} colors={page} onPress={() => startHere('quick')} style={styles.grow} />
-                <Button label={sc.custom} colors={page} onPress={() => router.push('/mind-reader/players')} style={styles.grow} />
+                <Button label={sc.custom} colors={page} onPress={toCustom} style={styles.grow} />
               </View>
               <View style={styles.link}>
                 <LinkButton label={sc.again} colors={page} onPress={() => startHere('practice')} />
@@ -494,6 +518,18 @@ export function MindReaderRound({ state, dispatch, chrome, onSheet }: Props) {
   return (
     <>
       {screen}
+      {!custom ? (
+        <DifficultySheet
+          visible={sheet === 'difficulty'}
+          settings={state.settings}
+          onClose={close}
+          onApply={(settings) => prefs.startGame(settings, 'quick')}
+          onCustom={() => {
+            close();
+            toCustom();
+          }}
+        />
+      ) : null}
       {details ? <DetailsSheet visible={sheet === 'details'} onClose={close} sections={details.sections} footer={details.footer} /> : null}
     </>
   );
@@ -550,6 +586,8 @@ const styles = StyleSheet.create({
   track: { height: layout.mindReader.clockBar, borderRadius: radius.pill, overflow: 'hidden', marginBottom: space[1.5] },
   progress: { height: '100%', borderRadius: radius.pill },
   link: { alignItems: 'center' },
+  links: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: space[2] },
+  tough: { flexDirection: 'row', alignItems: 'center', gap: space[3], borderRadius: radius.xl, paddingHorizontal: space[4], paddingVertical: space[3] },
   quickResult: { alignItems: 'center', gap: space[0.5] },
   sideCard: { gap: space[2.5] },
   pointsRow: { borderTopWidth: layout.stroke.hairline, paddingTop: space[2.5] },

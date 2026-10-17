@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   addPlayer,
+  gameConfig,
   createMindReaderRound,
   createRound,
   currentRoles,
@@ -14,6 +15,7 @@ import {
   mindReaderReducer,
   nextRoles,
   predictionsNeeded,
+  quickPlaySettings,
   roundReducer,
   setStyle,
   spokenClock,
@@ -158,4 +160,11 @@ it('runs through createRound and roundReducer', () => {
   const state = createRound(settingsFor('mindReader'), { cards, seed: 1, mindReader: { play: 'quick' } });
   expect(state.kind).toBe('mindReader');
   expect(roundReducer(state, { type: 'showWord' })).toMatchObject({ phase: 'predict' });
+});
+
+it('starts Quick play at its own difficulty, whatever was saved', () => {
+  const saved = { ...settingsFor('classic'), difficulties: ['Hard', 'Expert'] as const };
+  const quick = quickPlaySettings({ ...saved, difficulties: [...saved.difficulties] }, gameConfig);
+  expect(quick).toMatchObject({ mode: 'mindReader', difficulties: [gameConfig.mindReader.quickDifficulty] });
+  expect(quick.categories).toEqual(saved.categories);
 });

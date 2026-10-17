@@ -70,6 +70,7 @@ export const gameConfigSchema = z.object({
     minTeams: whole,
     maxTeams: whole,
     rounds: z.object({ default: whole, min: whole, max: whole }),
+    quickDifficulty: difficulty,
     scoring: z.object({ guess: whole, bonusEverySeconds: z.number().int().positive(), bonusPoints: whole, perPrediction: whole, notGuessed: whole }),
   }),
 }) satisfies z.ZodType<GameConfig>;

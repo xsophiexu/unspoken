@@ -1,5 +1,7 @@
 import {
+  DIFFICULTY_IDS,
   correctPredictions,
+  difficultyLabel,
   currentRoles,
   endsRound,
   format,
@@ -15,6 +17,7 @@ import {
   spokenClock,
   turnPoints,
   winners,
+  type Difficulty,
   type Lineup,
   type MindReaderRoundState,
   type TurnResult,
@@ -54,10 +57,10 @@ const isTeams = (state: MindReaderRoundState) => lineupOf(state)?.style === 'tea
 
 // --- Header --------------------------------------------------------------------------------------
 
-// "Round 2 of 5" in a Custom game; the mode name in Quick play.
+// "Round 2 of 5" in a Custom game; "Quick play" otherwise.
 export function turnTitle(state: MindReaderRoundState): string {
   const roles = currentRoles(state);
-  return roles && state.match ? format(m.round, { round: roles.round, rounds: state.match.setup.rounds }) : en.modes.mindReader.name;
+  return roles && state.match ? format(m.round, { round: roles.round, rounds: state.match.setup.rounds }) : m.quick.title;
 }
 
 // The two role cards under the round: who predicts, and who gives clues.
@@ -415,4 +418,20 @@ export function scoringRows(state: Pick<MindReaderRoundState, 'config'>): { rows
 // The predictions shown as chips on the Clues screen, with their index (blanks never get there).
 export function predictionChips(state: MindReaderRoundState): { index: number; word: string }[] {
   return state.predictions.map((word, index) => ({ index, word: word.trim() })).filter((p) => p.word);
+}
+
+// --- Quick play difficulty ---------------------------------------------------------------------------
+
+const badges = Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].badge])) as Record<Difficulty, string>;
+
+// The header chip's text: "NORMAL", or "HARD+" for several difficulties.
+export function difficultyBadge(difficulties: readonly Difficulty[]): string {
+  return difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix });
+}
+
+// The difficulty sheet's note: "Pick one or more", or "2 difficulties · 1,507 cards".
+export function difficultyPickNote(difficulties: readonly Difficulty[], cards: number): string {
+  return difficulties.length === 1
+    ? en.setup.difficultyHint
+    : format(en.setup.difficultyPicked, { difficulties: plural(difficulties.length, en.units.difficulties), cards: plural(cards, en.units.cards) });
 }

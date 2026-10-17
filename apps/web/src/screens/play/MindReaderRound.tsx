@@ -9,6 +9,7 @@ import {
   practiceStep,
   predictionChips,
   predictView,
+  difficultyBadge,
   quickOverView,
   resultsView,
   roleCards,
@@ -20,18 +21,19 @@ import {
   turnTitle,
   type ScoreRow,
 } from '@unspoken/content';
-import { correctPredictions, format, isMindReaderClockRunning, lastTurn, mindReaderCard, mindReaderClockProgress, type MindReaderRoundState } from '@unspoken/core';
+import { correctPredictions, format, isMindReaderClockRunning, quickPlaySettings, lastTurn, mindReaderCard, mindReaderClockProgress, type MindReaderRoundState } from '@unspoken/core';
 import { layout, type LayoutStyle } from '@unspoken/design-tokens';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
+import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { Card, LabelRow, Note, TeamDot } from '@/components/mindReader/parts';
 import { Button } from '@/components/ui/Button';
 import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
 import { useGame } from '@/state/game';
 
-import { BigWord, CoachCard, DetailsSheet, FixSheet, MRFrame, PracticeHeader, SpokenList, TurnHeader, WordCard } from './mindReaderParts';
+import { BigWord, CoachCard, DetailsSheet, DifficultyChip, FixSheet, MRFrame, PracticeHeader, SpokenList, TurnHeader, WordCard } from './mindReaderParts';
 import styles from './mindReader.module.css';
 import type { RoundScreenProps } from './types';
 
@@ -46,7 +48,7 @@ type MindReaderRoundProps = RoundScreenProps & { round: MindReaderRoundState; la
 export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu, onLeave }: MindReaderRoundProps) {
   const game = useGame();
   const { dispatch } = game;
-  const [sheet, setSheet] = useState<'details' | 'fix' | null>(null);
+  const [sheet, setSheet] = useState<'details' | 'fix' | 'difficulty' | null>(null);
   const word = mindReaderCard(state)?.word ?? '';
   const custom = state.match !== null;
   const practice = state.play === 'practice';
@@ -61,16 +63,21 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
   }, [running, dispatch]);
 
   const close = () => setSheet(null);
-  const startHere = (play: 'quick' | 'practice') => game.newGame({ ...game.settings, mode: 'mindReader' }, play);
+  const startHere = (play: 'quick' | 'practice') =>
+    game.newGame(play === 'quick' ? quickPlaySettings(game.settings) : { ...game.settings, mode: 'mindReader' }, play);
   const details = detailsSheet(state);
-  const header = (props: { title?: string | null; label?: string; cards?: boolean; details?: boolean } = {}) =>
+  // Quick play and Practice keep their few lines in the middle of the screen.
+  const centered = !custom;
+  // Custom: the round, Details and the role cards. Quick play: "Quick play", the difficulty chip and
+  // the menu. Practice: its step and Skip.
+  const header = (props: { cards?: boolean; details?: boolean } = {}) =>
     practice ? (
       <PracticeHeader overline={step.overline} title={en.mindReader.practice.title} skipHref={routes.mindReader} onLeave={onLeave} />
     ) : (
       <TurnHeader
         layoutStyle={s}
-        title={props.title === undefined ? turnTitle(state) : props.title}
-        label={props.label}
+        title={turnTitle(state)}
+        chip={custom ? undefined : <DifficultyChip label={difficultyBadge(state.settings.difficulties)} onClick={() => setSheet('difficulty')} />}
         cards={custom && props.cards ? roleCards(state) : undefined}
         onDetails={custom && props.details ? () => setSheet('details') : undefined}
         onMenu={onMenu}
@@ -91,6 +98,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
         <MRFrame
           layoutStyle={s}
           center
+          header={custom ? undefined : header()}
           footer={
             <Button size="large" onClick={() => dispatch({ type: 'showWord' })}>
               {v.button}
@@ -121,7 +129,8 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
       screen = (
         <MRFrame
           layoutStyle={s}
-          header={practice || custom ? header({ cards: true, details: true }) : header({ title: null, label: en.mindReader.predict.quickLabel })}
+          center={centered}
+          header={header({ cards: true, details: true })}
           footer={
             <>
               {coach}
@@ -198,6 +207,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
       screen = (
         <MRFrame
           layoutStyle={s}
+          center={centered}
           header={header({ details: true })}
           footer={
             <>
@@ -269,7 +279,13 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
                 <Button size="large" onClick={() => dispatch({ type: 'next' })}>
                   {en.mindReader.quickOver.next}
                 </Button>
-                {textLink(routes.mindReader, en.mindReader.quickOver.end)}
+                <p className={styles.links}>
+                  {textLink(routes.mindReader, en.mindReader.quickOver.end)}
+                  <span className={cx(styles.muted, text('link'))} aria-hidden="true">
+                    ·
+                  </span>
+                  {textLink(routes.mindReaderPlayers, en.mindReader.quickOver.custom)}
+                </p>
               </>
             }
           >
@@ -281,6 +297,19 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
               <p className={text('optionTitle')}>{v.correct}</p>
               {v.said && <p className={cx(styles.muted, text('small'))}>{v.said}</p>}
             </Card>
+            {/* A word that wasn't guessed offers an easier difficulty. */}
+            {!state.guessed && (
+              <div className={styles.tough}>
+                <p className={cx(styles.grow, text('label'))}>
+                  {en.mindReader.quickOver.tough}
+                  <br />
+                  {en.mindReader.quickOver.lower}
+                </p>
+                <Button variant="secondary" size="compact" onClick={() => setSheet('difficulty')}>
+                  {en.mindReader.quickOver.switch}
+                </Button>
+              </div>
+            )}
             <p className={cx(styles.muted, styles.centerText, text('hint'))}>{en.mindReader.quickOver.pass}</p>
           </MRFrame>
         );
@@ -407,6 +436,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
       screen = (
         <MRFrame
           layoutStyle={s}
+          center
           header={<PracticeHeader overline={step.overline} title={sc.scoring.title} skipHref={routes.mindReader} onLeave={onLeave} />}
           footer={
             <>
@@ -449,6 +479,9 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
   return (
     <>
       {screen}
+      {sheet === 'difficulty' && !custom && (
+        <DifficultySheet settings={state.settings} onClose={close} onApply={(settings) => game.newGame(settings, 'quick')} customHref={routes.mindReaderPlayers} onCustom={onLeave} />
+      )}
       {sheet === 'details' && details && <DetailsSheet sections={details.sections} footer={details.footer} onClose={close} />}
     </>
   );

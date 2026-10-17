@@ -34,14 +34,15 @@ export function MRFrame({ layoutStyle, header, children, footer, center = false 
 }
 
 // "Round 2 of 5" with a Details pill and the menu; the role cards under it when given. Cards in a
-// row share the tallest card's height, two lines at most with an ellipsis. With no title, `label` is
-// a small quiet line in its place (Quick play's Predict).
-export function TurnHeader({ layoutStyle, title, label, cards, onDetails, onMenu }: { layoutStyle: LayoutStyle; title: string | null; label?: string; cards?: readonly RoleCard[]; onDetails?: () => void; onMenu: () => void }) {
+// row share the tallest card's height, two lines at most with an ellipsis. `chip` sits beside the
+// title (Quick play's difficulty).
+export function TurnHeader({ layoutStyle, title, chip, cards, onDetails, onMenu }: { layoutStyle: LayoutStyle; title: string; chip?: ReactNode; cards?: readonly RoleCard[]; onDetails?: () => void; onMenu: () => void }) {
   return (
     <header className={styles.header}>
       <div className={styles.headerRow}>
         <div className={styles.titleRow}>
-          {title ? <h1 className={cx(styles.title, styles.ellipsis, text('modeName'))}>{title}</h1> : label && <p className={cx(styles.muted, styles.ellipsis, text('subline'))}>{label}</p>}
+          <h1 className={cx(styles.title, styles.ellipsis, text('modeName'))}>{title}</h1>
+          {chip}
           {onDetails && (
             <button type="button" className={cx(styles.details, text('label'))} aria-label={en.a11y.roundDetails} onClick={onDetails}>
               {en.mindReader.details}
@@ -63,6 +64,16 @@ export function TurnHeader({ layoutStyle, title, label, cards, onDetails, onMenu
         </div>
       )}
     </header>
+  );
+}
+
+// Quick play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
+export function DifficultyChip({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button type="button" className={cx(styles.chip, text('badge'))} aria-label={format(en.mindReader.quick.chip, { difficulty: label })} aria-haspopup="dialog" onClick={onClick}>
+      {label}
+      <Icon name="caret" />
+    </button>
   );
 }
 

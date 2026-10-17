@@ -6,7 +6,7 @@
 // - practice: one guided turn with a coach card on each step, then how scoring works.
 
 import { gameConfig, type GameConfig } from '../config';
-import { hasTimeLimit, modeRules } from '../rules';
+import { hasTimeLimit, modeRules, withDifficulty } from '../rules';
 import type { Card, GameSettings } from '../types';
 import { canPlay } from '../mindReader/lineup';
 import {
@@ -79,6 +79,11 @@ export type MindReaderAction =
 
 function emptyPredictions(config: GameConfig): string[] {
   return Array.from({ length: config.mindReader.predictions }, () => '');
+}
+
+// Quick play's settings from the saved ones: Mind Reader at the Quick play difficulty.
+export function quickPlaySettings(settings: GameSettings, config: GameConfig = gameConfig): GameSettings {
+  return withDifficulty({ ...settings, mode: 'mindReader' }, config.mindReader.quickDifficulty, config);
 }
 
 export function createMindReaderRound(

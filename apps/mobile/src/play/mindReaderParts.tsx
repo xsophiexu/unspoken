@@ -44,22 +44,17 @@ function MenuDots({ colors, onPress }: { colors: RegionColors; onPress: () => vo
 
 // "Round 2 of 5" with a Details pill and the menu; the role cards under it when given. Cards in a
 // row share the tallest card's height, one line each unless a name needs two.
-// With no title, `label` is a small quiet line in its place (Quick play's Predict).
-export function TurnHeader({ chrome, title, label, cards, onDetails }: { chrome: Chrome; title: string | null; label?: string; cards?: readonly RoleCard[]; onDetails?: () => void }) {
+// `chip` sits beside the title (Quick play's difficulty).
+export function TurnHeader({ chrome, title, chip, cards, onDetails }: { chrome: Chrome; title: string; chip?: ReactNode; cards?: readonly RoleCard[]; onDetails?: () => void }) {
   const { page } = chrome;
   return (
     <View style={styles.header}>
       <View style={styles.headerRow}>
         <View style={styles.titleRow}>
-          {title ? (
-            <Txt variant="modeName" size={layout.mindReader.titleSize} color={page.ink} accessibilityRole="header" numberOfLines={1} style={styles.shrink}>
-              {title}
-            </Txt>
-          ) : label ? (
-            <Txt variant="subline" color={page.muted} numberOfLines={1} style={styles.shrink}>
-              {label}
-            </Txt>
-          ) : null}
+          <Txt variant="modeName" size={layout.mindReader.titleSize} color={page.ink} accessibilityRole="header" numberOfLines={1} style={styles.shrink}>
+            {title}
+          </Txt>
+          {chip}
           {onDetails ? (
             <Press onPress={onDetails} accessibilityLabel={en.a11y.roundDetails} hitSlop={slopFor(space[7.5])} style={[styles.details, { backgroundColor: page.chip }]}>
               <Txt variant="label" color={page.accentText}>
@@ -85,6 +80,24 @@ export function TurnHeader({ chrome, title, label, cards, onDetails }: { chrome:
         </View>
       ) : null}
     </View>
+  );
+}
+
+// Quick play's difficulty chip ("NORMAL ⌄"): opens the difficulty sheet.
+export function DifficultyChip({ label, colors, onPress }: { label: string; colors: RegionColors; onPress: () => void }) {
+  return (
+    <Press
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={format(en.mindReader.quick.chip, { difficulty: label })}
+      hitSlop={slopFor(space[6])}
+      style={[styles.chip, { backgroundColor: colors.accent }]}
+    >
+      <Txt variant="badge" color={colors.onAccent}>
+        {label}
+      </Txt>
+      <Icon name="chevronDown" size={layout.icon.sm} color={colors.onAccent} />
+    </Press>
   );
 }
 
@@ -325,6 +338,7 @@ const styles = StyleSheet.create({
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space[3], minHeight: layout.minTouch },
   titleRow: { flexDirection: 'row', alignItems: 'center', gap: space[2], flexShrink: 1 },
   shrink: { flexShrink: 1 },
+  chip: { flexDirection: 'row', alignItems: 'center', gap: space[0.5], minHeight: space[6], borderRadius: radius.xs, paddingLeft: space[2], paddingRight: space[1] },
   details: { minHeight: space[7.5], borderRadius: radius.pill, paddingHorizontal: space[3], justifyContent: 'center' },
   menu: { borderRadius: radius.pill, alignItems: 'center', justifyContent: 'center' },
   cards: { flexDirection: 'row', gap: space[1.5], alignItems: 'stretch' },

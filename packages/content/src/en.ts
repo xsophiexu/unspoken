@@ -537,8 +537,6 @@ export const en = {
     predict: {
       kicker: '{name}, the word is',
       kickerQuick: 'Mind Reader, the word is',
-      // The quiet label beside the menu on Quick play's Predict (no round heading there).
-      quickLabel: 'Mind Reader · Quick play',
       kickerPractice: 'Mind Reader · the word is',
       label: '{n} PREDICTIONS',
       hint: 'Words {name} might say',
@@ -640,6 +638,15 @@ export const en = {
       newGame: 'New game',
     },
 
+    // --- Quick play: the header's difficulty chip and its sheet ---
+    quick: {
+      title: 'Quick play',
+      chip: 'Difficulty {difficulty}. Tap to change.',
+      sheetTitle: 'Difficulty',
+      apply: 'Apply difficulty',
+      custom: 'Custom settings',
+    },
+
     // --- Quick play: the word is over ---
     quickOver: {
       guessed: 'GUESSED IT',
@@ -647,6 +654,11 @@ export const en = {
       pass: 'Pass the phone to someone new to be the next Mind Reader.',
       next: 'Next word',
       end: 'End quick play',
+      custom: 'Custom game',
+      // After a word that wasn't guessed.
+      tough: 'Tough one?',
+      lower: 'You can lower the difficulty.',
+      switch: 'Switch difficulty',
     },
 
     // --- Practice ---

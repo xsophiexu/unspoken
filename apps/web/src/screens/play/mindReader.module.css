@@ -161,6 +161,36 @@
   font-size: var(--un-layout-mind-reader-title-size);
 }
 
+.chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-0-5);
+  min-height: var(--un-space-6);
+  padding: 0 var(--un-space-1) 0 var(--un-space-2);
+  border: 0;
+  border-radius: var(--un-radius-xs);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--un-space-2);
+}
+
+.tough {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  padding: var(--un-space-3) var(--un-space-4);
+  border-radius: var(--un-radius-xl);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
 .details {
   flex: none;
   min-height: var(--un-space-7-5);

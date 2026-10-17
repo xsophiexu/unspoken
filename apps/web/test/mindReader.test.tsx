@@ -66,9 +66,64 @@ describe('Mind Reader', () => {
     const game = within(screen.getByRole('region', { name: 'game' }));
     expect(game.getByRole('heading', { name: m.roles.quick.title })).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.roles.quick.show }));
-    expect(game.getByText(m.predict.quickLabel)).toBeInTheDocument();
+    expect(game.getByRole('heading', { name: m.quick.title })).toBeInTheDocument();
     expect(game.queryByRole('heading', { name: /^Round/ })).not.toBeInTheDocument();
     expect(game.getByRole('button', { name: 'Write 5 more' })).toBeDisabled();
+  });
+
+  it('starts Quick play at Normal, and the chip changes the difficulty', async () => {
+    saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Expert'], categories: [], skips: 3 } });
+    const user = userEvent.setup();
+    renderApp(
+      <>
+        <MindReaderStartScreen />
+        <section aria-label="game">
+          <PlayScreen />
+        </section>
+      </>,
+    );
+    await user.click(screen.getByRole('button', { name: new RegExp(`^${m.start.quick.title}`) }));
+    const game = within(screen.getByRole('region', { name: 'game' }));
+    await user.click(game.getByRole('button', { name: 'Difficulty NORMAL. Tap to change.' }));
+
+    const sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
+    expect(sheet.getByText(en.setup.difficultyHint)).toBeInTheDocument();
+    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
+    expect(sheet.getByText(/^2 difficulties · /)).toBeInTheDocument();
+    await user.click(sheet.getByRole('checkbox', { name: /^Normal/ }));
+    await user.click(sheet.getByRole('button', { name: m.quick.apply }));
+    expect(game.getByRole('button', { name: 'Difficulty HARD. Tap to change.' })).toBeInTheDocument();
+  });
+
+  it('offers an easier difficulty after a word that wasn’t guessed, not after one that was', async () => {
+    const user = userEvent.setup();
+    renderApp(
+      <>
+        <MindReaderStartScreen />
+        <section aria-label="game">
+          <PlayScreen />
+        </section>
+      </>,
+    );
+    await user.click(screen.getByRole('button', { name: new RegExp(`^${m.start.quick.title}`) }));
+    const game = within(screen.getByRole('region', { name: 'game' }));
+    const playWord = async (guessed: boolean) => {
+      await user.click(game.getByRole('button', { name: m.roles.quick.show }));
+      for (let i = 1; i <= gameWords.length; i++) await user.type(game.getByRole('textbox', { name: `Word ${i}` }), gameWords[i - 1]!);
+      await user.click(game.getByRole('button', { name: m.predict.doneQuick }));
+      await user.click(game.getByRole('button', { name: m.show.seenQuick }));
+      await user.click(game.getByRole('button', { name: guessed ? m.clues.guessed : m.clues.notGuessed }));
+    };
+
+    await playWord(true);
+    expect(game.queryByText(m.quickOver.tough, { exact: false })).not.toBeInTheDocument();
+    expect(game.getByRole('link', { name: m.quickOver.custom })).toHaveAttribute('href', '/mind-reader/players/');
+
+    await user.click(game.getByRole('button', { name: m.quickOver.next }));
+    await playWord(false);
+    expect(game.getByText(m.quickOver.tough, { exact: false })).toBeInTheDocument();
+    await user.click(game.getByRole('button', { name: m.quickOver.switch }));
+    expect(screen.getByRole('dialog', { name: m.quick.sheetTitle })).toBeInTheDocument();
   });
 
   it('needs 3 players, and offers Add players or Individual when Teams is picked with 3', async () => {

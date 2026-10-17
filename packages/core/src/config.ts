@@ -81,6 +81,8 @@ export type GameConfig = {
     maxTeams: number;
     // The Rounds stepper on Game settings; every team (or player) is the Mind Reader once a round.
     rounds: { default: number; min: number; max: number };
+    // Quick play starts at this difficulty; its header chip changes it.
+    quickDifficulty: Difficulty;
     // A correct guess scores guess, plus bonusPoints for every bonusEverySeconds left on the clock
     // (guess alone with no time limit). The Mind Readers score perPrediction every time one of their
     // words is said, and notGuessed when the word isn't guessed.
@@ -146,6 +148,7 @@ export const gameConfig: GameConfig = {
     minTeams: 2,
     maxTeams: 6,
     rounds: { default: 5, min: 1, max: 20 },
+    quickDifficulty: 'Normal',
     scoring: { guess: 3, bonusEverySeconds: 10, bonusPoints: 1, perPrediction: 1, notGuessed: 3 },
   },
 };
