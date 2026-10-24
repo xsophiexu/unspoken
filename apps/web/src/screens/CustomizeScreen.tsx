@@ -48,7 +48,7 @@ export function CustomizeScreen() {
   const pinned = layoutStyles[selection.style].color.kind === 'pinned';
   // A Halloween look always draws in its own night colors, so there is no color or mode to pick
   // while one is selected. The saved color and mode stay, for when the player picks another style.
-  const ownLook = layoutStyles[selection.style].scene !== undefined;
+  const ownLook = layoutStyles[selection.style].mode !== undefined;
 
   const goTo = (index: number, smooth = !reduced) => {
     const el = scroller.current;

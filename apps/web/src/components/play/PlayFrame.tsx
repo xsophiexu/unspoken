@@ -10,6 +10,7 @@ import { cx, text } from '@/lib/ui';
 
 import { BannedList } from './BannedList';
 import { Controls } from './Controls';
+import { DecorBackdrop, DecorBody, DecorTop, decorFrameClass, decorLabel, hasDecorTop } from './decor/DecorBody';
 import { Header, MenuButton } from './Header';
 import type { HeaderModel, PlayModel } from './model';
 import { SceneBody, Stars } from './scene/SceneBody';
@@ -50,7 +51,7 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
   const { arrangement, regions } = s;
   const card = model.card;
   const word = card && <Word slot={s.word} word={card.word} />;
-  const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} />;
+  const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} label={decorLabel(s.decor)} />;
   // A Halloween look draws its own timer (the art), so the timer slot shows nowhere else.
   const timer = (at: Parameters<typeof Timer>[0]['at']) => (s.scene ? null : <Timer slot={s.timer} at={at} clock={model.clock} onPause={actions?.onPause} />);
   const controls = ownControls ?? (
@@ -113,9 +114,21 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
   );
 
   let body: ReactNode;
-  switch (s.scene ? 'scene' : arrangement) {
+  switch (s.scene ? 'scene' : s.decor ? 'decor' : arrangement) {
     case 'scene':
       body = s.scene && <SceneBody slot={s.scene} clock={model.clock} word={swipeable(word)} banned={swipeable(banned)} onPause={actions?.onPause} preview={!actions} />;
+      break;
+    case 'decor':
+      body = s.decor && (
+        <DecorBody
+          slot={s.decor}
+          card={card}
+          word={word}
+          banned={banned}
+          swipeItem={(content) => swipeable(content)}
+          swipeCard={(content) => swipeable(content, styles.swipeCard)}
+        />
+      );
       break;
     case 'ringCard':
       body = <RingCard layoutStyle={s} model={model} actions={actions} word={word} banned={banned} />;
@@ -182,7 +195,12 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
       surface={surface}
       top={
         <>
-          {top ?? <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />}
+          {top ??
+            (s.decor && hasDecorTop(s.decor) ? (
+              <DecorTop slot={s.decor} layoutStyle={s} model={model} actions={actions} />
+            ) : (
+              <FrameTop layoutStyle={s} model={model} actions={actions} timer={timer('header')} />
+            ))}
           {timer('top')}
           <Stats slot={s.stats} at="belowHeader" stats={model.stats} />
         </>
@@ -218,14 +236,16 @@ export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface,
   return (
     <div
       ref={frameRef}
-      className={cx(styles.frame, preview && styles.preview)}
+      className={cx(styles.frame, preview && styles.preview, s.decor && decorFrameClass)}
       style={marginVars(s)}
       data-region={s.regions.page}
       data-arrangement={s.arrangement}
-      data-scene={s.scene?.look}
+      data-scene={s.scene?.look ?? s.decor?.look}
+      data-decor={s.decor?.look}
     >
       {s.scene && <Stars look={s.scene.look} />}
       <div className={styles.column} inert={overlay ? true : undefined}>
+        {s.decor && <DecorBackdrop slot={s.decor} />}
         {top}
         <div className={styles.body} {...surface}>
           {!preview && <SwipeHint />}

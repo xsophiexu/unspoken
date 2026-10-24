@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   COLOR_IDS,
   DEFAULT_THEME,
+  FAVOURITE_STYLE_IDS,
   HALLOWEEN_STYLE_IDS,
   NATIVE_STYLE_IDS,
   STYLE_GROUPS,
   STYLE_IDS,
+  TIMER_LOOK_STYLE_IDS,
   cssText,
   cardSwipes,
   cssVariables,
@@ -340,6 +342,19 @@ describe('the Halloween looks', () => {
       expect(parseThemeSelection({ style: id, color: 'rose', mode: 'light' }).style).toBe(id);
     }
     expect(NATIVE_STYLE_IDS).toEqual(STYLE_IDS.slice(0, STYLE_IDS.indexOf('ombre') + 1));
+  });
+
+  it('list the favourites first, then Candle', () => {
+    expect(STYLE_GROUPS.find((g) => g.id === 'halloween')?.styles).toEqual([...FAVOURITE_STYLE_IDS, ...TIMER_LOOK_STYLE_IDS]);
+    expect(HALLOWEEN_STYLE_IDS).toEqual([...FAVOURITE_STYLE_IDS, ...TIMER_LOOK_STYLE_IDS]);
+  });
+
+  it('let a saved look that was removed (Potion, Jack-o’-lantern, Hourglass, Moon, Spider) fall back to the default style, keeping its color and mode', () => {
+    for (const style of ['potion', 'jack', 'hourglass', 'moon', 'spider']) {
+      for (const ids of [STYLE_IDS, NATIVE_STYLE_IDS]) {
+        expect(parseThemeSelection({ style, color: 'rose', mode: 'light' }, ids)).toEqual({ style: DEFAULT_THEME.style, color: 'rose', mode: 'light' });
+      }
+    }
   });
 
   it('draw dark in their own color whatever the player picked, and keep the pick for other styles', () => {

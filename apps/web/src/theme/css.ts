@@ -23,7 +23,7 @@ import {
   type ColorMode,
   type RegionSlot,
   type SceneGradient,
-  type SceneLook,
+  type NightLook,
   type TextStyleToken,
 } from '@unspoken/design-tokens';
 
@@ -75,7 +75,7 @@ function sharedTokens(): Vars {
     ...flatten('opacity', opacity, (_, n) => String(n)),
     // Flex-grow shares, so plain numbers.
     ...flatten('button-pair', buttonPair, (_, n) => String(n)),
-    ...flatten('scene', scene, (path, n) => (path.endsWith('share') ? String(n) : path.endsWith('tilt') ? `${n}deg` : px(n))),
+    ...flatten('scene', scene, (path, n) => (path.endsWith('share') ? String(n) : px(n))),
   };
 }
 
@@ -108,14 +108,16 @@ function regionRules(): string[] {
 
 function gradientCss(g: SceneGradient): string {
   const stops = g.stops.map(([color, at]) => `${color} ${at * 100}%`).join(',');
-  return g.kind === 'radial' ? `radial-gradient(ellipse at ${g.at[0]}% ${g.at[1]}%,${stops})` : `linear-gradient(${stops})`;
+  if (g.kind === 'linear') return `linear-gradient(${stops})`;
+  const size = g.size ? ` ${g.size[0]}% ${g.size[1]}%` : '';
+  return `radial-gradient(ellipse${size} at ${g.at[0]}% ${g.at[1]}%,${stops})`;
 }
 
 // A Halloween look's page: its own region colors (the slot components read --region-*) over its
 // gradient, and the star color for the art.
 function sceneRules(): string[] {
   return STYLE_IDS.flatMap((id) => {
-    const look: SceneLook | undefined = layoutStyles[id].scene?.look;
+    const look: NightLook | undefined = layoutStyles[id].scene?.look ?? layoutStyles[id].decor?.look;
     if (!look) return [];
     const colors = sceneRegionColors(look);
     return [

@@ -94,6 +94,12 @@
   color: var(--region-on-accent);
 }
 
+/* fill 'none': the clock as plain text in the accent text color, with its pause button. */
+.plainChip {
+  padding-inline-start: 0;
+  color: var(--region-accent-text);
+}
+
 .chip .pause {
   width: var(--un-layout-header-pill-height);
   height: var(--un-layout-header-pill-height);

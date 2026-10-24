@@ -1,0 +1,819 @@
+/* Kurt's favourite Halloween looks (decor/). Sizes in var(--bp) are board px of the designs (the 372
+   px wide play page), scaled to the game column; plain px are the designs' own type and spacing,
+   which stay put like the rest of the app's text. The word, banned list, header and controls are
+   the regular slot components, found here by their data-spot and data-control attributes. */
+
+/* --- Building blocks ---------------------------------------------------------------------------- */
+
+.body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+/* Art in the flow of the page, out to the window's edges. It takes only the height the word and
+   list leave (up to its art's height, or all of it for a growing room), so it gives up its space
+   first and scales down on a short screen. */
+.room {
+  position: relative;
+  flex: 4 1 0;
+  min-height: 0;
+  max-height: calc(var(--room) * var(--bp));
+  margin-inline: calc(-1 * var(--pad-x));
+  pointer-events: none;
+}
+
+.grow {
+  flex-grow: 1;
+  max-height: none;
+}
+
+/* A growing room's art stands on its bottom edge at the column's width, and on a short screen
+   shrinks only so far (to 65% of its height), reaching up behind the text above instead. */
+.grow > .roomArt {
+  top: auto;
+  bottom: 0;
+  height: max(100%, calc(var(--room) * var(--bp) * 0.65));
+}
+
+.roomArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Text sits over the art. */
+.text {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  min-width: 0;
+}
+
+/* Art behind the whole column (stars). */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.boardArt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* A look's own top row. */
+.top {
+  position: relative;
+  z-index: 1;
+  min-height: var(--un-layout-min-touch);
+}
+
+.statLines {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  color: var(--region-muted);
+}
+
+/* Long lists (an Escalate card shows up to ten words) keep tiles and rows compact. */
+.text ul:has(> li:nth-child(7)) > li {
+  padding-block: var(--un-space-2);
+}
+
+/* Two-column grids end on a tile across both columns when the count is odd. */
+.tiles [data-spot='banned'] li:last-child:nth-child(odd) {
+  grid-column: span 2;
+}
+
+/* The rows of the graveyards, each marked with a little tombstone. */
+.tombs [data-spot='banned'] li::before {
+  content: '';
+  flex: none;
+  width: 18px;
+  height: 22px;
+  background: var(--tomb) no-repeat center / contain;
+}
+
+/* --- The frame around a look: its header and controls ------------------------------------------- */
+
+/* The mode and level pill: a hairline between them and the level in the accent text color. */
+.frame:is([data-decor='glowingChips'], [data-decor='candles']) [data-spot='difficulty'] > span[aria-hidden='true'] {
+  width: 1px;
+  height: 16px;
+  border-radius: 0;
+  background: var(--region-accent-text);
+  opacity: 0.6;
+}
+
+.frame:is([data-decor='glowingChips'], [data-decor='candles']) [data-spot='difficulty'] > span:nth-of-type(3),
+.frame:is([data-decor='glowingChips'], [data-decor='candles']) [data-spot='difficulty'] > svg {
+  color: var(--region-accent-text);
+}
+
+/* Buttons with arrows: "← Skip" and "Correct →". */
+.frame:is([data-decor='silverMoon'], [data-decor='vampire'], [data-decor='tarot']) [data-control='skip']::before {
+  content: '←';
+}
+
+.frame:is([data-decor='silverMoon'], [data-decor='vampire'], [data-decor='tarot']) [data-control='correct']::after {
+  content: '→';
+}
+
+.frame:is([data-decor='silverMoon'], [data-decor='vampire'], [data-decor='tarot']) [data-control] {
+  gap: var(--un-space-1-5);
+  font-weight: 800;
+}
+
+/* --- 1 Graveyard -------------------------------------------------------------------------------- */
+
+.graveyardText {
+  --region-accent-text: #e3c878;
+  --tomb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 22'%3E%3Cpath d='M1 22 L1 9 Q1 1 9 1 Q17 1 17 9 L17 22Z' fill='%237E9693'/%3E%3Cpath d='M6 9 L12 9 M9 6 L9 14' stroke='%2314262A' stroke-width='1.6'/%3E%3C/svg%3E");
+}
+
+/* The rows stop short of the tree. */
+.graveyardText [data-spot='banned'] ul {
+  max-width: calc(240 * var(--bp));
+}
+
+.graveyardText [data-spot='banned'] li {
+  gap: 12px;
+  padding-block: 9px;
+}
+
+/* --- 2 Two spiders ------------------------------------------------------------------------------ */
+
+/* The word keeps clear of the small spider at its right. */
+.besideSpider {
+  padding-inline-end: calc(92 * var(--bp));
+}
+
+.twoSpidersText [data-spot='banned'] > h2 {
+  color: color-mix(in srgb, var(--region-ink) 70%, transparent);
+}
+
+.twoSpidersText [data-spot='banned'] li {
+  gap: 14px;
+  padding-block: 12px;
+  border-bottom-width: 1.5px;
+}
+
+.twoSpidersText [data-spot='banned'] li::before {
+  content: '';
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--region-accent);
+}
+
+/* --- 3 Witch hat -------------------------------------------------------------------------------- */
+
+.witchTop {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: var(--un-space-2);
+}
+
+.witchStats {
+  padding-top: var(--un-space-1-5);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.witchCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.witchTop .witchClock {
+  min-height: 0;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* "Endless" small and muted beside the level badge. */
+.witchCenter > div > div > span {
+  color: var(--region-muted);
+  font-weight: 700;
+}
+
+.witchTop > :last-child {
+  justify-self: end;
+}
+
+.witchText {
+  margin-inline: calc(24 * var(--bp) - var(--pad-x));
+}
+
+.witchCard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 22px 14px;
+  border: 1.5px solid #e3c87855;
+  border-radius: 24px;
+  background: #38215c;
+  box-shadow: 0 18px 34px #00000066;
+  transform: rotate(-2deg);
+}
+
+.witchCard h1 {
+  color: #f6e7b8;
+}
+
+.witchCard [data-spot='banned'] > h2 {
+  opacity: 0.85;
+}
+
+.witchCard [data-spot='banned'] li {
+  padding: 6px 11px;
+  border: 1.5px solid #e3c87888;
+  background: transparent;
+  color: var(--region-ink);
+}
+
+.witchHat {
+  position: absolute;
+  z-index: 1;
+  top: calc(-64 * var(--bp));
+  right: calc(-10 * var(--bp));
+  width: calc(96 * var(--bp));
+  height: auto;
+  transform: rotate(16deg);
+}
+
+/* --- 4 Glowing chips ---------------------------------------------------------------------------- */
+
+.glowingChipsText h1 {
+  text-shadow: 0 0 22px #e8812a66;
+}
+
+.glowingChipsText [data-spot='banned'] ul {
+  gap: 12px;
+}
+
+.glowingChipsText [data-spot='banned'] li {
+  justify-content: center;
+  padding: 24px 12px;
+  border: 2px solid #e8812a;
+  border-radius: 14px;
+  background: transparent;
+  box-shadow:
+    0 0 14px #e8812a55,
+    inset 0 0 10px #e8812a2a;
+  color: var(--region-ink);
+  text-align: center;
+}
+
+.frame[data-decor='glowingChips'] [data-control='skip'] {
+  background: #2a1a0e;
+  color: #fbe9d2;
+  font-weight: 700;
+}
+
+.frame[data-decor='glowingChips'] [data-control='correct'] {
+  background: #e8812a;
+  color: #1a0f06;
+  font-weight: 800;
+}
+
+/* --- 5 Bat circle ------------------------------------------------------------------------------- */
+
+/* The bats fill the space above the list, with the word in their middle. */
+.batRing {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: min-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.batRing > .batArt {
+  position: absolute;
+  inset: 0 calc(-1 * var(--pad-x));
+  margin: 0;
+}
+
+.batWord {
+  text-align: center;
+}
+
+.batWord h1 {
+  color: #fff6e2;
+}
+
+.batList [data-spot='banned'] > h2 {
+  opacity: 0.7;
+  text-align: center;
+}
+
+.batList [data-spot='banned'] ul {
+  gap: 10px;
+}
+
+.batList [data-spot='banned'] li {
+  justify-content: center;
+  padding: 15px 8px;
+  border: 1px solid #e3c87833;
+  border-radius: 12px;
+  background: #ffffff0e;
+  color: var(--region-ink);
+  text-align: center;
+}
+
+/* --- 6 Silver moon ------------------------------------------------------------------------------ */
+
+.silverText {
+  margin-inline: calc(28 * var(--bp) - var(--pad-x));
+}
+
+.silverText [data-spot='word'] {
+  text-align: center;
+}
+
+.silverText h1 {
+  color: #f4f6fa;
+}
+
+.silverFrame {
+  padding: 5px;
+  border: 1.5px solid #d5dce6aa;
+  border-radius: 20px;
+}
+
+.silverFrameInner {
+  padding: 16px 10px 18px;
+  border: 1px solid #d5dce655;
+  border-radius: 16px;
+}
+
+.silverText [data-spot='banned'] > h2 {
+  text-align: center;
+}
+
+.silverText [data-spot='banned'] ul {
+  gap: 10px;
+}
+
+.silverText [data-spot='banned'] li {
+  justify-content: center;
+  padding: 14px 8px;
+  border: 1px solid var(--region-rule);
+  border-radius: 12px;
+  background: transparent;
+  color: var(--region-ink);
+  text-align: center;
+}
+
+.frame[data-decor='silverMoon'] [data-control='skip'] {
+  border: 1.5px solid #d5dce666;
+}
+
+/* --- 7 Vampire ---------------------------------------------------------------------------------- */
+
+.vampireTop {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+  gap: var(--un-space-2);
+}
+
+.vampireStart {
+  padding-top: var(--un-space-1);
+}
+
+.vampireClock {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-inline-start: 11px;
+  border-radius: 16px;
+  background: #ffffff16;
+  color: var(--region-ink);
+}
+
+.vampireClock > svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+}
+
+.vampireClock > span {
+  min-height: 32px;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.vampireCenter,
+.vampireCenter > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.vampireCenter > div > div {
+  flex-direction: column;
+  gap: 5px;
+}
+
+.vampireTop .vampireStats {
+  flex-direction: row;
+  gap: 0 var(--un-space-2);
+  margin-top: var(--un-space-1);
+}
+
+.vampireEnd {
+  justify-self: end;
+}
+
+.vampireText {
+  margin-inline: calc(30 * var(--bp) - var(--pad-x));
+}
+
+/* The bone card: its own ink, labels and chips. */
+.vampireCard {
+  --region-ink: #3a0e14;
+  --region-muted: #7a2a33;
+  --region-accent-text: #7a2a33;
+  --region-chip: #d9c9aa;
+  --region-chip-ink: #3a0e14;
+  --region-accent: #7a2a33;
+  --region-on-accent: #e4d8bf;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px 22px 14px;
+  border-radius: 24px;
+  background: #e4d8bf;
+  color: var(--region-ink);
+  box-shadow: 0 18px 34px #00000077;
+  transform: rotate(-2.5deg);
+}
+
+.vampireCard [data-spot='banned'] li {
+  padding: 7px 12px;
+}
+
+/* Skip and Correct joined in one outlined pill. */
+.frame[data-decor='vampire'] [data-controls='buttons'] {
+  gap: 0;
+  overflow: hidden;
+  border: 1.5px solid #eadfc855;
+  border-radius: 18px;
+}
+
+.frame[data-decor='vampire'] [data-control] {
+  flex: 1 1 0;
+  min-height: 55px;
+  border: 0;
+  border-radius: 0;
+}
+
+.frame[data-decor='vampire'] [data-control='skip'] {
+  color: color-mix(in srgb, var(--region-ink) 85%, transparent);
+}
+
+/* --- 8 Candles ---------------------------------------------------------------------------------- */
+
+.candlesText [data-spot='banned'] > h2 {
+  color: color-mix(in srgb, var(--region-ink) 70%, transparent);
+}
+
+/* Two ruled columns, filled row by row as in the design. */
+.candlesText [data-spot='banned'] ul {
+  grid-template-rows: none;
+  grid-auto-flow: row;
+  gap: 0 22px;
+}
+
+.candlesText [data-spot='banned'] li {
+  padding-block: 10px;
+  border-bottom: 1px solid var(--region-rule);
+}
+
+.frame[data-decor='candles'] [data-control='skip'] {
+  border: 1.5px solid #e8a15a;
+  color: #e8a15a;
+  font-weight: 700;
+}
+
+.frame[data-decor='candles'] [data-control='correct'] {
+  font-weight: 800;
+}
+
+/* --- 9 Tarot ------------------------------------------------------------------------------------ */
+
+.tarotTop {
+  display: flex;
+  flex-direction: column;
+}
+
+.tarotRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-2);
+  min-height: var(--un-layout-min-touch);
+}
+
+/* "Endless" at the left, the level badge at the right by the menu. */
+.tarotRow > div:first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tarotRow > div:first-child > div {
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tarotRule {
+  height: 1px;
+  margin: var(--un-space-1) 0 0;
+  background: var(--region-rule);
+}
+
+.tarotTop .tarotStats {
+  flex-direction: row;
+  gap: 0 var(--un-space-2-5);
+  font-weight: 700;
+}
+
+.tarotText {
+  margin-inline: calc(46 * var(--bp) - var(--pad-x));
+  padding-top: calc(24 * var(--bp));
+}
+
+.tarotText > [data-swipe] {
+  position: relative;
+}
+
+/* Two more cards fanned out behind. */
+.tarotFan {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.tarotFanLeft,
+.tarotFanRight {
+  position: absolute;
+  width: calc(250 * var(--bp));
+  height: calc(100% - 64 * var(--bp));
+  border: 1.5px solid #b39b6a55;
+  border-radius: 18px;
+  background: #5a5160;
+}
+
+.tarotFanLeft::after,
+.tarotFanRight::after {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border: 1px solid #b39b6a44;
+  border-radius: 10px;
+}
+
+.tarotFanLeft {
+  top: calc(50 * var(--bp));
+  left: calc(-24 * var(--bp));
+  transform: rotate(-9deg);
+}
+
+.tarotFanRight {
+  top: calc(44 * var(--bp));
+  left: calc(56 * var(--bp));
+  transform: rotate(8deg);
+}
+
+.tarotCard {
+  --region-ink: #3b3340;
+  --region-muted: #6e6270;
+  --region-rule: #3b334022;
+  padding: 8px;
+  border-radius: 18px;
+  background: #e6dcca;
+  color: var(--region-ink);
+  box-shadow: 0 20px 36px #00000044;
+}
+
+.tarotBorder {
+  padding: 6px;
+  border: 1.5px solid #b39b6a;
+  border-radius: 12px;
+}
+
+.tarotFace {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 62px 20px 12px;
+  border: 1px solid #b39b6a88;
+  border-radius: 9px;
+  text-align: center;
+}
+
+.tarotMoon {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  width: 100px;
+  height: 40px;
+  overflow: visible;
+  transform: translateX(-50%);
+}
+
+.tarotFace [data-spot='banned'] {
+  gap: 6px;
+}
+
+.tarotFace [data-spot='banned'] li {
+  justify-content: center;
+  padding: 7px 0;
+  border-top: 1px solid var(--region-rule);
+  border-bottom: 0;
+}
+
+.frame[data-decor='tarot'] [data-control='skip'] {
+  border: 1.5px solid #ffffff26;
+  color: var(--region-ink);
+}
+
+/* --- 10 Little ghosts --------------------------------------------------------------------------- */
+
+.ghostText {
+  position: relative;
+  margin-inline: calc(14 * var(--bp) - var(--pad-x));
+  padding-top: calc(38 * var(--bp));
+}
+
+.ghostPeek {
+  position: absolute;
+  top: 0;
+  left: calc(-14 * var(--bp));
+  width: calc(372 * var(--bp));
+  height: auto;
+  overflow: visible;
+}
+
+.ghostText > [data-swipe] {
+  position: relative;
+}
+
+/* The big ghost: its head with the face, its body holding the word and chips, its wavy hem. */
+.ghost {
+  --region-ink: #1f3332;
+  --region-muted: #1f333299;
+  --region-chip: #e3efed;
+  --region-chip-ink: #1f3332;
+  display: flex;
+  flex-direction: column;
+  color: var(--region-ink);
+  filter: drop-shadow(0 16px 26px #00000066);
+}
+
+.ghostHead,
+.ghostHem {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ghostBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-block: -1px;
+  padding: calc(18 * var(--bp)) calc(26 * var(--bp)) calc(4 * var(--bp)) calc(28 * var(--bp));
+  background: #f4f8f7;
+}
+
+.ghostBody [data-spot='banned'] > h2 {
+  color: #1f3332b3;
+}
+
+.ghostBody [data-spot='banned'] li {
+  padding: 8px 13px;
+}
+
+/* --- 11 Harvest moon ---------------------------------------------------------------------------- */
+
+.harvestText {
+  --tomb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 18 22'%3E%3Cpath d='M1 22 L1 9 Q1 1 9 1 Q17 1 17 9 L17 22Z' fill='%23F6A65A'/%3E%3Cpath d='M6 9 L12 9 M9 6 L9 14' stroke='%231A0F06' stroke-width='1.6'/%3E%3C/svg%3E");
+  padding-top: calc(36 * var(--bp));
+}
+
+/* Two ruled columns, filled row by row as in the design. */
+.harvestText [data-spot='banned'] ul {
+  grid-template-rows: none;
+  grid-auto-flow: row;
+  gap: 0 18px;
+}
+
+.harvestText [data-spot='banned'] li {
+  gap: 10px;
+  padding-block: 11px;
+  border-bottom: 1px solid var(--region-rule);
+}
+
+/* --- 12 Haunted house --------------------------------------------------------------------------- */
+
+.houseText {
+  padding-top: calc(28 * var(--bp));
+}
+
+.houseSection {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  margin-top: calc(-1 * var(--un-space-2));
+}
+
+.houseLabel {
+  margin: 0;
+  color: var(--region-muted);
+}
+
+.houseRoom {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: calc(240 * var(--bp));
+  margin-inline: calc(-1 * var(--pad-x));
+}
+
+.houseBox {
+  position: absolute;
+  bottom: 0;
+}
+
+.houseArt {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.houseWindow {
+  position: absolute;
+}
+
+/* The words in the windows follow the finger with the card. */
+.houseWindows,
+.houseWindows > [data-swipe],
+.houseWindows > [data-swipe] > div,
+.houseList {
+  position: absolute;
+  inset: 0;
+}
+
+.houseList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.houseWord {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 3px 0;
+  background: #ebcb8b;
+  color: #3a0e14;
+  font-weight: 800;
+  line-height: 1.05;
+  text-align: center;
+  overflow-wrap: normal;
+}
+
+.houseFresh {
+  box-shadow: 0 0 0 2px var(--region-ink);
+}

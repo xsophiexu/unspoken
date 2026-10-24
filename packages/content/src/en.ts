@@ -178,6 +178,9 @@ export const en = {
   play: {
     yourWord: 'Your word',
     dontSay: 'DON’T SAY',
+    // The banned list's label in some Halloween looks (DecorSlot.label in @unspoken/design-tokens).
+    // The list is still named DON'T SAY for screen readers.
+    dontSayLabels: { rip: 'R.I.P. IF YOU SAY', windows: 'DON’T SAY, IT’S IN THE WINDOWS' },
     skipLink: '← Skip',
     correctLink: 'Correct →',
     skip: 'Skip',
@@ -328,12 +331,19 @@ export const en = {
       bigTimer: 'Big timer',
       chips: 'Chips',
       ombre: 'Ombre',
+      graveyard: 'Graveyard',
+      twoSpiders: 'Two spiders',
+      witchHat: 'Witch hat',
+      glowingChips: 'Glowing chips',
+      batCircle: 'Bat circle',
+      silverMoon: 'Silver moon',
+      vampire: 'Vampire',
+      candles: 'Candles',
+      tarot: 'Tarot',
+      littleGhosts: 'Little ghosts',
+      harvestMoon: 'Harvest moon',
+      hauntedHouse: 'Haunted house',
       candle: 'Candle',
-      hourglass: 'Hourglass',
-      moon: 'Moon',
-      potion: 'Potion',
-      spider: 'Spider',
-      jack: 'Jack-o’-lantern',
     },
     // Keyed by COLOR_IDS in @unspoken/design-tokens.
     colors: {

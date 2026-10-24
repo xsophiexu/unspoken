@@ -11,18 +11,6 @@
   padding-top: var(--un-space-4);
 }
 
-.textSlot {
-  flex: none;
-  min-width: 0;
-}
-
-.artSlot {
-  flex: 1 1 0;
-  min-height: 0;
-  display: flex;
-  margin-inline: calc(-1 * var(--pad-x));
-}
-
 /* side: word and list on the left, the art in a column on the right that runs to the right edge. */
 .side {
   flex-direction: row;
@@ -80,15 +68,6 @@
   width: var(--un-layout-min-touch);
   height: var(--un-scene-pill-height);
   min-height: 0;
-}
-
-/* The potion's paper tag tied to the flask's neck. */
-.artBox .holder.tag {
-  border-radius: var(--un-scene-tag-radius);
-  padding-inline-start: var(--un-scene-tag-padding-x);
-  box-shadow: var(--un-scene-tag-shadow);
-  transform: translateX(var(--holder-shift)) rotate(var(--un-scene-tag-tilt));
-  transform-origin: left center;
 }
 
 /* The stars across the game column, behind it (the frame's column sits above them). */

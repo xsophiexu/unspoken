@@ -7,7 +7,7 @@ import {
   ICON_CHIP_TONES,
   REGION_TEXT_PAIRS,
   REGION_TONES,
-  SCENE_LOOKS,
+  NIGHT_LOOKS,
   STYLE_IDS,
   composite,
   contrastRatio,
@@ -118,7 +118,7 @@ describe('icon-only chips', () => {
 // The Halloween looks' night pages: every text slot reads on the page's flat color and on every
 // stop of its gradient.
 describe('Halloween scene pages', () => {
-  it.each(SCENE_LOOKS)('%s', (look) => {
+  it.each(NIGHT_LOOKS)('%s', (look) => {
     const colors = sceneRegionColors(look);
     for (const page of scenePageColors(look)) {
       for (const slot of ['ink', 'muted', 'accentText'] as const) expect(contrastRatio(colors[slot], page), `${slot} on ${page}`).toBeGreaterThanOrEqual(AA_TEXT);

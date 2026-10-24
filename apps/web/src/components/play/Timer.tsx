@@ -116,10 +116,11 @@ export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
 
 type ClockChipProps = { clock: ClockModel; onPause?: () => void; fill: NonNullable<TimerSlot['fill']>; className?: string; style?: CSSProperties };
 
-// The clock and pause button in a pill (the chip timer, and the Halloween looks' time pill).
+// The clock and pause button in a pill (the chip timer, and the Halloween looks' time pill), or as
+// plain clock text in the accent text color (fill 'none').
 export function ClockChip({ clock, onPause, fill, className, style }: ClockChipProps) {
   return (
-    <span className={cx(styles.chip, fillClass(fill), text('clock'), className)} style={style}>
+    <span className={cx(styles.chip, fill === 'none' ? styles.plainChip : fillClass(fill), text('clock'), className)} style={style}>
       <ClockLabel clock={clock} />
       <Pause onPause={onPause} />
     </span>

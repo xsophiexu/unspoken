@@ -37,13 +37,13 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
     '--control-padding-bottom': slot.paddingBottom ? `${slot.paddingBottom}px` : undefined,
     '--control-label-space': slot.variant === 'splitBar' ? `${splitBarLabelSpace(slot)}px` : undefined,
   } as CSSProperties;
-  const skip = { onClick: onSkip, disabled: !canSkip, tabIndex: tab, 'aria-label': labels.skip };
-  const correct = { onClick: onCorrect, disabled: !canCorrect, tabIndex: tab, 'aria-label': labels.correct };
+  const skip = { onClick: onSkip, disabled: !canSkip, tabIndex: tab, 'aria-label': labels.skip, 'data-control': 'skip' };
+  const correct = { onClick: onCorrect, disabled: !canCorrect, tabIndex: tab, 'aria-label': labels.correct, 'data-control': 'correct' };
 
   switch (slot.variant) {
     case 'swipeLinks':
       return (
-        <div className={cx(styles.links, slot.hint === 'bars' && styles.withBars)} style={sizing}>
+        <div className={cx(styles.links, slot.hint === 'bars' && styles.withBars)} style={sizing} data-controls={slot.variant}>
           <button type="button" className={cx(styles.link, styles.skipLink, text('button'))} {...skip}>
             <span className={styles.label}>{labels.skipLink}</span>
           </button>
@@ -59,7 +59,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
       );
     case 'splitBar':
       return (
-        <div className={styles.splitBar} style={sizing}>
+        <div className={styles.splitBar} style={sizing} data-controls={slot.variant}>
           <button type="button" className={cx(styles.half, styles.skipHalf, text('button'))} data-region={regions.skip ?? 'surface'} {...skip}>
             {labels.skip}
           </button>
@@ -71,7 +71,7 @@ export function Controls({ slot, regions, canSkip, canCorrect, onSkip, onCorrect
     case 'pills':
     case 'buttons':
       return (
-        <div className={cx(styles.row, styles[slot.variant], slot.skipWidth ? styles.fixedSkip : slot.ratio && styles.ratio)} style={sizing}>
+        <div className={cx(styles.row, styles[slot.variant], slot.skipWidth ? styles.fixedSkip : slot.ratio && styles.ratio)} style={sizing} data-controls={slot.variant}>
           <button type="button" className={cx(styles.skip, styles[`skip-${slot.skip}`], text(slot.skip === 'round' ? 'label' : 'button'))} {...skip}>
             {slot.skip === 'pillIcon' && <Icon name="arrowRight" size={layout.icon.lg} />}
             {labels.skip}

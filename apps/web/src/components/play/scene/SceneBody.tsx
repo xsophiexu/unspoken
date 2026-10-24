@@ -10,15 +10,10 @@ import { cx } from '@/lib/ui';
 import type { ClockModel } from '../model';
 import { ClockChip } from '../Timer';
 import { candle } from './candle';
-import { hourglass } from './hourglass';
-import { jack } from './jack';
-import { moon } from './moon';
 import type { LookArt } from './parts';
-import { potion } from './potion';
-import { spider } from './spider';
 import styles from './Scene.module.css';
 
-export const looks: Readonly<Record<SceneLook, LookArt>> = { candle, hourglass, moon, potion, spider, jack };
+export const looks: Readonly<Record<SceneLook, LookArt>> = { candle };
 
 // The share of time left the art shows: the clock's, or the full (start) picture when the round has
 // no time limit or hides its clock.
@@ -36,44 +31,32 @@ type SceneBodyProps = {
   preview: boolean;
 };
 
-// A Halloween look between the header and the controls: the word, the banned list and the art,
-// arranged as the look's layout says. The word and list are the frame's (they swipe with the card);
+// A Halloween timer look between the header and the controls: the word and the banned list in a
+// column, the art beside them. The word and list are the frame's (they swipe with the card);
 // the art is the timer.
 export function SceneBody({ slot, clock, word, banned, onPause, preview }: SceneBodyProps) {
-  const art = <SceneArt look={slot.look} holder={slot.holder} clock={clock} onPause={onPause} animate={!preview} />;
-  const order: Record<Exclude<SceneSlot['layout'], 'side'>, ReactNode[]> = {
-    artMiddle: [word, art, banned],
-    artTop: [art, word, banned],
-    artBottom: [word, banned, art],
-  };
+  const art = <SceneArt look={slot.look} clock={clock} onPause={onPause} animate={!preview} />;
   return (
     <div className={cx(styles.scene, styles[slot.layout], slot.align === 'center' && styles.center)} data-look={slot.look}>
-      {slot.layout === 'side' ? (
-        <>
-          <div className={styles.text}>
-            {word}
-            {banned}
-          </div>
-          {art}
-        </>
-      ) : (
-        order[slot.layout].map((part, i) => part && <div key={i} className={part === art ? styles.artSlot : styles.textSlot}>{part}</div>)
-      )}
+      <div className={styles.text}>
+        {word}
+        {banned}
+      </div>
+      {art}
     </div>
   );
 }
 
 type SceneArtProps = {
   look: SceneLook;
-  holder: SceneSlot['holder'];
   clock: ClockModel | null;
   onPause?: () => void;
   animate: boolean;
 };
 
 // The look's art scaled to fit its area (keeping its shape, placed by the look's alignment), with
-// the time pill (or tag) at the look's spot for the time left.
-function SceneArt({ look, holder, clock, onPause, animate }: SceneArtProps) {
+// the time pill at the look's spot for the time left.
+function SceneArt({ look, clock, onPause, animate }: SceneArtProps) {
   const art = looks[look];
   const { box, align } = art;
   const ref = useRef<HTMLDivElement>(null);
@@ -99,7 +82,7 @@ function SceneArt({ look, holder, clock, onPause, animate }: SceneArtProps) {
         <svg className={styles.art} viewBox={`${box.x} ${box.y} ${box.width} ${box.height}`} width={width} height={height} aria-hidden="true">
           <Art f={f} out={clock !== null && !clock.hidden && clock.progress <= 0} animate={animate && !reduced} uid={uid} />
         </svg>
-        {clock && <ClockChip clock={clock} onPause={onPause} fill="accent" className={cx(styles.holder, holder === 'tag' && styles.tag)} style={holderStyle} />}
+        {clock && <ClockChip clock={clock} onPause={onPause} fill="accent" className={styles.holder} style={holderStyle} />}
       </div>
     </div>
   );

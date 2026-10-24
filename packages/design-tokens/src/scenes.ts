@@ -2,22 +2,50 @@ import { composite, readableOn, withAlpha } from './color';
 import type { RegionColors } from './regions';
 import { opacity } from './scales';
 
-// The Halloween looks (website only): play screens where the countdown timer is the art. A candle
-// melts, sand drains, a shadow slides over the moon, a potion drains, a spider lowers on its
-// thread, a jack-o'-lantern's glow dims. Each look is a layout style (styles.ts) with a `scene`
-// slot; the art itself is drawn by the platform from the clock's fraction left (one module per
-// look on web). Source: design/word-packs/timer-looks/halloween (gen62hw.py, 2026-10-23).
+// The Halloween looks (website only), two kinds:
+//
+//  Timer looks (SCENE_LOOKS): play screens where the countdown timer is the art: a candle melts as
+//  the round runs. Each is a layout style (styles.ts) with a `scene` slot; the art is drawn by the
+//  platform from the clock's fraction left (one module per look on web). Source:
+//  design/word-packs/timer-looks/halloween (gen62hw.py).
+//
+//  Favourite looks (FAVOURITE_LOOKS): Kurt's twelve favourites from the word-pack looks
+//  (design/word-packs/halloween-favourite-looks, in the order of halloween-favourites-scroll.gif).
+//  Each is a layout style with a `decor` slot: the regular header, timer, stats and controls slots,
+//  with the look's own art, word and banned-word treatment drawn by the platform (one module per look
+//  on web).
 //
 // The night palettes below are the looks' own colors. They color the play page only (the scene
 // region); sheets, menus and overlays use the style's pinned palette in dark.
 
-export const SCENE_LOOKS = ['candle', 'hourglass', 'moon', 'potion', 'spider', 'jack'] as const;
+export const SCENE_LOOKS = ['candle'] as const;
 export type SceneLook = (typeof SCENE_LOOKS)[number];
 
-// A page background: a radial glow centered at `at` (percent of the page), or a top-to-bottom
-// linear fade. Stops are [color, position 0..1].
+export const FAVOURITE_LOOKS = [
+  'graveyard',
+  'twoSpiders',
+  'witchHat',
+  'glowingChips',
+  'batCircle',
+  'silverMoon',
+  'vampire',
+  'candles',
+  'tarot',
+  'littleGhosts',
+  'harvestMoon',
+  'hauntedHouse',
+] as const;
+export type FavouriteLook = (typeof FAVOURITE_LOOKS)[number];
+
+// Every look with a night palette.
+export const NIGHT_LOOKS = [...SCENE_LOOKS, ...FAVOURITE_LOOKS] as const;
+export type NightLook = (typeof NIGHT_LOOKS)[number];
+
+// A page background: a radial glow centered at `at` (percent of the page), as big as `size`
+// (percent of the page; the farthest corner when absent), or a top-to-bottom linear fade. Stops are
+// [color, position 0..1].
 export type SceneGradient =
-  | { kind: 'radial'; at: readonly [x: number, y: number]; stops: readonly (readonly [color: string, at: number])[] }
+  | { kind: 'radial'; at: readonly [x: number, y: number]; size?: readonly [width: number, height: number]; stops: readonly (readonly [color: string, at: number])[] }
   | { kind: 'linear'; stops: readonly (readonly [color: string, at: number])[] };
 
 export type ScenePalette = {
@@ -27,13 +55,13 @@ export type ScenePalette = {
   ink: string;
   // "Your word", the status line and the swipe hint.
   muted: string;
-  // The DON'T SAY label and Correct →.
+  // The DON'T SAY label and Correct → (a favourite look's clock and Correct →).
   label: string;
   // Banned-word chips and the menu button (translucent white over the gradient).
   chip: string;
   // Hairlines between banned rows.
   rule: string;
-  // The time pill (or the potion's paper tag) and the text on it.
+  // The time pill (a favourite look's level badge, Correct button and swipe bar) and the text on it.
   pill: string;
   onPill: string;
   // The faint stars over the page.
@@ -41,24 +69,23 @@ export type ScenePalette = {
 };
 
 // How a look arranges the word, the banned list and the art between the header and the controls.
-//  side       word and list in a column on the left, the art in a column on the right (Candle, Spider)
-//  artMiddle  word on top, the art in the middle, the list under it (Hourglass)
-//  artTop     the art on top, word and list under it (Moon)
-//  artBottom  word and list on top, the art under them (Potion, Jack-o'-lantern)
-export type SceneLayout = 'side' | 'artMiddle' | 'artTop' | 'artBottom';
+//  side  word and list in a column on the left, the art in a column on the right (Candle)
+export type SceneLayout = 'side';
 
 export type SceneSlot = {
   look: SceneLook;
   layout: SceneLayout;
   // Word and list alignment.
   align: 'start' | 'center';
-  // The clock's holder: a rounded pill, or a paper tag tied to the potion's neck.
-  holder: 'pill' | 'tag';
 };
+
+// A favourite look: which art and treatment the platform draws, and what the banned list's label
+// says (the graveyards' R.I.P. IF YOU SAY, the haunted house's windows; DON'T SAY otherwise).
+export type DecorSlot = { look: FavouriteLook; label?: 'rip' | 'windows' };
 
 const gold = '#E3C878';
 
-export const scenePalettes: Readonly<Record<SceneLook, ScenePalette>> = {
+export const scenePalettes: Readonly<Record<NightLook, ScenePalette>> = {
   candle: {
     background: { kind: 'radial', at: [74, 60], stops: [['#3A2550', 0], ['#22163A', 0.45], ['#150E24', 1]] },
     bg: '#22163A',
@@ -71,85 +98,163 @@ export const scenePalettes: Readonly<Record<SceneLook, ScenePalette>> = {
     onPill: '#22163A',
     star: '#E9DDF7',
   },
-  hourglass: {
-    background: { kind: 'radial', at: [50, 42], stops: [['#26303B', 0], ['#161D25', 0.6], ['#0E1318', 1]] },
-    bg: '#161D25',
-    ink: '#EEF2F4',
-    muted: '#9EB0BC',
+
+  // Favourite looks: the source files' colors (N9-p07, N25-cw02, …; see FAVOURITE_LOOKS).
+  graveyard: {
+    background: { kind: 'radial', at: [50, 30], stops: [['#22424C', 0], ['#132830', 0.6], ['#0D1D23', 1]] },
+    bg: '#132830',
+    ink: '#EAF4F3',
+    muted: '#9CC7C1',
+    label: '#9CCFC9',
+    chip: '#FFFFFF14',
+    rule: '#FFFFFF14',
+    pill: '#9CCFC9',
+    onPill: '#0D1D23',
+    star: '#D9EFEC',
+  },
+  twoSpiders: {
+    background: { kind: 'linear', stops: [['#17130F', 0], ['#17130F', 1]] },
+    bg: '#17130F',
+    ink: '#FBE9D2',
+    muted: '#E8A15A',
+    label: '#F6A65A',
+    chip: '#FFFFFF14',
+    rule: '#FBE9D222',
+    pill: '#F6A65A',
+    onPill: '#1A0F06',
+    star: '#FBE9D2',
+  },
+  witchHat: {
+    background: { kind: 'linear', stops: [['#2C1849', 0], ['#241340', 0.5], ['#1C0F33', 1]] },
+    bg: '#241340',
+    ink: '#F6EFE0',
+    muted: '#CDB9E4',
     label: gold,
     chip: '#FFFFFF16',
     rule: '#FFFFFF1C',
     pill: gold,
-    onPill: '#161D25',
-    star: '#DDE6EA',
+    onPill: '#1C0F33',
+    star: '#F6E7B8',
   },
-  moon: {
-    background: { kind: 'linear', stops: [['#0D1626', 0], ['#16243A', 0.6], ['#1C2B44', 1]] },
-    bg: '#16243A',
-    ink: '#EEF3FA',
-    muted: '#9FB2CC',
-    label: gold,
-    chip: '#FFFFFF16',
+  glowingChips: {
+    background: { kind: 'radial', at: [50, 35], stops: [['#2A1A0E', 0], ['#15100B', 0.65], ['#0E0B08', 1]] },
+    bg: '#15100B',
+    ink: '#FBE9D2',
+    muted: '#F6A65A',
+    label: '#F6A65A',
+    chip: '#FFFFFF14',
     rule: '#FFFFFF1C',
-    pill: '#FFFFFF18',
-    onPill: '#EEF3FA',
-    star: '#E8EEF8',
+    pill: '#E8812A',
+    onPill: '#1A0F06',
+    star: '#FBE9D2',
   },
-  potion: {
-    background: { kind: 'radial', at: [50, 80], stops: [['#2C1F44', 0], ['#1A1229', 0.6], ['#110B1B', 1]] },
-    bg: '#1A1229',
-    ink: '#F2ECFA',
-    muted: '#B3A3CF',
-    label: gold,
-    chip: '#FFFFFF16',
-    rule: '#FFFFFF1C',
-    pill: '#F2E8D2',
-    onPill: '#2A1E3A',
-    star: '#E8DDF8',
-  },
-  spider: {
-    background: { kind: 'linear', stops: [['#17151C', 0], ['#1F1B26', 1]] },
-    bg: '#1B1821',
-    ink: '#F1EEF6',
-    muted: '#A7A0B6',
-    label: gold,
-    chip: '#FFFFFF16',
-    rule: '#FFFFFF1C',
-    pill: gold,
-    onPill: '#1A1720',
-    star: '#E8E4F0',
-  },
-  jack: {
-    background: { kind: 'radial', at: [50, 74], stops: [['#2A1A10', 0], ['#160F0A', 0.55], ['#0D0906', 1]] },
-    bg: '#160F0A',
-    ink: '#FBF1E2',
-    muted: '#C9AE8E',
+  batCircle: {
+    background: { kind: 'linear', stops: [['#0B1A1E', 0], ['#0D1E21', 0.5], ['#0F2224', 1]] },
+    bg: '#0D1E21',
+    ink: '#EAF4F3',
+    muted: '#9CC7C1',
     label: gold,
     chip: '#FFFFFF14',
     rule: '#FFFFFF1C',
-    pill: '#F6B04A',
-    onPill: '#1A0F08',
-    star: '#F4E6D0',
+    pill: gold,
+    onPill: '#0F2224',
+    star: '#E3EEEC',
+  },
+  silverMoon: {
+    background: { kind: 'linear', stops: [['#0B1530', 0], ['#0D1838', 0.5], ['#0F1C40', 1]] },
+    bg: '#0D1838',
+    ink: '#EEF2F7',
+    muted: '#9FAEC6',
+    label: '#EEF2F7',
+    chip: '#FFFFFF14',
+    rule: '#D5DCE655',
+    pill: '#D5DCE6',
+    onPill: '#0B1530',
+    star: '#E8EEF8',
+  },
+  vampire: {
+    background: { kind: 'radial', at: [50, 30], size: [100, 70], stops: [['#561521', 0], ['#370B14', 0.55], ['#22060C', 1]] },
+    bg: '#370B14',
+    ink: '#EADFC8',
+    muted: '#D7A3A5',
+    label: '#EADFC8',
+    chip: '#FFFFFF16',
+    rule: '#EADFC855',
+    pill: '#EADFC8',
+    onPill: '#3A0E14',
+    star: '#EADFC8',
+  },
+  candles: {
+    background: { kind: 'radial', at: [50, 22], stops: [['#2A1A10', 0], ['#160E08', 0.6], ['#0B0704', 1]] },
+    bg: '#160E08',
+    ink: '#FBE9D2',
+    muted: '#E8A15A',
+    label: '#F6A65A',
+    chip: '#FFFFFF14',
+    rule: '#F6A65A2A',
+    pill: '#F6A65A',
+    onPill: '#1A0F06',
+    star: '#FBE9D2',
+  },
+  tarot: {
+    background: { kind: 'linear', stops: [['#5C5461', 0], ['#504A56', 0.5], ['#45404B', 1]] },
+    bg: '#504A56',
+    ink: '#F2ECE4',
+    // The source's #C6BCC6, lightened to read on the lightest stop.
+    muted: '#DDD4DD',
+    label: '#F2ECE4',
+    chip: '#FFFFFF12',
+    rule: '#FFFFFF26',
+    pill: '#D2BC84',
+    onPill: '#2E2933',
+    star: '#E6DCCA',
+  },
+  littleGhosts: {
+    background: { kind: 'radial', at: [50, 30], stops: [['#22424C', 0], ['#132830', 0.6], ['#0D1D23', 1]] },
+    bg: '#132830',
+    ink: '#EAF4F3',
+    muted: '#9CC7C1',
+    label: '#9CCFC9',
+    chip: '#FFFFFF14',
+    rule: '#FFFFFF14',
+    pill: '#9CCFC9',
+    onPill: '#0D1D23',
+    star: '#D9EFEC',
+  },
+  harvestMoon: {
+    background: { kind: 'radial', at: [50, 80], size: [90, 50], stops: [['#4A2410', 0], ['#24120A', 0.5], ['#130A05', 1]] },
+    bg: '#24120A',
+    ink: '#FBE9D2',
+    muted: '#E8A15A',
+    label: '#F6A65A',
+    chip: '#FFFFFF14',
+    rule: '#F6A65A2E',
+    pill: '#F6A65A',
+    onPill: '#1A0F06',
+    star: '#FBE9D2',
+  },
+  hauntedHouse: {
+    background: { kind: 'linear', stops: [['#2A0A12', 0], ['#2A0A12', 1]] },
+    bg: '#2A0A12',
+    ink: '#F4E9D8',
+    muted: '#D7A3A5',
+    label: '#EADFC8',
+    chip: '#FFFFFF14',
+    rule: '#FFFFFF1C',
+    pill: '#EADFC8',
+    onPill: '#3A0E14',
+    star: '#F4E9D8',
   },
 };
 
 // Layout of the scene arrangement. sideArtShare: the art column's share of the width in the side
-// layout (the art runs out to the window's edge past the side margin). pill* and tag*: the time
-// holder (a pill, or the potion's paper tag tilted by tagTilt degrees). board: the play page the
-// designs are drawn on (372 × 826 inside the phone frame); art and star positions are in its px.
-export const scene = {
-  sideArtShare: 0.46,
-  tagTilt: 8,
-  pillHeight: 34,
-  pillPaddingX: 13,
-  tagRadius: 6,
-  tagPaddingX: 10,
-  tagShadow: '0 6px 12px #00000055',
-  board: { width: 372, height: 826 },
-} as const;
+// layout (the art runs out to the window's edge past the side margin). pill*: the time pill.
+// board: the play page the designs are drawn on (372 × 826 inside the phone frame); art and star
+// positions are in its px (the favourite looks scale them with the game column's width).
+export const scene = { sideArtShare: 0.46, pillHeight: 34, pillPaddingX: 13, board: { width: 372, height: 826 } } as const;
 
 // The play page's region colors for a look, in the same slots every slot component reads.
-export function sceneRegionColors(look: SceneLook): RegionColors {
+export function sceneRegionColors(look: NightLook): RegionColors {
   const p = scenePalettes[look];
   const chip = p.chip;
   const disabled = composite(withAlpha(composite(chip, p.bg), opacity.disabled), p.bg);
@@ -175,7 +280,7 @@ export function sceneRegionColors(look: SceneLook): RegionColors {
 }
 
 // Every color the page shows behind text: the flat page color and each gradient stop.
-export function scenePageColors(look: SceneLook): string[] {
+export function scenePageColors(look: NightLook): string[] {
   const p = scenePalettes[look];
   return [p.bg, ...p.background.stops.map(([color]) => color)];
 }

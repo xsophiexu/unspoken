@@ -38,6 +38,25 @@
   position: relative;
 }
 
+/* A favourite Halloween look draws its art in board px (the 372 px wide play page of its design)
+   scaled to the game column: --bp is one board px. The art behind the column's top row and footer
+   stays behind them, and art that runs past the window's edges is cut off there. */
+.frame[data-decor] {
+  overflow: clip;
+}
+
+.frame[data-decor] .column {
+  isolation: isolate;
+  container-type: inline-size;
+  --bp: calc((100cqw + 2 * var(--pad-x)) / 372);
+}
+
+.frame[data-decor] .top,
+.frame[data-decor] .footer {
+  position: relative;
+  z-index: 1;
+}
+
 .top {
   display: flex;
   align-items: center;
