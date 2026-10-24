@@ -1,11 +1,11 @@
 'use client';
 
-import { bank } from '@unspoken/content';
-import { cardsFor, createRound, defaultSettings, gameConfig, type SwipeRoundState } from '@unspoken/core';
+import { cardsFor, createRound, defaultSettings, type SwipeRoundState } from '@unspoken/core';
 import { layoutStyleFor, resolveTheme, type ColorMode, type StyleId } from '@unspoken/design-tokens';
 
 import { swipeModel, type PlayModel } from '@/components/play/model';
 import { PlayFrame } from '@/components/play/PlayFrame';
+import { bank, config } from '@/lib/catalog';
 
 import styles from './StyleThumbnail.module.css';
 
@@ -18,11 +18,11 @@ let sample: PlayModel | undefined;
 // The sample round: the first timed swipe mode, so every slot (the clock too) has something to show.
 function sampleModel(): PlayModel {
   if (sample) return sample;
-  const mode = gameConfig.modes.find((m) => m.available && m.play === 'swipe' && m.clock === 'visible');
-  const settings = { ...defaultSettings(), mode: mode?.id ?? gameConfig.defaults.mode };
+  const mode = config.modes.find((m) => m.available && m.play === 'swipe' && m.clock === 'visible');
+  const settings = { ...defaultSettings(config), mode: mode?.id ?? config.defaults.mode };
   const card = bank.find((c) => c.id === PREVIEW_CARD_ID);
   const cards = card ? [{ id: card.id, word: card.word, banned: card.banned }] : cardsFor(bank, settings.difficulties, settings.categories);
-  const round = createRound(settings, { cards, seed: PREVIEW_SEED });
+  const round = createRound(settings, { cards, seed: PREVIEW_SEED, config });
   sample = swipeModel(round as SwipeRoundState);
   return sample;
 }

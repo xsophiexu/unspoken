@@ -102,6 +102,51 @@ describe('Choose categories', () => {
   });
 });
 
+describe('the website’s extras', () => {
+  // The levels and categories the app offered before Easy and Halloween came to the website.
+  const levels = ['Normal', 'Tricky', 'Hard', 'Tough', 'Expert', 'Elite', 'Master', 'Legend'];
+  const categories = [
+    'Inner World',
+    'Literature and Language',
+    'Pop Culture',
+    'Arts and Entertainment',
+    'Science and Nature',
+    'Health and Body',
+    'Technology',
+    'Computer Science',
+    'Society',
+    'Law and Diplomacy',
+    'Business',
+    'Love and Relationships',
+    'Everyday Life',
+    'Culture and Travel',
+    'Sports and Games',
+    'History and Myth',
+    'Fantasy and Sci-Fi',
+  ];
+  const names = (role: 'checkbox') => screen.getAllByRole(role).map((b) => String(b.props.accessibilityLabel).split(',')[0]);
+
+  it('offers neither Easy nor Halloween', async () => {
+    await openSetup();
+    expect(names('checkbox')).toEqual(levels);
+    fireEvent.press(categoriesRow());
+    await screen.findByText(en.categoriesSheet.title);
+    expect(names('checkbox').filter((n) => !levels.includes(n))).toEqual(categories);
+  });
+
+  it('drops Easy and Halloween picks saved by a newer version, keeping the rest', async () => {
+    await openSetup({ difficulties: ['Easy', 'Hard'], categories: ['Society', 'Halloween'] });
+    expect([checked('Hard'), checked('Normal')]).toEqual([true, false]);
+    expect(categoriesRow()).toHaveAccessibleName(format(en.a11y.categories, { summary: 'Society' }));
+  });
+
+  it('starts at Normal with All cards when only Easy and Halloween were saved', async () => {
+    await openSetup({ difficulties: ['Easy'], categories: ['Halloween'] });
+    expect(checked('Normal')).toBe(true);
+    expect(categoriesRow()).toHaveAccessibleName(format(en.a11y.categories, { summary: en.themes.all }));
+  });
+});
+
 describe('Start game with few cards', () => {
   it('asks first; Go back stays on New game and Play anyway starts', async () => {
     // Normal with only Inner World draws from fewer cards than the threshold.

@@ -9,6 +9,7 @@ import { SheetHead } from '@/components/sheets/SheetHead';
 import sheetStyles from '@/components/sheets/sheets.module.css';
 import { Button } from '@/components/ui/Button';
 import { Sheet } from '@/components/ui/Sheet';
+import { config } from '@/lib/catalog';
 import { cx } from '@/lib/ui';
 
 import styles from './mindReader.module.css';
@@ -45,7 +46,7 @@ export function DifficultySheet({ settings, onClose, onApply, customHref, onCust
         className={styles.tiles}
         picked={difficulties}
         categories={categories}
-        onToggle={(next) => setDraft((current) => toggleDifficulty(current, next))}
+        onToggle={(next) => setDraft((current) => toggleDifficulty(current, next, config))}
         onInfo={onInfo ? () => onInfo(draft) : undefined}
       />
       {customHref ? (

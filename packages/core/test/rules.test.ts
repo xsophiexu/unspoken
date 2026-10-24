@@ -7,6 +7,7 @@ import {
   canStart,
   defaultRoundSeconds,
   defaultSettings,
+  extendedGameConfig,
   gameConfig,
   hasEasierDifficulty,
   hasSkipSetting,
@@ -158,7 +159,7 @@ describe('toggleDifficulty', () => {
 });
 
 describe('difficultyLabel', () => {
-  const badges = { Normal: 'NORMAL', Tricky: 'TRICKY', Hard: 'HARD', Tough: 'TOUGH', Expert: 'EXPERT', Elite: 'ELITE', Master: 'MASTER', Legend: 'LEGEND' };
+  const badges = { Easy: 'EASY', Normal: 'NORMAL', Tricky: 'TRICKY', Hard: 'HARD', Tough: 'TOUGH', Expert: 'EXPERT', Elite: 'ELITE', Master: 'MASTER', Legend: 'LEGEND' };
   const copy = { names: badges, mixed: '{easiest}+' };
 
   it('names a single pick', () => {
@@ -265,6 +266,18 @@ describe('toggleCategory', () => {
 });
 
 describe('parseSettings', () => {
+  // A save from the website, which offers Easy and Halloween.
+  const website = { mode: 'classic', difficulties: ['Easy', 'Hard'], categories: ['Society', 'Halloween'], roundSeconds: 150, skips: 3, noTimeLimit: false };
+
+  it('drops Easy and Halloween where they aren’t offered, keeping the other picks', () => {
+    expect(parseSettings(website)).toMatchObject({ difficulties: ['Hard'], categories: ['Society'] });
+    expect(parseSettings({ ...website, difficulties: ['Easy'], categories: ['Halloween'] })).toMatchObject({ difficulties: ['Normal'], categories: [] });
+  });
+
+  it('keeps Easy and Halloween with the extended catalog', () => {
+    expect(parseSettings(website, extendedGameConfig)).toEqual(website);
+  });
+
   it('reads back settings that were saved', () => {
     const saved = { mode: 'classic', difficulties: ['Tough', 'Elite'], categories: ['Society', 'Business'], roundSeconds: 95, skips: null, noTimeLimit: true };
     expect(parseSettings(JSON.parse(JSON.stringify(saved)))).toEqual(saved);
@@ -330,5 +343,28 @@ describe('hasEasierDifficulty', () => {
     const second = gameConfig.difficulties[1]!.id;
     expect(hasEasierDifficulty([second])).toBe(true);
     expect(hasEasierDifficulty([first, second])).toBe(false);
+  });
+});
+
+describe('the extended catalog (the website)', () => {
+  const settings = { ...defaultSettings(extendedGameConfig), mode: 'classic' as const };
+
+  it('starts at Normal, like everywhere else', () => {
+    expect(settings.difficulties).toEqual(['Normal']);
+  });
+
+  it('puts Easy before Normal, with Normal’s 5 banned words and time limit', () => {
+    const both = toggleDifficulty(settings, 'Easy', extendedGameConfig);
+    expect(both.difficulties).toEqual(['Easy', 'Normal']);
+    expect(bannedCountFor('Easy', extendedGameConfig)).toBe(5);
+    expect(defaultRoundSeconds('Easy', extendedGameConfig)).toBe(defaultRoundSeconds('Normal'));
+    expect(hasEasierDifficulty(['Normal'], extendedGameConfig)).toBe(true);
+    expect(hasEasierDifficulty(['Easy'], extendedGameConfig)).toBe(false);
+  });
+
+  it('lists Halloween after the other categories, which the Android app keeps as they are', () => {
+    expect(extendedGameConfig.categories).toEqual([...gameConfig.categories, 'Halloween']);
+    expect(gameConfig.categories).not.toContain('Halloween');
+    expect(gameConfig.difficulties.map((d) => d.id)).toEqual([...DIFFICULTY_IDS]);
   });
 });

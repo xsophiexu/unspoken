@@ -122,32 +122,25 @@ describe('Mind Reader', () => {
 
     await user.click(game.getByRole('button', { name: m.quickOver.next }));
     await playWord(false);
-    // Normal is the easiest difficulty: nothing easier to switch to, so no box.
-    expect(game.queryByText(m.quickOver.tough)).not.toBeInTheDocument();
-    expect(game.queryByRole('button', { name: m.quickOver.switch })).not.toBeInTheDocument();
-
-    await user.click(game.getByRole('button', { name: 'Difficulty NORMAL. Tap to change.' }));
-    let sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
-    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
-    await user.click(sheet.getByRole('checkbox', { name: /^Normal/ }));
-    await user.click(sheet.getByRole('button', { name: m.quick.apply }));
-    await user.click(game.getByRole('button', { name: m.quickOver.next }));
-    await playWord(false);
+    // The website has Easy below Normal, so a missed word at Normal offers it.
     expect(game.getByText(m.quickOver.tough)).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.quickOver.switch }));
-    sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
+    const sheet = within(screen.getByRole('dialog', { name: m.quick.sheetTitle }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Easy/ }));
     await user.click(sheet.getByRole('checkbox', { name: /^Normal/ }));
-    await user.click(sheet.getByRole('checkbox', { name: /^Hard/ }));
     await user.click(sheet.getByRole('button', { name: m.quick.apply }));
     // Applied on the result screen: it confirms, and the next word uses it.
-    expect(game.getByText('Difficulty is now Normal')).toBeInTheDocument();
-    expect(game.getByText('Next words come from Normal.')).toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Difficulty NORMAL. Tap to change.' })).toBeInTheDocument();
+    expect(game.getByText('Difficulty is now Easy')).toBeInTheDocument();
+    expect(game.getByText('Next words come from Easy.')).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Difficulty EASY. Tap to change.' })).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.quickOver.switchAgain }));
     expect(screen.getByRole('dialog', { name: m.quick.sheetTitle })).toBeInTheDocument();
     await user.keyboard('{Escape}');
     await user.click(game.getByRole('button', { name: m.quickOver.next }));
-    expect(game.getByRole('button', { name: m.roles.quick.show })).toBeInTheDocument();
+    await playWord(false);
+    // Easy is the easiest difficulty: nothing easier to switch to, so no box.
+    expect(game.queryByText(m.quickOver.tough)).not.toBeInTheDocument();
+    expect(game.queryByRole('button', { name: m.quickOver.switch })).not.toBeInTheDocument();
   });
 
   it('needs 3 players, and offers Add players or Individual when Teams is picked with 3', async () => {

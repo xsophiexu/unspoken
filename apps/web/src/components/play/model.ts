@@ -1,6 +1,5 @@
 import { en } from '@unspoken/content';
 import {
-  DIFFICULTY_IDS,
   canAnswer,
   difficultyLabel,
   clockLabel,
@@ -14,6 +13,8 @@ import {
   type RoundStats,
   type SwipeRoundState,
 } from '@unspoken/core';
+
+import { config, difficultyIds } from '@/lib/catalog';
 
 // What the play screen shows, read from the round through core's selectors and the copy catalog.
 // Slot components take this and their slot config; they never look at the round or the rules.
@@ -41,7 +42,7 @@ export type PlayModel = HeaderModel & {
 };
 
 const difficultyText = (pick: 'name' | 'badge') =>
-  Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id][pick]])) as Record<Difficulty, string>;
+  Object.fromEntries(difficultyIds.map((id) => [id, en.difficulties[id][pick]])) as Record<Difficulty, string>;
 const names = difficultyText('name');
 const badges = difficultyText('badge');
 
@@ -51,8 +52,8 @@ export function headerModel(state: RoundState): HeaderModel {
     modeName: en.modes[mode].name,
     // One difficulty by name; several as the easiest one and "+" (Hard+, HARD+).
     difficulty: {
-      name: difficultyLabel(difficulties, { names, mixed: en.difficultyMix }),
-      badge: difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }),
+      name: difficultyLabel(difficulties, { names, mixed: en.difficultyMix }, config),
+      badge: difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }, config),
     },
     subline: roundSubline(state, en),
     stats: roundStats(state, en),

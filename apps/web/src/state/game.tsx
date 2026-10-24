@@ -1,13 +1,11 @@
 'use client';
 
-import { bank } from '@unspoken/content';
 import {
   canPlayVersus,
   cardsFor,
   createRound,
   defaultVersusSetup,
   emptyLineup,
-  gameConfig,
   modeRules,
   newSeed,
   resumableSettings,
@@ -25,6 +23,7 @@ import {
 } from '@unspoken/core';
 import { createContext, use, useCallback, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
+import { bank, config } from '@/lib/catalog';
 import { parseSettings, SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { readStored, writeStored } from '@/lib/storage';
 
@@ -62,6 +61,7 @@ function startRound(wanted: GameSettings, seed: number, state: Pick<GameState, '
   return createRound(settings, {
     cards: cardsFor(bank, settings.difficulties, settings.categories),
     seed,
+    config,
     showIntro: !state.introSeen[modeRules(settings.mode).play],
     mindReader: { play: state.play, setup: state.mindReader },
     versus: state.versus,
@@ -124,7 +124,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
     const fresh = {
       introSeen: {},
       play: 'quick' as const,
-      mindReader: { lineup: emptyLineup(), rounds: gameConfig.mindReader.rounds.default },
+      mindReader: { lineup: emptyLineup(), rounds: config.mindReader.rounds.default },
       versus: defaultVersusSetup(emptyLineup()),
     };
     return { ...fresh, settings, round: startRound(settings, newSeed(random), fresh) };
@@ -151,7 +151,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       setVersus,
       saveSettings,
       restart: () => newGame(state.settings, state.play),
-      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty), state.play),
+      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty, config), state.play),
     }),
     [state.settings, state.round, state.play, state.mindReader, state.versus, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );

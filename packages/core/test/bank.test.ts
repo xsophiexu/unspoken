@@ -39,8 +39,8 @@ describe('normalizeBank', () => {
 });
 
 describe('card levels', () => {
-  it('levels a card by its familiarity score, 2 at Normal up to 9 and 10 at Legend', () => {
-    expect([2, 3, 4, 5, 6, 7, 8, 9, 10].map(difficultyForScore)).toEqual(['Normal', 'Tricky', 'Hard', 'Tough', 'Expert', 'Elite', 'Master', 'Legend', 'Legend']);
+  it('levels a card by its familiarity score, 1 at Easy, 2 at Normal up to 9 and 10 at Legend', () => {
+    expect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(difficultyForScore)).toEqual(['Easy', 'Normal', 'Tricky', 'Hard', 'Tough', 'Expert', 'Elite', 'Master', 'Legend', 'Legend']);
   });
 
   it('trusts the score over an old difficulty name in the file', () => {

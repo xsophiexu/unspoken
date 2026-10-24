@@ -1,0 +1,9263 @@
+[
+  {
+    "word": "Pillow",
+    "banned": [
+      "Bed",
+      "Sleep",
+      "Head",
+      "Soft",
+      "Fluffy",
+      "Feathers",
+      "Case",
+      "Fight",
+      "Couch",
+      "Rest"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Blanket",
+    "banned": [
+      "Warm",
+      "Bed",
+      "Cover",
+      "Cozy",
+      "Soft",
+      "Sleep",
+      "Wool",
+      "Cold",
+      "Fort",
+      "Quilt"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bathtub",
+    "banned": [
+      "Relax",
+      "Water",
+      "Bubbles",
+      "Rubber duck",
+      "Wash",
+      "Bathroom",
+      "Soak",
+      "Splash",
+      "Drain",
+      "Shower"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Towel",
+    "banned": [
+      "Dry",
+      "Wet",
+      "Bath",
+      "Shower",
+      "Beach",
+      "Wrap",
+      "Fluffy",
+      "Hang",
+      "Cloth",
+      "Pool"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Fridge",
+    "banned": [
+      "Cold",
+      "Food",
+      "Kitchen",
+      "Milk",
+      "Freezer",
+      "Door",
+      "Magnet",
+      "Leftovers",
+      "Cool",
+      "Hot"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Spoon",
+    "banned": [
+      "Soup",
+      "Fork",
+      "Eat",
+      "Cereal",
+      "Scoop",
+      "Silverware",
+      "Knife",
+      "Bowl",
+      "Tea",
+      "Metal"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Plate",
+    "banned": [
+      "Dinner",
+      "Dish",
+      "Food",
+      "Eat",
+      "Round",
+      "Bowl",
+      "Table",
+      "Break",
+      "Wash",
+      "Paper"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Pizza",
+    "banned": [
+      "Cheese",
+      "Slice",
+      "Pepperoni",
+      "Italy",
+      "Delivery",
+      "Crust",
+      "Sauce",
+      "Tomato",
+      "Oven",
+      "Pie"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Sandwich",
+    "banned": [
+      "Bread",
+      "Lunch",
+      "Ham",
+      "Cheese",
+      "Peanut butter",
+      "Slices",
+      "Sub",
+      "Deli",
+      "Jelly",
+      "Turkey"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Pancakes",
+    "banned": [
+      "Breakfast",
+      "Syrup",
+      "Flip",
+      "Flat",
+      "Stack",
+      "Butter",
+      "Waffle",
+      "Batter",
+      "Griddle",
+      "Morning"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Cereal",
+    "banned": [
+      "Bowl",
+      "Milk",
+      "Breakfast",
+      "Spoon",
+      "Box",
+      "Morning",
+      "Crunchy",
+      "Flakes",
+      "Sugar",
+      "Toy"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Cookie",
+    "banned": [
+      "Chocolate chip",
+      "Bake",
+      "Sweet",
+      "Milk",
+      "Jar",
+      "Crumbs",
+      "Oven",
+      "Dough",
+      "Dessert",
+      "Monster"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Banana",
+    "banned": [
+      "Yellow",
+      "Fruit",
+      "Peel",
+      "Monkey",
+      "Split",
+      "Bunch",
+      "Ripe",
+      "Slip",
+      "Smoothie",
+      "Brown"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Spaghetti",
+    "banned": [
+      "Noodles",
+      "Pasta",
+      "Meatballs",
+      "Italian",
+      "Sauce",
+      "Fork",
+      "Twirl",
+      "Tomato",
+      "Long",
+      "Dinner"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Hamburger",
+    "banned": [
+      "Bun",
+      "Beef",
+      "Patty",
+      "Grill",
+      "Cheese",
+      "Fries",
+      "Ketchup",
+      "Fast food",
+      "Pickles",
+      "Barbecue"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "French fries",
+    "banned": [
+      "Potato",
+      "Ketchup",
+      "Salty",
+      "Fast food",
+      "Burger",
+      "Crispy",
+      "Oil",
+      "Chips",
+      "Golden",
+      "Side"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Peanut butter",
+    "banned": [
+      "Jelly",
+      "Sandwich",
+      "Knife",
+      "Spread",
+      "Sticky",
+      "Jar",
+      "Allergy",
+      "Crunchy",
+      "Smooth",
+      "Toast"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Egg",
+    "banned": [
+      "Chicken",
+      "Yolk",
+      "Shell",
+      "Breakfast",
+      "Crack",
+      "Scrambled",
+      "Fried",
+      "Hen",
+      "Dozen",
+      "White"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bread",
+    "banned": [
+      "Toast",
+      "Loaf",
+      "Slice",
+      "Bake",
+      "Sandwich",
+      "Butter",
+      "Wheat",
+      "Crust",
+      "Bakery",
+      "Dough"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Soup",
+    "banned": [
+      "Bowl",
+      "Spoon",
+      "Hot",
+      "Chicken",
+      "Noodle",
+      "Broth",
+      "Sick",
+      "Warm",
+      "Tomato",
+      "Slurp"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Carrot",
+    "banned": [
+      "Orange",
+      "Vegetable",
+      "Rabbit",
+      "Bunny",
+      "Crunchy",
+      "Eyes",
+      "Garden",
+      "Root",
+      "Snowman",
+      "Healthy"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Teacher",
+    "banned": [
+      "School",
+      "Class",
+      "Students",
+      "Learn",
+      "Homework",
+      "Desk",
+      "Apple",
+      "Lesson",
+      "Grade",
+      "Principal"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Classroom",
+    "banned": [
+      "School",
+      "Desk",
+      "Teacher",
+      "Students",
+      "Homework",
+      "Board",
+      "Learn",
+      "Chairs",
+      "Lesson",
+      "Bell"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Homework",
+    "banned": [
+      "School",
+      "Teacher",
+      "Assignment",
+      "Due",
+      "Study",
+      "Dog ate",
+      "Math",
+      "Worksheet",
+      "Night",
+      "Grade"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "School bus",
+    "banned": [
+      "Yellow",
+      "Kids",
+      "Driver",
+      "Stop",
+      "Ride",
+      "Morning",
+      "Seats",
+      "Route",
+      "Field trip",
+      "Wheels"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Pencil",
+    "banned": [
+      "Write",
+      "Eraser",
+      "Lead",
+      "Sharpen",
+      "Paper",
+      "Tip",
+      "Yellow",
+      "Draw",
+      "Number two",
+      "Graphite"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Eraser",
+    "banned": [
+      "Pencil",
+      "Mistake",
+      "Rub",
+      "Pink",
+      "Rubber",
+      "Remove",
+      "Delete",
+      "Undo",
+      "Clean",
+      "Wipe"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Ruler",
+    "banned": [
+      "Measure",
+      "Inches",
+      "Straight",
+      "Line",
+      "Centimeters",
+      "Foot",
+      "Length",
+      "School",
+      "Wood",
+      "Metric"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Scissors",
+    "banned": [
+      "Cut",
+      "Paper",
+      "Sharp",
+      "Blades",
+      "Snip",
+      "Rock",
+      "Craft",
+      "Run",
+      "Hair",
+      "Safety"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Glue",
+    "banned": [
+      "Sticky",
+      "Stick",
+      "Paste",
+      "Craft",
+      "Paper",
+      "Dry",
+      "White",
+      "Tape",
+      "Bottle",
+      "Gooey"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Playground",
+    "banned": [
+      "Slide",
+      "Swings",
+      "Recess",
+      "Park",
+      "Kids",
+      "Seesaw",
+      "Monkey bars",
+      "Sandbox",
+      "Jungle gym",
+      "Outside"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Broom",
+    "banned": [
+      "Sweep",
+      "Floor",
+      "Dust",
+      "Witch",
+      "Clean",
+      "Bristles",
+      "Mop",
+      "Dustpan",
+      "Handle",
+      "Dirt"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Mop",
+    "banned": [
+      "Floor",
+      "Bucket",
+      "Wet",
+      "Clean",
+      "Wash",
+      "Broom",
+      "Spill",
+      "Wring",
+      "Kitchen",
+      "Janitor"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Laundry",
+    "banned": [
+      "Clothes",
+      "Wash",
+      "Dryer",
+      "Fold",
+      "Basket",
+      "Dirty",
+      "Detergent",
+      "Socks",
+      "Clean",
+      "Machine"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Dishwasher",
+    "banned": [
+      "Plates",
+      "Bowls",
+      "Kitchen",
+      "Clean",
+      "Load",
+      "Soap",
+      "Rinse",
+      "Machine",
+      "Cups",
+      "Sink"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Trash can",
+    "banned": [
+      "Garbage",
+      "Bin",
+      "Throw",
+      "Waste",
+      "Lid",
+      "Bag",
+      "Smell",
+      "Recycle",
+      "Empty",
+      "Dump"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Make the bed",
+    "banned": [
+      "Sheets",
+      "Pillow",
+      "Blanket",
+      "Morning",
+      "Chores",
+      "Neat",
+      "Tidy",
+      "Messy",
+      "Tuck",
+      "Mom"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Library",
+    "banned": [
+      "Books",
+      "Read",
+      "Borrow",
+      "Quiet",
+      "Shh",
+      "Librarian",
+      "Shelves",
+      "Card",
+      "Return",
+      "Late fee"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bakery",
+    "banned": [
+      "Bread",
+      "Cake",
+      "Pastries",
+      "Bagels",
+      "Cookies",
+      "Oven",
+      "Fresh",
+      "Donuts",
+      "Smell",
+      "Shop"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Post office",
+    "banned": [
+      "Mail",
+      "Letters",
+      "Stamps",
+      "Package",
+      "Send",
+      "Mailman",
+      "Envelope",
+      "Box",
+      "Deliver",
+      "Line"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Fire station",
+    "banned": [
+      "Rescue",
+      "Truck",
+      "Pole",
+      "Siren",
+      "Hose",
+      "Dalmatian",
+      "Red",
+      "Alarm",
+      "Engine",
+      "Emergency"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bank",
+    "banned": [
+      "Money",
+      "Save",
+      "Account",
+      "Teller",
+      "Vault",
+      "Cash",
+      "ATM",
+      "Deposit",
+      "Loan",
+      "Check"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Park",
+    "banned": [
+      "Trees",
+      "Grass",
+      "Bench",
+      "Playground",
+      "Picnic",
+      "Walk",
+      "Swings",
+      "Dog",
+      "Pond",
+      "Green"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Zoo",
+    "banned": [
+      "Animals",
+      "Lion",
+      "Cage",
+      "Elephant",
+      "Monkey",
+      "Zebra",
+      "Giraffe",
+      "Visit",
+      "Tiger",
+      "Safari"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Gas station",
+    "banned": [
+      "Fuel",
+      "Car",
+      "Pump",
+      "Petrol",
+      "Fill up",
+      "Tank",
+      "Snacks",
+      "Price",
+      "Diesel",
+      "Road trip"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Restaurant",
+    "banned": [
+      "Eat",
+      "Food",
+      "Menu",
+      "Waiter",
+      "Order",
+      "Dinner",
+      "Table",
+      "Chef",
+      "Tip",
+      "Reservation"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Grocery store",
+    "banned": [
+      "Food",
+      "Shopping",
+      "Cart",
+      "Aisle",
+      "Supermarket",
+      "Buy",
+      "Checkout",
+      "Milk",
+      "Bags",
+      "Market"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Toy store",
+    "banned": [
+      "Games",
+      "Kids",
+      "Play",
+      "Aisle",
+      "Buy",
+      "Shop",
+      "Dolls",
+      "Teddy bears",
+      "Shelves",
+      "Want"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Socks",
+    "banned": [
+      "Feet",
+      "Shoes",
+      "Pair",
+      "Toes",
+      "Lost",
+      "Wool",
+      "Warm",
+      "Laundry",
+      "Match",
+      "Drawer"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Shoes",
+    "banned": [
+      "Feet",
+      "Laces",
+      "Wear",
+      "Pair",
+      "Sneakers",
+      "Boots",
+      "Walk",
+      "Tie",
+      "Heels",
+      "Size"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Pajamas",
+    "banned": [
+      "Sleep",
+      "Bed",
+      "Night",
+      "Pjs",
+      "Comfy",
+      "Wear",
+      "Bedtime",
+      "Party",
+      "Onesie",
+      "Slippers"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Jacket",
+    "banned": [
+      "Coat",
+      "Cold",
+      "Zip",
+      "Wear",
+      "Warm",
+      "Sleeves",
+      "Winter",
+      "Hood",
+      "Rain",
+      "Leather"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Mittens",
+    "banned": [
+      "Hands",
+      "Cold",
+      "Gloves",
+      "Winter",
+      "Warm",
+      "Snow",
+      "Wool",
+      "Thumb",
+      "Knit",
+      "Pair"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Scarf",
+    "banned": [
+      "Neck",
+      "Warm",
+      "Wrap",
+      "Cold",
+      "Winter",
+      "Wool",
+      "Knit",
+      "Long",
+      "Hat",
+      "Cozy"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Boots",
+    "banned": [
+      "Feet",
+      "Rain",
+      "Snow",
+      "Shoes",
+      "Cowboy",
+      "Mud",
+      "Tall",
+      "Leather",
+      "Winter",
+      "Kick"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Sneakers",
+    "banned": [
+      "Shoes",
+      "Running",
+      "Laces",
+      "Feet",
+      "Gym",
+      "Tennis",
+      "White",
+      "Rubber",
+      "Sport",
+      "Athletic"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Dress",
+    "banned": [
+      "Girl",
+      "Wear",
+      "Skirt",
+      "Gown",
+      "Pretty",
+      "Party",
+      "Clothes",
+      "Long",
+      "Fancy",
+      "Wedding"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Shorts",
+    "banned": [
+      "Pants",
+      "Summer",
+      "Legs",
+      "Cutoffs",
+      "Hot",
+      "Knees",
+      "Wear",
+      "Swim",
+      "Long",
+      "Jeans"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Belt",
+    "banned": [
+      "Pants",
+      "Buckle",
+      "Waist",
+      "Leather",
+      "Hold",
+      "Tight",
+      "Loop",
+      "Black",
+      "Strap",
+      "Seat"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Doll",
+    "banned": [
+      "Toy",
+      "Girl",
+      "Play",
+      "Pigtails",
+      "Baby",
+      "Dress",
+      "Hair",
+      "House",
+      "Pretend",
+      "Clothes"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Blocks",
+    "banned": [
+      "Build",
+      "Stack",
+      "Toy",
+      "Tower",
+      "Wooden",
+      "Letters",
+      "Tumble",
+      "Square",
+      "Bricks",
+      "Baby"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bubbles",
+    "banned": [
+      "Blow",
+      "Soap",
+      "Wand",
+      "Pop",
+      "Float",
+      "Round",
+      "Bath",
+      "Shiny",
+      "Air",
+      "Burst"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Rubber duck",
+    "banned": [
+      "Bath",
+      "Yellow",
+      "Toy",
+      "Squeak",
+      "Float",
+      "Tub",
+      "Water",
+      "Quack",
+      "Bubbles",
+      "Baby"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Couch",
+    "banned": [
+      "Sofa",
+      "Sit",
+      "Living room",
+      "TV",
+      "Cushion",
+      "Comfy",
+      "Nap",
+      "Lie",
+      "Pillows",
+      "Potato"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Lamp",
+    "banned": [
+      "Light",
+      "Bulb",
+      "Shade",
+      "Switch",
+      "Table",
+      "Bright",
+      "Dark",
+      "Read",
+      "Desk",
+      "Turn on"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Stairs",
+    "banned": [
+      "Up",
+      "Down",
+      "Steps",
+      "Climb",
+      "Floor",
+      "Railing",
+      "Walk",
+      "Ladder",
+      "Elevator",
+      "Fall"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Kitchen",
+    "banned": [
+      "Cook",
+      "Food",
+      "Stove",
+      "Oven",
+      "Fridge",
+      "Sink",
+      "Room",
+      "Eat",
+      "Dinner",
+      "Chef"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Mirror",
+    "banned": [
+      "Reflection",
+      "Look",
+      "See",
+      "Glass",
+      "Face",
+      "Bathroom",
+      "Wall",
+      "Image",
+      "Selfie",
+      "Vanity"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Toilet",
+    "banned": [
+      "Bathroom",
+      "Flush",
+      "Seat",
+      "Potty",
+      "Paper",
+      "Water",
+      "Restroom",
+      "Plunger",
+      "Bowl",
+      "Pee"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Mailbox",
+    "banned": [
+      "Letters",
+      "Post",
+      "Flag",
+      "Postman",
+      "Package",
+      "Curb",
+      "Envelope",
+      "Send",
+      "Deliver",
+      "Stamp"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Napkin",
+    "banned": [
+      "Wipe",
+      "Mouth",
+      "Paper",
+      "Table",
+      "Lap",
+      "Messy",
+      "Dinner",
+      "Fold",
+      "Clean",
+      "Tissue"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Lemonade",
+    "banned": [
+      "Citrus",
+      "Sour",
+      "Sweet",
+      "Drink",
+      "Stand",
+      "Summer",
+      "Pink",
+      "Sugar",
+      "Yellow",
+      "Cold"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Donut",
+    "banned": [
+      "Hole",
+      "Sprinkles",
+      "Glazed",
+      "Frosting",
+      "Round",
+      "Sweet",
+      "Coffee",
+      "Dozen",
+      "Police",
+      "Bakery"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Taco",
+    "banned": [
+      "Tortilla",
+      "Mexican",
+      "Shell",
+      "Beef",
+      "Cheese",
+      "Tuesday",
+      "Salsa",
+      "Lettuce",
+      "Crunchy",
+      "Burrito"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Strawberry",
+    "banned": [
+      "Red",
+      "Fruit",
+      "Seeds",
+      "Cream",
+      "Sweet",
+      "Shortcake",
+      "Jam",
+      "Pick",
+      "Green",
+      "Juicy"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Chocolate",
+    "banned": [
+      "Sweet",
+      "Brown",
+      "Candy",
+      "Cocoa",
+      "Bar",
+      "Milk",
+      "Dark",
+      "Melt",
+      "Dessert",
+      "White"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Marshmallow",
+    "banned": [
+      "Fluffy",
+      "Campfire",
+      "Roast",
+      "White",
+      "Soft",
+      "Hot cocoa",
+      "S'mores",
+      "Puffy",
+      "Sweet",
+      "Stick"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Ketchup",
+    "banned": [
+      "Tomato",
+      "Red",
+      "Fries",
+      "Bottle",
+      "Mustard",
+      "Sauce",
+      "Squeeze",
+      "Burger",
+      "Condiment",
+      "Hot dog"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Notebook",
+    "banned": [
+      "Paper",
+      "Write",
+      "Pages",
+      "School",
+      "Lines",
+      "Spiral",
+      "Journal",
+      "Pen",
+      "Diary",
+      "Binder"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Principal",
+    "banned": [
+      "School",
+      "Office",
+      "Boss",
+      "Teacher",
+      "Trouble",
+      "Detention",
+      "Head",
+      "Students",
+      "Strict",
+      "Call"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Report card",
+    "banned": [
+      "Grades",
+      "School",
+      "Parents",
+      "A",
+      "F",
+      "Teacher",
+      "Test",
+      "Semester",
+      "Honor roll",
+      "Pass"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Car wash",
+    "banned": [
+      "Soap",
+      "Vehicle",
+      "Clean",
+      "Water",
+      "Brushes",
+      "Dirty",
+      "Suds",
+      "Drive through",
+      "Rinse",
+      "Fundraiser"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Lawn mower",
+    "banned": [
+      "Grass",
+      "Cut",
+      "Yard",
+      "Engine",
+      "Blades",
+      "Push",
+      "Loud",
+      "Chore",
+      "Garden",
+      "Green"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Stuffed animal",
+    "banned": [
+      "Teddy bear",
+      "Toy",
+      "Plush",
+      "Soft",
+      "Cuddle",
+      "Bed",
+      "Hug",
+      "Fluffy",
+      "Kid",
+      "Prize"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Bus",
+    "banned": [
+      "Ride",
+      "Driver",
+      "Stop",
+      "Seats",
+      "Public",
+      "City",
+      "Ticket",
+      "Yellow",
+      "Route",
+      "Wheels"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Boat",
+    "banned": [
+      "Water",
+      "Sail",
+      "Ship",
+      "Row",
+      "Lake",
+      "Float",
+      "Ocean",
+      "Captain",
+      "Paddle",
+      "Sink"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Helicopter",
+    "banned": [
+      "Fly",
+      "Blades",
+      "Spin",
+      "Pilot",
+      "Hover",
+      "Chopper",
+      "Sky",
+      "Air",
+      "Rescue",
+      "Land"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Bicycle",
+    "banned": [
+      "Bike",
+      "Ride",
+      "Pedals",
+      "Wheels",
+      "Two",
+      "Helmet",
+      "Chain",
+      "Training wheels",
+      "Seat",
+      "Spokes"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Subway",
+    "banned": [
+      "Train",
+      "Underground",
+      "Metro",
+      "City",
+      "Station",
+      "Tunnel",
+      "Ride",
+      "New York",
+      "Tracks",
+      "Fare"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Fire truck",
+    "banned": [
+      "Rescue",
+      "Red",
+      "Siren",
+      "Ladder",
+      "Hose",
+      "Emergency",
+      "Station",
+      "Water",
+      "Engine",
+      "Loud"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Police car",
+    "banned": [
+      "Cop",
+      "Siren",
+      "Lights",
+      "Chase",
+      "Officer",
+      "Red and blue",
+      "Pull over",
+      "Arrest",
+      "Patrol",
+      "Speed"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Sailboat",
+    "banned": [
+      "Wind",
+      "Yacht",
+      "Breeze",
+      "Mast",
+      "Ocean",
+      "Lake",
+      "Water",
+      "Captain",
+      "Float",
+      "Sea"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Hot air balloon",
+    "banned": [
+      "Basket",
+      "Fly",
+      "Float",
+      "Sky",
+      "Fire",
+      "Up",
+      "Colorful",
+      "Ride",
+      "Burner",
+      "Big"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Tent",
+    "banned": [
+      "Camping",
+      "Sleep",
+      "Outdoors",
+      "Poles",
+      "Woods",
+      "Zip",
+      "Campfire",
+      "Sleeping bag",
+      "Set up",
+      "Canvas"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Lighthouse",
+    "banned": [
+      "Ocean",
+      "Ships",
+      "Lamp",
+      "Tower",
+      "Coast",
+      "Beam",
+      "Sea",
+      "Rocks",
+      "Warning",
+      "Sailors"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Skyscraper",
+    "banned": [
+      "Tall",
+      "Building",
+      "City",
+      "Floors",
+      "Elevator",
+      "Clouds",
+      "High",
+      "Tower",
+      "New York",
+      "Office"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Farm",
+    "banned": [
+      "Animals",
+      "Cow",
+      "Barn",
+      "Hay",
+      "Tractor",
+      "Pig",
+      "Crops",
+      "Field",
+      "Country",
+      "Chickens"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "City",
+    "banned": [
+      "Town",
+      "Buildings",
+      "Big",
+      "People",
+      "Streets",
+      "Downtown",
+      "New York",
+      "Busy",
+      "Country",
+      "Lights"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Sunglasses",
+    "banned": [
+      "Shades",
+      "Eyes",
+      "Bright",
+      "Cool",
+      "Beach",
+      "Dark",
+      "Wear",
+      "Summer",
+      "Lenses",
+      "UV"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Train station",
+    "banned": [
+      "Platform",
+      "Tickets",
+      "Tracks",
+      "Wait",
+      "Arrive",
+      "Depart",
+      "Railroad",
+      "Subway",
+      "Schedule",
+      "Conductor"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Seat belt",
+    "banned": [
+      "Car",
+      "Buckle",
+      "Safety",
+      "Click",
+      "Strap",
+      "Crash",
+      "Driver",
+      "Wear",
+      "Lap",
+      "Airplane"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Bridge",
+    "banned": [
+      "River",
+      "Cross",
+      "Over",
+      "Water",
+      "Golden Gate",
+      "Build",
+      "Road",
+      "Tall",
+      "Suspension",
+      "Troll"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Highway",
+    "banned": [
+      "Road",
+      "Cars",
+      "Fast",
+      "Lanes",
+      "Freeway",
+      "Drive",
+      "Traffic",
+      "Exit",
+      "Speed",
+      "Interstate"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Stop sign",
+    "banned": [
+      "Red",
+      "Halt",
+      "Corner",
+      "Car",
+      "Octagon",
+      "Traffic",
+      "Street",
+      "Brake",
+      "Road",
+      "Intersection"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Motorcycle",
+    "banned": [
+      "Bike",
+      "Ride",
+      "Helmet",
+      "Wheels",
+      "Two",
+      "Fast",
+      "Loud",
+      "Engine",
+      "Biker",
+      "Leather"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Tractor",
+    "banned": [
+      "Farm",
+      "Farmer",
+      "Field",
+      "Green",
+      "Big",
+      "Wheels",
+      "Plow",
+      "Drive",
+      "Crops",
+      "Hay"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Canoe",
+    "banned": [
+      "Paddle",
+      "Boat",
+      "Lake",
+      "River",
+      "Row",
+      "Water",
+      "Kayak",
+      "Tip",
+      "Wood",
+      "Camp"
+    ],
+    "score": 1,
+    "themes": [
+      "Culture and Travel"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.036
+  },
+  {
+    "word": "Dog",
+    "banned": [
+      "Bark",
+      "Pet",
+      "Puppy",
+      "Woof",
+      "Bone",
+      "Leash",
+      "Walk",
+      "Cat",
+      "Tail",
+      "Fetch"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Cat",
+    "banned": [
+      "Meow",
+      "Pet",
+      "Kitten",
+      "Purr",
+      "Dog",
+      "Mouse",
+      "Whiskers",
+      "Litter",
+      "Fur",
+      "Claws"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Cow",
+    "banned": [
+      "Moo",
+      "Milk",
+      "Farm",
+      "Barn",
+      "Grass",
+      "Spots",
+      "Bull",
+      "Calf",
+      "Udder",
+      "Beef"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Pig",
+    "banned": [
+      "Oink",
+      "Farm",
+      "Pink",
+      "Mud",
+      "Bacon",
+      "Snout",
+      "Sty",
+      "Hog",
+      "Curly tail",
+      "Pork"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Horse",
+    "banned": [
+      "Ride",
+      "Neigh",
+      "Saddle",
+      "Pony",
+      "Gallop",
+      "Farm",
+      "Hay",
+      "Hooves",
+      "Mane",
+      "Cowboy"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Duck",
+    "banned": [
+      "Quack",
+      "Pond",
+      "Bird",
+      "Swim",
+      "Feathers",
+      "Bill",
+      "Waddle",
+      "Water",
+      "Goose",
+      "Bread"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Chicken",
+    "banned": [
+      "Egg",
+      "Cluck",
+      "Farm",
+      "Hen",
+      "Rooster",
+      "Bird",
+      "Feathers",
+      "Coop",
+      "Wings",
+      "Nuggets"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Sheep",
+    "banned": [
+      "Wool",
+      "Baa",
+      "Farm",
+      "Lamb",
+      "Fluffy",
+      "White",
+      "Flock",
+      "Shepherd",
+      "Count",
+      "Sweater"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Lion",
+    "banned": [
+      "King",
+      "Roar",
+      "Mane",
+      "Jungle",
+      "Cat",
+      "Africa",
+      "Pride",
+      "Zoo",
+      "Simba",
+      "Cub"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Tiger",
+    "banned": [
+      "Stripes",
+      "Orange",
+      "Cat",
+      "Roar",
+      "Jungle",
+      "Big",
+      "Zoo",
+      "Lion",
+      "Black",
+      "Cub"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Elephant",
+    "banned": [
+      "Trunk",
+      "Big",
+      "Gray",
+      "Tusks",
+      "Ears",
+      "Peanuts",
+      "Zoo",
+      "Africa",
+      "Heavy",
+      "Mouse"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Giraffe",
+    "banned": [
+      "Neck",
+      "Tall",
+      "Long",
+      "Spots",
+      "Africa",
+      "Leaves",
+      "Zoo",
+      "Yellow",
+      "Short",
+      "Legs"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Monkey",
+    "banned": [
+      "Banana",
+      "Tree",
+      "Swing",
+      "Climb",
+      "Ape",
+      "Tail",
+      "Jungle",
+      "Zoo",
+      "Funny",
+      "Chimp"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Zebra",
+    "banned": [
+      "Stripes",
+      "Black",
+      "White",
+      "Horse",
+      "Africa",
+      "Zoo",
+      "Lines",
+      "Lion",
+      "Herd",
+      "Crosswalk"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Bear",
+    "banned": [
+      "Honey",
+      "Brown",
+      "Grizzly",
+      "Teddy",
+      "Hibernate",
+      "Cave",
+      "Forest",
+      "Claws",
+      "Growl",
+      "Cub"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Rabbit",
+    "banned": [
+      "Hop",
+      "Carrot",
+      "Ears",
+      "Bunny",
+      "Fluffy",
+      "Hole",
+      "Whiskers",
+      "Pet",
+      "Fast",
+      "Hare"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Frog",
+    "banned": [
+      "Green",
+      "Jump",
+      "Hop",
+      "Pond",
+      "Ribbit",
+      "Toad",
+      "Lily pad",
+      "Tadpole",
+      "Fly",
+      "Prince"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Shark",
+    "banned": [
+      "Teeth",
+      "Ocean",
+      "Fin",
+      "Fish",
+      "Bite",
+      "Swim",
+      "Jaws",
+      "Great white",
+      "Sea",
+      "Scary"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Whale",
+    "banned": [
+      "Big",
+      "Ocean",
+      "Blue",
+      "Swim",
+      "Sea",
+      "Blowhole",
+      "Mammal",
+      "Huge",
+      "Fish",
+      "Tail"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Dolphin",
+    "banned": [
+      "Smart",
+      "Ocean",
+      "Swim",
+      "Jump",
+      "Fin",
+      "Gray",
+      "Flipper",
+      "Sea",
+      "Click",
+      "Fish"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Snake",
+    "banned": [
+      "Slither",
+      "Hiss",
+      "Long",
+      "Reptile",
+      "Scales",
+      "Venom",
+      "Python",
+      "Cobra",
+      "Tongue",
+      "Rattle"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Turtle",
+    "banned": [
+      "Shell",
+      "Slow",
+      "Swim",
+      "Reptile",
+      "Green",
+      "Tortoise",
+      "Ocean",
+      "Fast",
+      "Hide",
+      "Hare"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Owl",
+    "banned": [
+      "Hoot",
+      "Night",
+      "Bird",
+      "Wise",
+      "Big eyes",
+      "Tree",
+      "Who",
+      "Feathers",
+      "Awake",
+      "Day"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Penguin",
+    "banned": [
+      "Black",
+      "White",
+      "Ice",
+      "Cold",
+      "Bird",
+      "Waddle",
+      "Fly",
+      "Antarctica",
+      "Swim",
+      "Tuxedo"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Butterfly",
+    "banned": [
+      "Wings",
+      "Garden",
+      "Caterpillar",
+      "Pretty",
+      "Colorful",
+      "Flower",
+      "Bug",
+      "Insect",
+      "Moth",
+      "Cocoon"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Ant",
+    "banned": [
+      "Small",
+      "Bug",
+      "Hill",
+      "Picnic",
+      "Insect",
+      "Colony",
+      "Tiny",
+      "Queen",
+      "Crawl",
+      "Big"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Mouse",
+    "banned": [
+      "Cheese",
+      "Small",
+      "Squeak",
+      "Rat",
+      "Cat",
+      "Tail",
+      "Gray",
+      "Hole",
+      "Trap",
+      "Big"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Kangaroo",
+    "banned": [
+      "Jump",
+      "Hop",
+      "Australia",
+      "Pouch",
+      "Baby",
+      "Joey",
+      "Tail",
+      "Box",
+      "High",
+      "Brown"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Panda",
+    "banned": [
+      "Black",
+      "White",
+      "Bear",
+      "China",
+      "Bamboo",
+      "Cute",
+      "Zoo",
+      "Eat",
+      "Fluffy",
+      "Red"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Fox",
+    "banned": [
+      "Red",
+      "Orange",
+      "Tail",
+      "Sly",
+      "Clever",
+      "Dog",
+      "Forest",
+      "Wolf",
+      "Chicken",
+      "Den"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Wolf",
+    "banned": [
+      "Howl",
+      "Moon",
+      "Pack",
+      "Dog",
+      "Gray",
+      "Big bad",
+      "Forest",
+      "Teeth",
+      "Fox",
+      "Pig"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Deer",
+    "banned": [
+      "Antlers",
+      "Forest",
+      "Bambi",
+      "Buck",
+      "Doe",
+      "Brown",
+      "Fawn",
+      "Run",
+      "Hooves",
+      "Hunt"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Squirrel",
+    "banned": [
+      "Nuts",
+      "Tree",
+      "Tail",
+      "Acorn",
+      "Climb",
+      "Fluffy",
+      "Park",
+      "Gray",
+      "Bury",
+      "Chipmunk"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Snail",
+    "banned": [
+      "Slow",
+      "Shell",
+      "Slime",
+      "Garden",
+      "Slug",
+      "Fast",
+      "Crawl",
+      "Rain",
+      "Wet",
+      "Back"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Worm",
+    "banned": [
+      "Dirt",
+      "Wiggle",
+      "Ground",
+      "Soil",
+      "Bird",
+      "Long",
+      "Fishing",
+      "Bait",
+      "Slimy",
+      "Rain"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Crab",
+    "banned": [
+      "Claws",
+      "Pinch",
+      "Beach",
+      "Sideways",
+      "Sand",
+      "Shell",
+      "Red",
+      "Ocean",
+      "Walk",
+      "Legs"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Ladybug",
+    "banned": [
+      "Red",
+      "Spots",
+      "Black",
+      "Garden",
+      "Insect",
+      "Small",
+      "Dots",
+      "Fly",
+      "Beetle",
+      "Lucky"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Caterpillar",
+    "banned": [
+      "Butterfly",
+      "Cocoon",
+      "Worm",
+      "Leaf",
+      "Eat",
+      "Crawl",
+      "Bug",
+      "Hungry",
+      "Fuzzy",
+      "Green"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Bee",
+    "banned": [
+      "Honey",
+      "Buzz",
+      "Sting",
+      "Hive",
+      "Yellow",
+      "Black",
+      "Flower",
+      "Insect",
+      "Wasp",
+      "Queen"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Puppy",
+    "banned": [
+      "Dog",
+      "Baby",
+      "Young",
+      "Cute",
+      "Bark",
+      "Small",
+      "Pet",
+      "Kitten",
+      "Lick",
+      "Play"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Kitten",
+    "banned": [
+      "Cat",
+      "Baby",
+      "Young",
+      "Cute",
+      "Meow",
+      "Small",
+      "Pet",
+      "Puppy",
+      "Yarn",
+      "Fur"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Tree",
+    "banned": [
+      "Leaves",
+      "Wood",
+      "Trunk",
+      "Branch",
+      "Green",
+      "Tall",
+      "Bark",
+      "Forest",
+      "Climb",
+      "Roots"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Flower",
+    "banned": [
+      "Petals",
+      "Pretty",
+      "Smell",
+      "Rose",
+      "Garden",
+      "Bee",
+      "Plant",
+      "Bloom",
+      "Stem",
+      "Bouquet"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Grass",
+    "banned": [
+      "Green",
+      "Lawn",
+      "Mow",
+      "Yard",
+      "Ground",
+      "Field",
+      "Cut",
+      "Park",
+      "Blade",
+      "Weeds"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Leaf",
+    "banned": [
+      "Tree",
+      "Green",
+      "Fall",
+      "Branch",
+      "Plant",
+      "Brown",
+      "Rake",
+      "Autumn",
+      "Pile",
+      "Red"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Seed",
+    "banned": [
+      "Plant",
+      "Grow",
+      "Garden",
+      "Dirt",
+      "Tiny",
+      "Water",
+      "Sunflower",
+      "Apple",
+      "Soil",
+      "Tree"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Sun",
+    "banned": [
+      "Hot",
+      "Bright",
+      "Sky",
+      "Day",
+      "Yellow",
+      "Moon",
+      "Light",
+      "Shine",
+      "Star",
+      "Night"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Moon",
+    "banned": [
+      "Night",
+      "Sky",
+      "Full",
+      "Crescent",
+      "Sun",
+      "Stars",
+      "Space",
+      "Astronaut",
+      "Day",
+      "Round"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Star",
+    "banned": [
+      "Sky",
+      "Night",
+      "Twinkle",
+      "Shine",
+      "Bright",
+      "Wish",
+      "Space",
+      "Five",
+      "Points",
+      "Sun"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Rain",
+    "banned": [
+      "Wet",
+      "Water",
+      "Cloud",
+      "Umbrella",
+      "Drops",
+      "Fall",
+      "Storm",
+      "Puddle",
+      "Sunny",
+      "Pour"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Snow",
+    "banned": [
+      "Cold",
+      "White",
+      "Winter",
+      "Ice",
+      "Flakes",
+      "Man",
+      "Sled",
+      "Melt",
+      "Fall",
+      "Shovel"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Wind",
+    "banned": [
+      "Blow",
+      "Air",
+      "Breeze",
+      "Kite",
+      "Storm",
+      "Strong",
+      "Gust",
+      "Cold",
+      "Weather",
+      "Calm"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Rock",
+    "banned": [
+      "Stone",
+      "Hard",
+      "Heavy",
+      "Throw",
+      "Gray",
+      "Boulder",
+      "Pebble",
+      "Ground",
+      "Paper",
+      "Soft"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Sand",
+    "banned": [
+      "Beach",
+      "Castle",
+      "Dirt",
+      "Desert",
+      "Box",
+      "Grains",
+      "Tan",
+      "Hot",
+      "Dune",
+      "Shovel"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Lake",
+    "banned": [
+      "Water",
+      "Swim",
+      "Boat",
+      "Fish",
+      "Pond",
+      "Big",
+      "Fresh",
+      "Shore",
+      "Ocean",
+      "Canoe"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Forest",
+    "banned": [
+      "Trees",
+      "Woods",
+      "Animals",
+      "Green",
+      "Jungle",
+      "Bear",
+      "Camp",
+      "Hike",
+      "Leaves",
+      "Path"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Nest",
+    "banned": [
+      "Bird",
+      "Eggs",
+      "Tree",
+      "Home",
+      "Twigs",
+      "Baby",
+      "Branch",
+      "Build",
+      "Sticks",
+      "Hatch"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Feather",
+    "banned": [
+      "Bird",
+      "Light",
+      "Soft",
+      "Wing",
+      "Fly",
+      "Pillow",
+      "Tickle",
+      "Quill",
+      "Fluffy",
+      "Heavy"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Dinosaur",
+    "banned": [
+      "Extinct",
+      "Big",
+      "Old",
+      "T-Rex",
+      "Fossil",
+      "Bones",
+      "Reptile",
+      "Museum",
+      "Roar",
+      "Jurassic"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Planet",
+    "banned": [
+      "Earth",
+      "Space",
+      "Mars",
+      "Sun",
+      "Orbit",
+      "Solar",
+      "Jupiter",
+      "Round",
+      "Star",
+      "Saturn"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Sky",
+    "banned": [
+      "Blue",
+      "Up",
+      "Clouds",
+      "High",
+      "Air",
+      "Sun",
+      "Above",
+      "Ground",
+      "Stars",
+      "Fly"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Ice",
+    "banned": [
+      "Cold",
+      "Frozen",
+      "Water",
+      "Cube",
+      "Slippery",
+      "Melt",
+      "Freeze",
+      "Skate",
+      "Hot",
+      "Hockey"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Water",
+    "banned": [
+      "Drink",
+      "Wet",
+      "Ocean",
+      "Rain",
+      "Swim",
+      "Thirsty",
+      "Clear",
+      "Bottle",
+      "Liquid",
+      "Dry"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Shadow",
+    "banned": [
+      "Dark",
+      "Sun",
+      "Light",
+      "Follow",
+      "Shade",
+      "Black",
+      "Wall",
+      "Puppet",
+      "Ground",
+      "Behind"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Rose",
+    "banned": [
+      "Red",
+      "Flower",
+      "Thorns",
+      "Valentine",
+      "Petals",
+      "Smell",
+      "Love",
+      "Pink",
+      "Bouquet",
+      "Garden"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Sunflower",
+    "banned": [
+      "Yellow",
+      "Tall",
+      "Seeds",
+      "Bloom",
+      "Big",
+      "Summer",
+      "Field",
+      "Petals",
+      "Garden",
+      "Stem"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Cactus",
+    "banned": [
+      "Desert",
+      "Spiky",
+      "Prickly",
+      "Plant",
+      "Green",
+      "Ouch",
+      "Dry",
+      "Needles",
+      "Water",
+      "Hot"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Mushroom",
+    "banned": [
+      "Fungus",
+      "Forest",
+      "Cap",
+      "Pizza",
+      "Toadstool",
+      "Grow",
+      "Wet",
+      "Poison",
+      "Dark",
+      "Spores"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Seashell",
+    "banned": [
+      "Beach",
+      "Ocean",
+      "Sand",
+      "Hermit crab",
+      "Spiral",
+      "Collect",
+      "Listen",
+      "Snail",
+      "Pearl",
+      "Clam"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Mud",
+    "banned": [
+      "Dirt",
+      "Wet",
+      "Brown",
+      "Messy",
+      "Pig",
+      "Puddle",
+      "Rain",
+      "Dirty",
+      "Splash",
+      "Pie"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Hippo",
+    "banned": [
+      "Big",
+      "River",
+      "Africa",
+      "Mouth",
+      "Gray",
+      "Heavy",
+      "Water",
+      "Zoo",
+      "Mud",
+      "Fat"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Crocodile",
+    "banned": [
+      "Teeth",
+      "Alligator",
+      "Reptile",
+      "Swamp",
+      "River",
+      "Green",
+      "Snap",
+      "Jaws",
+      "Scales",
+      "Tears"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Parrot",
+    "banned": [
+      "Talk",
+      "Bird",
+      "Colorful",
+      "Pirate",
+      "Repeat",
+      "Green",
+      "Feathers",
+      "Cracker",
+      "Squawk",
+      "Copy"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Camel",
+    "banned": [
+      "Hump",
+      "Desert",
+      "Sand",
+      "Water",
+      "Ride",
+      "Thirsty",
+      "Spit",
+      "Dry",
+      "Brown",
+      "Hot"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Koala",
+    "banned": [
+      "Australia",
+      "Tree",
+      "Bear",
+      "Gray",
+      "Gum tree",
+      "Cute",
+      "Sleep",
+      "Fluffy",
+      "Leaves",
+      "Climb"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Jellyfish",
+    "banned": [
+      "Sting",
+      "Ocean",
+      "Clear",
+      "Tentacles",
+      "Squishy",
+      "Sea",
+      "Float",
+      "Glowing",
+      "Ouch",
+      "Beach"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Starfish",
+    "banned": [
+      "Ocean",
+      "Beach",
+      "Five",
+      "Arms",
+      "Sea",
+      "Points",
+      "Sand",
+      "Tide pool",
+      "Pink",
+      "Shape"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Telescope",
+    "banned": [
+      "Stars",
+      "Look",
+      "Space",
+      "See",
+      "Far",
+      "Planets",
+      "Lens",
+      "Moon",
+      "Sky",
+      "Close"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Bubble",
+    "banned": [
+      "Pop",
+      "Soap",
+      "Blow",
+      "Round",
+      "Float",
+      "Gum",
+      "Wand",
+      "Bath",
+      "Clear",
+      "Air"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Skunk",
+    "banned": [
+      "Smell",
+      "Stinky",
+      "Black",
+      "White",
+      "Stripe",
+      "Spray",
+      "Gross",
+      "Tail",
+      "Night",
+      "Nice"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Hamster",
+    "banned": [
+      "Pet",
+      "Small",
+      "Wheel",
+      "Cage",
+      "Run",
+      "Cheeks",
+      "Fluffy",
+      "Mouse",
+      "Gerbil",
+      "Brown"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Goldfish",
+    "banned": [
+      "Pet",
+      "Bowl",
+      "Orange",
+      "Swim",
+      "Small",
+      "Tank",
+      "Water",
+      "Bubbles",
+      "Memory",
+      "Food"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Flamingo",
+    "banned": [
+      "Pink",
+      "Bird",
+      "One leg",
+      "Stand",
+      "Tall",
+      "Lawn",
+      "Shrimp",
+      "Florida",
+      "Water",
+      "Feathers"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Firefly",
+    "banned": [
+      "Light",
+      "Glow",
+      "Bug",
+      "Night",
+      "Summer",
+      "Jar",
+      "Blink",
+      "Catch",
+      "Insect",
+      "Yellow"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Comet",
+    "banned": [
+      "Tail",
+      "Space",
+      "Shooting star",
+      "Sky",
+      "Ice",
+      "Fast",
+      "Meteor",
+      "Fly",
+      "Bright",
+      "Halley"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Rooster",
+    "banned": [
+      "Morning",
+      "Crow",
+      "Chicken",
+      "Farm",
+      "Wake up",
+      "Loud",
+      "Sunrise",
+      "Hen",
+      "Cock-a-doodle-doo",
+      "Red"
+    ],
+    "score": 1,
+    "themes": [
+      "Science and Nature"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.01163
+  },
+  {
+    "word": "Nose",
+    "banned": [
+      "Smell",
+      "Face",
+      "Sniff",
+      "Breathe",
+      "Sneeze",
+      "Pick",
+      "Nostril",
+      "Runny",
+      "Big",
+      "Tissue"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Eye",
+    "banned": [
+      "See",
+      "Look",
+      "Blink",
+      "Face",
+      "Two",
+      "Blue",
+      "Glasses",
+      "Lid",
+      "Brown",
+      "Wink"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Ear",
+    "banned": [
+      "Hear",
+      "Listen",
+      "Sound",
+      "Head",
+      "Two",
+      "Loud",
+      "Music",
+      "Side",
+      "Wax",
+      "Lobe"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Mouth",
+    "banned": [
+      "Eat",
+      "Talk",
+      "Lips",
+      "Teeth",
+      "Tongue",
+      "Open",
+      "Face",
+      "Smile",
+      "Close",
+      "Kiss"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Tooth",
+    "banned": [
+      "Teeth",
+      "Brush",
+      "Fairy",
+      "Dentist",
+      "Bite",
+      "Loose",
+      "White",
+      "Chew",
+      "Mouth",
+      "Cavity"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Hand",
+    "banned": [
+      "Fingers",
+      "Arm",
+      "Wave",
+      "Thumb",
+      "Hold",
+      "Clap",
+      "Glove",
+      "Palm",
+      "Five",
+      "Shake"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Foot",
+    "banned": [
+      "Toes",
+      "Shoe",
+      "Walk",
+      "Leg",
+      "Sock",
+      "Kick",
+      "Heel",
+      "Feet",
+      "Ankle",
+      "Step"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Hair",
+    "banned": [
+      "Head",
+      "Long",
+      "Short",
+      "Comb",
+      "Brush",
+      "Cut",
+      "Blonde",
+      "Bald",
+      "Curly",
+      "Wash"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Knee",
+    "banned": [
+      "Leg",
+      "Bend",
+      "Bruise",
+      "Scrape",
+      "Hurt",
+      "Bone",
+      "Pad",
+      "Joint",
+      "Fall",
+      "Middle"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Elbow",
+    "banned": [
+      "Arm",
+      "Bend",
+      "Joint",
+      "Funny bone",
+      "Bone",
+      "Middle",
+      "Lean",
+      "Knee",
+      "Bump",
+      "Sharp"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Finger",
+    "banned": [
+      "Hand",
+      "Point",
+      "Five",
+      "Thumb",
+      "Nail",
+      "Ring",
+      "Toe",
+      "Pinky",
+      "Count",
+      "Touch"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Tongue",
+    "banned": [
+      "Mouth",
+      "Lick",
+      "Taste",
+      "Pink",
+      "Stick out",
+      "Talk",
+      "Lips",
+      "Teeth",
+      "Twister",
+      "Lollipop"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Heart",
+    "banned": [
+      "Love",
+      "Beat",
+      "Chest",
+      "Blood",
+      "Red",
+      "Pump",
+      "Organ",
+      "Valentine",
+      "Pulse",
+      "Doctor"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Stomach",
+    "banned": [
+      "Belly",
+      "Tummy",
+      "Food",
+      "Hungry",
+      "Full",
+      "Ache",
+      "Eat",
+      "Growl",
+      "Digest",
+      "Gut"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Doctor",
+    "banned": [
+      "Sick",
+      "Hospital",
+      "Nurse",
+      "Medicine",
+      "Checkup",
+      "Stethoscope",
+      "Patient",
+      "Office",
+      "Healthy",
+      "Shot"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Hospital",
+    "banned": [
+      "Sick",
+      "Doctor",
+      "Nurse",
+      "Bed",
+      "Ambulance",
+      "Emergency",
+      "Patient",
+      "Building",
+      "Surgery",
+      "Visit"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Medicine",
+    "banned": [
+      "Sick",
+      "Pill",
+      "Doctor",
+      "Better",
+      "Take",
+      "Syrup",
+      "Taste",
+      "Bottle",
+      "Cough",
+      "Spoon"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Shot",
+    "banned": [
+      "Needle",
+      "Doctor",
+      "Arm",
+      "Ouch",
+      "Vaccine",
+      "Sting",
+      "Nurse",
+      "Pinch",
+      "Scared",
+      "Sticker"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Cold",
+    "banned": [
+      "Sick",
+      "Sneeze",
+      "Runny nose",
+      "Cough",
+      "Tissue",
+      "Germs",
+      "Flu",
+      "Stuffy",
+      "Hot",
+      "Catch"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Soap",
+    "banned": [
+      "Wash",
+      "Hands",
+      "Clean",
+      "Bubbles",
+      "Dirt",
+      "Water",
+      "Bath",
+      "Shower",
+      "Bar",
+      "Germs"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Toothpaste",
+    "banned": [
+      "Brush",
+      "Teeth",
+      "Mint",
+      "Tube",
+      "Squeeze",
+      "Clean",
+      "Dentist",
+      "Fresh",
+      "Toothbrush",
+      "Spit"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Shower",
+    "banned": [
+      "Wash",
+      "Water",
+      "Bath",
+      "Soap",
+      "Clean",
+      "Wet",
+      "Shampoo",
+      "Hot",
+      "Dirty",
+      "Towel"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Tears",
+    "banned": [
+      "Cry",
+      "Sad",
+      "Eyes",
+      "Water",
+      "Drop",
+      "Wet",
+      "Tissue",
+      "Happy",
+      "Wipe",
+      "Baby"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Stomachache",
+    "banned": [
+      "Belly",
+      "Tummy",
+      "Hurt",
+      "Sick",
+      "Pain",
+      "Food",
+      "Ate",
+      "Much",
+      "Ouch",
+      "Doctor"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Loose tooth",
+    "banned": [
+      "Wiggle",
+      "Fairy",
+      "Fall",
+      "Out",
+      "Baby",
+      "Dentist",
+      "Wobbly",
+      "Pull",
+      "String",
+      "Mouth"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Tissue",
+    "banned": [
+      "Nose",
+      "Blow",
+      "Sneeze",
+      "Box",
+      "Cry",
+      "Tears",
+      "Wipe",
+      "Paper",
+      "Cold",
+      "Soft"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Thumb",
+    "banned": [
+      "Finger",
+      "Hand",
+      "Up",
+      "Suck",
+      "Short",
+      "Fat",
+      "Ride",
+      "War",
+      "Green",
+      "Like"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Sweat",
+    "banned": [
+      "Hot",
+      "Wet",
+      "Exercise",
+      "Run",
+      "Drip",
+      "Smell",
+      "Gym",
+      "Towel",
+      "Cool",
+      "Forehead"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Burp",
+    "banned": [
+      "Belch",
+      "Soda",
+      "Loud",
+      "Gross",
+      "Excuse me",
+      "Gas",
+      "Mouth",
+      "Baby",
+      "Air",
+      "Fizzy"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Itch",
+    "banned": [
+      "Scratch",
+      "Mosquito",
+      "Bite",
+      "Skin",
+      "Rash",
+      "Annoying",
+      "Bug",
+      "Poison ivy",
+      "Back",
+      "Nails"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Dizzy",
+    "banned": [
+      "Spin",
+      "Round",
+      "Fall",
+      "Head",
+      "Room",
+      "Faint",
+      "Sick",
+      "Turn",
+      "Merry-go-round",
+      "Woozy"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Eye chart",
+    "banned": [
+      "Letters",
+      "Doctor",
+      "Read",
+      "Glasses",
+      "See",
+      "Big",
+      "Small",
+      "Vision",
+      "Test",
+      "Wall"
+    ],
+    "score": 1,
+    "themes": [
+      "Health and Body"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.03125
+  },
+  {
+    "word": "Soccer",
+    "banned": [
+      "Ball",
+      "Kick",
+      "Goal",
+      "Field",
+      "Team",
+      "Net",
+      "Goalie",
+      "Score",
+      "Cleats",
+      "World Cup"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Basketball",
+    "banned": [
+      "Hoop",
+      "Dribble",
+      "Court",
+      "Shoot",
+      "Net",
+      "Orange",
+      "Bounce",
+      "Dunk",
+      "Tall",
+      "Team"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Baseball",
+    "banned": [
+      "Bat",
+      "Pitch",
+      "Glove",
+      "Home run",
+      "Stadium",
+      "Strike",
+      "Catch",
+      "Diamond",
+      "Inning",
+      "Hit"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Football",
+    "banned": [
+      "Touchdown",
+      "Helmet",
+      "Tackle",
+      "Quarterback",
+      "Throw",
+      "Field",
+      "Kick",
+      "Team",
+      "Super Bowl",
+      "Pass"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Hockey",
+    "banned": [
+      "Ice",
+      "Puck",
+      "Stick",
+      "Skates",
+      "Goal",
+      "Rink",
+      "Net",
+      "Goalie",
+      "Cold",
+      "Team"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Swimming",
+    "banned": [
+      "Pool",
+      "Water",
+      "Wet",
+      "Splash",
+      "Goggles",
+      "Dive",
+      "Float",
+      "Lap",
+      "Swimsuit",
+      "Stroke"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Roller skates",
+    "banned": [
+      "Wheels",
+      "Disco",
+      "Rink",
+      "Feet",
+      "Boots",
+      "Fall",
+      "Knee pads",
+      "Spin",
+      "Laces",
+      "Glide"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Jump rope",
+    "banned": [
+      "Skip",
+      "Hop",
+      "Swing",
+      "Turn",
+      "Count",
+      "Feet",
+      "Recess",
+      "Double Dutch",
+      "Rhyme",
+      "Trip"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Tag",
+    "banned": [
+      "You're it",
+      "Chase",
+      "Run",
+      "Touch",
+      "Catch",
+      "Playground",
+      "Freeze",
+      "Fast",
+      "Base",
+      "Game"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Race",
+    "banned": [
+      "Fast",
+      "Run",
+      "Win",
+      "First",
+      "Finish line",
+      "Start",
+      "Car",
+      "Lose",
+      "Slow",
+      "Ready set go"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Karate",
+    "banned": [
+      "Kick",
+      "Chop",
+      "Belt",
+      "Black",
+      "Uniform",
+      "Punch",
+      "Kid",
+      "Board",
+      "Martial arts",
+      "Sensei"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Gymnastics",
+    "banned": [
+      "Flip",
+      "Tumble",
+      "Cartwheel",
+      "Balance beam",
+      "Bars",
+      "Leotard",
+      "Bend",
+      "Mat",
+      "Olympics",
+      "Handstand"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Puzzle",
+    "banned": [
+      "Pieces",
+      "Fit",
+      "Jigsaw",
+      "Picture",
+      "Box",
+      "Edge",
+      "Missing",
+      "Corner",
+      "Solve",
+      "Table"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Playing cards",
+    "banned": [
+      "Deck",
+      "Shuffle",
+      "Deal",
+      "Hand",
+      "Ace",
+      "King",
+      "Queen",
+      "Hearts",
+      "Go Fish",
+      "Joker"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Marbles",
+    "banned": [
+      "Glass",
+      "Roll",
+      "Round",
+      "Small",
+      "Shoot",
+      "Circle",
+      "Lose",
+      "Bag",
+      "Shiny",
+      "Shooter"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Yo-yo",
+    "banned": [
+      "String",
+      "Spin",
+      "Down",
+      "Up",
+      "Trick",
+      "Toy",
+      "Finger",
+      "Wrist",
+      "Throw",
+      "Sleep"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Kite",
+    "banned": [
+      "Fly",
+      "Wind",
+      "String",
+      "Sky",
+      "High",
+      "Tail",
+      "Park",
+      "Breeze",
+      "Pull",
+      "Tangle"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Seesaw",
+    "banned": [
+      "Up",
+      "Down",
+      "Playground",
+      "Balance",
+      "Two",
+      "Heavy",
+      "Light",
+      "Bounce",
+      "Teeter-totter",
+      "Sit"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Slide",
+    "banned": [
+      "Down",
+      "Playground",
+      "Climb",
+      "Ladder",
+      "Fast",
+      "Slippery",
+      "Whee",
+      "Tall",
+      "Wheee",
+      "Bottom"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Swing",
+    "banned": [
+      "Push",
+      "Playground",
+      "High",
+      "Back",
+      "Forth",
+      "Chain",
+      "Seat",
+      "Higher",
+      "Legs",
+      "Pump"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Monkey bars",
+    "banned": [
+      "Swing",
+      "Hang",
+      "Climb",
+      "Playground",
+      "Arms",
+      "Hands",
+      "Fall",
+      "Across",
+      "Recess",
+      "Grip"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Coach",
+    "banned": [
+      "Team",
+      "Whistle",
+      "Teach",
+      "Practice",
+      "Players",
+      "Sideline",
+      "Yell",
+      "Train",
+      "Captain",
+      "Game"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Whistle",
+    "banned": [
+      "Blow",
+      "Loud",
+      "Referee",
+      "Coach",
+      "Stop",
+      "Sound",
+      "Mouth",
+      "Air",
+      "Lifeguard",
+      "Tweet"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Helmet",
+    "banned": [
+      "Head",
+      "Safe",
+      "Bike",
+      "Hard",
+      "Protect",
+      "Football",
+      "Strap",
+      "Crash",
+      "Wear",
+      "Hat"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Medal",
+    "banned": [
+      "Gold",
+      "Silver",
+      "Bronze",
+      "Win",
+      "Neck",
+      "First",
+      "Prize",
+      "Olympics",
+      "Ribbon",
+      "Shiny"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Finish line",
+    "banned": [
+      "Race",
+      "Win",
+      "End",
+      "Run",
+      "Tape",
+      "First",
+      "Cross",
+      "Start",
+      "Last",
+      "Flag"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Jungle gym",
+    "banned": [
+      "Climb",
+      "Playground",
+      "Monkey bars",
+      "Bars",
+      "Hang",
+      "Slide",
+      "Swing",
+      "Park",
+      "Kids",
+      "Recess"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Simon says",
+    "banned": [
+      "Do this",
+      "Follow",
+      "Leader",
+      "Copy",
+      "Touch",
+      "Out",
+      "Rules",
+      "Listen",
+      "Trick",
+      "Game"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Duck duck goose",
+    "banned": [
+      "Circle",
+      "Tap",
+      "Head",
+      "Run",
+      "Chase",
+      "Sit",
+      "Around",
+      "Bird",
+      "Pick",
+      "It"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Leapfrog",
+    "banned": [
+      "Jump",
+      "Over",
+      "Back",
+      "Bend",
+      "Hop",
+      "Green",
+      "Turn",
+      "Kids",
+      "Squat",
+      "Line"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Tic-tac-toe",
+    "banned": [
+      "X",
+      "O",
+      "Three",
+      "Row",
+      "Grid",
+      "Paper",
+      "Draw",
+      "Win",
+      "Line",
+      "Tie"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Dominoes",
+    "banned": [
+      "Tiles",
+      "Dots",
+      "Fall",
+      "Line",
+      "Push",
+      "Row",
+      "Chain",
+      "Match",
+      "Black",
+      "Topple"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Catch",
+    "banned": [
+      "Throw",
+      "Ball",
+      "Glove",
+      "Back",
+      "Forth",
+      "Toss",
+      "Hands",
+      "Drop",
+      "Yard",
+      "Dad"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Fishing",
+    "banned": [
+      "Pole",
+      "Rod",
+      "Hook",
+      "Worm",
+      "Lake",
+      "Boat",
+      "Reel",
+      "Bait",
+      "Wait",
+      "Catch"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Relay race",
+    "banned": [
+      "Baton",
+      "Pass",
+      "Run",
+      "Team",
+      "Hand",
+      "Turn",
+      "Fast",
+      "Lap",
+      "Track",
+      "Next"
+    ],
+    "score": 1,
+    "themes": [
+      "Sports and Games"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.028
+  },
+  {
+    "word": "Drum",
+    "banned": [
+      "Beat",
+      "Bang",
+      "Sticks",
+      "Loud",
+      "Hit",
+      "Band",
+      "Music",
+      "Rhythm",
+      "Tap",
+      "Boom"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Guitar",
+    "banned": [
+      "Strings",
+      "Strum",
+      "Play",
+      "Rock",
+      "Chords",
+      "Band",
+      "Pick",
+      "Music",
+      "Electric",
+      "Song"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Piano",
+    "banned": [
+      "Keys",
+      "Black",
+      "White",
+      "Play",
+      "Music",
+      "Fingers",
+      "Notes",
+      "Grand",
+      "Lesson",
+      "Bench"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Violin",
+    "banned": [
+      "Bow",
+      "Strings",
+      "Chin",
+      "Play",
+      "Orchestra",
+      "Fiddle",
+      "Music",
+      "Small",
+      "Squeaky",
+      "Cello"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Trumpet",
+    "banned": [
+      "Blow",
+      "Brass",
+      "Loud",
+      "Horn",
+      "Band",
+      "Gold",
+      "Toot",
+      "Buttons",
+      "Music",
+      "Jazz"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Flute",
+    "banned": [
+      "Blow",
+      "Silver",
+      "Holes",
+      "Sideways",
+      "Music",
+      "Bird",
+      "Fingers",
+      "Band",
+      "Soft",
+      "Air"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Maracas",
+    "banned": [
+      "Shake",
+      "Rattle",
+      "Two",
+      "Beads",
+      "Music",
+      "Mexico",
+      "Hand",
+      "Noise",
+      "Dance",
+      "Party"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Cymbals",
+    "banned": [
+      "Crash",
+      "Clash",
+      "Loud",
+      "Drum",
+      "Metal",
+      "Band",
+      "Bang",
+      "Gold",
+      "Hit",
+      "Together"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Harmonica",
+    "banned": [
+      "Mouth",
+      "Blow",
+      "Small",
+      "Metal",
+      "Holes",
+      "Music",
+      "Country",
+      "Pocket",
+      "Play",
+      "Blues"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Song",
+    "banned": [
+      "Sing",
+      "Music",
+      "Words",
+      "Tune",
+      "Radio",
+      "Lyrics",
+      "Melody",
+      "Voice",
+      "Hum",
+      "Listen"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Singer",
+    "banned": [
+      "Choir",
+      "Voice",
+      "Song",
+      "Microphone",
+      "Stage",
+      "Star",
+      "Band",
+      "Concert",
+      "Loud",
+      "Pop"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Dancer",
+    "banned": [
+      "Tutu",
+      "Move",
+      "Music",
+      "Spin",
+      "Stage",
+      "Ballet",
+      "Feet",
+      "Twirl",
+      "Jump",
+      "Graceful"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Band",
+    "banned": [
+      "Music",
+      "Play",
+      "Drums",
+      "Guitar",
+      "Group",
+      "Concert",
+      "Rock",
+      "Singer",
+      "Stage",
+      "Members"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Paintbrush",
+    "banned": [
+      "Easel",
+      "Art",
+      "Bristles",
+      "Color",
+      "Canvas",
+      "Wet",
+      "Artist",
+      "Dip",
+      "Stroke",
+      "Handle"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Crayon",
+    "banned": [
+      "Color",
+      "Wax",
+      "Draw",
+      "Box",
+      "Paper",
+      "Kids",
+      "Coloring book",
+      "Stick",
+      "Break",
+      "Rainbow"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Clown",
+    "banned": [
+      "Circus",
+      "Funny",
+      "Red nose",
+      "Makeup",
+      "Laugh",
+      "Silly",
+      "Big shoes",
+      "Wig",
+      "Juggle",
+      "Scary"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Movie",
+    "banned": [
+      "Watch",
+      "Film",
+      "Popcorn",
+      "Theater",
+      "Screen",
+      "Actor",
+      "Show",
+      "Story",
+      "Ticket",
+      "Cinema"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Movie theater",
+    "banned": [
+      "Popcorn",
+      "Screen",
+      "Seats",
+      "Ticket",
+      "Dark",
+      "Film",
+      "Watch",
+      "Cinema",
+      "Big",
+      "Quiet"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Stage",
+    "banned": [
+      "Show",
+      "Play",
+      "Perform",
+      "Curtain",
+      "Lights",
+      "Actor",
+      "Audience",
+      "Up",
+      "Theater",
+      "Spotlight"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Drawing",
+    "banned": [
+      "Pencil",
+      "Picture",
+      "Paper",
+      "Art",
+      "Sketch",
+      "Doodle",
+      "Crayon",
+      "Line",
+      "Paint",
+      "Color"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Puppet show",
+    "banned": [
+      "Hand",
+      "Strings",
+      "Stage",
+      "Sock",
+      "Kids",
+      "Talk",
+      "Curtain",
+      "Funny",
+      "Voice",
+      "Box"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Clay",
+    "banned": [
+      "Mold",
+      "Squish",
+      "Shape",
+      "Soft",
+      "Pottery",
+      "Dough",
+      "Sculpt",
+      "Mud",
+      "Bowl",
+      "Art"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Glitter",
+    "banned": [
+      "Sparkle",
+      "Shiny",
+      "Glue",
+      "Mess",
+      "Tiny",
+      "Gold",
+      "Craft",
+      "Sprinkle",
+      "Silver",
+      "Everywhere"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Coloring book",
+    "banned": [
+      "Crayon",
+      "Pages",
+      "Lines",
+      "Pictures",
+      "Inside",
+      "Kids",
+      "Fill",
+      "Draw",
+      "Markers",
+      "Paint"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Actor",
+    "banned": [
+      "Movie",
+      "Play",
+      "Role",
+      "Star",
+      "Stage",
+      "Pretend",
+      "Hollywood",
+      "Lines",
+      "Film",
+      "Character"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Saxophone",
+    "banned": [
+      "Jazz",
+      "Blow",
+      "Brass",
+      "Gold",
+      "Band",
+      "Curvy",
+      "Smooth",
+      "Keys",
+      "Reed",
+      "Music"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Trapeze",
+    "banned": [
+      "Swing",
+      "Circus",
+      "High",
+      "Bar",
+      "Fly",
+      "Net",
+      "Acrobat",
+      "Tent",
+      "Catch",
+      "Air"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Ringmaster",
+    "banned": [
+      "Circus",
+      "Top hat",
+      "Whip",
+      "Announce",
+      "Tent",
+      "Boss",
+      "Show",
+      "Red coat",
+      "Ladies and gentlemen",
+      "Lions"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Tightrope",
+    "banned": [
+      "Walk",
+      "Balance",
+      "High",
+      "Circus",
+      "Wire",
+      "Fall",
+      "Thin",
+      "Line",
+      "Careful",
+      "Net"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Unicycle",
+    "banned": [
+      "Wheel",
+      "One",
+      "Bike",
+      "Balance",
+      "Circus",
+      "Pedal",
+      "Clown",
+      "Ride",
+      "Fall",
+      "Juggle"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Marching band",
+    "banned": [
+      "Parade",
+      "Drums",
+      "Uniform",
+      "Football",
+      "Halftime",
+      "Flag",
+      "Trumpet",
+      "Feet",
+      "Step",
+      "Music"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Balloon animal",
+    "banned": [
+      "Twist",
+      "Dog",
+      "Clown",
+      "Party",
+      "Long",
+      "Squeak",
+      "Pop",
+      "Air",
+      "Shape",
+      "Blow up"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Music",
+    "banned": [
+      "Song",
+      "Listen",
+      "Sing",
+      "Notes",
+      "Sound",
+      "Band",
+      "Dance",
+      "Radio",
+      "Play",
+      "Beat"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Painting",
+    "banned": [
+      "Gallery",
+      "Brush",
+      "Art",
+      "Picture",
+      "Canvas",
+      "Colors",
+      "Museum",
+      "Artist",
+      "Wall",
+      "Frame"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Dance",
+    "banned": [
+      "Move",
+      "Music",
+      "Party",
+      "Spin",
+      "Feet",
+      "Shake",
+      "Ballet",
+      "Step",
+      "Groove",
+      "Twirl"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.02857
+  },
+  {
+    "word": "Cat video",
+    "banned": [
+      "Funny",
+      "Internet",
+      "Kitten",
+      "Meow",
+      "Watch",
+      "Cute",
+      "Phone",
+      "Viral",
+      "Pet",
+      "Fall"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Funny video",
+    "banned": [
+      "Laugh",
+      "Watch",
+      "Internet",
+      "Fail",
+      "Phone",
+      "Share",
+      "Silly",
+      "Clip",
+      "Prank",
+      "Joke"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Action figure",
+    "banned": [
+      "Toy",
+      "Superhero",
+      "Plastic",
+      "Doll",
+      "Play",
+      "Pose",
+      "Collect",
+      "Arms",
+      "Small",
+      "Hero"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Trading cards",
+    "banned": [
+      "Collect",
+      "Trade",
+      "Pack",
+      "Rare",
+      "Swap",
+      "Deck",
+      "Shiny",
+      "Binder",
+      "Players",
+      "Holographic"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Kids show",
+    "banned": [
+      "Cartoon",
+      "TV",
+      "Children",
+      "Watch",
+      "Morning",
+      "Puppets",
+      "Sing",
+      "Learn",
+      "Channel",
+      "Young"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Dance video",
+    "banned": [
+      "Moves",
+      "Music",
+      "Phone",
+      "Post",
+      "Copy",
+      "Trend",
+      "Steps",
+      "Internet",
+      "Song",
+      "Learn"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Nature show",
+    "banned": [
+      "Animals",
+      "TV",
+      "Wild",
+      "Watch",
+      "Lions",
+      "Ocean",
+      "Narrator",
+      "Documentary",
+      "Jungle",
+      "Learn"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Cartoon character",
+    "banned": [
+      "Animated",
+      "TV",
+      "Drawn",
+      "Funny",
+      "Mouse",
+      "Kids",
+      "Show",
+      "Voice",
+      "Talking animal",
+      "Saturday"
+    ],
+    "score": 1,
+    "themes": [
+      "Arts and Entertainment"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Phone",
+    "banned": [
+      "Call",
+      "Ring",
+      "Text",
+      "Talk",
+      "Cell",
+      "Screen",
+      "Apps",
+      "Pocket",
+      "Hello",
+      "Smart"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Laptop",
+    "banned": [
+      "Computer",
+      "Screen",
+      "Keyboard",
+      "Fold",
+      "Type",
+      "Battery",
+      "Portable",
+      "Charger",
+      "School",
+      "Work"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Computer mouse",
+    "banned": [
+      "Click",
+      "Cursor",
+      "Scroll",
+      "Screen",
+      "Point",
+      "Wheel",
+      "Desk",
+      "Pad",
+      "Wireless",
+      "Hand"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Camera",
+    "banned": [
+      "Picture",
+      "Photo",
+      "Click",
+      "Smile",
+      "Flash",
+      "Lens",
+      "Snap",
+      "Say cheese",
+      "Video",
+      "Zoom"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Radio",
+    "banned": [
+      "Music",
+      "Car",
+      "Station",
+      "Listen",
+      "Song",
+      "Channel",
+      "Antenna",
+      "DJ",
+      "Turn up",
+      "Talk"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Video camera",
+    "banned": [
+      "Record",
+      "Film",
+      "Movie",
+      "Lens",
+      "Tape",
+      "Zoom",
+      "Action",
+      "Shoot",
+      "Picture",
+      "Battery"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Game console",
+    "banned": [
+      "Multiplayer",
+      "Controller",
+      "Play",
+      "TV",
+      "Gaming",
+      "Box",
+      "Online",
+      "Button",
+      "Joystick",
+      "Level"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Elevator",
+    "banned": [
+      "Up",
+      "Down",
+      "Buttons",
+      "Floor",
+      "Ride",
+      "Doors",
+      "Stairs",
+      "Building",
+      "Lift",
+      "Ding"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Escalator",
+    "banned": [
+      "Stairs",
+      "Moving",
+      "Up",
+      "Down",
+      "Mall",
+      "Ride",
+      "Steps",
+      "Handrail",
+      "Airport",
+      "Stand"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Traffic light",
+    "banned": [
+      "Red",
+      "Green",
+      "Yellow",
+      "Stop",
+      "Go",
+      "Cars",
+      "Street",
+      "Corner",
+      "Wait",
+      "Signal"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Alarm clock",
+    "banned": [
+      "Wake up",
+      "Beep",
+      "Morning",
+      "Snooze",
+      "Ring",
+      "Bed",
+      "Early",
+      "Time",
+      "Loud",
+      "Sleep"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Doorbell",
+    "banned": [
+      "Ring",
+      "Ding dong",
+      "Button",
+      "Front",
+      "Visitor",
+      "Push",
+      "Knock",
+      "House",
+      "Answer",
+      "Who's there"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Speaker",
+    "banned": [
+      "Sound",
+      "Music",
+      "Loud",
+      "Volume",
+      "Bass",
+      "Listen",
+      "Quiet",
+      "Boom",
+      "Play",
+      "Wireless"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Screen",
+    "banned": [
+      "Watch",
+      "TV",
+      "Phone",
+      "Glass",
+      "Look",
+      "Touch",
+      "Bright",
+      "Computer",
+      "Picture",
+      "Display"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Plug",
+    "banned": [
+      "Outlet",
+      "Wall",
+      "Cord",
+      "Electric",
+      "Lamp",
+      "Prongs",
+      "Socket",
+      "Power",
+      "Shock",
+      "Charger"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Vacuum cleaner",
+    "banned": [
+      "Suck",
+      "Dirt",
+      "Floor",
+      "Carpet",
+      "Loud",
+      "Dust",
+      "Hose",
+      "Chores",
+      "Crumbs",
+      "Broom"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Ceiling fan",
+    "banned": [
+      "Spin",
+      "Blades",
+      "Breeze",
+      "Cool",
+      "Hot",
+      "Air",
+      "Overhead",
+      "Light",
+      "Room",
+      "Wind"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Phone call",
+    "banned": [
+      "Ring",
+      "Talk",
+      "Hello",
+      "Answer",
+      "Dial",
+      "Voice",
+      "Hang up",
+      "Number",
+      "Goodbye",
+      "Text"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Hair dryer",
+    "banned": [
+      "Hot",
+      "Air",
+      "Blow",
+      "Wet",
+      "Bathroom",
+      "Loud",
+      "Shower",
+      "Wind",
+      "Brush",
+      "Plug"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Light switch",
+    "banned": [
+      "Flip",
+      "On",
+      "Off",
+      "Wall",
+      "Dark",
+      "Lamp",
+      "Up",
+      "Down",
+      "Room",
+      "Click"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Electric toothbrush",
+    "banned": [
+      "Teeth",
+      "Bristles",
+      "Buzz",
+      "Spin",
+      "Batteries",
+      "Dentist",
+      "Clean",
+      "Bathroom",
+      "Charge",
+      "Toothpaste"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Toaster",
+    "banned": [
+      "Bread",
+      "Bagel",
+      "Pop",
+      "Hot",
+      "Kitchen",
+      "Breakfast",
+      "Burn",
+      "Slot",
+      "Crispy",
+      "Butter"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Washing machine",
+    "banned": [
+      "Clothes",
+      "Laundry",
+      "Soap",
+      "Spin",
+      "Clean",
+      "Water",
+      "Dirty",
+      "Dryer",
+      "Load",
+      "Socks"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Night light",
+    "banned": [
+      "Dark",
+      "Sleep",
+      "Bedroom",
+      "Scared",
+      "Glow",
+      "Plug",
+      "Bed",
+      "Kids",
+      "Monster",
+      "Dim"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Selfie stick",
+    "banned": [
+      "Picture",
+      "Phone",
+      "Photo",
+      "Long",
+      "Arm",
+      "Camera",
+      "Smile",
+      "Group",
+      "Tourist",
+      "Pose"
+    ],
+    "score": 1,
+    "themes": [
+      "Technology"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Magic",
+    "banned": [
+      "Wand",
+      "Trick",
+      "Spell",
+      "Wizard",
+      "Hat",
+      "Rabbit",
+      "Abracadabra",
+      "Real",
+      "Disappear",
+      "Power"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Tooth fairy",
+    "banned": [
+      "Pillow",
+      "Money",
+      "Lost",
+      "Wings",
+      "Night",
+      "Coin",
+      "Baby",
+      "Sleep",
+      "Mouth",
+      "Kids"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Three wishes",
+    "banned": [
+      "Genie",
+      "Lamp",
+      "Grant",
+      "Want",
+      "Magic",
+      "Rub",
+      "Bottle",
+      "Aladdin",
+      "Fairy",
+      "Four"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Wicked witch",
+    "banned": [
+      "Oz",
+      "Green",
+      "Broom",
+      "Evil",
+      "Fly",
+      "Melt",
+      "Water",
+      "Hat",
+      "Good",
+      "Spell"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Poison apple",
+    "banned": [
+      "Snow White",
+      "Red",
+      "Eat",
+      "Bite",
+      "Witch",
+      "Sleep",
+      "Fruit",
+      "Evil",
+      "Queen",
+      "Kiss"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Frog prince",
+    "banned": [
+      "Kiss",
+      "Spell",
+      "Green",
+      "Pond",
+      "Toad",
+      "Fairy tale",
+      "Curse",
+      "Turn",
+      "Lily pad",
+      "King"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Abracadabra",
+    "banned": [
+      "Magic",
+      "Wizard",
+      "Hat",
+      "Rabbit",
+      "Trick",
+      "Word",
+      "Spell",
+      "Wand",
+      "Hocus pocus",
+      "Disappear"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Sea monster",
+    "banned": [
+      "Ocean",
+      "Tentacles",
+      "Giant",
+      "Water",
+      "Deep",
+      "Ship",
+      "Scary",
+      "Loch Ness",
+      "Octopus",
+      "Kraken"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Monster under the bed",
+    "banned": [
+      "Scary",
+      "Closet",
+      "Night",
+      "Kids",
+      "Dark",
+      "Afraid",
+      "Hide",
+      "Sleep",
+      "Lights",
+      "Check"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Invisible",
+    "banned": [
+      "See",
+      "Disappear",
+      "Cloak",
+      "Hidden",
+      "Ghost",
+      "Clear",
+      "Man",
+      "Power",
+      "Air",
+      "Gone"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Pumpkin carriage",
+    "banned": [
+      "Cinderella",
+      "Ball",
+      "Midnight",
+      "Horses",
+      "Fairy godmother",
+      "Coach",
+      "Orange",
+      "Magic",
+      "Glass slipper",
+      "Ride"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Fairy wings",
+    "banned": [
+      "Fly",
+      "Tinker Bell",
+      "Sparkle",
+      "Butterfly",
+      "Tiny",
+      "Costume",
+      "Glitter",
+      "Magic",
+      "Wand",
+      "Pixie"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Prince",
+    "banned": [
+      "Queen",
+      "King",
+      "Castle",
+      "Charming",
+      "Crown",
+      "Royal",
+      "Son",
+      "Horse",
+      "Frog",
+      "Kiss"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Cinderella",
+    "banned": [
+      "Glass slipper",
+      "Ball",
+      "Prince",
+      "Midnight",
+      "Stepsisters",
+      "Pumpkin",
+      "Fairy godmother",
+      "Shoe",
+      "Dance",
+      "Princess"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Snow White",
+    "banned": [
+      "Seven",
+      "Dwarfs",
+      "Apple",
+      "Mirror",
+      "Evil queen",
+      "Princess",
+      "Poison",
+      "Sleep",
+      "Kiss",
+      "Disney"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Goldilocks",
+    "banned": [
+      "Bears",
+      "Porridge",
+      "Three",
+      "Just right",
+      "Hot",
+      "Cold",
+      "Bed",
+      "Chair",
+      "Girl",
+      "Blonde"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Three little pigs",
+    "banned": [
+      "Wolf",
+      "Huff",
+      "Puff",
+      "Blow",
+      "House",
+      "Straw",
+      "Sticks",
+      "Bricks",
+      "Chimney",
+      "Story"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Little Red Riding Hood",
+    "banned": [
+      "Wolf",
+      "Grandma",
+      "Basket",
+      "Forest",
+      "Woods",
+      "Cape",
+      "Girl",
+      "Big eyes",
+      "Teeth",
+      "Story"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Peter Pan",
+    "banned": [
+      "Tinker Bell",
+      "Neverland",
+      "Fly",
+      "Captain Hook",
+      "Pirates",
+      "Lost boys",
+      "Grow up",
+      "Wendy",
+      "Green",
+      "Fairy"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "Super strength",
+    "banned": [
+      "Strong",
+      "Lift",
+      "Power",
+      "Muscles",
+      "Hulk",
+      "Heavy",
+      "Hero",
+      "Weak",
+      "Car",
+      "Mighty"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.016
+  },
+  {
+    "word": "King",
+    "banned": [
+      "Queen",
+      "Crown",
+      "Castle",
+      "Throne",
+      "Royal",
+      "Rule",
+      "Prince",
+      "Chess",
+      "Lion",
+      "Knight"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Queen",
+    "banned": [
+      "King",
+      "Crown",
+      "Royal",
+      "Princess",
+      "Castle",
+      "England",
+      "Throne",
+      "Bee",
+      "Chess",
+      "Elizabeth"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Crown",
+    "banned": [
+      "King",
+      "Queen",
+      "Head",
+      "Gold",
+      "Jewels",
+      "Royal",
+      "Wear",
+      "Princess",
+      "Tiara",
+      "Throne"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Throne",
+    "banned": [
+      "King",
+      "Queen",
+      "Chair",
+      "Sit",
+      "Royal",
+      "Castle",
+      "Crown",
+      "Seat",
+      "Gold",
+      "Rule"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Sword",
+    "banned": [
+      "Knight",
+      "Fight",
+      "Sharp",
+      "Blade",
+      "Shield",
+      "Pirate",
+      "Metal",
+      "Cut",
+      "Steel",
+      "Excalibur"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Shield",
+    "banned": [
+      "Sword",
+      "Protect",
+      "Knight",
+      "Armor",
+      "Block",
+      "Superhero",
+      "Battle",
+      "Metal",
+      "Defend",
+      "Round"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Armor",
+    "banned": [
+      "Knight",
+      "Metal",
+      "Suit",
+      "Protect",
+      "Shining",
+      "Helmet",
+      "Shield",
+      "Iron",
+      "Heavy",
+      "Battle"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Treasure chest",
+    "banned": [
+      "Gold",
+      "Pirate",
+      "Box",
+      "Coins",
+      "Jewels",
+      "Buried",
+      "Map",
+      "Open",
+      "Lock",
+      "Island"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Pirate ship",
+    "banned": [
+      "Sail",
+      "Captain",
+      "Flag",
+      "Skull",
+      "Ocean",
+      "Treasure",
+      "Cannon",
+      "Parrot",
+      "Plank",
+      "Hook"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Eye patch",
+    "banned": [
+      "Pirate",
+      "Cover",
+      "One",
+      "Black",
+      "Hook",
+      "Parrot",
+      "Captain",
+      "Blind",
+      "See",
+      "Face"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Cowboy",
+    "banned": [
+      "Horse",
+      "Hat",
+      "Boots",
+      "Lasso",
+      "Ranch",
+      "Western",
+      "Sheriff",
+      "Rodeo",
+      "Texas",
+      "Yeehaw"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Dungeon",
+    "banned": [
+      "Castle",
+      "Prison",
+      "Dark",
+      "Underground",
+      "Chains",
+      "Dragons",
+      "Jail",
+      "Cell",
+      "Basement",
+      "Locked"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Bow and arrow",
+    "banned": [
+      "Shoot",
+      "Target",
+      "Robin Hood",
+      "Archery",
+      "String",
+      "Hunt",
+      "Aim",
+      "Cupid",
+      "Quiver",
+      "Bullseye"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Yeti",
+    "banned": [
+      "Bigfoot",
+      "Snow",
+      "Mountain",
+      "Abominable",
+      "Hairy",
+      "Monster",
+      "Himalayas",
+      "White",
+      "Footprints",
+      "Giant"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Cannon",
+    "banned": [
+      "Fire",
+      "Ball",
+      "Boom",
+      "Pirate",
+      "Ship",
+      "Shoot",
+      "Gun",
+      "War",
+      "Loud",
+      "Castle"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.024
+  },
+  {
+    "word": "Happy",
+    "banned": [
+      "Smile",
+      "Glad",
+      "Joy",
+      "Sad",
+      "Good",
+      "Cheerful",
+      "Mood",
+      "Laugh",
+      "Face",
+      "Feeling"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Sad",
+    "banned": [
+      "Cry",
+      "Tears",
+      "Down",
+      "Happy",
+      "Blue",
+      "Upset",
+      "Frown",
+      "Feel",
+      "Lonely",
+      "Face"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Angry",
+    "banned": [
+      "Mad",
+      "Upset",
+      "Red",
+      "Yell",
+      "Temper",
+      "Furious",
+      "Calm",
+      "Grumpy",
+      "Shout",
+      "Face"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Scared",
+    "banned": [
+      "Afraid",
+      "Fear",
+      "Frightened",
+      "Monster",
+      "Dark",
+      "Scream",
+      "Brave",
+      "Shake",
+      "Ghost",
+      "Hide"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Tired",
+    "banned": [
+      "Sleepy",
+      "Yawn",
+      "Bed",
+      "Rest",
+      "Nap",
+      "Exhausted",
+      "Awake",
+      "Energy",
+      "Night",
+      "Long day"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Bored",
+    "banned": [
+      "Nothing",
+      "Dull",
+      "Fun",
+      "Yawn",
+      "Waiting",
+      "Interesting",
+      "Excited",
+      "Sigh",
+      "Long",
+      "Busy"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Excited",
+    "banned": [
+      "Happy",
+      "Can't wait",
+      "Jump",
+      "Thrilled",
+      "Fun",
+      "Bored",
+      "Party",
+      "Energy",
+      "Yay",
+      "Surprise"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Surprised",
+    "banned": [
+      "Shock",
+      "Wow",
+      "Gasp",
+      "Party",
+      "Unexpected",
+      "Expect",
+      "Mouth",
+      "Jump",
+      "Eyes",
+      "Oh"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Lonely",
+    "banned": [
+      "Alone",
+      "Sad",
+      "Friends",
+      "Nobody",
+      "Miss",
+      "Company",
+      "Crowd",
+      "Empty",
+      "One",
+      "Isolated"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Shy",
+    "banned": [
+      "Quiet",
+      "Nervous",
+      "Hide",
+      "Blush",
+      "Bold",
+      "Talk",
+      "Timid",
+      "Outgoing",
+      "Strangers",
+      "Friend"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Proud",
+    "banned": [
+      "Good job",
+      "Happy",
+      "Win",
+      "Parents",
+      "Accomplish",
+      "Ashamed",
+      "Chest",
+      "Award",
+      "Hard work",
+      "Smile"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Brave",
+    "banned": [
+      "Scared",
+      "Hero",
+      "Courage",
+      "Fear",
+      "Strong",
+      "Coward",
+      "Bold",
+      "Lion",
+      "Fight",
+      "Afraid"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Silly",
+    "banned": [
+      "Funny",
+      "Goofy",
+      "Laugh",
+      "Joke",
+      "Clown",
+      "Face",
+      "Serious",
+      "Dumb",
+      "Crazy",
+      "Giggle"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Jealous",
+    "banned": [
+      "Envy",
+      "Want",
+      "Green",
+      "Mine",
+      "Friend",
+      "Share",
+      "Unfair",
+      "Sibling",
+      "Mad",
+      "Have"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Nervous",
+    "banned": [
+      "Scared",
+      "Worried",
+      "Butterflies",
+      "Shaky",
+      "Sweat",
+      "Test",
+      "Calm",
+      "Stomach",
+      "Anxious",
+      "Stage"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Worried",
+    "banned": [
+      "Nervous",
+      "Scared",
+      "Afraid",
+      "Problem",
+      "Think",
+      "Anxious",
+      "Calm",
+      "Wrong",
+      "Mom",
+      "Stress"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Dream",
+    "banned": [
+      "Sleep",
+      "Night",
+      "Bed",
+      "Nightmare",
+      "Wish",
+      "Wake up",
+      "Goal",
+      "Asleep",
+      "Day",
+      "Imagine"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Wish",
+    "banned": [
+      "Want",
+      "Star",
+      "Genie",
+      "Birthday",
+      "Candles",
+      "Hope",
+      "Three",
+      "Make",
+      "Fountain",
+      "Well"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Laugh",
+    "banned": [
+      "Funny",
+      "Joke",
+      "Ha ha",
+      "Giggle",
+      "Smile",
+      "Cry",
+      "Tickle",
+      "Happy",
+      "Loud",
+      "Hysterical"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Cry",
+    "banned": [
+      "Tears",
+      "Sad",
+      "Baby",
+      "Eyes",
+      "Sob",
+      "Weep",
+      "Laugh",
+      "Hurt",
+      "Tissue",
+      "Upset"
+    ],
+    "score": 1,
+    "themes": [
+      "Inner World"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Mom",
+    "banned": [
+      "Mother",
+      "Dad",
+      "Parent",
+      "Mama",
+      "Love",
+      "Baby",
+      "Family",
+      "Woman",
+      "Hug",
+      "Kids"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Dad",
+    "banned": [
+      "Father",
+      "Mom",
+      "Papa",
+      "Parent",
+      "Man",
+      "Family",
+      "Pop",
+      "Kids",
+      "Son",
+      "Beard"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Brother",
+    "banned": [
+      "Sister",
+      "Sibling",
+      "Boy",
+      "Family",
+      "Mom",
+      "Twin",
+      "Older",
+      "Younger",
+      "Fight",
+      "Son"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Sister",
+    "banned": [
+      "Brother",
+      "Sibling",
+      "Girl",
+      "Family",
+      "Older",
+      "Younger",
+      "Twin",
+      "Mom",
+      "Daughter",
+      "Share"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Baby",
+    "banned": [
+      "Diaper",
+      "Cry",
+      "Small",
+      "Bottle",
+      "Newborn",
+      "Crib",
+      "Mom",
+      "Infant",
+      "Old",
+      "Rattle"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Family",
+    "banned": [
+      "Mom",
+      "Dad",
+      "Kids",
+      "Parents",
+      "Brother",
+      "Sister",
+      "Home",
+      "Together",
+      "Tree",
+      "Relatives"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Friend",
+    "banned": [
+      "Buddy",
+      "Pal",
+      "Best",
+      "Play",
+      "Enemy",
+      "Together",
+      "Trust",
+      "School",
+      "Classmate",
+      "Fun"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Uncle",
+    "banned": [
+      "Aunt",
+      "Dad",
+      "Brother",
+      "Family",
+      "Cousin",
+      "Nephew",
+      "Niece",
+      "Mom",
+      "Relative",
+      "Sam"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Parents",
+    "banned": [
+      "Mom",
+      "Dad",
+      "Kids",
+      "Family",
+      "Mother",
+      "Father",
+      "Raise",
+      "Children",
+      "Home",
+      "Grownups"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Wedding",
+    "banned": [
+      "Bride",
+      "Groom",
+      "Marry",
+      "Ring",
+      "Cake",
+      "Dress",
+      "Church",
+      "Husband",
+      "Wife",
+      "Kiss"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Love",
+    "banned": [
+      "Heart",
+      "Valentine",
+      "Hug",
+      "Kiss",
+      "Like",
+      "Hate",
+      "Care",
+      "Romance",
+      "Family",
+      "Crush"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Classmate",
+    "banned": [
+      "School",
+      "Friend",
+      "Teacher",
+      "Student",
+      "Desk",
+      "Same",
+      "Room",
+      "Grade",
+      "Kid",
+      "Recess"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Kiss goodnight",
+    "banned": [
+      "Bed",
+      "Sleep",
+      "Sweet dreams",
+      "Mom",
+      "Dad",
+      "Cheek",
+      "Tuck",
+      "Hug",
+      "Lips",
+      "Bedtime"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "High five",
+    "banned": [
+      "Hand",
+      "Slap",
+      "Palm",
+      "Up",
+      "Hi",
+      "Great job",
+      "Clap",
+      "Celebrate",
+      "Low",
+      "Fingers"
+    ],
+    "score": 1,
+    "themes": [
+      "Love and Relationships"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Letter",
+    "banned": [
+      "Alphabet",
+      "ABC",
+      "Mail",
+      "Envelope",
+      "Write",
+      "Word",
+      "Stamp",
+      "Number",
+      "Vowel",
+      "Capital"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Alphabet",
+    "banned": [
+      "ABC",
+      "Letters",
+      "Song",
+      "A to Z",
+      "Order",
+      "Learn",
+      "Spell",
+      "Twenty-six",
+      "Read",
+      "Words"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Book",
+    "banned": [
+      "Read",
+      "Page",
+      "Cover",
+      "Story",
+      "Library",
+      "Author",
+      "Chapter",
+      "Novel",
+      "Shelf",
+      "Title"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Story",
+    "banned": [
+      "Tell",
+      "Book",
+      "Once upon a time",
+      "Bedtime",
+      "Tale",
+      "Read",
+      "Ending",
+      "Character",
+      "True",
+      "Plot"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Word",
+    "banned": [
+      "Letter",
+      "Spell",
+      "Say",
+      "Dictionary",
+      "Sentence",
+      "Language",
+      "Mean",
+      "Write",
+      "Read",
+      "Vocabulary"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Poem",
+    "banned": [
+      "Rhyme",
+      "Poet",
+      "Verse",
+      "Roses are red",
+      "Write",
+      "Lines",
+      "Song",
+      "Haiku",
+      "Words",
+      "Shakespeare"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Picture book",
+    "banned": [
+      "Kids",
+      "Read",
+      "Story",
+      "Drawings",
+      "Children",
+      "Pages",
+      "Bedtime",
+      "Library",
+      "Illustration",
+      "Colors"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Author",
+    "banned": [
+      "Write",
+      "Book",
+      "Writer",
+      "Story",
+      "Name",
+      "Novel",
+      "Publish",
+      "Cover",
+      "Pen",
+      "Reader"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Joke",
+    "banned": [
+      "Funny",
+      "Laugh",
+      "Punchline",
+      "Knock knock",
+      "Tell",
+      "Prank",
+      "Comedian",
+      "Kidding",
+      "Serious",
+      "Silly"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "The end",
+    "banned": [
+      "Finish",
+      "Last",
+      "Story",
+      "Book",
+      "Over",
+      "Done",
+      "Beginning",
+      "Movie",
+      "Final",
+      "Page"
+    ],
+    "score": 1,
+    "themes": [
+      "Literature and Language"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Town",
+    "banned": [
+      "City",
+      "Small",
+      "Village",
+      "Mayor",
+      "Live",
+      "Main Street",
+      "Place",
+      "People",
+      "Country",
+      "Map"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Mail carrier",
+    "banned": [
+      "Letters",
+      "Post office",
+      "Deliver",
+      "Packages",
+      "Postman",
+      "Truck",
+      "Uniform",
+      "Stamps",
+      "Dog",
+      "Neighborhood"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Neighborhood",
+    "banned": [
+      "Street",
+      "Houses",
+      "Block",
+      "Live",
+      "Next door",
+      "Area",
+      "Town",
+      "Friends",
+      "Community",
+      "Kids"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Parade",
+    "banned": [
+      "March",
+      "Floats",
+      "Street",
+      "Band",
+      "Balloons",
+      "Watch",
+      "Crowd",
+      "Holiday",
+      "Drums",
+      "Wave"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Crowd",
+    "banned": [
+      "People",
+      "Lots",
+      "Many",
+      "Group",
+      "Stadium",
+      "Concert",
+      "Busy",
+      "Packed",
+      "Cheer",
+      "Alone"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Volunteer",
+    "banned": [
+      "Help",
+      "Free",
+      "Unpaid",
+      "Charity",
+      "Raise hand",
+      "Give",
+      "Time",
+      "Work",
+      "Pick me",
+      "Community"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Leader",
+    "banned": [
+      "Boss",
+      "Follow",
+      "Charge",
+      "Captain",
+      "Team",
+      "President",
+      "King",
+      "Line",
+      "Guide",
+      "Head"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Country",
+    "banned": [
+      "Nation",
+      "Flag",
+      "Land",
+      "City",
+      "Map",
+      "America",
+      "World",
+      "President",
+      "Music",
+      "Border"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Crossing guard",
+    "banned": [
+      "School",
+      "Street",
+      "Stop sign",
+      "Vest",
+      "Kids",
+      "Safe",
+      "Walk",
+      "Cars",
+      "Corner",
+      "Whistle"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Firefighter",
+    "banned": [
+      "Truck",
+      "Hose",
+      "Hero",
+      "Burn",
+      "Smoke",
+      "Helmet",
+      "Ladder",
+      "Rescue",
+      "Dalmatian",
+      "Station"
+    ],
+    "score": 1,
+    "themes": [
+      "Society"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.04
+  },
+  {
+    "word": "Money",
+    "banned": [
+      "Cash",
+      "Dollar",
+      "Coins",
+      "Pay",
+      "Rich",
+      "Bank",
+      "Spend",
+      "Buy",
+      "Bills",
+      "Save"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Coin",
+    "banned": [
+      "Penny",
+      "Money",
+      "Quarter",
+      "Round",
+      "Flip",
+      "Heads",
+      "Tails",
+      "Metal",
+      "Change",
+      "Dime"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Dollar",
+    "banned": [
+      "Money",
+      "Bill",
+      "Cash",
+      "Cents",
+      "Green",
+      "Washington",
+      "Buck",
+      "Pay",
+      "Store",
+      "Price"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Shop",
+    "banned": [
+      "Store",
+      "Buy",
+      "Sell",
+      "Money",
+      "Mall",
+      "Owner",
+      "Open",
+      "Closed",
+      "Window",
+      "Cart"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Buy",
+    "banned": [
+      "Purchase",
+      "Sell",
+      "Pay",
+      "Store",
+      "Money",
+      "Shop",
+      "Spend",
+      "Get",
+      "Price",
+      "Cash"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Sell",
+    "banned": [
+      "Buy",
+      "Money",
+      "Sale",
+      "Price",
+      "Customer",
+      "Store",
+      "Trade",
+      "Market",
+      "Give",
+      "Shop"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Job",
+    "banned": [
+      "Work",
+      "Boss",
+      "Pay",
+      "Career",
+      "Office",
+      "Money",
+      "Hire",
+      "Interview",
+      "Fired",
+      "Employee"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Rich",
+    "banned": [
+      "Money",
+      "Poor",
+      "Wealthy",
+      "Millionaire",
+      "Gold",
+      "Mansion",
+      "Fancy",
+      "Bank",
+      "Lots",
+      "Famous"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Penny",
+    "banned": [
+      "Cent",
+      "Copper",
+      "Coin",
+      "Lincoln",
+      "Money",
+      "Brown",
+      "Wishing well",
+      "Jar",
+      "Nickel",
+      "Lucky"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Price",
+    "banned": [
+      "Cost",
+      "Tag",
+      "Money",
+      "How much",
+      "Dollar",
+      "Expensive",
+      "Cheap",
+      "Pay",
+      "Sale",
+      "Store"
+    ],
+    "score": 1,
+    "themes": [
+      "Business"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Rules",
+    "banned": [
+      "Follow",
+      "Break",
+      "Game",
+      "Law",
+      "Teacher",
+      "Obey",
+      "Allowed",
+      "Must",
+      "Order",
+      "Play"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Bad guy",
+    "banned": [
+      "Villain",
+      "Evil",
+      "Good",
+      "Hero",
+      "Movie",
+      "Mean",
+      "Robber",
+      "Criminal",
+      "Jail",
+      "Boo"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Steal",
+    "banned": [
+      "Take",
+      "Thief",
+      "Rob",
+      "Money",
+      "Without asking",
+      "Wrong",
+      "Jail",
+      "Police",
+      "Burglar",
+      "Mine"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Lie",
+    "banned": [
+      "Truth",
+      "Fib",
+      "Fake",
+      "Tell",
+      "Honest",
+      "Pinocchio",
+      "Nose",
+      "Trust",
+      "Wrong",
+      "Pretend"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Truth",
+    "banned": [
+      "Lie",
+      "Honest",
+      "Real",
+      "Fact",
+      "Tell",
+      "False",
+      "Dare",
+      "Nothing but",
+      "Swear",
+      "Promise"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Cheat",
+    "banned": [
+      "Rules",
+      "Test",
+      "Copy",
+      "Game",
+      "Unfair",
+      "Lie",
+      "Peek",
+      "Win",
+      "Break",
+      "Caught"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Time-out",
+    "banned": [
+      "Corner",
+      "Punishment",
+      "Sit",
+      "Naughty",
+      "Bad",
+      "Kids",
+      "Chair",
+      "Minutes",
+      "Parent",
+      "Behave"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Bully",
+    "banned": [
+      "Mean",
+      "Push",
+      "Pick on",
+      "Tease",
+      "Recess",
+      "Tough",
+      "Kids",
+      "Teacher",
+      "Stand up",
+      "Lunch money"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Security guard",
+    "banned": [
+      "Mall",
+      "Bank",
+      "Protect",
+      "Watch",
+      "Uniform",
+      "Police",
+      "Night",
+      "Building",
+      "Badge",
+      "Safe"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Tattletale",
+    "banned": [
+      "Snitch",
+      "Tell",
+      "Teacher",
+      "Mom",
+      "Trouble",
+      "Rat",
+      "Kids",
+      "Brother",
+      "Sister",
+      "Blame"
+    ],
+    "score": 1,
+    "themes": [
+      "History and Myth"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.032
+  },
+  {
+    "word": "Apple pie",
+    "banned": [
+      "Dessert",
+      "American",
+      "Crust",
+      "Cinnamon",
+      "Slice",
+      "Baked",
+      "Fruit",
+      "Ice cream",
+      "Lattice",
+      "Grandma"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Whipped cream",
+    "banned": [
+      "Topping",
+      "Can",
+      "Spray",
+      "Fluffy",
+      "White",
+      "Sundae",
+      "Dessert",
+      "Strawberries",
+      "Pie",
+      "Dollop"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Dinner rolls",
+    "banned": [
+      "Bread",
+      "Butter",
+      "Basket",
+      "Soft",
+      "Buns",
+      "Warm",
+      "Table",
+      "Yeast",
+      "Baked",
+      "Meal"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  },
+  {
+    "word": "Drumstick",
+    "banned": [
+      "Chicken",
+      "Leg",
+      "Turkey",
+      "Bone",
+      "Fried",
+      "Meat",
+      "Thigh",
+      "Bucket",
+      "Wing",
+      "Barbecue"
+    ],
+    "score": 1,
+    "themes": [
+      "Everyday Life"
+    ],
+    "allCards": true,
+    "allCardsWeight": 0.0119
+  }
+]

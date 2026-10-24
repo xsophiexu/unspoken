@@ -1,0 +1,1225 @@
+{
+  "category": "Halloween",
+  "cards": [
+    {
+      "word": "Boo",
+      "banned": [
+        "Scare",
+        "Ghost",
+        "Jump",
+        "Surprise",
+        "Startle",
+        "Shout",
+        "Halloween",
+        "Frighten",
+        "Yell",
+        "Gotcha"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Candy",
+      "banned": [
+        "Sweet",
+        "Sugar",
+        "Chocolate",
+        "Halloween",
+        "Treat",
+        "Lollipop",
+        "Dentist",
+        "Bar",
+        "Trick or treat",
+        "Gummy"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Costume",
+      "banned": [
+        "Dress up",
+        "Halloween",
+        "Mask",
+        "Outfit",
+        "Wear",
+        "Party",
+        "Pretend",
+        "Character",
+        "Wig",
+        "Disguise"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Ghost",
+      "banned": [
+        "Boo",
+        "Sheet",
+        "Spirit",
+        "Haunted",
+        "Scary",
+        "White",
+        "Dead",
+        "Halloween",
+        "Spooky",
+        "Float"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Gummy worms",
+      "banned": [
+        "Candy",
+        "Sour",
+        "Chewy",
+        "Jelly",
+        "Wriggly",
+        "Gelatin",
+        "Colorful",
+        "Bait",
+        "Dirt cup",
+        "Sweets"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Halloween",
+      "banned": [
+        "Costume",
+        "Candy",
+        "October",
+        "Trick or treat",
+        "Scary",
+        "Pumpkin",
+        "Ghost",
+        "Witch",
+        "Spooky",
+        "Night"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Howl",
+      "banned": [
+        "Wolf",
+        "Moon",
+        "Cry",
+        "Bark",
+        "Dog",
+        "Night",
+        "Wail",
+        "Coyote",
+        "Loud",
+        "Werewolf"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Monster",
+      "banned": [
+        "Scary",
+        "Creature",
+        "Halloween",
+        "Under the bed",
+        "Closet",
+        "Beast",
+        "Big",
+        "Teeth",
+        "Frankenstein",
+        "Ugly"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Pumpkin",
+      "banned": [
+        "Orange",
+        "Halloween",
+        "Carve",
+        "Pie",
+        "Jack-o'-lantern",
+        "Patch",
+        "Squash",
+        "Fall",
+        "Seeds",
+        "Round"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Skull",
+      "banned": [
+        "Bones",
+        "Head",
+        "Skeleton",
+        "Pirate flag",
+        "Pirate",
+        "Dead",
+        "Teeth",
+        "Eyes",
+        "Halloween",
+        "Brain"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Slime",
+      "banned": [
+        "Goo",
+        "Green",
+        "Sticky",
+        "Gooey",
+        "Ooze",
+        "Gross",
+        "Wet",
+        "Snail",
+        "Toy",
+        "Glue"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Spider",
+      "banned": [
+        "Eight",
+        "Legs",
+        "Web",
+        "Bug",
+        "Creepy",
+        "Scary",
+        "Insect",
+        "Itsy bitsy",
+        "Tarantula",
+        "Crawl"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Witch's hat",
+      "banned": [
+        "Pointy",
+        "Black",
+        "Wizard",
+        "Halloween",
+        "Brim",
+        "Costume",
+        "Wear",
+        "Cone",
+        "Broom",
+        "Headwear"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Candy bucket",
+      "banned": [
+        "Pumpkin",
+        "Halloween",
+        "Trick or treat",
+        "Loot",
+        "Bag",
+        "Carry",
+        "Orange",
+        "Fill",
+        "Kids",
+        "Pail"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Candy corn",
+      "banned": [
+        "Halloween",
+        "Wax",
+        "Orange",
+        "Yellow",
+        "Sugar",
+        "Triangle",
+        "Chewy",
+        "Sweet",
+        "Hate",
+        "Kernel"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Cape",
+      "banned": [
+        "Superhero",
+        "Vampire",
+        "Cloak",
+        "Back",
+        "Fly",
+        "Costume",
+        "Red",
+        "Dracula",
+        "Wear",
+        "Batman"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Caramel apple",
+      "banned": [
+        "Toffee",
+        "Fairground",
+        "Stick",
+        "Sticky",
+        "Fall",
+        "Halloween",
+        "Sweet",
+        "Fair",
+        "Nuts",
+        "Dip"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Cobweb",
+      "banned": [
+        "Spider",
+        "Dusty",
+        "Corner",
+        "Haunted house",
+        "Old",
+        "Halloween",
+        "Sticky",
+        "Attic",
+        "Silk",
+        "Abandoned"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Coffin",
+      "banned": [
+        "Vampire",
+        "Dead",
+        "Box",
+        "Body",
+        "Funeral",
+        "Buried",
+        "Casket",
+        "Lid",
+        "Wood",
+        "Dracula"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Creaky door",
+      "banned": [
+        "Squeak",
+        "Hinge",
+        "Open",
+        "Noise",
+        "Haunted",
+        "Old",
+        "Slowly",
+        "Oil",
+        "Spooky",
+        "Sound"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Creepy-crawly",
+      "banned": [
+        "Bug",
+        "Insect",
+        "Spider",
+        "Legs",
+        "Gross",
+        "Worm",
+        "Wriggle",
+        "Tiny",
+        "Beetle",
+        "Shiver"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Face paint",
+      "banned": [
+        "Colors",
+        "Cheeks",
+        "Kids",
+        "Fair",
+        "Costume",
+        "Makeup",
+        "Tiger",
+        "Butterfly",
+        "Brush",
+        "Party"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Fangs",
+      "banned": [
+        "Teeth",
+        "Vampire",
+        "Sharp",
+        "Bite",
+        "Snake",
+        "Dracula",
+        "Pointy",
+        "Fake",
+        "Blood",
+        "Wolf"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Full moon",
+      "banned": [
+        "Lunar",
+        "Round",
+        "Night",
+        "Werewolf",
+        "Bright",
+        "Howl",
+        "Month",
+        "Night sky",
+        "Circle",
+        "Phase"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Glow-in-the-dark",
+      "banned": [
+        "Light",
+        "Shine",
+        "Night",
+        "Neon",
+        "Stars",
+        "Ceiling",
+        "Bright",
+        "Lights off",
+        "Stickers",
+        "Green"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Goosebumps",
+      "banned": [
+        "Chills",
+        "Skin",
+        "Cold",
+        "Scared",
+        "Hair",
+        "Arm",
+        "Shiver",
+        "Fear",
+        "R.L. Stine",
+        "Creepy"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Graveyard",
+      "banned": [
+        "Cemetery",
+        "Tombstone",
+        "Dead",
+        "Buried",
+        "Headstones",
+        "Spooky",
+        "Halloween",
+        "Night",
+        "Bodies",
+        "Church"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Grim Reaper",
+      "banned": [
+        "Death",
+        "Scythe",
+        "Hood",
+        "Skeleton",
+        "Soul",
+        "Black",
+        "Cloak",
+        "Afterlife",
+        "Angel of death",
+        "Hourglass"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Jack-o'-lantern",
+      "banned": [
+        "Pumpkin",
+        "Carve",
+        "Halloween",
+        "Face",
+        "Candle",
+        "Glow",
+        "Porch",
+        "Orange",
+        "Spooky",
+        "Light"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Nightmare",
+      "banned": [
+        "Dream",
+        "Scary",
+        "Bad",
+        "Sleep",
+        "Wake",
+        "Bed",
+        "Freddy Krueger",
+        "Monster",
+        "Sweat",
+        "Terror"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Potion",
+      "banned": [
+        "Witch",
+        "Drink",
+        "Bottle",
+        "Magic",
+        "Brew",
+        "Cauldron",
+        "Spell",
+        "Love",
+        "Poison",
+        "Bubble"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Pumpkin carving",
+      "banned": [
+        "Gourd",
+        "Carve",
+        "Knife",
+        "Halloween",
+        "Face",
+        "Seeds",
+        "Jack-o'-lantern",
+        "Gooey",
+        "Design",
+        "Scoop"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Pumpkin patch",
+      "banned": [
+        "Gourds",
+        "Farm",
+        "Pick",
+        "Halloween",
+        "Fall",
+        "Hayride",
+        "Field",
+        "October",
+        "Vine",
+        "Orange"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Raven",
+      "banned": [
+        "Black",
+        "Bird",
+        "Crow",
+        "Poe",
+        "Feathers",
+        "Caw",
+        "Nevermore",
+        "Dark",
+        "Wings",
+        "Omen"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Scarecrow",
+      "banned": [
+        "Birds",
+        "Field",
+        "Straw",
+        "Farm",
+        "Pumpkin",
+        "Crops",
+        "Hat",
+        "Corn",
+        "Stuffed",
+        "Wizard of Oz"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Scaredy-cat",
+      "banned": [
+        "Coward",
+        "Afraid",
+        "Chicken",
+        "Timid",
+        "Brave",
+        "Frightened",
+        "Nervous",
+        "Baby",
+        "Jumpy",
+        "Fearful"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Spell",
+      "banned": [
+        "Magic",
+        "Witch",
+        "Wizard",
+        "Cast",
+        "Words",
+        "Wand",
+        "Curse",
+        "Abracadabra",
+        "Potion",
+        "Charm"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Tarantula",
+      "banned": [
+        "Spider",
+        "Hairy",
+        "Big",
+        "Eight legs",
+        "Fuzzy",
+        "Venom",
+        "Bite",
+        "Pet",
+        "Creepy",
+        "Web"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Tombstone",
+      "banned": [
+        "Grave",
+        "Cemetery",
+        "RIP",
+        "Epitaph",
+        "Name",
+        "Dead",
+        "Headstone",
+        "Buried",
+        "Halloween",
+        "Engraved"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Trapdoor",
+      "banned": [
+        "Floor",
+        "Secret",
+        "Hidden",
+        "Fall",
+        "Hatch",
+        "Below",
+        "Escape",
+        "Attic",
+        "Lever",
+        "Drop"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Trick or treat",
+      "banned": [
+        "Halloween",
+        "Candy",
+        "Door",
+        "Costume",
+        "Knock",
+        "Neighbors",
+        "Bag",
+        "Kids",
+        "Doorbell",
+        "Sweets"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Witch's brew",
+      "banned": [
+        "Cauldron",
+        "Potion",
+        "Stir",
+        "Bubbling",
+        "Green",
+        "Spell",
+        "Ingredients",
+        "Recipe",
+        "Punch",
+        "Magic"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Black widow",
+      "banned": [
+        "Spider",
+        "Venom",
+        "Red",
+        "Hourglass",
+        "Poison",
+        "Bite",
+        "Deadly",
+        "Female",
+        "Web",
+        "Eight"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Bobbing for apples",
+      "banned": [
+        "Fruit",
+        "Water",
+        "Bucket",
+        "Teeth",
+        "Bite",
+        "Halloween",
+        "Party",
+        "Game",
+        "Wet",
+        "Hands"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Boogeyman",
+      "banned": [
+        "Monster",
+        "Closet",
+        "Under bed",
+        "Scary",
+        "Kids",
+        "Afraid",
+        "Dark",
+        "Night",
+        "Bogeyman",
+        "Nightmare"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Cackle",
+      "banned": [
+        "Laugh",
+        "Witch",
+        "Evil",
+        "Loud",
+        "Cluck",
+        "Hen",
+        "Giggle",
+        "Mean",
+        "High-pitched",
+        "Villain"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Corn maze",
+      "banned": [
+        "Labyrinth",
+        "Get lost",
+        "Lost",
+        "Farm",
+        "Fall",
+        "Field",
+        "Paths",
+        "Exit",
+        "October",
+        "Stalks"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Costume contest",
+      "banned": [
+        "Best",
+        "Prize",
+        "Dress up",
+        "Judge",
+        "Winner",
+        "Outfit",
+        "Party",
+        "Vote",
+        "Compete",
+        "Creative"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Costume party",
+      "banned": [
+        "Dressed up",
+        "Dress up",
+        "Fancy dress",
+        "Halloween",
+        "Theme",
+        "Outfit",
+        "Mask",
+        "Prize",
+        "Guests",
+        "Character"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Dry ice",
+      "banned": [
+        "Smoke",
+        "Fog",
+        "Cold",
+        "Frozen",
+        "Carbon dioxide",
+        "Gloves",
+        "Bubbling",
+        "Mist",
+        "Solid",
+        "Burn"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Fake blood",
+      "banned": [
+        "Red",
+        "Costume",
+        "Halloween",
+        "Gross",
+        "Drip",
+        "Makeup",
+        "Vampire",
+        "Zombie",
+        "Movie",
+        "Ketchup"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Fog machine",
+      "banned": [
+        "Haze",
+        "Smoke",
+        "Haunted house",
+        "Halloween",
+        "Spooky",
+        "Party",
+        "Stage",
+        "Mist",
+        "Dry ice",
+        "Effect"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Fun-size",
+      "banned": [
+        "Mini",
+        "Small",
+        "Candy bar",
+        "Wrapper",
+        "Tiny",
+        "Trick or treat",
+        "Share",
+        "Snack",
+        "Little",
+        "Bag"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Ghost tour",
+      "banned": [
+        "Haunted",
+        "Walk",
+        "Guide",
+        "Spooky",
+        "Night",
+        "History",
+        "Spirits",
+        "Town",
+        "Stories",
+        "Lantern"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Hayride",
+      "banned": [
+        "Tractor",
+        "Wagon",
+        "Straw",
+        "Fall",
+        "Farm",
+        "Bales",
+        "Haunted",
+        "Bumpy",
+        "Pumpkin",
+        "October"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Mad scientist",
+      "banned": [
+        "Crazy",
+        "Lab",
+        "Experiment",
+        "Frankenstein",
+        "Evil",
+        "Coat",
+        "Hair",
+        "Doc Brown",
+        "Cackle",
+        "Invention"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Monster Mash",
+      "banned": [
+        "Song",
+        "Dance",
+        "Graveyard",
+        "Halloween",
+        "Party",
+        "Hit",
+        "Frankenstein",
+        "Twist",
+        "Lab",
+        "Record"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Secret passage",
+      "banned": [
+        "Hidden",
+        "Tunnel",
+        "Bookshelf",
+        "Wall",
+        "Door",
+        "Castle",
+        "Lever",
+        "Escape",
+        "Mansion",
+        "Behind"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Skeleton key",
+      "banned": [
+        "Lock",
+        "Open",
+        "Old",
+        "Any",
+        "Master",
+        "Door",
+        "Unlock",
+        "Iron",
+        "Antique",
+        "Every"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Spooky season",
+      "banned": [
+        "Halloween",
+        "October",
+        "Scary",
+        "Fall",
+        "Ghosts",
+        "Creepy",
+        "Autumn",
+        "Horror",
+        "Movies",
+        "Pumpkins"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Tarot cards",
+      "banned": [
+        "Fortune",
+        "Future",
+        "Deck",
+        "Psychic",
+        "Read",
+        "Death card",
+        "Reading",
+        "Mystic",
+        "Predict",
+        "Draw"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Toilet paper prank",
+      "banned": [
+        "TP",
+        "Trees",
+        "House",
+        "Roll",
+        "Throw",
+        "Halloween",
+        "Teenagers",
+        "Mess",
+        "Yard",
+        "Mischief"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Day of the Dead",
+      "banned": [
+        "Mexico",
+        "Skulls",
+        "Halloween",
+        "Altar",
+        "Ancestors",
+        "Sugar skull",
+        "Marigolds",
+        "Remember",
+        "November",
+        "Death"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Gargoyle",
+      "banned": [
+        "Statue",
+        "Stone",
+        "Church",
+        "Roof",
+        "Gutter",
+        "Ugly",
+        "Cathedral",
+        "Wings",
+        "Notre-Dame",
+        "Guard"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Headless Horseman",
+      "banned": [
+        "Sleepy Hollow",
+        "Ichabod",
+        "Pumpkin",
+        "Ghost",
+        "Ride",
+        "Halloween",
+        "Neck",
+        "Scary",
+        "Washington Irving",
+        "Legend"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Heebie-jeebies",
+      "banned": [
+        "Creeps",
+        "Shiver",
+        "Nervous",
+        "Uneasy",
+        "Willies",
+        "Goosebumps",
+        "Spooked",
+        "Chills",
+        "Jitters",
+        "Calm"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Hocus-pocus",
+      "banned": [
+        "Magic",
+        "Spell",
+        "Abracadabra",
+        "Trick",
+        "Wand",
+        "Magician",
+        "Words",
+        "Sanderson",
+        "Nonsense",
+        "Witch"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Poltergeist",
+      "banned": [
+        "Ghost",
+        "Haunted",
+        "Noisy",
+        "Objects",
+        "Move",
+        "Throw",
+        "Spirit",
+        "Movie",
+        "Furniture",
+        "Invisible"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Sugar skull",
+      "banned": [
+        "Skeleton",
+        "Day of the Dead",
+        "Mexico",
+        "Decorated",
+        "Colorful",
+        "Candy",
+        "Face paint",
+        "Bones",
+        "Flowers",
+        "Sweet"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Doppelgänger",
+      "banned": [
+        "Double",
+        "Twin",
+        "Lookalike",
+        "Identical",
+        "German",
+        "Copy",
+        "Clone",
+        "Evil twin",
+        "Mirror",
+        "Stranger"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Séance",
+      "banned": [
+        "Spirits",
+        "Dead",
+        "Contact",
+        "Medium",
+        "Table",
+        "Candles",
+        "Hold hands",
+        "Ghost",
+        "Communicate",
+        "Circle"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Things that go bump in the night",
+      "banned": [
+        "Noises",
+        "Ghosts",
+        "Monsters",
+        "Dark",
+        "Scared",
+        "Bed",
+        "Spooky",
+        "Creatures",
+        "Sounds",
+        "Afraid"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Witching hour",
+      "banned": [
+        "Midnight",
+        "Night",
+        "Magic",
+        "Clock",
+        "Late",
+        "Spooky",
+        "Strike",
+        "Darkest",
+        "Ghosts",
+        "Twelve"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Will-o'-the-wisp",
+      "banned": [
+        "Light",
+        "Swamp",
+        "Marsh",
+        "Glow",
+        "Ghostly",
+        "Follow",
+        "Lead astray",
+        "Flicker",
+        "Folklore",
+        "Fairy"
+      ],
+      "score": 6
+    },
+    {
+      "word": "Samhain",
+      "banned": [
+        "Halloween",
+        "Celtic",
+        "Gaelic",
+        "Pagan",
+        "Harvest",
+        "End",
+        "October",
+        "Spirits",
+        "Festival",
+        "Winter"
+      ],
+      "score": 7
+    }
+  ],
+  "freeBankWords": [
+    "Witch",
+    "Bat",
+    "Haunted house",
+    "Skeleton",
+    "Zombie",
+    "Vampire",
+    "Werewolf",
+    "Black cat",
+    "Cauldron",
+    "Broomstick",
+    "Spider web",
+    "Mummy",
+    "Frankenstein",
+    "Crystal ball",
+    "Ghost story",
+    "Jump scare",
+    "Magic wand",
+    "Friday the 13th"
+  ]
+}

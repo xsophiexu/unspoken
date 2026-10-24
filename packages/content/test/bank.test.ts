@@ -1,8 +1,8 @@
-import { CATEGORY_IDS, DIFFICULTY_IDS, LEGACY_DIFFICULTIES, cardsFor, categoriesInBank, dealFromBank, normalizeBank, type BankCardInput } from '@unspoken/core';
+import { ALL_DIFFICULTY_IDS, CATEGORY_IDS, DIFFICULTY_IDS, LEGACY_DIFFICULTIES, cardsFor, categoriesInBank, dealFromBank, normalizeBank, type BankCardInput } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
 import raw from '../data/word-banks.json';
-import { bank, en } from '../src';
+import { bank, en, extendedBank } from '../src';
 
 // Checks on the shipped word bank, so a bad edit to data/word-banks.json fails before it ships.
 describe('shipped word bank', () => {
@@ -58,9 +58,10 @@ describe('shipped word bank', () => {
 });
 
 describe('Difficulty info examples', () => {
+  // Easy's words come from the website's bank, the only one with Easy cards.
   it('names a word from the bank at each difficulty, so the ladder matches what players draw', () => {
     const misplaced = en.difficultyInfo.examples.flatMap(({ words }) =>
-      DIFFICULTY_IDS.filter((d) => !bank.some((c) => c.word === words[d] && c.difficulty === d)).map((d) => `${words[d]} (${d})`),
+      ALL_DIFFICULTY_IDS.filter((d) => !extendedBank.some((c) => c.word === words[d] && c.difficulty === d)).map((d) => `${words[d]} (${d})`),
     );
     expect(misplaced).toEqual([]);
   });

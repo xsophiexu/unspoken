@@ -1,6 +1,6 @@
 'use client';
 
-import { bank, en } from '@unspoken/content';
+import { en } from '@unspoken/content';
 import { deckSize, plural, type Difficulty, type RoundState } from '@unspoken/core';
 import { layout } from '@unspoken/design-tokens';
 import { useId } from 'react';
@@ -8,6 +8,7 @@ import { useId } from 'react';
 import { DifficultyGrid } from '@/components/game/DifficultyGrid';
 import { Button } from '@/components/ui/Button';
 import { Sheet } from '@/components/ui/Sheet';
+import { bank } from '@/lib/catalog';
 
 import { SheetHead } from './SheetHead';
 import styles from './sheets.module.css';

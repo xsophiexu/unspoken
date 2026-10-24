@@ -1,7 +1,7 @@
 'use client';
 
 import { en } from '@unspoken/content';
-import { DIFFICULTY_IDS, allCategoriesPicked, format, plural, type Category, type Difficulty } from '@unspoken/core';
+import { allCategoriesPicked, format, plural, type Category, type Difficulty } from '@unspoken/core';
 import { useId } from 'react';
 
 import { SheetHead } from '@/components/sheets/SheetHead';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/Button';
 import { Choice } from '@/components/ui/Choice';
 import { Icon } from '@/components/ui/Icon';
 import { Sheet } from '@/components/ui/Sheet';
+import { difficultyIds } from '@/lib/catalog';
 import { cx, text } from '@/lib/ui';
 
 import styles from './SetupSheets.module.css';
@@ -103,7 +104,7 @@ export function DifficultyInfoSheet({ onClose, picked }: { onClose: () => void; 
           </tr>
         </thead>
         <tbody>
-          {DIFFICULTY_IDS.map((d) => {
+          {difficultyIds.map((d) => {
             const selected = picked.includes(d);
             return (
               <tr key={d} className={cx(selected && styles.picked)} aria-current={selected || undefined}>

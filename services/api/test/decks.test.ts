@@ -1,5 +1,5 @@
 import { bank } from '@unspoken/content';
-import { CATEGORY_IDS, type Card } from '@unspoken/core';
+import { CATEGORY_IDS, type Card, type Category } from '@unspoken/core';
 import { describe, expect, it } from 'vitest';
 
 import { failure, testApp } from './fixtures';
@@ -41,14 +41,15 @@ describe('POST /v1/decks', () => {
 
   it('deals only the chosen themes, without repeats, including cards kept out of All cards', async () => {
     const card = keptOut[0]!;
-    const themes = [...card.categories, CATEGORY_IDS.find((t) => !card.categories.includes(t))!];
+    const themes = [...CATEGORY_IDS.filter((t) => card.categories.includes(t)), CATEGORY_IDS.find((t) => !card.categories.includes(t))!];
     const deck = await api.dealDeck({ difficulty: 'Expert', categories: themes, seed: 3 });
+    const picked: readonly Category[] = themes;
 
     expect(deck.cards.map((c) => c.id)).toContain(card.id);
     expect(new Set(deck.cards.map((c) => c.id)).size).toBe(deck.cards.length);
     for (const entry of entriesOf(deck.cards)) {
       expect(entry.difficulty).toBe('Expert');
-      expect(entry.categories.some((t) => themes.includes(t))).toBe(true);
+      expect(entry.categories.some((t) => picked.includes(t))).toBe(true);
     }
     const themesDealt = new Set(entriesOf(deck.cards).flatMap((e) => e.categories));
     for (const theme of themes) expect(themesDealt).toContain(theme);

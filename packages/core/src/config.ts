@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, type Category, type Difficulty, type GameSettings, type ModeId } from './types';
+import { CATEGORY_IDS, EXTRA_CATEGORY_IDS, type Category, type Difficulty, type GameSettings, type ModeId } from './types';
 
 // Everything tunable about the rules lives in this one JSON-serializable object, so the service can
 // serve it (GET /v1/config) and clients can run on a served copy. Display text lives in the copy
@@ -187,4 +187,14 @@ export const gameConfig: GameConfig = {
     individual: { clueGiverPoints: 1, guesserPoints: 1, bonus: { on: true, points: 1, minPlayers: 3 } },
     penalty: { on: false, points: { default: 1, min: 1, max: 5 } },
   },
+};
+
+// The website's catalog: gameConfig plus the levels and categories it opts into. Easy (score 1)
+// comes before Normal, plays like it (1:30 rounds, 5 banned words), and Halloween follows the
+// other categories. Everything else is gameConfig's, and the defaults stay Normal with All cards.
+// The Android app and the service stay on gameConfig, so saved Easy or Halloween picks drop out there.
+export const extendedGameConfig: GameConfig = {
+  ...gameConfig,
+  difficulties: [{ id: 'Easy', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 }, ...gameConfig.difficulties],
+  categories: [...CATEGORY_IDS, ...EXTRA_CATEGORY_IDS],
 };

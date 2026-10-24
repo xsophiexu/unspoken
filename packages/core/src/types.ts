@@ -1,6 +1,6 @@
 // Identifiers are const tuples so schemas (zod, JSON) and TypeScript unions share one source.
 
-// Easiest to hardest.
+// Easiest to hardest: the levels every app offers (gameConfig).
 export const DIFFICULTY_IDS = [
   'Normal',
   'Tricky',
@@ -11,10 +11,18 @@ export const DIFFICULTY_IDS = [
   'Master',
   'Legend',
 ] as const;
-export type Difficulty = (typeof DIFFICULTY_IDS)[number];
 
-// The lowest familiarity score (2 to 10) at each level; word bank cards are levelled by score.
+// Levels an app opts into on top of DIFFICULTY_IDS, all easier than Normal: Easy (score 1). The
+// website offers it (extendedGameConfig); the Android app doesn't yet.
+export const EXTRA_DIFFICULTY_IDS = ['Easy'] as const;
+
+// Every level, easiest to hardest.
+export const ALL_DIFFICULTY_IDS = [...EXTRA_DIFFICULTY_IDS, ...DIFFICULTY_IDS] as const;
+export type Difficulty = (typeof ALL_DIFFICULTY_IDS)[number];
+
+// The lowest familiarity score (1 to 10) at each level; word bank cards are levelled by score.
 export const DIFFICULTY_MIN_SCORES: Readonly<Record<Difficulty, number>> = {
+  Easy: 1,
   Normal: 2,
   Tricky: 3,
   Hard: 4,
@@ -38,8 +46,8 @@ export const LEGACY_DIFFICULTIES = {
 } as const satisfies Record<string, Difficulty>;
 export type LegacyDifficulty = keyof typeof LEGACY_DIFFICULTIES;
 
-// Word themes in the order the setup screen lists them. ("Theme" in the UI; "category" in code so it
-// never collides with the visual theme in @unspoken/design-tokens.)
+// Word categories in the order the setup screen lists them, offered by every app. ("Category" in
+// code, never "theme", so it doesn't collide with the visual theme in @unspoken/design-tokens.)
 export const CATEGORY_IDS = [
   'Inner World',
   'Literature and Language',
@@ -59,7 +67,13 @@ export const CATEGORY_IDS = [
   'History and Myth',
   'Fantasy and Sci-Fi',
 ] as const;
-export type Category = (typeof CATEGORY_IDS)[number];
+
+// Seasonal categories an app opts into after CATEGORY_IDS. Their pack cards play only when the
+// category is picked, never in All cards. The website offers them (extendedGameConfig); the Android
+// app doesn't yet.
+export const EXTRA_CATEGORY_IDS = ['Halloween'] as const;
+
+export type Category = (typeof CATEGORY_IDS)[number] | (typeof EXTRA_CATEGORY_IDS)[number];
 
 // Order matches the Modes grid in the designs. Zen was removed; Versus took the Teams tile.
 export const MODE_IDS = ['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader'] as const;

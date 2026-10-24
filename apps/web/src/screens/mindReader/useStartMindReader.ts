@@ -3,6 +3,7 @@
 import { quickPlaySettings, type MindReaderPlay } from '@unspoken/core';
 import { useRouter } from 'next/navigation';
 
+import { config } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { useGame } from '@/state/game';
 
@@ -12,7 +13,7 @@ export function useStartMindReader() {
   const game = useGame();
   const router = useRouter();
   return (play: MindReaderPlay) => {
-    game.newGame(play === 'quick' ? quickPlaySettings(game.settings) : { ...game.settings, mode: 'mindReader' }, play);
+    game.newGame(play === 'quick' ? quickPlaySettings(game.settings, config) : { ...game.settings, mode: 'mindReader' }, play);
     router.push(routes.play);
   };
 }

@@ -1,5 +1,5 @@
 import {
-  DIFFICULTY_IDS,
+  ALL_DIFFICULTY_IDS,
   correctPredictions,
   difficultyLabel,
   hasEasierDifficulty,
@@ -19,6 +19,7 @@ import {
   turnPoints,
   winners,
   type Difficulty,
+  type GameConfig,
   type Lineup,
   type MindReaderRoundState,
   type TurnResult,
@@ -429,30 +430,33 @@ export function predictionChips(state: MindReaderRoundState): { index: number; w
 
 // --- Quick Play difficulty ---------------------------------------------------------------------------
 
-const badges = Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].badge])) as Record<Difficulty, string>;
+const badges = Object.fromEntries(ALL_DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].badge])) as Record<Difficulty, string>;
 
-// The header chip's text: "NORMAL", or "HARD+" for several difficulties.
-export function difficultyBadge(difficulties: readonly Difficulty[]): string {
-  return difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix });
+// The header chip's text: "NORMAL", or "HARD+" for several difficulties. Pass the app's config
+// when it offers more levels than gameConfig (the website's Easy).
+export function difficultyBadge(difficulties: readonly Difficulty[], config?: GameConfig): string {
+  return difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }, config);
 }
 
-const difficultyNames = Object.fromEntries(DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].name])) as Record<Difficulty, string>;
+const difficultyNames = Object.fromEntries(ALL_DIFFICULTY_IDS.map((id) => [id, en.difficulties[id].name])) as Record<Difficulty, string>;
 
 // The picks by name: "Hard", or "Normal+" for several.
-export function difficultyName(difficulties: readonly Difficulty[]): string {
-  return difficultyLabel(difficulties, { names: difficultyNames, mixed: en.difficultyMix });
+export function difficultyName(difficulties: readonly Difficulty[], config?: GameConfig): string {
+  return difficultyLabel(difficulties, { names: difficultyNames, mixed: en.difficultyMix }, config);
 }
 
 // The box on a Quick Play result: after a word that wasn't guessed, lower the difficulty when an
-// easier one exists (none when it's already the easiest); once a new pick is applied, confirm it.
+// easier one exists in the app's levels (none when it's already the easiest); once a new pick is
+// applied, confirm it.
 export function toughPrompt(
   difficulties: readonly Difficulty[],
   { guessed, applied }: { guessed: boolean; applied: boolean },
+  config?: GameConfig,
 ): { title: string; body: string; action: string } | null {
   const q = en.mindReader.quickOver;
-  const name = difficultyName(difficulties);
+  const name = difficultyName(difficulties, config);
   if (applied) return { title: format(q.applied, { name }), body: format(q.appliedNext, { name }), action: q.switchAgain };
-  if (guessed || !hasEasierDifficulty(difficulties)) return null;
+  if (guessed || !hasEasierDifficulty(difficulties, config)) return null;
   return { title: q.tough, body: q.lower, action: q.switch };
 }
 

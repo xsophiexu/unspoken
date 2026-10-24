@@ -1,6 +1,6 @@
 'use client';
 
-import { bank, difficultyRowDetail, en } from '@unspoken/content';
+import { difficultyRowDetail, en } from '@unspoken/content';
 import {
   canStart,
   categoriesInBank,
@@ -8,7 +8,6 @@ import {
   deckSize,
   format,
   formatClock,
-  gameConfig,
   hasSkipSetting,
   hasTimeLimit,
   hasTimerSetting,
@@ -40,6 +39,7 @@ import { MindReaderRounds } from '@/components/mindReader/MindReaderRounds';
 import { StepTop } from '@/components/mindReader/parts';
 import { Section } from '@/components/ui/Section';
 import { VersusSettings } from '@/components/versus/VersusSettings';
+import { bank, config } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { toggleCategory } from '@/lib/settings';
 import { cx, text } from '@/lib/ui';
@@ -48,7 +48,7 @@ import { useGame } from '@/state/game';
 import styles from './screens.module.css';
 
 const copy = en.setup;
-const themes = categoriesInBank(bank);
+const themes = categoriesInBank(bank, config);
 const summaryCopy = { all: en.themes.all, names: en.categories, many: en.themes.many };
 
 type Open = 'categories' | 'difficulty' | 'info' | 'smallDeck' | null;
@@ -70,8 +70,8 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   const turn = game.versus;
   const cards = deckSize(bank, difficulties, categories);
   const cardsLabel = (n: number) => plural(n, en.units.cards);
-  const summary = categoriesSummary(categories, summaryCopy);
-  const difficultyRow = difficultyRowDetail(difficulties, cards);
+  const summary = categoriesSummary(categories, summaryCopy, config);
+  const difficultyRow = difficultyRowDetail(difficulties, cards, config);
   const categoriesRow = (
     <ChevronRow
       title={copy.categories}
@@ -97,7 +97,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
     update({ categories: tap.categories });
   };
 
-  const limits = { min: formatClock(gameConfig.minRoundSeconds), max: formatClock(gameConfig.maxRoundSeconds) };
+  const limits = { min: formatClock(config.minRoundSeconds), max: formatClock(config.maxRoundSeconds) };
   // The time is checked once the box loses focus; Start waits while it is out of range.
   const timeOutOfRange = hasTimeLimit(settings) && !isTimeLimitInRange(roundSeconds) && !timerFocused;
   const turnOutOfRange = versus && !turn.noTimeLimit && !isTimeLimitInRange(turn.turnSeconds) && !timerFocused;
@@ -134,7 +134,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
       />
       {timeOutOfRange && <TimerNote>{format(copy.timerOutOfRange, limits)}</TimerNote>}
       {/* Mind Reader scores faster guesses higher; with no limit every guess scores the same. */}
-      {custom && noTimeLimit && <p className={cx(styles.muted, text('small'))}>{format(en.mindReader.settings.flatGuess, { points: gameConfig.mindReader.scoring.guess })}</p>}
+      {custom && noTimeLimit && <p className={cx(styles.muted, text('small'))}>{format(en.mindReader.settings.flatGuess, { points: config.mindReader.scoring.guess })}</p>}
     </Section>
   );
 
@@ -176,7 +176,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
       )}
 
       {!versus && (
-        <DifficultyTiles picked={difficulties} categories={categories} onToggle={(next) => setSettings((current) => toggleDifficulty(current, next))} onInfo={() => setOpen('info')} />
+        <DifficultyTiles picked={difficulties} categories={categories} onToggle={(next) => setSettings((current) => toggleDifficulty(current, next, config))} onInfo={() => setOpen('info')} />
       )}
 
       {!custom && timerSection}
@@ -184,7 +184,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
       {hasSkipSetting(mode) && !versus && (
         <Section label={copy.skips} aside={copy.skipsHint}>
           <Grid columns={layout.grid.skips} role="radiogroup" aria-label={copy.skips}>
-            {gameConfig.skipOptions.map((option) => (
+            {config.skipOptions.map((option) => (
               <Choice
                 key={String(option)}
                 type="radio"

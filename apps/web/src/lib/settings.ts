@@ -1,10 +1,8 @@
 import {
-  CATEGORY_IDS,
   MODE_IDS,
   clampTimeLimit,
   defaultRoundSeconds,
   defaultSettings,
-  gameConfig,
   hardestDifficulty,
   modeRules,
   parseDifficulties,
@@ -13,20 +11,25 @@ import {
 } from '@unspoken/core';
 import { z } from 'zod';
 
+import { config as webConfig } from './catalog';
+
 export const SETTINGS_STORAGE_KEY = 'unspoken.settings';
 
 // Reads saved game settings, keeping each valid field and defaulting the rest (like
 // parseThemeSelection does for the theme). A mode that is no longer available falls back too, an
 // old level name maps to its level (Expert 1 → Hard), and a single saved difficulty becomes a
-// one-item list.
-export function parseSettings(value: unknown, config = gameConfig): GameSettings {
+// one-item list. Categories the website doesn't offer drop out, keeping the rest.
+export function parseSettings(value: unknown, config = webConfig): GameSettings {
   const fallback = defaultSettings(config);
   const schema = z.object({
     mode: z
       .enum(MODE_IDS)
       .refine((mode) => modeRules(mode, config).available)
       .catch(fallback.mode),
-    categories: z.array(z.enum(CATEGORY_IDS)).catch([...fallback.categories]),
+    categories: z
+      .array(z.unknown())
+      .transform((saved) => config.categories.filter((c) => saved.includes(c)))
+      .catch([...fallback.categories]),
     // A time saved under older, wider limits moves to the nearest limit (15:00 → 10:00).
     roundSeconds: z
       .number()
@@ -54,7 +57,7 @@ export function parseSettings(value: unknown, config = gameConfig): GameSettings
 
 // Setup's theme chips: All cards (null) clears the chosen themes; a theme toggles, and clearing the
 // last one means All cards again. Themes stay in catalog order.
-export function toggleCategory(categories: readonly Category[], category: Category | null, config = gameConfig): Category[] {
+export function toggleCategory(categories: readonly Category[], category: Category | null, config = webConfig): Category[] {
   if (category === null) return [];
   const next = categories.includes(category) ? categories.filter((c) => c !== category) : [...categories, category];
   return config.categories.filter((c) => next.includes(c));

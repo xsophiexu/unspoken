@@ -1,11 +1,12 @@
 import { en } from '@unspoken/content';
-import { DIFFICULTY_IDS, type Difficulty } from '@unspoken/core';
+import type { Difficulty } from '@unspoken/core';
 import { textStyles } from '@unspoken/design-tokens';
 import type { ReactNode } from 'react';
 
 import { Choice, Tile } from '@/components/ui/Choice';
 import { FittedText } from '@/components/ui/FittedText';
 import { Grid } from '@/components/ui/Grid';
+import { difficultyIds } from '@/lib/catalog';
 
 type DifficultyGridProps = {
   columns: number;
@@ -20,11 +21,11 @@ type DifficultyGridProps = {
   detail?: (difficulty: Difficulty) => ReactNode;
 };
 
-// The eight levels in a grid. Long names shrink to fit narrow tiles.
+// The levels in a grid (Easy, then Normal to Legend). Long names shrink to fit narrow tiles.
 export function DifficultyGrid({ columns, current, onPick, kind, label, detail }: DifficultyGridProps) {
   return (
     <Grid columns={columns} role="group" aria-label={label}>
-      {DIFFICULTY_IDS.map((id) => {
+      {difficultyIds.map((id) => {
         const name = <FittedText text={en.difficulties[id].name} max={textStyles.optionTitle.size} min={textStyles.small.size} />;
         return kind === 'pick' ? (
           <Choice key={id} type="checkbox" name="difficulty" look="tile" mark checked={current.includes(id)} onChange={() => onPick(id)} detail={detail?.(id)}>

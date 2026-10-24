@@ -64,8 +64,8 @@ function watchingTeams(lineup: Lineup, roles: VersusRoles): string {
 // --- Game settings -------------------------------------------------------------------------------
 
 // The Difficulty row: "Normal · 638 cards", or "Hard+ · 1,743 cards" for several.
-export function difficultyRowDetail(difficulties: readonly Difficulty[], cards: number): { detail: string; a11y: string } {
-  const name = difficultyName(difficulties);
+export function difficultyRowDetail(difficulties: readonly Difficulty[], cards: number, config?: GameConfig): { detail: string; a11y: string } {
+  const name = difficultyName(difficulties, config);
   return { detail: format(v.settings.difficultyDetail, { name, cards: plural(cards, en.units.cards) }), a11y: format(en.a11y.difficultyRow, { name }) };
 }
 

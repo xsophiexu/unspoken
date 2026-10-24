@@ -1,7 +1,7 @@
 import { gameConfig, type GameConfig } from './config';
 import { dealDeck, seededRandom } from './random';
 import { modeRules, toDifficulty } from './rules';
-import { DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type ModeId } from './types';
+import { ALL_DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type ModeId } from './types';
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
 function capitalize(word: string): string {
@@ -18,10 +18,10 @@ function cardId(word: string): string {
     .replace(/^-+|-+$/g, '');
 }
 
-// The level for a familiarity score: 2 is Normal, 3 Tricky, up to 9 and 10 at Legend.
+// The level for a familiarity score: 1 is Easy, 2 Normal, 3 Tricky, up to 9 and 10 at Legend.
 export function difficultyForScore(score: number): Difficulty | undefined {
   if (!Number.isFinite(score)) return undefined;
-  return [...DIFFICULTY_IDS].reverse().find((id) => score >= DIFFICULTY_MIN_SCORES[id]) ?? DIFFICULTY_IDS[0];
+  return [...ALL_DIFFICULTY_IDS].reverse().find((id) => score >= DIFFICULTY_MIN_SCORES[id]) ?? ALL_DIFFICULTY_IDS[0];
 }
 
 // A bank card's level: from its score, or from its difficulty name (current or legacy) when it has

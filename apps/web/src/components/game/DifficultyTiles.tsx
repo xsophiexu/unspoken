@@ -1,12 +1,13 @@
 'use client';
 
-import { bank, difficultyPickNote, en } from '@unspoken/content';
+import { difficultyPickNote, en } from '@unspoken/content';
 import { deckSize, plural, type Category, type Difficulty } from '@unspoken/core';
 import { layout } from '@unspoken/design-tokens';
 
 import { DifficultyGrid } from '@/components/game/DifficultyGrid';
 import { Icon } from '@/components/ui/Icon';
 import { Section } from '@/components/ui/Section';
+import { bank } from '@/lib/catalog';
 
 import styles from './DifficultyTiles.module.css';
 

@@ -17,6 +17,7 @@ const modes: Record<ModeId, { name: string; sub: string }> = {
 };
 
 const difficulties: Record<Difficulty, { name: string; badge: string }> = {
+  Easy: { name: 'Easy', badge: 'EASY' },
   Normal: { name: 'Normal', badge: 'NORMAL' },
   Tricky: { name: 'Tricky', badge: 'TRICKY' },
   Hard: { name: 'Hard', badge: 'HARD' },
@@ -31,19 +32,19 @@ const difficulties: Record<Difficulty, { name: string; badge: string }> = {
 const difficultyMixed = '{easiest}+';
 
 // The Difficulty info sheet on New game: the same category at each difficulty, every word from the
-// word bank at that difficulty.
+// word bank at that difficulty (Easy's from the website's bank, which has Easy cards).
 const difficultyExamples: { category: string; words: Record<Difficulty, string> }[] = [
   {
     category: 'FOOD',
-    words: { Normal: 'Leftovers', Tricky: 'Appetizer', Hard: 'Al dente', Tough: 'Umami', Expert: 'Fermentation', Elite: 'Sous vide', Master: 'Mise en place', Legend: 'Roux' },
+    words: { Easy: 'Sandwich', Normal: 'Leftovers', Tricky: 'Appetizer', Hard: 'Al dente', Tough: 'Umami', Expert: 'Fermentation', Elite: 'Sous vide', Master: 'Mise en place', Legend: 'Roux' },
   },
   {
     category: 'BOOKS',
-    words: { Normal: 'Rhyme', Tricky: 'Cliffhanger', Hard: 'Prologue', Tough: 'Cliché', Expert: 'Pseudonym', Elite: 'Loanword', Master: 'Allusion', Legend: 'In medias res' },
+    words: { Easy: 'Picture book', Normal: 'Rhyme', Tricky: 'Cliffhanger', Hard: 'Prologue', Tough: 'Cliché', Expert: 'Pseudonym', Elite: 'Loanword', Master: 'Allusion', Legend: 'In medias res' },
   },
   {
     category: 'WEATHER',
-    words: { Normal: 'Cloud', Tricky: 'Humidity', Hard: 'Typhoon', Tough: 'Cold front', Expert: 'Trade winds', Elite: 'Wind shear', Master: 'Rain shadow', Legend: 'Katabatic wind' },
+    words: { Easy: 'Rain', Normal: 'Cloud', Tricky: 'Humidity', Hard: 'Typhoon', Tough: 'Cold front', Expert: 'Trade winds', Elite: 'Wind shear', Master: 'Rain shadow', Legend: 'Katabatic wind' },
   },
 ];
 
@@ -66,6 +67,7 @@ const categories: Record<Category, string> = {
   'Sports and Games': 'Sports and Games',
   'History and Myth': 'History and Myth',
   'Fantasy and Sci-Fi': 'Fantasy and Sci-Fi',
+  Halloween: 'Halloween',
 };
 
 const feedbackTopics: Record<FeedbackTopic, string> = {

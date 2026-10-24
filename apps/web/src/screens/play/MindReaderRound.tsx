@@ -30,6 +30,7 @@ import { useEffect, useState } from 'react';
 import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { Card, LabelRow, Note, TeamDot } from '@/components/mindReader/parts';
 import { Button } from '@/components/ui/Button';
+import { config } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
 import { useGame } from '@/state/game';
@@ -68,7 +69,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
 
   const close = () => setSheet(null);
   const startHere = (play: 'quick' | 'practice') =>
-    game.newGame(play === 'quick' ? quickPlaySettings(game.settings) : { ...game.settings, mode: 'mindReader' }, play);
+    game.newGame(play === 'quick' ? quickPlaySettings(game.settings, config) : { ...game.settings, mode: 'mindReader' }, play);
   const details = detailsSheet(state);
   // Quick Play and Practice keep their few lines in the middle of the screen.
   const centered = !custom;
@@ -82,7 +83,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
         layoutStyle={s}
         title={turnTitle(state)}
         subtitle={custom ? undefined : en.modes.mindReader.name}
-        chip={custom ? undefined : <DifficultyChip label={difficultyBadge(difficulties)} onClick={() => setSheet('difficulty')} />}
+        chip={custom ? undefined : <DifficultyChip label={difficultyBadge(difficulties, config)} onClick={() => setSheet('difficulty')} />}
         cards={custom && props.cards ? roleCards(state) : undefined}
         onDetails={custom && props.details ? () => setSheet('details') : undefined}
         onMenu={onMenu}
@@ -278,7 +279,7 @@ export function MindReaderRound({ round: state, layoutStyle: s, blocked, onMenu,
     case 'over': {
       if (!custom) {
         const v = quickOverView(state);
-        const tough = toughPrompt(difficulties, { guessed: state.guessed, applied: pending !== null });
+        const tough = toughPrompt(difficulties, { guessed: state.guessed, applied: pending !== null }, config);
         screen = (
           <MRFrame
             layoutStyle={s}

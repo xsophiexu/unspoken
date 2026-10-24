@@ -184,7 +184,8 @@ describe('New game setup', () => {
     const rows = within(sheet).getAllByRole('row').slice(1);
     const picked = rows.filter((row) => row.getAttribute('aria-current')).map((row) => within(row).getAllByRole('rowheader')[0]!.textContent);
     expect(picked).toEqual(['Normal', 'Legend']);
-    expect(within(rows[2]!).getByText(en.difficultyInfo.examples[0]!.words.Hard)).toBeInTheDocument();
+    expect(within(rows[3]!).getByText(en.difficultyInfo.examples[0]!.words.Hard)).toBeInTheDocument();
+    expect(within(rows[0]!).getByText(en.difficultyInfo.examples[0]!.words.Easy)).toBeInTheDocument();
   });
 
   it('double-tapping All cards highlights every category, and again goes back to All cards', async () => {
