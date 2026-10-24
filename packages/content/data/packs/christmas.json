@@ -1,0 +1,1083 @@
+{
+  "category": "Christmas",
+  "cards": [
+    {
+      "word": "Christmas",
+      "banned": [
+        "Santa",
+        "December",
+        "Presents",
+        "Tree",
+        "Holiday",
+        "Jesus",
+        "Snow",
+        "Gifts",
+        "Carols",
+        "Reindeer"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas at the beach",
+      "banned": [
+        "Summer",
+        "Sand",
+        "Hot",
+        "Santa",
+        "Swimming",
+        "Australia",
+        "December",
+        "Barbecue",
+        "Prawns",
+        "Sunscreen"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas cookies",
+      "banned": [
+        "Biscuits",
+        "Bake",
+        "Santa",
+        "Sprinkles",
+        "Cutter",
+        "Icing",
+        "Shapes",
+        "Milk",
+        "Plate",
+        "Sugar"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas lights",
+      "banned": [
+        "Electric",
+        "Bulbs",
+        "String",
+        "Tree",
+        "House",
+        "Roof",
+        "Twinkle",
+        "Tangled",
+        "Colorful",
+        "Plug"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas movie",
+      "banned": [
+        "Film",
+        "Holiday",
+        "Watch",
+        "Elf",
+        "Home Alone",
+        "December",
+        "Santa",
+        "Cozy",
+        "Hallmark",
+        "Classic"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas pudding",
+      "banned": [
+        "Plum",
+        "Flaming",
+        "Dessert",
+        "Britain",
+        "Dried fruit",
+        "Steamed",
+        "Holly",
+        "Sixpence",
+        "Custard",
+        "Dome"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Christmas tree",
+      "banned": [
+        "Pine",
+        "Ornaments",
+        "Decorate",
+        "Lights",
+        "Star",
+        "Presents",
+        "Fir",
+        "Fake",
+        "Needles",
+        "Angel"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Gingerbread man",
+      "banned": [
+        "Cookie",
+        "Run",
+        "Christmas",
+        "Bake",
+        "Icing",
+        "Catch me",
+        "Fox",
+        "House",
+        "Spice",
+        "Shape"
+      ],
+      "score": 1
+    },
+    {
+      "word": "North Pole",
+      "banned": [
+        "Santa",
+        "Arctic",
+        "Cold",
+        "Ice",
+        "Top of the world",
+        "Top",
+        "Workshop",
+        "Elves",
+        "Polar bear",
+        "Snow"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Pavlova",
+      "banned": [
+        "Meringue",
+        "Dessert",
+        "Cream",
+        "Fruit",
+        "Kiwi",
+        "Christmas",
+        "Ballerina",
+        "Australia",
+        "New Zealand",
+        "Strawberries"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Present",
+      "banned": [
+        "Gift",
+        "Wrap",
+        "Box",
+        "Bow",
+        "Birthday",
+        "Christmas",
+        "Open",
+        "Ribbon",
+        "Surprise",
+        "Give"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Santa Claus",
+      "banned": [
+        "Christmas",
+        "North Pole",
+        "Presents",
+        "Beard",
+        "Red",
+        "Reindeer",
+        "Elves",
+        "Sleigh",
+        "Chimney",
+        "Ho ho ho"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Santa hat",
+      "banned": [
+        "Red",
+        "White",
+        "Pom-pom",
+        "Christmas",
+        "Cap",
+        "Fluffy",
+        "Father Christmas",
+        "Wear",
+        "Fur",
+        "Pointy"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Santa's workshop",
+      "banned": [
+        "North Pole",
+        "Elves",
+        "Toys",
+        "Make",
+        "Christmas",
+        "Factory",
+        "Build",
+        "Sleigh",
+        "Presents",
+        "Busy"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Sleigh",
+      "banned": [
+        "Santa",
+        "Reindeer",
+        "Snow",
+        "Ride",
+        "Christmas",
+        "Bells",
+        "Pull",
+        "Sled",
+        "Fly",
+        "Presents"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Snowball fight",
+      "banned": [
+        "Winter",
+        "Throw",
+        "Hurl",
+        "Battle",
+        "Hit",
+        "Gloves",
+        "Teams",
+        "Fort",
+        "Duck",
+        "Cold"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Boxing Day",
+      "banned": [
+        "December",
+        "Twenty-sixth December",
+        "Britain",
+        "Sales",
+        "Holiday",
+        "Twenty-sixth",
+        "Boxes",
+        "Gifts",
+        "Shopping",
+        "Canada"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Candy cane",
+      "banned": [
+        "Peppermint",
+        "Christmas",
+        "Striped",
+        "Red",
+        "White",
+        "Hook",
+        "Hang",
+        "Sweet",
+        "Stick",
+        "Mint"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Chimney",
+      "banned": [
+        "Santa",
+        "Roof",
+        "Smoke",
+        "Fireplace",
+        "Brick",
+        "Sweep",
+        "Climb",
+        "Stack",
+        "Soot",
+        "Down"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Christmas carol",
+      "banned": [
+        "Song",
+        "Sing",
+        "Noel",
+        "Choir",
+        "Door",
+        "Hark",
+        "Jingle Bells",
+        "Holiday",
+        "Group",
+        "Hymn"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Christmas cracker",
+      "banned": [
+        "Pull",
+        "Bang",
+        "Paper crown",
+        "Joke",
+        "Snap",
+        "Dinner table",
+        "Toy",
+        "Tube",
+        "Britain",
+        "Prize"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Christmas Eve",
+      "banned": [
+        "December",
+        "Night before",
+        "Twenty-fourth",
+        "Santa",
+        "Holiday",
+        "Presents",
+        "Church",
+        "Sleep",
+        "Cookies",
+        "Midnight"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Christmas morning",
+      "banned": [
+        "Wake up",
+        "Early",
+        "Presents",
+        "Open",
+        "Tree",
+        "Kids",
+        "Pajamas",
+        "December",
+        "Santa",
+        "Excited"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Coal",
+      "banned": [
+        "Naughty",
+        "Santa",
+        "Stocking",
+        "Black",
+        "Lump",
+        "Christmas",
+        "Rock",
+        "Fire",
+        "Mine",
+        "Bad"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Fake snow",
+      "banned": [
+        "Flakes",
+        "Spray",
+        "Artificial",
+        "Decoration",
+        "White",
+        "Window",
+        "Christmas",
+        "Can",
+        "Frost",
+        "Plastic"
+      ],
+      "score": 2
+    },
+    {
+      "word": "First snow",
+      "banned": [
+        "Flakes",
+        "Season",
+        "Winter",
+        "Fall",
+        "Sledding",
+        "Magical",
+        "Excited",
+        "Morning",
+        "Window",
+        "White"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Garland",
+      "banned": [
+        "Decoration",
+        "Hang",
+        "Tree",
+        "String",
+        "Pine",
+        "Banister",
+        "Christmas",
+        "Wrap",
+        "Wreath",
+        "Tinsel"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Gingerbread house",
+      "banned": [
+        "Cookie dough",
+        "Candy",
+        "Icing",
+        "Build",
+        "Christmas",
+        "Cookie",
+        "Decorate",
+        "Roof",
+        "Gumdrops",
+        "Bake"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Holiday baking",
+      "banned": [
+        "Bake",
+        "Cookies",
+        "Christmas",
+        "Oven",
+        "Flour",
+        "Gingerbread",
+        "Kitchen",
+        "Sugar",
+        "Recipes",
+        "Pie"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Holiday party",
+      "banned": [
+        "Gathering",
+        "Christmas",
+        "Office",
+        "December",
+        "Celebrate",
+        "Festive",
+        "Coworkers",
+        "Sweater",
+        "Gifts",
+        "Dinner"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Holly",
+      "banned": [
+        "Leaves",
+        "Red",
+        "Berries",
+        "Christmas",
+        "Prickly",
+        "Green",
+        "Wreath",
+        "Ivy",
+        "Bush",
+        "Spiky"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Jingle bells",
+      "banned": [
+        "Song",
+        "Sleigh",
+        "Christmas",
+        "Ring",
+        "Dashing",
+        "Sing",
+        "Snow",
+        "Horse",
+        "Carol",
+        "Batman"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Letter to Santa",
+      "banned": [
+        "Father Christmas",
+        "Write",
+        "North Pole",
+        "Wish",
+        "Christmas",
+        "Mail",
+        "Kids",
+        "Dear",
+        "Gifts",
+        "Envelope"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Milk and cookies",
+      "banned": [
+        "Santa",
+        "Plate",
+        "Leave out",
+        "Christmas Eve",
+        "Glass",
+        "Snack",
+        "Fireplace",
+        "Dunk",
+        "Chimney",
+        "Night"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Mince pie",
+      "banned": [
+        "Christmas",
+        "Pastry",
+        "Dried fruit",
+        "Sweet",
+        "Tart",
+        "Father Christmas",
+        "Cream",
+        "Small",
+        "Festive",
+        "Raisins"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Naughty list",
+      "banned": [
+        "Nice",
+        "Santa",
+        "Bad",
+        "Coal",
+        "Christmas",
+        "Check twice",
+        "Behave",
+        "Kids",
+        "Gifts",
+        "Good"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Nutcracker",
+      "banned": [
+        "Ballet",
+        "Soldier",
+        "Tchaikovsky",
+        "Sugar Plum Fairy",
+        "Wooden",
+        "Christmas",
+        "Toy",
+        "Jaw",
+        "Clara",
+        "Mouse King"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Ornament",
+      "banned": [
+        "Christmas tree",
+        "Hang",
+        "Bauble",
+        "Decorate",
+        "Glass",
+        "Ball",
+        "Hook",
+        "Shiny",
+        "Break",
+        "Branch"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Reindeer",
+      "banned": [
+        "Santa",
+        "Rudolph",
+        "Sleigh",
+        "Antlers",
+        "Fly",
+        "Christmas",
+        "Hooves",
+        "North",
+        "Red nose",
+        "Pull"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Rudolph",
+      "banned": [
+        "Red nose",
+        "Reindeer",
+        "Santa",
+        "Christmas",
+        "Glow",
+        "Song",
+        "Lead",
+        "Sleigh",
+        "Fog",
+        "Bright"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Silent Night",
+      "banned": [
+        "Song",
+        "Carol",
+        "Christmas",
+        "Holy",
+        "Quiet",
+        "Calm",
+        "Bright",
+        "Sing",
+        "Hymn",
+        "Stille Nacht"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Snow fort",
+      "banned": [
+        "Igloo",
+        "Castle",
+        "Build",
+        "Walls",
+        "Tunnel",
+        "Kids",
+        "Hide",
+        "Shelter",
+        "Blocks",
+        "Winter"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Snow globe",
+      "banned": [
+        "Shake",
+        "Flurry",
+        "Glass",
+        "Ball",
+        "Water",
+        "Scene",
+        "Flakes",
+        "Souvenir",
+        "Christmas",
+        "Tiny"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Stocking",
+      "banned": [
+        "Christmas",
+        "Sock",
+        "Hang",
+        "Fireplace",
+        "Fill",
+        "Stuffer",
+        "Mantel",
+        "Santa",
+        "Name",
+        "Gifts"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Tinsel",
+      "banned": [
+        "Shiny",
+        "Tree",
+        "Silver",
+        "Strands",
+        "Christmas",
+        "Sparkle",
+        "Decoration",
+        "Glitter",
+        "Garland",
+        "Hang"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Ugly sweater",
+      "banned": [
+        "Christmas",
+        "Knitwear",
+        "Party",
+        "Tacky",
+        "Knit",
+        "Contest",
+        "Reindeer",
+        "Jumper",
+        "Wear",
+        "Funny"
+      ],
+      "score": 2
+    },
+    {
+      "word": "White Christmas",
+      "banned": [
+        "Snow",
+        "Holiday",
+        "Song",
+        "Bing",
+        "Dreaming",
+        "Bing Crosby",
+        "December",
+        "Wish",
+        "Ground",
+        "Snowfall"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Wrapping paper",
+      "banned": [
+        "Gift",
+        "Ribbon",
+        "Tape",
+        "Present",
+        "Bow",
+        "Scissors",
+        "Rip",
+        "Tear",
+        "Pattern",
+        "Roll"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Wreath",
+      "banned": [
+        "Door",
+        "Circle",
+        "Christmas",
+        "Pine",
+        "Hang",
+        "Ring",
+        "Holly",
+        "Front",
+        "Bow",
+        "Funeral"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Advent calendar",
+      "banned": [
+        "December",
+        "Doors",
+        "Chocolate",
+        "Countdown",
+        "Christmas",
+        "Days",
+        "Open",
+        "Twenty-four",
+        "Window",
+        "Daily"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Festive",
+      "banned": [
+        "Holiday",
+        "Celebrate",
+        "Party",
+        "Cheerful",
+        "Decorations",
+        "Jolly",
+        "Merry",
+        "Mood",
+        "Christmas",
+        "Fun"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Fruitcake",
+      "banned": [
+        "Dense",
+        "Christmas",
+        "Raisins",
+        "Gift",
+        "Doorstop",
+        "Hate",
+        "Nuts",
+        "Regift",
+        "Candied",
+        "Brick"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Gift receipt",
+      "banned": [
+        "Proof",
+        "Return",
+        "Present",
+        "Price",
+        "Hidden",
+        "Exchange",
+        "Store",
+        "Price tag",
+        "Tag",
+        "Swap"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Gift tag",
+      "banned": [
+        "To",
+        "From",
+        "Name",
+        "Present",
+        "Label",
+        "Stick",
+        "Ribbon",
+        "Bow",
+        "Write",
+        "Card"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Holiday card",
+      "banned": [
+        "Greeting",
+        "Christmas",
+        "Mail",
+        "Family",
+        "Photo",
+        "Send",
+        "Stamp",
+        "Envelope",
+        "Season",
+        "List"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Holiday rush",
+      "banned": [
+        "Busy",
+        "Christmas",
+        "Shopping",
+        "Crowds",
+        "Hectic",
+        "Stores",
+        "December",
+        "Lines",
+        "Last minute",
+        "Stress"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Holiday spirit",
+      "banned": [
+        "Christmas",
+        "Cheer",
+        "Joy",
+        "Festive",
+        "Mood",
+        "Goodwill",
+        "Season",
+        "Merry",
+        "Giving",
+        "Happy"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Mall Santa",
+      "banned": [
+        "Lap",
+        "Photo",
+        "Father Christmas",
+        "Department store",
+        "Line",
+        "Fake",
+        "Beard",
+        "Kids",
+        "Wish",
+        "Christmas"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Matching pajamas",
+      "banned": [
+        "Family",
+        "Sleepwear",
+        "Christmas",
+        "Photo",
+        "Same",
+        "Pattern",
+        "Plaid",
+        "Morning",
+        "Cheesy",
+        "Wear"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Nativity scene",
+      "banned": [
+        "Jesus",
+        "Manger",
+        "Baby",
+        "Mary",
+        "Joseph",
+        "Christmas",
+        "Stable",
+        "Shepherds",
+        "Wise men",
+        "Figurines"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Secret Santa",
+      "banned": [
+        "Gift",
+        "Exchange",
+        "Office",
+        "Draw",
+        "Names",
+        "Anonymous",
+        "Christmas",
+        "Budget",
+        "Coworker",
+        "Hat"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Tree topper",
+      "banned": [
+        "Star",
+        "Angel",
+        "Peak",
+        "Christmas",
+        "Place",
+        "Lift",
+        "Last",
+        "Ornament",
+        "Bow",
+        "Shine"
+      ],
+      "score": 3
+    },
+    {
+      "word": "White elephant",
+      "banned": [
+        "Gift",
+        "Exchange",
+        "Steal",
+        "Swap",
+        "Party",
+        "Funny",
+        "Christmas",
+        "Game",
+        "Gag",
+        "Office"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Winter wonderland",
+      "banned": [
+        "Snow",
+        "Frosty",
+        "Magical",
+        "Song",
+        "White",
+        "Beautiful",
+        "Christmas",
+        "Scene",
+        "Sparkle",
+        "Ice"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Yule log",
+      "banned": [
+        "Firewood",
+        "Christmas",
+        "Fireplace",
+        "Burn",
+        "Cake",
+        "Chocolate",
+        "Wood",
+        "TV",
+        "Winter",
+        "Roll"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Poinsettia",
+      "banned": [
+        "Red",
+        "Plant",
+        "Flower",
+        "Christmas",
+        "Leaves",
+        "Mexico",
+        "Pot",
+        "Star",
+        "Poisonous",
+        "Holiday"
+      ],
+      "score": 6
+    },
+    {
+      "word": "Twelfth Night",
+      "banned": [
+        "Christmas",
+        "Twelve",
+        "January",
+        "Shakespeare",
+        "Epiphany",
+        "Days",
+        "Party",
+        "Kings",
+        "Last",
+        "Play"
+      ],
+      "score": 6
+    }
+  ],
+  "freeBankWords": [
+    "Elf",
+    "Mistletoe",
+    "Regift",
+    "Gift card"
+  ]
+}

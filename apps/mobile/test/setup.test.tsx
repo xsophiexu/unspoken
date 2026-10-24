@@ -126,7 +126,7 @@ describe('the website’s extras', () => {
   ];
   const names = (role: 'checkbox') => screen.getAllByRole(role).map((b) => String(b.props.accessibilityLabel).split(',')[0]);
 
-  it('offers neither Easy nor Halloween', async () => {
+  it('offers neither Easy nor the seasonal categories', async () => {
     await openSetup();
     expect(names('checkbox')).toEqual(levels);
     fireEvent.press(categoriesRow());
@@ -134,14 +134,14 @@ describe('the website’s extras', () => {
     expect(names('checkbox').filter((n) => !levels.includes(n))).toEqual(categories);
   });
 
-  it('drops Easy and Halloween picks saved by a newer version, keeping the rest', async () => {
-    await openSetup({ difficulties: ['Easy', 'Hard'], categories: ['Society', 'Halloween'] });
+  it('drops Easy and seasonal picks saved by a newer version, keeping the rest', async () => {
+    await openSetup({ difficulties: ['Easy', 'Hard'], categories: ['Society', 'Halloween', 'Thanksgiving', 'Christmas'] });
     expect([checked('Hard'), checked('Normal')]).toEqual([true, false]);
     expect(categoriesRow()).toHaveAccessibleName(format(en.a11y.categories, { summary: 'Society' }));
   });
 
-  it('starts at Normal with All cards when only Easy and Halloween were saved', async () => {
-    await openSetup({ difficulties: ['Easy'], categories: ['Halloween'] });
+  it('starts at Normal with All cards when only Easy and seasonal categories were saved', async () => {
+    await openSetup({ difficulties: ['Easy'], categories: ['Halloween', 'Thanksgiving', 'Christmas'] });
     expect(checked('Normal')).toBe(true);
     expect(categoriesRow()).toHaveAccessibleName(format(en.a11y.categories, { summary: en.themes.all }));
   });

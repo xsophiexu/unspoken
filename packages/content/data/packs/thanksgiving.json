@@ -1,0 +1,684 @@
+{
+  "category": "Thanksgiving",
+  "cards": [
+    {
+      "word": "Mashed potatoes",
+      "banned": [
+        "Spuds",
+        "Gravy",
+        "Butter",
+        "Fork",
+        "Creamy",
+        "Side",
+        "Thanksgiving",
+        "Lumpy",
+        "Whipped",
+        "White"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Pumpkin pie",
+      "banned": [
+        "Squash",
+        "Tart",
+        "Thanksgiving",
+        "Whipped cream",
+        "Dessert",
+        "Orange",
+        "Slice",
+        "Crust",
+        "Spice",
+        "Fall"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Thanksgiving",
+      "banned": [
+        "Turkey",
+        "November",
+        "Thankful",
+        "Pilgrims",
+        "Feast",
+        "Family",
+        "Dinner",
+        "Grateful",
+        "Holiday",
+        "Football"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Turkey",
+      "banned": [
+        "Thanksgiving",
+        "Bird",
+        "Gobble",
+        "Stuffing",
+        "Dinner",
+        "Roast",
+        "Meat",
+        "Feathers",
+        "Carve",
+        "Leftovers"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Gravy",
+      "banned": [
+        "Sauce",
+        "Brown",
+        "Turkey",
+        "Mashed potatoes",
+        "Pour",
+        "Boat",
+        "Thick",
+        "Thanksgiving",
+        "Drippings",
+        "Meat"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Kids' table",
+      "banned": [
+        "Children",
+        "Thanksgiving",
+        "Family",
+        "Cousins",
+        "Small",
+        "Adults",
+        "Separate",
+        "Dinner",
+        "Sit",
+        "Grown up"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Stuffing",
+      "banned": [
+        "Turkey",
+        "Bread",
+        "Thanksgiving",
+        "Side",
+        "Dressing",
+        "Inside",
+        "Sage",
+        "Herbs",
+        "Celery",
+        "Box"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Thanksgiving parade",
+      "banned": [
+        "Macy's",
+        "Balloons",
+        "Floats",
+        "New York",
+        "November",
+        "Morning",
+        "TV",
+        "Marching band",
+        "Santa",
+        "Giant"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Wishbone",
+      "banned": [
+        "Pull",
+        "Break",
+        "Turkey",
+        "Snap",
+        "Fork",
+        "Thanksgiving",
+        "Chicken",
+        "Luck",
+        "Dinner",
+        "Bigger"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Cranberry sauce",
+      "banned": [
+        "Thanksgiving",
+        "Can",
+        "Red",
+        "Tart",
+        "Jelly",
+        "Turkey",
+        "Side",
+        "Jellied",
+        "Dish",
+        "Ridges"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Cyber Monday",
+      "banned": [
+        "Online",
+        "Shopping",
+        "Deals",
+        "Black Friday",
+        "Week",
+        "Sales",
+        "Internet",
+        "Discount",
+        "Thanksgiving",
+        "Website"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Leftover sandwich",
+      "banned": [
+        "Remains",
+        "Turkey",
+        "Bread roll",
+        "Day after",
+        "Bread",
+        "Cranberry",
+        "Lunch",
+        "Stuffing",
+        "Fridge",
+        "Thanksgiving"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Pilgrims",
+      "banned": [
+        "Mayflower",
+        "Thanksgiving",
+        "Plymouth",
+        "Settlers",
+        "Hats",
+        "Buckles",
+        "Native Americans",
+        "England",
+        "Ship",
+        "Colony"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Saying grace",
+      "banned": [
+        "Pray",
+        "Thanks",
+        "Dinner",
+        "Before",
+        "Bless",
+        "Food",
+        "Table",
+        "Hands",
+        "Amen",
+        "God"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Turkey baster",
+      "banned": [
+        "Thanksgiving",
+        "Moist",
+        "Bulb",
+        "Squeeze",
+        "Juice",
+        "Tube",
+        "Oven",
+        "Roast",
+        "Kitchen",
+        "Suck"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Green bean casserole",
+      "banned": [
+        "Veggies",
+        "Thanksgiving",
+        "Fried onions",
+        "Soup",
+        "Mushroom",
+        "Dish",
+        "Side",
+        "Bake",
+        "Crispy",
+        "Oven"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Cornucopia",
+      "banned": [
+        "Horn",
+        "Plenty",
+        "Fruit",
+        "Thanksgiving",
+        "Basket",
+        "Harvest",
+        "Overflowing",
+        "Abundance",
+        "Centerpiece",
+        "Goat"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Turkey trot",
+      "banned": [
+        "Race",
+        "Run",
+        "Thanksgiving",
+        "Morning",
+        "5K",
+        "Charity",
+        "Costume",
+        "Jog",
+        "Family",
+        "November"
+      ],
+      "score": 5
+    },
+    {
+      "word": "Pecan pie",
+      "banned": [
+        "Nut",
+        "Dessert",
+        "Southern",
+        "Thanksgiving",
+        "Slice",
+        "Sweet",
+        "Syrup",
+        "Crust",
+        "Gooey",
+        "Brown"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Sweet potato casserole",
+      "banned": [
+        "Marshmallows",
+        "Yams",
+        "Orange",
+        "Thanksgiving",
+        "Side dish",
+        "Baked",
+        "Brown sugar",
+        "Pecans",
+        "Mashed",
+        "Topping"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Gravy boat",
+      "banned": [
+        "Pour",
+        "Sauce",
+        "Dish",
+        "Spout",
+        "Handle",
+        "Pitcher",
+        "Thanksgiving",
+        "Turkey",
+        "Table",
+        "China"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Carving the turkey",
+      "banned": [
+        "Knife",
+        "Slice",
+        "Cut",
+        "Platter",
+        "Dad",
+        "Bird",
+        "Thanksgiving",
+        "Electric",
+        "Table",
+        "Breast"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Deep-fried turkey",
+      "banned": [
+        "Oil",
+        "Fire",
+        "Propane",
+        "Thanksgiving",
+        "Pot",
+        "Crispy",
+        "Bird",
+        "Dangerous",
+        "Backyard",
+        "Hot"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Giblets",
+      "banned": [
+        "Gizzard",
+        "Liver",
+        "Heart",
+        "Neck",
+        "Bag",
+        "Organs",
+        "Turkey",
+        "Inside",
+        "Gravy",
+        "Gross"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Dark meat",
+      "banned": [
+        "Thigh",
+        "Leg",
+        "Drumstick",
+        "Turkey",
+        "White",
+        "Chicken",
+        "Juicy",
+        "Breast",
+        "Wing",
+        "Fat"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Pop-up timer",
+      "banned": [
+        "Turkey",
+        "Done",
+        "Oven",
+        "Thermometer",
+        "Plastic",
+        "Cooked",
+        "Button",
+        "Red",
+        "Ready",
+        "Roast"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Hand turkey",
+      "banned": [
+        "Trace",
+        "Fingers",
+        "Kids",
+        "Drawing",
+        "Crayons",
+        "Feathers",
+        "Paper",
+        "School",
+        "Craft",
+        "Thumb"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Turkey pardon",
+      "banned": [
+        "President",
+        "White House",
+        "Thanksgiving",
+        "Forgive",
+        "Spared",
+        "Bird",
+        "Ceremony",
+        "Free",
+        "Saved",
+        "Farm"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Gobble gobble",
+      "banned": [
+        "Turkey",
+        "Sound",
+        "Noise",
+        "Bird",
+        "Thanksgiving",
+        "Say",
+        "Wattle",
+        "Feathers",
+        "Call",
+        "Farm"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Thanksgiving football",
+      "banned": [
+        "Game",
+        "Touchdown",
+        "Watch",
+        "TV",
+        "Couch",
+        "Detroit",
+        "Dallas",
+        "Turkey",
+        "Family",
+        "Backyard"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Parade float",
+      "banned": [
+        "Balloon",
+        "Giant",
+        "Truck",
+        "Decorated",
+        "Street",
+        "March",
+        "Wave",
+        "New York",
+        "Band",
+        "Ride"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Day after Thanksgiving",
+      "banned": [
+        "Shopping",
+        "Leftovers",
+        "Sales",
+        "Deals",
+        "Stores",
+        "Bargains",
+        "Lines",
+        "Mall",
+        "Off",
+        "Turkey"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Thanksgiving break",
+      "banned": [
+        "School",
+        "Vacation",
+        "College",
+        "Home",
+        "Week",
+        "Off",
+        "Holiday",
+        "November",
+        "Students",
+        "Long weekend"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Holiday traffic",
+      "banned": [
+        "Cars",
+        "Highway",
+        "Jam",
+        "Stuck",
+        "Travel",
+        "Drive",
+        "Airport",
+        "Gridlock",
+        "Slow",
+        "Road trip"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Fine china",
+      "banned": [
+        "Plates",
+        "Dishes",
+        "Cabinet",
+        "Fancy",
+        "Grandma",
+        "Porcelain",
+        "Special",
+        "Tea",
+        "Wedding",
+        "Break"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Stretchy pants",
+      "banned": [
+        "Elastic",
+        "Waistband",
+        "Leggings",
+        "Comfy",
+        "Full",
+        "Belly",
+        "Stuffed",
+        "Loose",
+        "Eating",
+        "Yoga"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Plymouth Rock",
+      "banned": [
+        "Pilgrims",
+        "Mayflower",
+        "Landed",
+        "Massachusetts",
+        "Boulder",
+        "Ship",
+        "Stone",
+        "1620",
+        "History",
+        "Colonists"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Canadian Thanksgiving",
+      "banned": [
+        "October",
+        "Monday",
+        "Harvest",
+        "Turkey",
+        "Maple",
+        "Long weekend",
+        "Early",
+        "Holiday",
+        "Hockey",
+        "North"
+      ],
+      "score": 2
+    },
+    {
+      "word": "Gourd",
+      "banned": [
+        "Pumpkin",
+        "Squash",
+        "Decoration",
+        "Autumn",
+        "Fall",
+        "Bumpy",
+        "Dried",
+        "Orange",
+        "Shaker",
+        "Vegetable"
+      ],
+      "score": 3
+    },
+    {
+      "word": "Acorn",
+      "banned": [
+        "Oak",
+        "Squirrel",
+        "Nut",
+        "Tree",
+        "Seed",
+        "Cap",
+        "Fall",
+        "Brown",
+        "Forest",
+        "Bury"
+      ],
+      "score": 1
+    },
+    {
+      "word": "Mayflower",
+      "banned": [
+        "Pilgrims",
+        "Ship",
+        "Plymouth",
+        "1620",
+        "Thanksgiving",
+        "England",
+        "Rock",
+        "Compact",
+        "Colony",
+        "Sail"
+      ],
+      "score": 4
+    },
+    {
+      "word": "Friendsgiving",
+      "banned": [
+        "Thanksgiving",
+        "Turkey",
+        "Potluck",
+        "Pals",
+        "Holiday",
+        "November",
+        "Feast",
+        "Dinner",
+        "Gratitude",
+        "Pie"
+      ],
+      "score": 4
+    }
+  ],
+  "freeBankWords": [
+    "Leftovers",
+    "Food coma",
+    "Black Friday",
+    "Potluck",
+    "Second helping"
+  ]
+}

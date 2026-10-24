@@ -362,9 +362,9 @@ describe('the extended catalog (the website)', () => {
     expect(hasEasierDifficulty(['Easy'], extendedGameConfig)).toBe(false);
   });
 
-  it('lists Halloween after the other categories, which the Android app keeps as they are', () => {
-    expect(extendedGameConfig.categories).toEqual([...gameConfig.categories, 'Halloween']);
-    expect(gameConfig.categories).not.toContain('Halloween');
+  it('lists Halloween, Thanksgiving and Christmas after the other categories, which the Android app keeps as they are', () => {
+    expect(extendedGameConfig.categories).toEqual([...gameConfig.categories, 'Halloween', 'Thanksgiving', 'Christmas']);
+    for (const seasonal of ['Halloween', 'Thanksgiving', 'Christmas'] as const) expect(gameConfig.categories).not.toContain(seasonal);
     expect(gameConfig.difficulties.map((d) => d.id)).toEqual([...DIFFICULTY_IDS]);
   });
 });

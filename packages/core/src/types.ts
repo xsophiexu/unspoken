@@ -71,7 +71,7 @@ export const CATEGORY_IDS = [
 // Seasonal categories an app opts into after CATEGORY_IDS. Their pack cards play only when the
 // category is picked, never in All cards. The website offers them (extendedGameConfig); the Android
 // app doesn't yet.
-export const EXTRA_CATEGORY_IDS = ['Halloween'] as const;
+export const EXTRA_CATEGORY_IDS = ['Halloween', 'Thanksgiving', 'Christmas'] as const;
 
 export type Category = (typeof CATEGORY_IDS)[number] | (typeof EXTRA_CATEGORY_IDS)[number];
 

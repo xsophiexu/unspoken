@@ -1,7 +1,9 @@
 import { normalizeBank, type BankCardInput, type BankEntry, type Category } from '@unspoken/core';
 
 import easyRaw from '../data/easy.json';
+import christmas from '../data/packs/christmas.json';
 import halloween from '../data/packs/halloween.json';
+import thanksgiving from '../data/packs/thanksgiving.json';
 import raw from '../data/word-banks.json';
 
 // @unspoken/content: the data every platform and the service load.
@@ -46,10 +48,14 @@ export function extendBank(base: readonly BankCardInput[], packs: readonly Categ
   return normalizeBank([...tagged, ...packCards, ...extra]);
 }
 
-// The website's bank: the bank plus the Halloween pack (data/packs/halloween.json, from
-// holidays-and-seasons.json and its free tags) and the Easy cards (data/easy.json: the score 1
+// The website's bank: the bank plus the seasonal packs (data/packs/halloween.json,
+// thanksgiving.json and christmas.json, from holidays-and-seasons.json and its free tags) and the Easy cards (data/easy.json: the score 1
 // cards of the newer word bank, filed under today's categories). The Android app plays `bank`.
-export const extendedBank: readonly BankEntry[] = extendBank(raw as BankCardInput[], [halloween as CategoryPack], easyRaw as BankCardInput[]);
+export const extendedBank: readonly BankEntry[] = extendBank(
+  raw as BankCardInput[],
+  [halloween, thanksgiving, christmas] as CategoryPack[],
+  easyRaw as BankCardInput[],
+);
 
 // The copy catalog: every user-facing string, in English. A new locale is a copy of en.ts typed as
 // CopyCatalog.

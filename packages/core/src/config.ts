@@ -190,9 +190,9 @@ export const gameConfig: GameConfig = {
 };
 
 // The website's catalog: gameConfig plus the levels and categories it opts into. Easy (score 1)
-// comes before Normal, plays like it (1:30 rounds, 5 banned words), and Halloween follows the
-// other categories. Everything else is gameConfig's, and the defaults stay Normal with All cards.
-// The Android app and the service stay on gameConfig, so saved Easy or Halloween picks drop out there.
+// comes before Normal, plays like it (1:30 rounds, 5 banned words), and the seasonal categories
+// (Halloween, Thanksgiving, Christmas) follow the other categories. Everything else is gameConfig's, and the defaults stay Normal with All cards.
+// The Android app and the service stay on gameConfig, so saved Easy or seasonal picks drop out there.
 export const extendedGameConfig: GameConfig = {
   ...gameConfig,
   difficulties: [{ id: 'Easy', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 }, ...gameConfig.difficulties],

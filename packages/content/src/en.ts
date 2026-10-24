@@ -68,6 +68,8 @@ const categories: Record<Category, string> = {
   'History and Myth': 'History and Myth',
   'Fantasy and Sci-Fi': 'Fantasy and Sci-Fi',
   Halloween: 'Halloween',
+  Thanksgiving: 'Thanksgiving',
+  Christmas: 'Christmas',
 };
 
 const feedbackTopics: Record<FeedbackTopic, string> = {

@@ -10,7 +10,8 @@ import { THEME_STORAGE_KEY } from '@/theme/boot';
 
 import { renderApp, saved } from './app';
 
-// The website's extras: the Easy level and the Halloween category.
+// The website's extras: the Easy level and the seasonal categories (Halloween, Thanksgiving,
+// Christmas).
 
 const categoriesRow = () => screen.getByRole('button', { name: /^Categories:/ });
 const halloweenWords = new Set(extendedBank.filter((c) => c.categories.includes('Halloween')).map((c) => c.word));
@@ -40,13 +41,15 @@ afterEach(() => {
 });
 
 describe('Halloween', () => {
-  it('appears in the Categories picker after the other categories', async () => {
+  it('appears in the Categories picker after the other categories, before Thanksgiving and Christmas', async () => {
     const user = userEvent.setup();
     renderApp(<SetupScreen mode="classic" />);
     await user.click(categoriesRow());
     const chips = within(screen.getByRole('group', { name: en.categoriesSheet.title })).getAllByRole('checkbox');
-    expect(chips.at(-1)).toHaveAccessibleName(/^Halloween/);
-    expect(chips.at(-2)).toHaveAccessibleName(/^Fantasy and Sci-Fi/);
+    expect(chips.at(-4)).toHaveAccessibleName(/^Fantasy and Sci-Fi/);
+    expect(chips.at(-3)).toHaveAccessibleName(/^Halloween/);
+    expect(chips.at(-2)).toHaveAccessibleName(/^Thanksgiving/);
+    expect(chips.at(-1)).toHaveAccessibleName(/^Christmas/);
   });
 
   it('counts its cards on the difficulty tiles once picked, Easy included, and saves the pick', async () => {
@@ -79,6 +82,28 @@ describe('Halloween', () => {
     renderApp(<SetupScreen mode="classic" />);
     expect(categoriesRow()).toHaveAccessibleName(/^Categories: Society, Halloween\./);
   });
+});
+
+describe.each([
+  { category: 'Thanksgiving', tagged: ['Leftovers', 'Food coma', 'Black Friday', 'Potluck', 'Second helping'] },
+  { category: 'Christmas', tagged: ['Elf', 'Mistletoe', 'Regift', 'Gift card'] },
+])('$category', ({ category, tagged }) => {
+  const inCategory = extendedBank.filter((c) => c.categories.includes(category as (typeof c.categories)[number]));
+
+  it('plays every one of its cards, tagged free bank words included, and nothing else, when only it is picked', () => {
+    const seen = playedWords({ difficulties: everyLevel, categories: [category] }, inCategory.length);
+    expect([...seen].sort()).toEqual(inCategory.map((c) => c.word).sort());
+    expect(tagged.filter((w) => !seen.includes(w))).toEqual([]);
+  });
+});
+
+it('never plays Thanksgiving or Christmas pack cards in All cards', { timeout: 30_000 }, () => {
+  // The pack's own cards: in no other category (a free bank card may already sit out of All cards).
+  const holiday = (t: string) => t === 'Thanksgiving' || t === 'Christmas';
+  const packOnly = new Set(extendedBank.filter((c) => c.categories.every(holiday)).map((c) => c.word));
+  expect(packOnly.size).toBe(107);
+  const seen = playedWords({ difficulties: everyLevel, categories: [] }, 200);
+  expect(seen.filter((w) => packOnly.has(w))).toEqual([]);
 });
 
 describe('Easy', () => {
