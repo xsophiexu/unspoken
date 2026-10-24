@@ -1,6 +1,7 @@
 import type { ColorId, ColorMode } from './palettes';
 import type { RegionTone } from './regions';
 import { buttonPair, layout, type RadiusName } from './scales';
+import type { SceneSlot } from './scenes';
 import { fontMetrics, textStyles } from './typography';
 
 // Layout styles as data. Every platform implements a small set of slot components once (header,
@@ -16,7 +17,10 @@ import { fontMetrics, textStyles } from './typography';
 // (read the style for a mode with layoutStyleFor, or resolveTheme).
 
 // Customize lists the styles in this order (page 1: first nine, page 2: the rest and a Suggest tile).
-export const STYLE_IDS = ['card', 'deck', 'lines', 'split', 'ledger', 'ink', 'bottom', 'sheet', 'bigTimer', 'chips', 'ombre'] as const;
+// The Halloween looks come last and are on the website only (webOnly); the Android app lists
+// NATIVE_STYLE_IDS.
+export const HALLOWEEN_STYLE_IDS = ['candle', 'hourglass', 'moon', 'potion', 'spider', 'jack'] as const;
+export const STYLE_IDS = ['card', 'deck', 'lines', 'split', 'ledger', 'ink', 'bottom', 'sheet', 'bigTimer', 'chips', 'ombre', ...HALLOWEEN_STYLE_IDS] as const;
 export type StyleId = (typeof STYLE_IDS)[number];
 
 // Whether the style takes the player's color or always uses its own. Mode (light or dark) always
@@ -216,9 +220,46 @@ export type LayoutStyle = {
   margins?: Partial<Pick<PlayMargins, 'paddingTop' | 'paddingBottom'>>;
   // What changes in dark mode.
   dark?: StyleOverride;
+  // Always drawn in this mode, whatever the player picked (the Halloween looks are night scenes).
+  // Read the mode in use with modeFor.
+  mode?: ColorMode;
+  // Offered on the website only: the Android app neither lists it nor reads it from saved prefs.
+  webOnly?: true;
+  // A play screen where the timer is the art (scenes.ts). Platforms that draw scenes use it in place
+  // of the arrangement and timer slot; the rest of the style (arrangement 'stack', a header chip
+  // timer) is what any other renderer, and the non-swipe rounds, fall back to.
+  scene?: SceneSlot;
 };
 
 const follow: ColorPolicy = { kind: 'follow' };
+
+// A Halloween look: the real header (mode, level badge, stats in the status line), the word with its
+// "Your word" label, the banned list with a gold DON'T SAY and swipe links, over a night scene. Always
+// dark, in the pinned color closest to the scene for the sheets and overlays over it.
+function halloween(
+  id: (typeof HALLOWEEN_STYLE_IDS)[number],
+  color: ColorId,
+  scene: Omit<SceneSlot, 'look'>,
+  wordSize: number,
+  banned: Pick<BannedSlot, 'variant' | 'size'>,
+): LayoutStyle {
+  return {
+    id,
+    color: { kind: 'pinned', color },
+    thumbnailColor: color,
+    mode: 'dark',
+    webOnly: true,
+    arrangement: 'stack',
+    regions: { page: 'base' },
+    header: { variant: 'titleBadge', position: 'top', container: 'none', size: 22, menu: 'dots', menuContainer: 'filled' },
+    timer: { variant: 'chip', fill: 'accent' },
+    stats: { placement: 'subline', emphasis: 'plain' },
+    word: { container: 'none', label: true, size: wordSize, minSize: 22, maxLines: 2, color: 'ink' },
+    banned: { ...banned, weight: 600, label: true, labelColor: 'accentText', chipRadius: 'sm' },
+    controls: { variant: 'swipeLinks', height: 46, radius: 'none', skip: 'link', hint: 'text' },
+    scene: { look: id, ...scene },
+  };
+}
 
 export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
   // Card · current layout. The app today.
@@ -400,7 +441,25 @@ export const layoutStyles: Readonly<Record<StyleId, LayoutStyle>> = {
     controls: { variant: 'buttons', height: 58, radius: 'lg', skip: 'outline', skipWidth: 120 },
     dark: { regions: { controls: 'deep' } },
   },
+  // Halloween · the countdown is the art (website only).
+  candle: halloween('candle', 'lilac', { layout: 'side', align: 'start', holder: 'pill' }, 50, { variant: 'rows', size: 20 }),
+  hourglass: halloween('hourglass', 'slateBlue', { layout: 'artMiddle', align: 'center', holder: 'pill' }, 40, { variant: 'chips', size: 19 }),
+  moon: halloween('moon', 'slateBlue', { layout: 'artTop', align: 'start', holder: 'pill' }, 50, { variant: 'chips', size: 19 }),
+  potion: halloween('potion', 'lilac', { layout: 'artBottom', align: 'start', holder: 'tag' }, 50, { variant: 'chips', size: 19 }),
+  spider: halloween('spider', 'lilac', { layout: 'side', align: 'start', holder: 'pill' }, 52, { variant: 'rows', size: 21 }),
+  jack: halloween('jack', 'clay', { layout: 'artBottom', align: 'start', holder: 'pill' }, 44, { variant: 'chips', size: 19 }),
 };
+
+// Customize groups the styles: the everyday ones, then the Halloween looks together.
+export type StyleGroup = { id: 'everyday' | 'halloween'; styles: readonly StyleId[] };
+export const STYLE_GROUPS: readonly StyleGroup[] = [
+  { id: 'everyday', styles: STYLE_IDS.filter((id) => !(HALLOWEEN_STYLE_IDS as readonly StyleId[]).includes(id)) },
+  { id: 'halloween', styles: HALLOWEEN_STYLE_IDS },
+];
+
+// The styles the Android app offers and reads back from saved prefs: every style but the
+// website-only ones, in Customize order.
+export const NATIVE_STYLE_IDS: readonly StyleId[] = STYLE_IDS.filter((id) => !layoutStyles[id].webOnly);
 
 export const DEFAULT_STYLE: StyleId = 'card';
 
@@ -427,6 +486,11 @@ const stylesByMode: Readonly<Record<ColorMode, Readonly<Record<StyleId, LayoutSt
 // same object comes back on every call. resolveTheme uses it, so theme.style is already resolved.
 export function layoutStyleFor(id: StyleId, mode: ColorMode): LayoutStyle {
   return stylesByMode[mode][id];
+}
+
+// The mode a style is drawn in: its own (the Halloween looks are always dark) or the player's.
+export function modeFor(selection: { style: StyleId; mode: ColorMode }): ColorMode {
+  return layoutStyles[selection.style].mode ?? selection.mode;
 }
 
 // The play screen's margins in a style: layout.play with the style's own top and bottom. The side

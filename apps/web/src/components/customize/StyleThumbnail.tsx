@@ -1,7 +1,7 @@
 'use client';
 
 import { cardsFor, createRound, defaultSettings, type SwipeRoundState } from '@unspoken/core';
-import { layoutStyleFor, resolveTheme, type ColorMode, type StyleId } from '@unspoken/design-tokens';
+import { layoutStyleFor, modeFor, resolveTheme, type ColorMode, type StyleId } from '@unspoken/design-tokens';
 
 import { swipeModel, type PlayModel } from '@/components/play/model';
 import { PlayFrame } from '@/components/play/PlayFrame';
@@ -28,8 +28,10 @@ function sampleModel(): PlayModel {
 }
 
 // A style on Customize: the real play screen at the reference size, scaled down (layout.thumbnail),
-// in the style's thumbnail color (or its pinned color) and the current light or dark mode.
-export function StyleThumbnail({ style, mode }: { style: StyleId; mode: ColorMode }) {
+// in the style's thumbnail color (or its pinned color) and the current light or dark mode (or the
+// style's own, for the always-dark Halloween looks).
+export function StyleThumbnail({ style, mode: picked }: { style: StyleId; mode: ColorMode }) {
+  const mode = modeFor({ style, mode: picked });
   const layoutStyle = layoutStyleFor(style, mode);
   const color = resolveTheme({ style, color: layoutStyle.thumbnailColor, mode }).color;
   return (

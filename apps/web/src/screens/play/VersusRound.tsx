@@ -12,7 +12,7 @@ import {
   versusClockProgress,
   type VersusRoundState,
 } from '@unspoken/core';
-import { cardSwipes, layout, layoutStyleFor, type LayoutStyle } from '@unspoken/design-tokens';
+import { cardSwipes, layout, layoutStyleFor, modeFor, type LayoutStyle } from '@unspoken/design-tokens';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -174,7 +174,7 @@ function turnModel(state: VersusRoundState): PlayModel {
     difficulty: { name: '', badge: '' },
     subline: versusTitle(state),
     stats: { points: null, detail: '' },
-    clock: state.clock ? { label: formatClock(state.clock.left), progress: versusClockProgress(state), running: isVersusClockRunning(state) } : null,
+    clock: state.clock ? { label: formatClock(state.clock.left), progress: versusClockProgress(state), running: isVersusClockRunning(state), hidden: false } : null,
     card: card && { key: `${state.deck.seed}:${state.deck.index}`, word: card.word, banned: card.banned.slice(0, shown), freshIndex: null },
     canCorrect: canVersusAnswer(state, 'correct'),
     canSkip: canVersusAnswer(state, 'skip'),
@@ -186,7 +186,7 @@ function turnModel(state: VersusRoundState): PlayModel {
 function Turn({ state, blocked, onMenu, onLeave, onDetails }: { state: VersusRoundState; blocked: boolean; onMenu: () => void; onLeave: () => void; onDetails: () => void }) {
   const { dispatch, restart } = useGame();
   const { selection } = useTheme();
-  const layoutStyle = layoutStyleFor(TURN_STYLE, selection.mode);
+  const layoutStyle = layoutStyleFor(TURN_STYLE, modeFor(selection));
   const frameRef = useRef<HTMLDivElement>(null);
   const model = turnModel(state);
   const pick = needsGuesser(state);

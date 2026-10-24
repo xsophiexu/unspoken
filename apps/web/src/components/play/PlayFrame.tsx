@@ -12,6 +12,7 @@ import { BannedList } from './BannedList';
 import { Controls } from './Controls';
 import { Header, MenuButton } from './Header';
 import type { HeaderModel, PlayModel } from './model';
+import { SceneBody, Stars } from './scene/SceneBody';
 import { Stats } from './Stats';
 import { Timer } from './Timer';
 import { Word } from './Word';
@@ -50,7 +51,8 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
   const card = model.card;
   const word = card && <Word slot={s.word} word={card.word} />;
   const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} />;
-  const timer = (at: Parameters<typeof Timer>[0]['at']) => <Timer slot={s.timer} at={at} clock={model.clock} onPause={actions?.onPause} />;
+  // A Halloween look draws its own timer (the art), so the timer slot shows nowhere else.
+  const timer = (at: Parameters<typeof Timer>[0]['at']) => (s.scene ? null : <Timer slot={s.timer} at={at} clock={model.clock} onPause={actions?.onPause} />);
   const controls = ownControls ?? (
     <Controls
       slot={s.controls}
@@ -111,7 +113,10 @@ export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, o
   );
 
   let body: ReactNode;
-  switch (arrangement) {
+  switch (s.scene ? 'scene' : arrangement) {
+    case 'scene':
+      body = s.scene && <SceneBody slot={s.scene} clock={model.clock} word={swipeable(word)} banned={swipeable(banned)} onPause={actions?.onPause} preview={!actions} />;
+      break;
     case 'ringCard':
       body = <RingCard layoutStyle={s} model={model} actions={actions} word={word} banned={banned} />;
       break;
@@ -217,7 +222,9 @@ export function FrameShell({ layoutStyle: s, preview = false, frameRef, surface,
       style={marginVars(s)}
       data-region={s.regions.page}
       data-arrangement={s.arrangement}
+      data-scene={s.scene?.look}
     >
+      {s.scene && <Stars look={s.scene.look} />}
       <div className={styles.column} inert={overlay ? true : undefined}>
         {top}
         <div className={styles.body} {...surface}>

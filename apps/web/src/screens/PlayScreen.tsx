@@ -1,7 +1,7 @@
 'use client';
 
 import { en } from '@unspoken/content';
-import { layoutStyleFor } from '@unspoken/design-tokens';
+import { layoutStyleFor, modeFor } from '@unspoken/design-tokens';
 import { useRef, useState } from 'react';
 
 import { Spotlight } from '@/components/play/Spotlight';
@@ -29,8 +29,8 @@ type SheetKind = 'menu' | 'mode' | 'difficulty';
 export function PlayScreen() {
   const { round, dispatch, restart, changeDifficulty } = useGame();
   const { selection } = useTheme();
-  // The style as drawn in the player's mode (dark mode changes some slots).
-  const layoutStyle = layoutStyleFor(selection.style, selection.mode);
+  // The style as drawn in the mode in use (dark mode changes some slots; a Halloween look is always dark).
+  const layoutStyle = layoutStyleFor(selection.style, modeFor(selection));
   const rootRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
   const [touring, setTouring] = useState(tourDue);

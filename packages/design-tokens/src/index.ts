@@ -2,6 +2,7 @@ export * from './color';
 export * from './palettes';
 export * from './regions';
 export * from './scales';
+export * from './scenes';
 export * from './styles';
 export * from './teams';
 export * from './theme';

@@ -1,0 +1,122 @@
+/* A Halloween look between the header and the controls. The art areas take whatever height the
+   word and list leave and run out to the window's edges past the side margin (--pad-x); the art
+   scales inside them (SceneArt measures the area). */
+
+.scene {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+  padding-top: var(--un-space-4);
+}
+
+.textSlot {
+  flex: none;
+  min-width: 0;
+}
+
+.artSlot {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  margin-inline: calc(-1 * var(--pad-x));
+}
+
+/* side: word and list on the left, the art in a column on the right that runs to the right edge. */
+.side {
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.text {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-4);
+}
+
+.side > .artArea {
+  flex: 0 0 calc(var(--un-scene-side-art-share) * (100% + var(--pad-x)));
+  margin-right: calc(-1 * var(--pad-x));
+}
+
+.center {
+  text-align: center;
+}
+
+.center [data-spot='banned'] ul {
+  justify-content: center;
+}
+
+.artArea {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.artBox {
+  position: absolute;
+}
+
+.art {
+  display: block;
+  overflow: visible;
+}
+
+/* The time holder: a pill in the look's pill color, placed by the art (left, top and --holder-shift
+   from SceneArt). */
+.artBox .holder {
+  position: absolute;
+  min-height: var(--un-scene-pill-height);
+  padding-inline-start: var(--un-scene-pill-padding-x);
+  transform: translateX(var(--holder-shift));
+  text-align: start;
+}
+
+.artBox .holder button {
+  width: var(--un-layout-min-touch);
+  height: var(--un-scene-pill-height);
+  min-height: 0;
+}
+
+/* The potion's paper tag tied to the flask's neck. */
+.artBox .holder.tag {
+  border-radius: var(--un-scene-tag-radius);
+  padding-inline-start: var(--un-scene-tag-padding-x);
+  box-shadow: var(--un-scene-tag-shadow);
+  transform: translateX(var(--holder-shift)) rotate(var(--un-scene-tag-tilt));
+  transform-origin: left center;
+}
+
+/* The stars across the game column, behind it (the frame's column sits above them). */
+.stars {
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: min(100%, var(--un-max-width-column));
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: var(--un-radius-pill);
+  background: var(--scene-star);
+  opacity: var(--star-opacity);
+  animation: twinkle var(--un-motion-scene-twinkle-ms) ease-in-out infinite;
+  animation-delay: calc(var(--star-delay) * -1 * var(--un-motion-scene-twinkle-ms));
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: calc(var(--star-opacity) * 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+  }
+}

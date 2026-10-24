@@ -49,15 +49,7 @@ export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
     case 'ring':
       return at === 'ring' && box ? <Ring clock={clock} box={box} pause={pause} fill={fillClass(slot.fill ?? 'none')} /> : null;
     case 'chip':
-      if (at === 'header') {
-        return (
-          <span className={cx(styles.chip, fillClass(slot.fill ?? 'outlined'), text('clock'))}>
-            {label}
-            {pause}
-          </span>
-        );
-      }
-      return bar;
+      return at === 'header' ? <ClockChip clock={clock} onPause={onPause} fill={slot.fill ?? 'outlined'} /> : bar;
     case 'dial': {
       if (at !== 'header') return bar;
       const size = slot.size ?? layout.header.menuButton;
@@ -120,6 +112,18 @@ export function Timer({ slot, at, clock, onPause, box }: TimerProps) {
       );
     }
   }
+}
+
+type ClockChipProps = { clock: ClockModel; onPause?: () => void; fill: NonNullable<TimerSlot['fill']>; className?: string; style?: CSSProperties };
+
+// The clock and pause button in a pill (the chip timer, and the Halloween looks' time pill).
+export function ClockChip({ clock, onPause, fill, className, style }: ClockChipProps) {
+  return (
+    <span className={cx(styles.chip, fillClass(fill), text('clock'), className)} style={style}>
+      <ClockLabel clock={clock} />
+      <Pause onPause={onPause} />
+    </span>
+  );
 }
 
 function ClockLabel({ clock }: { clock: ClockModel }) {

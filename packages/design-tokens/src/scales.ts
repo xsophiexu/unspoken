@@ -106,6 +106,10 @@ export const motion = {
   doubleTapMs: 300,
   // How to play: the spotlight glides between targets; steps change only on a tap or a swipe.
   spotlight: { moveMs: 630, easing: [0.5, 0, 0.3, 1] as const, pulseMs: 2000 },
+  // The Halloween looks' ambient motion, off under reduced motion (the timer-driven art still
+  // changes): the candle flame flickers, bats flap and drift, potion bubbles rise, the spider sways,
+  // the pumpkin glow flickers and stars twinkle. driftPx: how far a bat drifts and back.
+  scene: { flickerMs: 1400, flapMs: 360, driftMs: 5200, driftPx: 6, bubbleMs: 2600, swayMs: 3400, swayDeg: 1.2, glowMs: 2200, twinkleMs: 3600 },
 } as const;
 
 // Window widths where layouts change. Below medium is a phone; the game always fits a phone column.

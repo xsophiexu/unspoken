@@ -26,7 +26,9 @@ export type HeaderModel = {
   stats: RoundStats;
 };
 
-export type ClockModel = { label: string; progress: number; running: boolean };
+// progress: the share of time left, 0 to 1 (0 while the clock is hidden). hidden: the round hides
+// its clock (the label says so instead of the time).
+export type ClockModel = { label: string; progress: number; running: boolean; hidden: boolean };
 
 export type CardModel = { key: string; word: string; banned: readonly string[]; freshIndex: number | null };
 
@@ -65,7 +67,7 @@ export function swipeModel(state: SwipeRoundState): PlayModel {
   const view = swipeCard(state);
   return {
     ...headerModel(state),
-    clock: label === null ? null : { label, progress: clockProgress(state), running: isClockRunning(state) },
+    clock: label === null ? null : { label, progress: clockProgress(state), running: isClockRunning(state), hidden: state.rules.clock === 'hidden' },
     card: view && {
       // The deal position, so the same word dealt again still animates in as a new card.
       key: `${state.deck.seed}:${state.deck.index}`,

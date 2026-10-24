@@ -33,6 +33,11 @@
   padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
 }
 
+/* A Halloween look's stars sit behind the column. */
+.frame[data-scene] .column {
+  position: relative;
+}
+
 .top {
   display: flex;
   align-items: center;

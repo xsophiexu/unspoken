@@ -1,6 +1,6 @@
 import { en } from '@unspoken/content';
 import { defaultRoundSeconds, format, formatClock, gameConfig, plural } from '@unspoken/core';
-import { gameMenu, motion, type RestartPlacement } from '@unspoken/design-tokens';
+import { HALLOWEEN_STYLE_IDS, gameMenu, motion, type RestartPlacement, type ThemeSelection } from '@unspoken/design-tokens';
 import { act, fireEvent, renderRouter, screen, waitFor, within } from 'expo-router/testing-library';
 
 import { openApp, resetDevice, savedPrefs } from './helpers';
@@ -70,6 +70,21 @@ describe('switching the style on Customize', () => {
     expect(screen.getByText(en.play.swipeTheCard)).toBeOnTheScreen();
     expect(screen.queryByLabelText(levelBadge('Tricky'))).not.toBeOnTheScreen();
     await waitFor(async () => expect((await savedPrefs()).theme.style).toBe('deck'));
+  });
+});
+
+describe('the website-only Halloween looks', () => {
+  it('are not offered on Customize, and a save that names one plays in the default style', async () => {
+    await openApp('/', { theme: { style: 'candle' as ThemeSelection['style'], color: 'rose', mode: 'light' }, settings: { mode: 'classic', difficulties: ['Tricky'] } });
+
+    expect(await screen.findByLabelText(levelBadge('Tricky'))).toBeOnTheScreen();
+
+    fireEvent.press(screen.getByLabelText(en.a11y.menu));
+    fireEvent.press(await screen.findByLabelText(en.menu.customize.title));
+    fireEvent(await screen.findByText(en.customize.style), 'layout', { nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 400 } } });
+    expect(await screen.findByRole('radio', { name: en.customize.styles.card, selected: true })).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: en.customize.styles.ombre })).toBeOnTheScreen();
+    for (const id of HALLOWEEN_STYLE_IDS) expect(screen.queryByRole('radio', { name: en.customize.styles[id] })).not.toBeOnTheScreen();
   });
 });
 

@@ -1,7 +1,7 @@
 import { COLOR_IDS, COLOR_MODES, palettes, type ColorId, type ColorMode, type ColorRoles } from './palettes';
 import { REGION_TONES, regionColors, type RegionColors, type RegionTone } from './regions';
 import { elevation, radius, space } from './scales';
-import { DEFAULT_STYLE, STYLE_IDS, layoutStyleFor, type LayoutStyle, type StyleId } from './styles';
+import { DEFAULT_STYLE, STYLE_IDS, layoutStyleFor, modeFor, type LayoutStyle, type StyleId } from './styles';
 import { fonts, textStyles, type TextStyleName, type TextStyleToken } from './typography';
 
 // What the player picks on Customize.
@@ -15,28 +15,33 @@ export type Theme = {
   style: LayoutStyle;
   // The color in use: the player's pick, or the style's pinned color.
   color: ColorId;
+  // The mode in use: the player's pick, or the style's own (modeFor).
+  mode: ColorMode;
   colors: ColorRoles;
   regions: Readonly<Record<RegionTone, RegionColors>>;
   shadow: (typeof elevation)[ColorMode];
 };
 
 export function resolveTheme(selection: ThemeSelection): Theme {
-  const style = layoutStyleFor(selection.style, selection.mode);
+  const mode = modeFor(selection);
+  const style = layoutStyleFor(selection.style, mode);
   const color = style.color.kind === 'pinned' ? style.color.color : selection.color;
-  const colors = palettes[color][selection.mode];
+  const colors = palettes[color][mode];
   const regions = Object.fromEntries(REGION_TONES.map((tone) => [tone, regionColors(colors, tone)]));
-  return { selection, style, color, colors, regions: regions as Theme['regions'], shadow: elevation[selection.mode] };
+  return { selection, style, color, mode, colors, regions: regions as Theme['regions'], shadow: elevation[mode] };
 }
 
 function pick<T extends string>(ids: readonly T[], value: unknown, fallback: T): T {
   return ids.includes(value as T) ? (value as T) : fallback;
 }
 
-// Reads a stored selection, keeping each valid field and defaulting the rest.
-export function parseThemeSelection(value: unknown): ThemeSelection {
+// Reads a stored selection, keeping each valid field and defaulting the rest. `styles` are the
+// styles this platform offers (the Android app passes NATIVE_STYLE_IDS, so a website-only style
+// falls back to the default).
+export function parseThemeSelection(value: unknown, styles: readonly StyleId[] = STYLE_IDS): ThemeSelection {
   const v = (typeof value === 'object' && value !== null ? value : {}) as Partial<Record<keyof ThemeSelection, unknown>>;
   return {
-    style: pick(STYLE_IDS, v.style, DEFAULT_THEME.style),
+    style: pick(styles, v.style, DEFAULT_THEME.style),
     color: pick(COLOR_IDS, v.color, DEFAULT_THEME.color),
     mode: pick(COLOR_MODES, v.mode, DEFAULT_THEME.mode),
   };

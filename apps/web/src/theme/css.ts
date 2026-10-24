@@ -3,6 +3,9 @@ import {
   COLOR_MODES,
   REGION_TONES,
   STYLE_IDS,
+  scene,
+  scenePalettes,
+  sceneRegionColors,
   buttonPair,
   cssVariables,
   layout,
@@ -19,6 +22,8 @@ import {
   type ColorId,
   type ColorMode,
   type RegionSlot,
+  type SceneGradient,
+  type SceneLook,
   type TextStyleToken,
 } from '@unspoken/design-tokens';
 
@@ -29,6 +34,8 @@ import {
 //  [data-color=…][data-mode=…]             one block per palette and mode; set on <html> for the
 //                                          player's theme and on Customize thumbnails for previews
 //  [data-region=…]                         region tones, mapped onto --region-* for slot components
+//  [data-scene=…]                          a Halloween look's night page: its region colors and
+//                                          background (after the region rules, so it wins)
 //  .un-text-…                              text styles
 
 const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`).replace('.', '-');
@@ -68,6 +75,7 @@ function sharedTokens(): Vars {
     ...flatten('opacity', opacity, (_, n) => String(n)),
     // Flex-grow shares, so plain numbers.
     ...flatten('button-pair', buttonPair, (_, n) => String(n)),
+    ...flatten('scene', scene, (path, n) => (path.endsWith('share') ? String(n) : path.endsWith('tilt') ? `${n}deg` : px(n))),
   };
 }
 
@@ -98,6 +106,31 @@ function regionRules(): string[] {
   );
 }
 
+function gradientCss(g: SceneGradient): string {
+  const stops = g.stops.map(([color, at]) => `${color} ${at * 100}%`).join(',');
+  return g.kind === 'radial' ? `radial-gradient(ellipse at ${g.at[0]}% ${g.at[1]}%,${stops})` : `linear-gradient(${stops})`;
+}
+
+// A Halloween look's page: its own region colors (the slot components read --region-*) over its
+// gradient, and the star color for the art.
+function sceneRules(): string[] {
+  return STYLE_IDS.flatMap((id) => {
+    const look: SceneLook | undefined = layoutStyles[id].scene?.look;
+    if (!look) return [];
+    const colors = sceneRegionColors(look);
+    return [
+      rule(
+        `[data-region][data-scene="${look}"]`,
+        {
+          ...Object.fromEntries(REGION_SLOTS.map((slot) => [`--region-${kebab(slot)}`, colors[slot]])),
+          '--scene-star': scenePalettes[look].star,
+        },
+        `;background-color:var(--region-bg);background-image:${gradientCss(scenePalettes[look].background)};color:var(--region-ink)`,
+      ),
+    ];
+  });
+}
+
 function textRules(): string[] {
   return (Object.entries(textStyles) as [string, TextStyleToken][]).map(([name, t]) => {
     const v = (part: string) => `var(--un-text-${kebab(name)}-${part})`;
@@ -125,5 +158,5 @@ export function themeCss(): string {
     ),
   );
   const modes = COLOR_MODES.map((mode) => `[data-mode="${mode}"]{color-scheme:${mode}}`);
-  return [rule(':root', { ...shared, ...sharedTokens() }), ...perCombo, ...modes, ...regionRules(), ...textRules()].join('\n');
+  return [rule(':root', { ...shared, ...sharedTokens() }), ...perCombo, ...modes, ...regionRules(), ...sceneRules(), ...textRules()].join('\n');
 }

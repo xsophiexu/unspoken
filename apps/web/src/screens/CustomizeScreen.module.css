@@ -62,6 +62,14 @@
   height: calc(var(--un-layout-reference-screen-height) * var(--un-layout-thumbnail-scale));
 }
 
+/* A group's heading (Halloween) across the top of its page. */
+.groupHeading {
+  grid-column: 1 / -1;
+  justify-self: start;
+  margin: 0;
+  color: var(--region-muted);
+}
+
 .muted {
   color: var(--region-muted);
 }

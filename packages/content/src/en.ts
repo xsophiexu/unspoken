@@ -328,6 +328,12 @@ export const en = {
       bigTimer: 'Big timer',
       chips: 'Chips',
       ombre: 'Ombre',
+      candle: 'Candle',
+      hourglass: 'Hourglass',
+      moon: 'Moon',
+      potion: 'Potion',
+      spider: 'Spider',
+      jack: 'Jack-o’-lantern',
     },
     // Keyed by COLOR_IDS in @unspoken/design-tokens.
     colors: {
@@ -340,6 +346,9 @@ export const en = {
       rose: 'Rose',
     },
     pinnedColor: 'This style has its own colors',
+    // Headings over a group of styles (STYLE_GROUPS in @unspoken/design-tokens); the everyday styles
+    // have none.
+    groups: { halloween: 'Halloween' },
   },
 
   // --- Feedback ------------------------------------------------------------------------------

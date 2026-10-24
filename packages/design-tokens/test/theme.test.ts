@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   COLOR_IDS,
   DEFAULT_THEME,
+  HALLOWEEN_STYLE_IDS,
+  NATIVE_STYLE_IDS,
+  STYLE_GROUPS,
   STYLE_IDS,
   cssText,
   cardSwipes,
@@ -325,5 +328,32 @@ describe('cardSwipes', () => {
       expect(cardSwipes(layoutStyleFor('split', mode))).toBe(false);
       for (const style of STYLE_IDS.filter((id) => id !== 'split')) expect(cardSwipes(layoutStyleFor(style, mode))).toBe(true);
     }
+  });
+});
+
+describe('the Halloween looks', () => {
+  it('are website only: the Android list and its saved-prefs reader leave them out', () => {
+    for (const id of HALLOWEEN_STYLE_IDS) {
+      expect(STYLE_IDS).toContain(id);
+      expect(NATIVE_STYLE_IDS).not.toContain(id);
+      expect(parseThemeSelection({ style: id, color: 'rose', mode: 'light' }, NATIVE_STYLE_IDS)).toEqual({ style: DEFAULT_THEME.style, color: 'rose', mode: 'light' });
+      expect(parseThemeSelection({ style: id, color: 'rose', mode: 'light' }).style).toBe(id);
+    }
+    expect(NATIVE_STYLE_IDS).toEqual(STYLE_IDS.slice(0, STYLE_IDS.indexOf('ombre') + 1));
+  });
+
+  it('draw dark in their own color whatever the player picked, and keep the pick for other styles', () => {
+    for (const id of HALLOWEEN_STYLE_IDS) {
+      const theme = resolveTheme({ style: id, color: 'teal', mode: 'light' });
+      expect(theme.mode).toBe('dark');
+      expect(theme.colors).toBe(palettes[theme.color].dark);
+      expect(theme.color).toBe(resolveTheme({ style: id, color: 'rose', mode: 'dark' }).color);
+    }
+    expect(resolveTheme({ style: 'ledger', color: 'teal', mode: 'light' }).mode).toBe('light');
+  });
+
+  it('are grouped together on Customize, after every other style', () => {
+    expect(STYLE_GROUPS.flatMap((g) => g.styles)).toEqual([...STYLE_IDS]);
+    expect(STYLE_GROUPS.at(-1)?.styles).toEqual(HALLOWEEN_STYLE_IDS);
   });
 });

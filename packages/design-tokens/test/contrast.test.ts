@@ -7,6 +7,7 @@ import {
   ICON_CHIP_TONES,
   REGION_TEXT_PAIRS,
   REGION_TONES,
+  SCENE_LOOKS,
   STYLE_IDS,
   composite,
   contrastRatio,
@@ -15,6 +16,8 @@ import {
   palettes,
   readableOn,
   regionColors,
+  sceneRegionColors,
+  scenePageColors,
   withAlpha,
   spotlight,
   type LayoutStyle,
@@ -109,5 +112,18 @@ describe('icon-only chips', () => {
 
   it('are in use, so the rule above is not empty', () => {
     expect(STYLE_IDS.some((id) => COLOR_MODES.some((mode) => iconOnly(layoutStyleFor(id, mode).regions.header)))).toBe(true);
+  });
+});
+
+// The Halloween looks' night pages: every text slot reads on the page's flat color and on every
+// stop of its gradient.
+describe('Halloween scene pages', () => {
+  it.each(SCENE_LOOKS)('%s', (look) => {
+    const colors = sceneRegionColors(look);
+    for (const page of scenePageColors(look)) {
+      for (const slot of ['ink', 'muted', 'accentText'] as const) expect(contrastRatio(colors[slot], page), `${slot} on ${page}`).toBeGreaterThanOrEqual(AA_TEXT);
+      expect(contrastRatio(colors.chipInk, composite(colors.chip, page))).toBeGreaterThanOrEqual(AA_TEXT);
+    }
+    expect(contrastRatio(colors.onAccent, composite(colors.accent, colors.bg))).toBeGreaterThanOrEqual(AA_TEXT);
   });
 });

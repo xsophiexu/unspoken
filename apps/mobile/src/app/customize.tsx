@@ -1,5 +1,5 @@
 import { en } from '@unspoken/content';
-import { COLOR_IDS, STYLE_IDS, layout, layoutStyles, palettes, radius, space, type RegionColors, type StyleId } from '@unspoken/design-tokens';
+import { COLOR_IDS, NATIVE_STYLE_IDS, layout, layoutStyles, palettes, radius, space, type RegionColors, type StyleId } from '@unspoken/design-tokens';
 import { router } from 'expo-router';
 import { useRef, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
@@ -19,7 +19,8 @@ import { Txt } from '../ui/Txt';
 
 const { customizeColumns: COLUMNS, customizeRows: ROWS } = layout.grid;
 const GAP = space[3];
-const PAGES = [STYLE_IDS.slice(0, COLUMNS * ROWS), STYLE_IDS.slice(COLUMNS * ROWS)] as const;
+// The app offers every style but the website-only ones (the Halloween looks).
+const PAGES = [NATIVE_STYLE_IDS.slice(0, COLUMNS * ROWS), NATIVE_STYLE_IDS.slice(COLUMNS * ROWS)] as const;
 // On the reference screen a thumbnail is layout.thumbnail.scale of the screen; keep that share of
 // its grid cell at any width.
 const REFERENCE_CELL = (layout.referenceScreen.width - 2 * layout.screen.paddingX - (COLUMNS - 1) * GAP) / COLUMNS;

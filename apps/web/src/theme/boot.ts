@@ -5,9 +5,11 @@ import { COLOR_IDS, COLOR_MODES, DEFAULT_THEME, STYLE_IDS, breakpoints, layoutSt
 export const THEME_STORAGE_KEY = 'unspoken.theme';
 
 // The attributes on <html> that pick the theme's CSS variables (see theme/css.ts). A pinned style
-// (Split, Sheet) shows its own color whatever the player picked.
+// (Split, Sheet) shows its own color whatever the player picked, and a style with its own mode (the
+// Halloween looks, always dark) its own mode.
 export function themeAttributes(selection: ThemeSelection) {
-  return { 'data-style': selection.style, 'data-color': resolveTheme(selection).color, 'data-mode': selection.mode } as const;
+  const theme = resolveTheme(selection);
+  return { 'data-style': selection.style, 'data-color': theme.color, 'data-mode': theme.mode } as const;
 }
 
 type BootData = {
@@ -17,6 +19,8 @@ type BootData = {
   modes: readonly string[];
   fallback: ThemeSelection;
   pinned: Record<string, string>;
+  // Styles drawn in one mode whatever the player picked.
+  pinnedMode: Record<string, string>;
   // Window width classes from narrowest to widest: [name, min width].
   widths: [string, number][];
 };
@@ -35,7 +39,7 @@ function boot(d: BootData) {
   const style = pick(d.styles, saved.style, d.fallback.style);
   root.setAttribute('data-style', style);
   root.setAttribute('data-color', d.pinned[style] || pick(d.colors, saved.color, d.fallback.color));
-  root.setAttribute('data-mode', pick(d.modes, saved.mode, d.fallback.mode));
+  root.setAttribute('data-mode', d.pinnedMode[style] || pick(d.modes, saved.mode, d.fallback.mode));
   const width = () => {
     let name = d.widths[0]?.[0] ?? '';
     for (const [n, min] of d.widths) if (window.innerWidth >= min) name = n;
@@ -47,9 +51,11 @@ function boot(d: BootData) {
 
 export function bootScript(): string {
   const pinned: Record<string, string> = {};
+  const pinnedMode: Record<string, string> = {};
   for (const id of STYLE_IDS) {
-    const policy = layoutStyles[id].color;
+    const { color: policy, mode } = layoutStyles[id];
     if (policy.kind === 'pinned') pinned[id] = policy.color;
+    if (mode) pinnedMode[id] = mode;
   }
   const data: BootData = {
     key: THEME_STORAGE_KEY,
@@ -58,6 +64,7 @@ export function bootScript(): string {
     modes: COLOR_MODES,
     fallback: DEFAULT_THEME,
     pinned,
+    pinnedMode,
     widths: Object.entries(breakpoints).sort((a, b) => a[1] - b[1]),
   };
   return `(${boot.toString()})(${JSON.stringify(data)})`;
