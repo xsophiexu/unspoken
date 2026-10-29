@@ -1,6 +1,6 @@
 'use client';
 
-import { cardSpokenTerms, type SpokenHit } from '@unspoken/core';
+import type { SpokenHit, SpokenTerm } from '@unspoken/core';
 import { useEffect, useMemo, useState } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
@@ -27,8 +27,7 @@ type MicCheckProps = {
   active: boolean;
 };
 
-// A mic button over the round. While on, saying the card's word or a banned word that's showing
-// beeps and names the word.
+// A mic button over the round. While on, saying a banned word that's showing beeps and names it.
 export function MicCheck(props: MicCheckProps) {
   const [enabled] = useState(speechCheckEnabled);
   return enabled ? <MicCheckOn {...props} /> : null;
@@ -36,7 +35,9 @@ export function MicCheck(props: MicCheckProps) {
 
 function MicCheckOn({ card, active }: MicCheckProps) {
   const [hit, setHit] = useState<{ hit: SpokenHit; at: number } | null>(null);
-  const terms = useMemo(() => (card ? cardSpokenTerms(card) : null), [card]);
+  // Banned words only: the guesser says the card's word when they get it, and one phone can't tell
+  // who's talking.
+  const terms = useMemo(() => card?.banned.map((text): SpokenTerm => ({ text, kind: 'banned' })) ?? null, [card]);
   const { status, where, on, turnOn, turnOff } = useSpeechCheck({
     terms,
     active: active && card !== null,

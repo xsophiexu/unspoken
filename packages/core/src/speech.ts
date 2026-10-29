@@ -139,12 +139,23 @@ export class SpokenTermListener {
 
   // The latest text of result `index`. Returns the terms said since this result was last seen.
   hear(index: number, text: string): SpokenHit[] {
-    const before = this.heard.get(index)?.counts ?? new Map<string, number>();
+    const before = this.heard.get(index)?.counts ?? this.carriedOver(index, text);
     const counts = countAll(this.prepared, text);
     // A revision can drop a word the recognizer misheard; keep the higher count so it can't fire twice.
     for (const [term, n] of before) if ((counts.get(term) ?? 0) < n) counts.set(term, n);
     this.heard.set(index, { text, counts });
     return this.prepared.filter((p) => (counts.get(p.term.text) ?? 0) > (before.get(p.term.text) ?? 0)).map((p) => p.term);
+  }
+
+  // Chrome on Android repeats everything said so far at the start of each new result. When a new
+  // result starts with the one before it, the words already counted there aren't new.
+  private carriedOver(index: number, text: string): Map<string, number> {
+    const previous = this.heard.get(index - 1);
+    if (!previous) return new Map();
+    const earlier = speechTokens(previous.text);
+    const now = speechTokens(text);
+    const repeats = earlier.length > 0 && earlier.length <= now.length && earlier.every((token, i) => now[i] === token);
+    return repeats ? new Map(previous.counts) : new Map();
   }
 
   // A new recognition session numbers its results from 0 again.

@@ -79,6 +79,13 @@ describe('following a recognizer as it revises', () => {
     expect(listener.hear(1, 'sand')).toEqual(banned('Sand'));
   });
 
+  it('does not report again when a new result repeats the one before it', () => {
+    const listener = new SpokenTermListener(banned('Sand'));
+    expect(listener.hear(0, 'castles made of sand')).toEqual(banned('Sand'));
+    expect(listener.hear(1, 'castles made of sand at the beach')).toEqual([]);
+    expect(listener.hear(2, 'castles made of sand at the beach with more sand')).toEqual(banned('Sand'));
+  });
+
   it('does not report again when a revision drops and restores a word', () => {
     const listener = new SpokenTermListener(banned('Sand'));
     listener.hear(0, 'sand castle');
