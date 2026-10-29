@@ -1,6 +1,6 @@
 import { en } from '@unspoken/content';
 import { format } from '@unspoken/core';
-import { SERVER_TIME, createFeedbackClient, type BatchWrite, type FirebaseAdapter } from '@unspoken/firebase';
+import { SERVER_TIME, createFeedbackClient, type BatchWrite, type FirebaseAdapter, type ReadData } from '@unspoken/firebase';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
@@ -9,13 +9,14 @@ import { FeedbackScreen } from '@/screens/FeedbackScreen';
 
 import { renderApp } from './app';
 
-// A client over a stand-in for the Firebase SDK: sign-in gives a fixed user and commits are
-// recorded, or rejected with this SDK error code.
-function clientWith(rejectCode?: string) {
+// A client over a stand-in for the Firebase SDK: sign-in gives a fixed user whose send window is
+// `window` (none by default), and commits are recorded, or rejected with this SDK error code.
+function clientWith(rejectCode?: string, window: ReadData | null = null) {
   const batches: BatchWrite[][] = [];
   const adapter: FirebaseAdapter = {
     currentUid: () => null,
     signInAnonymously: async () => 'anon-1',
+    get: async () => window,
     commit: async (writes) => {
       if (rejectCode) throw Object.assign(new Error(rejectCode), { code: rejectCode });
       batches.push([...writes]);
@@ -78,7 +79,21 @@ describe('Send feedback', () => {
     expect(router.push).not.toHaveBeenCalled();
   });
 
-  it('asks the player to wait a minute when Firestore refuses a second idea', async () => {
+  it('tells the player to come back tomorrow after two ideas today, without sending', async () => {
+    const user = userEvent.setup();
+    const { batches, client } = clientWith(undefined, { count: 2, since: new Date() });
+    const { router } = renderApp(<FeedbackScreen from="menu" client={client} />);
+    const box = screen.getByRole('textbox', { name: en.feedback.ideaLabel });
+    await user.type(box, 'A third idea');
+    await user.click(screen.getByRole('button', { name: en.feedback.send }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(en.feedback.rateLimited);
+    expect(box).toHaveValue('A third idea');
+    expect(batches).toEqual([]);
+    expect(router.push).not.toHaveBeenCalled();
+  });
+
+  it('shows the same message when Firestore refuses the idea', async () => {
     const user = userEvent.setup();
     const { client } = clientWith('permission-denied');
     const { router } = renderApp(<FeedbackScreen from="menu" client={client} />);

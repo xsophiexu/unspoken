@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { canSendFeedback, defaultFeedbackTopic, feedbackLength } from '../src';
+import { canSendFeedback, defaultFeedbackTopic, feedbackLength, nextFeedback } from '../src';
 
 describe('feedback topic', () => {
   it('is picked from where the form was opened', () => {
@@ -30,5 +30,28 @@ describe('feedback message', () => {
     expect(feedbackLength('  idea  ')).toBe(4);
     expect(feedbackLength('👍👍')).toBe(2);
     expect(canSendFeedback(`${'x'.repeat(499)}👍`)).toBe(true);
+  });
+});
+
+describe('feedback send limit', () => {
+  const day = 24 * 60 * 60 * 1000;
+  const since = Date.UTC(2026, 9, 29, 9);
+
+  it('opens a window with the first idea', () => {
+    expect(nextFeedback(null, since)).toEqual({ kind: 'open' });
+  });
+
+  it('lets a second idea in the same day add to the window', () => {
+    expect(nextFeedback({ count: 1, since }, since + 1000)).toEqual({ kind: 'add', count: 2 });
+  });
+
+  it('refuses a third idea until a day after the first', () => {
+    expect(nextFeedback({ count: 2, since }, since + day - 1)).toEqual({ kind: 'full', until: since + day });
+    expect(nextFeedback({ count: 2, since }, since + day)).toEqual({ kind: 'full', until: since + day });
+  });
+
+  it('opens a new window once the day is over', () => {
+    expect(nextFeedback({ count: 2, since }, since + day + 1)).toEqual({ kind: 'open' });
+    expect(nextFeedback({ count: 1, since }, since + 3 * day)).toEqual({ kind: 'open' });
   });
 });

@@ -1,8 +1,8 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, signInAnonymously, type Auth } from 'firebase/auth';
-import { collection, doc, getFirestore, serverTimestamp, writeBatch, type Firestore } from 'firebase/firestore';
+import { Timestamp, collection, doc, getDoc, getFirestore, serverTimestamp, writeBatch, type Firestore } from 'firebase/firestore';
 
-import { SERVER_TIME, type BatchWrite, type DocValue, type FirebaseAdapter } from './adapter';
+import { SERVER_TIME, type BatchWrite, type DocValue, type FirebaseAdapter, type ReadData } from './adapter';
 import type { FirebaseOptions } from './options';
 
 // The real Firebase SDK (the modular JS SDK). Nothing else in the package imports 'firebase/*'.
@@ -32,6 +32,14 @@ function toFirestore(value: DocValue): unknown {
   return value;
 }
 
+// Timestamps (also inside maps and arrays) become Dates, so nothing above the adapter sees SDK types.
+function fromFirestore(value: unknown): unknown {
+  if (value instanceof Timestamp) return value.toDate();
+  if (Array.isArray(value)) return value.map(fromFirestore);
+  if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, v]) => [key, fromFirestore(v)]));
+  return value;
+}
+
 // A FirebaseAdapter over the SDK. Firebase starts only when the adapter is first used.
 export function firebaseAdapter(options: FirebaseOptions, setup?: FirebaseSetup): FirebaseAdapter {
   const firebase = () => getFirebase(options, setup);
@@ -44,12 +52,17 @@ export function firebaseAdapter(options: FirebaseOptions, setup?: FirebaseSetup)
       await auth.authStateReady();
       return auth.currentUser?.uid ?? (await signInAnonymously(auth)).user.uid;
     },
+    get: async (path: string) => {
+      const snapshot = await getDoc(doc(firebase().firestore, path));
+      return snapshot.exists() ? (fromFirestore(snapshot.data()) as ReadData) : null;
+    },
     commit: async (writes: readonly BatchWrite[]) => {
       const { firestore } = firebase();
       const batch = writeBatch(firestore);
       for (const write of writes) {
         const data = toFirestore(write.data) as Record<string, unknown>;
         if (write.kind === 'add') batch.set(doc(collection(firestore, write.collection)), data);
+        else if (write.kind === 'update') batch.update(doc(firestore, write.path), data);
         else batch.set(doc(firestore, write.path), data);
       }
       await batch.commit();

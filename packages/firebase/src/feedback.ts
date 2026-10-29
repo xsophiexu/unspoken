@@ -4,17 +4,20 @@ import {
   FEEDBACK_TOPIC_IDS,
   canSendFeedback,
   feedbackRules,
+  nextFeedback,
+  type FeedbackWindow,
   type FeedbackEntryPoint,
   type FeedbackPlatform,
   type FeedbackTopic,
 } from '@unspoken/core';
 
-import { SERVER_TIME, errorCode, type FirebaseAdapter } from './adapter';
+import { SERVER_TIME, errorCode, type BatchWrite, type FirebaseAdapter, type ReadData } from './adapter';
 import { signInAnonymously } from './auth';
 
 // Send feedback, written straight to Firestore. firestore.rules at the repo root checks the same
-// shape and allows one message per user per minute: each message also stamps feedbackLimits/{uid}
-// in the same batch, and the rules refuse a message within a minute of the last stamp.
+// shape and the same send limit (feedbackRules.sendLimit: 2 ideas, then nothing until a day after
+// the first of them). Each player's window is feedbackLimits/{uid} = { count, since }: every idea
+// opens a new window or adds one to the count in the same batch, and the rules refuse anything else.
 
 export const FEEDBACK_COLLECTION = 'feedback';
 export const FEEDBACK_LIMITS_COLLECTION = 'feedbackLimits';
@@ -27,9 +30,9 @@ export type FeedbackRequest = {
   appVersion?: string | null;
 };
 
-// invalid: the request breaks the shared rules and was not sent. rateLimited: Firestore refused it,
-// which for a valid request means the last one was under a minute ago. failed: anything else
-// (offline, sign-in failed, Firebase down).
+// invalid: the request breaks the shared rules and was not sent. rateLimited: the player's window is
+// full, either seen before sending or because Firestore refused it (which for a valid request means
+// the limit). failed: anything else (offline, sign-in failed, Firebase down).
 export type FeedbackErrorCode = 'invalid' | 'rateLimited' | 'failed';
 
 export class FeedbackError extends Error {
@@ -65,17 +68,27 @@ function validate({ topic, message, entryPoint, platform, appVersion }: Feedback
   };
 }
 
+// The stored window, or null when there is none or it predates the count (the old one-a-minute
+// stamp, { last }), which the rules also treat as no window.
+function storedWindow(data: ReadData | null): FeedbackWindow | null {
+  if (!data || typeof data.count !== 'number' || !(data.since instanceof Date)) return null;
+  return { count: data.count, since: data.since.getTime() };
+}
+
 export function createFeedbackClient(adapter: FirebaseAdapter): FeedbackClient {
   return {
     async sendFeedback(request) {
       const fields = validate(request);
       try {
         const uid = await signInAnonymously(adapter);
-        await adapter.commit([
-          { kind: 'add', collection: FEEDBACK_COLLECTION, data: { ...fields, uid, receivedAt: SERVER_TIME } },
-          { kind: 'set', path: `${FEEDBACK_LIMITS_COLLECTION}/${uid}`, data: { last: SERVER_TIME } },
-        ]);
+        const path = `${FEEDBACK_LIMITS_COLLECTION}/${uid}`;
+        const next = nextFeedback(storedWindow(await adapter.get(path)), Date.now());
+        if (next.kind === 'full') throw new FeedbackError('rateLimited');
+        // A new window starts at the server's time; adding to one leaves its start as stored.
+        const limit: BatchWrite = next.kind === 'open' ? { kind: 'set', path, data: { count: 1, since: SERVER_TIME } } : { kind: 'update', path, data: { count: next.count } };
+        await adapter.commit([{ kind: 'add', collection: FEEDBACK_COLLECTION, data: { ...fields, uid, receivedAt: SERVER_TIME } }, limit]);
       } catch (error) {
+        if (error instanceof FeedbackError) throw error;
         throw new FeedbackError(errorCode(error) === 'permission-denied' ? 'rateLimited' : 'failed', { cause: error });
       }
     },

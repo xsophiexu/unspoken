@@ -378,8 +378,8 @@ export const en = {
     send: 'Send feedback',
     sending: 'Sending…',
     failed: 'Couldn’t send that. Check your connection and try again.',
-    // One idea a minute per player; shown when the last one went out less than a minute ago.
-    rateLimited: 'You just sent an idea. Wait a minute, then try again.',
+    // Shown once a player has sent 2 ideas within a day (feedbackRules.sendLimit in core).
+    rateLimited: 'You’ve sent 2 ideas today. Try again tomorrow.',
   },
   thanks: {
     title: 'Thanks for the idea!',

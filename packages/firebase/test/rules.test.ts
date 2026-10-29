@@ -27,6 +27,13 @@ describe('firestore.rules', () => {
     expect(rules).toContain(`data.appVersion.size() <= ${feedbackRules.appVersionMaxLength}`);
   });
 
+  it('allows the same number of ideas per window, and the same window length', () => {
+    const { perWindow, windowDays } = feedbackRules.sendLimit;
+    expect(rules).toContain(`before.count < ${perWindow}`);
+    expect(rules).toContain(`after.count <= ${perWindow}`);
+    expect(rules).toContain(`before.since + duration.value(${windowDays}, 'd')`);
+  });
+
   it('guards the collections the client writes to', () => {
     expect(rules).toContain(`match /${FEEDBACK_COLLECTION}/{id}`);
     expect(rules).toContain(`match /${FEEDBACK_LIMITS_COLLECTION}/{uid}`);

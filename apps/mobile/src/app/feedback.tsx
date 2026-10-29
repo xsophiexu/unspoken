@@ -29,8 +29,8 @@ function entryPoint(value: unknown): FeedbackEntryPoint | undefined {
 }
 
 // Send feedback: a topic (picked for the player by where they came from) and up to 500 characters,
-// written to Firestore. When it can't be sent the text stays and an error says so; a second idea
-// within a minute is asked to wait.
+// written to Firestore. When it can't be sent the text stays and an error says so; a third idea
+// within a day of the first two is asked to wait until tomorrow.
 export default function FeedbackScreen() {
   const { theme } = usePrefs();
   const from = entryPoint(useLocalSearchParams<{ from?: string }>().from);

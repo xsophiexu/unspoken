@@ -1,5 +1,5 @@
 import { connectAuthEmulator, signOut } from 'firebase/auth';
-import { collection, connectFirestoreEmulator, doc, getDoc, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore';
+import { collection, connectFirestoreEmulator, deleteDoc, doc, getDoc, getDocs, serverTimestamp, setDoc, Timestamp, updateDoc, writeBatch } from 'firebase/firestore';
 import { beforeAll, beforeEach, describe, expect, it } from 'vitest';
 
 import { FeedbackError, createFeedbackClient, signInAnonymously } from '../../src';
@@ -19,7 +19,7 @@ beforeAll(() => {
   connectFirestoreEmulator(firestore, '127.0.0.1', 8080);
 });
 
-// Each test starts as a new anonymous user, so one test's rate limit never touches another.
+// Each test starts as a new anonymous user, so one test's send limit never touches another.
 beforeEach(async () => {
   await signOut(auth);
 });
@@ -36,7 +36,9 @@ const goodDoc = (uid: string) => ({
   receivedAt: serverTimestamp(),
 });
 
-// One batch like the client's: a feedback doc plus the sender's stamp (or a different stamp).
+const newWindow = () => ({ count: 1, since: serverTimestamp() });
+
+// One batch like the client's: a feedback doc plus the sender's window (or a different one).
 async function sendBatch(data: Record<string, unknown>, limit: { uid: string; data: Record<string, unknown> } | null) {
   const batch = writeBatch(firestore);
   batch.set(doc(collection(firestore, 'feedback')), data);
@@ -46,9 +48,23 @@ async function sendBatch(data: Record<string, unknown>, limit: { uid: string; da
 
 const denied = (promise: Promise<unknown>) => expect(promise).rejects.toMatchObject({ code: 'permission-denied' });
 
+const ADMIN = `http://127.0.0.1:8080/v1/projects/${PROJECT}/databases/(default)/documents`;
+
+// Stores a feedbackLimits doc as admin (bypassing the rules), e.g. a window that opened two days
+// ago: the emulator always uses its real clock for request.time, so time can't be moved forward.
+async function storeLimitAsAdmin(uid: string, fields: Record<string, unknown>) {
+  const response = await fetch(`${ADMIN}/feedbackLimits/${uid}`, {
+    method: 'PATCH',
+    headers: { Authorization: 'Bearer owner', 'Content-Type': 'application/json' },
+    body: JSON.stringify({ fields }),
+  });
+  if (!response.ok) throw new Error(`Admin write failed: ${response.status}`);
+}
+const daysAgo = (days: number) => ({ timestampValue: new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString() });
+
 // Reads what was stored, bypassing the rules the way the console or admin credentials do.
 async function storedFeedback(): Promise<Record<string, { stringValue?: string; nullValue?: null; timestampValue?: string }>[]> {
-  const response = await fetch(`http://127.0.0.1:8080/v1/projects/${PROJECT}/databases/(default)/documents/feedback?pageSize=500`, {
+  const response = await fetch(`${ADMIN}/feedback?pageSize=500`, {
     headers: { Authorization: 'Bearer owner' },
   });
   const body = (await response.json()) as { documents?: { fields: Record<string, never> }[] };
@@ -74,31 +90,71 @@ describe('feedback', () => {
     await expect(feedback.sendFeedback({ topic: 'other', message: 'Hi', platform: 'ios' })).resolves.toBeUndefined();
   });
 
-  it('refuses a second message from the same user within a minute', async () => {
-    await feedback.sendFeedback({ topic: 'styles', message: 'A sand color', platform: 'web' });
-    const error = await feedback.sendFeedback({ topic: 'styles', message: 'And a sea color', platform: 'web' }).catch((e: unknown) => e);
-    expect(error).toBeInstanceOf(FeedbackError);
-    expect((error as FeedbackError).code).toBe('rateLimited');
+  const send = (message: string) => feedback.sendFeedback({ topic: 'styles', message, platform: 'web' });
+  const errorCodeOf = (promise: Promise<unknown>) => promise.then(() => 'sent', (e: unknown) => (e instanceof FeedbackError ? e.code : String(e)));
+
+  it('accepts two messages from the same user and refuses a third', async () => {
+    await expect(send('A sand color')).resolves.toBeUndefined();
+    await expect(send('And a sea color')).resolves.toBeUndefined();
+    expect(await errorCodeOf(send('And a sky color'))).toBe('rateLimited');
   });
 
-  it('lets another user send in the same minute', async () => {
-    await feedback.sendFeedback({ topic: 'styles', message: 'First', platform: 'web' });
+  it('refuses a third message even when the client doesn’t check first', async () => {
+    const uid = await user();
+    await sendBatch(goodDoc(uid), { uid, data: newWindow() });
+    await sendBatch(goodDoc(uid), { uid, data: { count: 2, since: (await getDoc(doc(firestore, 'feedbackLimits', uid))).data()?.since } });
+    await denied(sendBatch(goodDoc(uid), { uid, data: newWindow() }));
+    const batch = writeBatch(firestore);
+    batch.set(doc(collection(firestore, 'feedback')), goodDoc(uid));
+    batch.update(doc(firestore, 'feedbackLimits', uid), { count: 3 });
+    await denied(batch.commit());
+  });
+
+  it('refuses a message that leaves the window unchanged', async () => {
+    const uid = await user();
+    await sendBatch(goodDoc(uid), { uid, data: newWindow() });
+    await denied(sendBatch(goodDoc(uid), null));
+  });
+
+  it('opens a new window a day after the first of two messages', async () => {
+    const uid = await user();
+    await storeLimitAsAdmin(uid, { count: { integerValue: '2' }, since: daysAgo(1.01) });
+    await expect(send('A new day')).resolves.toBeUndefined();
+    expect((await getDoc(doc(firestore, 'feedbackLimits', uid))).data()?.count).toBe(1);
+  });
+
+  it('still refuses within the day', async () => {
+    const uid = await user();
+    await storeLimitAsAdmin(uid, { count: { integerValue: '2' }, since: daysAgo(0.99) });
+    expect(await errorCodeOf(send('Too soon'))).toBe('rateLimited');
+    await denied(sendBatch(goodDoc(uid), { uid, data: newWindow() }));
+  });
+
+  it('opens a window over a stamp left by the old one-a-minute limit', async () => {
+    const uid = await user();
+    await storeLimitAsAdmin(uid, { last: daysAgo(0) });
+    await expect(send('After the update')).resolves.toBeUndefined();
+  });
+
+  it('lets another user send after someone used up their two', async () => {
+    await send('First');
+    await send('Second');
     await signOut(auth);
-    await expect(feedback.sendFeedback({ topic: 'styles', message: 'Second', platform: 'web' })).resolves.toBeUndefined();
+    await expect(send('Someone else')).resolves.toBeUndefined();
   });
 
-  it('refuses a message without the stamp in the same batch', async () => {
+  it('refuses a message without the window in the same batch', async () => {
     const uid = await user();
     await denied(sendBatch(goodDoc(uid), null));
   });
 
-  it('refuses a stamp that is not the server time', async () => {
+  it('refuses a window that does not start at the server time', async () => {
     const uid = await user();
-    await denied(sendBatch(goodDoc(uid), { uid, data: { last: Timestamp.fromMillis(Date.now()) } }));
+    await denied(sendBatch(goodDoc(uid), { uid, data: { count: 1, since: Timestamp.fromMillis(Date.now()) } }));
   });
 
   it('refuses a message when signed out', async () => {
-    await denied(sendBatch(goodDoc('nobody'), { uid: 'nobody', data: { last: serverTimestamp() } }));
+    await denied(sendBatch(goodDoc('nobody'), { uid: 'nobody', data: newWindow() }));
   });
 
   it.each([
@@ -117,17 +173,17 @@ describe('feedback', () => {
     const uid = await user();
     const data: Record<string, unknown> = { ...goodDoc(uid), ...change };
     for (const key of Object.keys(data)) if (data[key] === undefined) delete data[key];
-    await denied(sendBatch(data, { uid, data: { last: serverTimestamp() } }));
+    await denied(sendBatch(data, { uid, data: newWindow() }));
   });
 
   it('refuses a message signed with someone else’s uid', async () => {
     const uid = await user();
-    await denied(sendBatch({ ...goodDoc(uid), uid: 'someone-else' }, { uid, data: { last: serverTimestamp() } }));
+    await denied(sendBatch({ ...goodDoc(uid), uid: 'someone-else' }, { uid, data: newWindow() }));
   });
 
   it('accepts the hand-made batch the rules describe (so the refusals above are about the change)', async () => {
     const uid = await user();
-    await expect(sendBatch(goodDoc(uid), { uid, data: { last: serverTimestamp() } })).resolves.toBeUndefined();
+    await expect(sendBatch(goodDoc(uid), { uid, data: newWindow() })).resolves.toBeUndefined();
   });
 
   it('cannot be read, changed or deleted', async () => {
@@ -135,7 +191,7 @@ describe('feedback', () => {
     const ref = doc(collection(firestore, 'feedback'));
     const batch = writeBatch(firestore);
     batch.set(ref, goodDoc(uid));
-    batch.set(doc(firestore, 'feedbackLimits', uid), { last: serverTimestamp() });
+    batch.set(doc(firestore, 'feedbackLimits', uid), newWindow());
     await batch.commit();
 
     await denied(getDoc(ref));
@@ -147,19 +203,63 @@ describe('feedback', () => {
 });
 
 describe('feedbackLimits', () => {
-  it('lets a user stamp their own doc with the server time, and nothing else', async () => {
+  const ref = (uid: string) => doc(firestore, 'feedbackLimits', uid);
+
+  it('lets a user open their own window at the server time with exactly count and since', async () => {
     const uid = await user();
-    await expect(setDoc(doc(firestore, 'feedbackLimits', uid), { last: serverTimestamp() })).resolves.toBeUndefined();
-    await denied(setDoc(doc(firestore, 'feedbackLimits', uid), { last: serverTimestamp(), extra: true }));
-    await denied(setDoc(doc(firestore, 'feedbackLimits', uid), { last: Timestamp.fromMillis(0) }));
-    await denied(setDoc(doc(firestore, 'feedbackLimits', 'someone-else'), { last: serverTimestamp() }));
+    await denied(setDoc(ref(uid), { count: 1, since: serverTimestamp(), extra: true }));
+    await denied(setDoc(ref(uid), { count: 1 }));
+    await denied(setDoc(ref(uid), { count: 1, since: Timestamp.fromMillis(0) }));
+    await denied(setDoc(ref(uid), { count: 2, since: serverTimestamp() }));
+    await denied(setDoc(ref(uid), { count: 1.5, since: serverTimestamp() }));
+    await denied(setDoc(ref(uid), { last: serverTimestamp() }));
+    await denied(setDoc(ref('someone-else'), newWindow()));
+    await expect(setDoc(ref(uid), newWindow())).resolves.toBeUndefined();
   });
 
-  it('cannot be read, even by its owner', async () => {
+  it('can only add one idea at a time to a window, keeping its start', async () => {
     const uid = await user();
-    await setDoc(doc(firestore, 'feedbackLimits', uid), { last: serverTimestamp() });
-    await denied(getDoc(doc(firestore, 'feedbackLimits', uid)));
+    await setDoc(ref(uid), newWindow());
+    await denied(updateDoc(ref(uid), { count: 1 }));
+    await denied(updateDoc(ref(uid), { count: 2, since: serverTimestamp() }));
+    await expect(updateDoc(ref(uid), { count: 2 })).resolves.toBeUndefined();
+    await denied(updateDoc(ref(uid), { count: 3 }));
   });
+
+  it('cannot be reset by writing it alone, before the day is over', async () => {
+    const uid = await user();
+    await send2(uid);
+    await denied(setDoc(ref(uid), newWindow()));
+    await denied(updateDoc(ref(uid), { count: 1 }));
+    await denied(updateDoc(ref(uid), { count: 0 }));
+    await storeLimitAsAdmin(uid, { count: { integerValue: '2' }, since: daysAgo(0.5) });
+    await denied(setDoc(ref(uid), newWindow()));
+  });
+
+  it('cannot be deleted', async () => {
+    const uid = await user();
+    await setDoc(ref(uid), newWindow());
+    await denied(deleteDoc(ref(uid)));
+  });
+
+  it('can be read by its owner, and by nobody else', async () => {
+    const uid = await user();
+    await setDoc(ref(uid), newWindow());
+    const mine = await getDoc(ref(uid));
+    expect(mine.data()).toMatchObject({ count: 1, since: expect.any(Timestamp) });
+
+    await signOut(auth);
+    await user();
+    await denied(getDoc(ref(uid)));
+    await denied(getDocs(collection(firestore, 'feedbackLimits')));
+  });
+
+  // Two ideas through the client, which fills the window.
+  async function send2(uid: string) {
+    expect(adapter.currentUid()).toBe(uid);
+    await feedback.sendFeedback({ topic: 'other', message: 'One', platform: 'web' });
+    await feedback.sendFeedback({ topic: 'other', message: 'Two', platform: 'web' });
+  }
 });
 
 describe('everything else', () => {

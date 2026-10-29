@@ -1,13 +1,13 @@
 import { en } from '@unspoken/content';
 import { format } from '@unspoken/core';
-import { SERVER_TIME, createFeedbackClient, type BatchWrite, type FirebaseOptions } from '@unspoken/firebase';
+import { SERVER_TIME, createFeedbackClient, type BatchWrite, type FirebaseOptions, type ReadData } from '@unspoken/firebase';
 import { fireEvent, screen } from 'expo-router/testing-library';
 
 import { openApp, resetDevice } from './helpers';
 
 // test/setup.ts replaces src/firebase.ts, the app's only link to the Firebase SDK. Here it builds
-// the real feedback client over a stand-in adapter that signs in a fixed user and records (or
-// rejects) each batch.
+// the real feedback client over a stand-in adapter that signs in a fixed user (whose send window is
+// `window`) and records (or rejects) each batch.
 const { firebaseFeedbackClient } = jest.requireMock<{ firebaseFeedbackClient: jest.Mock }>('../src/firebase');
 
 const FIREBASE_ENV = {
@@ -21,16 +21,19 @@ const FIREBASE_ENV = {
 const IDEA = 'A team mode where each side gets its own color';
 let batches: BatchWrite[][];
 let rejectCode: string | undefined;
+let window: ReadData | null;
 
 beforeEach(async () => {
   await resetDevice();
   Object.assign(process.env, FIREBASE_ENV);
   batches = [];
   rejectCode = undefined;
+  window = null;
   firebaseFeedbackClient.mockImplementation((_options: FirebaseOptions) =>
     createFeedbackClient({
       currentUid: () => null,
       signInAnonymously: async () => 'anon-1',
+      get: async () => window,
       commit: async (writes) => {
         if (rejectCode) throw Object.assign(new Error(rejectCode), { code: rejectCode });
         batches.push([...writes]);
@@ -94,7 +97,17 @@ describe('Send feedback', () => {
     expect(screen.queryByText(en.thanks.title)).not.toBeOnTheScreen();
   });
 
-  it('asks the player to wait a minute when Firestore refuses a second idea', async () => {
+  it('tells the player to come back tomorrow after two ideas today, without sending', async () => {
+    window = { count: 2, since: new Date() };
+    await openApp('/feedback?from=menu');
+    await writeAndSend();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(en.feedback.rateLimited);
+    expect(screen.getByDisplayValue(IDEA)).toBeOnTheScreen();
+    expect(batches).toEqual([]);
+  });
+
+  it('shows the same message when Firestore refuses the idea', async () => {
     rejectCode = 'permission-denied';
     await openApp('/feedback?from=menu');
     await writeAndSend();

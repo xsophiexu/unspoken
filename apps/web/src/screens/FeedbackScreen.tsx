@@ -30,7 +30,7 @@ type FeedbackScreenProps = {
 
 // Send feedback: a topic (picked for the player from where they came) and up to 500 characters.
 // When sending fails, or Firebase is not configured, an inline error shows and the text stays; a
-// second idea within a minute gets a "wait a minute" error instead.
+// third idea within a day of the first two gets a "try again tomorrow" notice instead.
 export function FeedbackScreen({ from, client = feedbackClient }: FeedbackScreenProps) {
   const router = useRouter();
   const picked = defaultFeedbackTopic(from);

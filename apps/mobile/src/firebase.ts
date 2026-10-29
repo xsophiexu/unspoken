@@ -12,7 +12,7 @@ declare module 'firebase/auth' {
 }
 
 // The app's only link to the Firebase SDK (tests replace this module). On iOS and Android the
-// anonymous user is kept in device storage, so the one-idea-a-minute limit survives a restart; the
+// anonymous user is kept in device storage, so the two-ideas-a-day limit survives a restart; the
 // web build keeps it in the browser as usual.
 function auth(app: FirebaseApp) {
   return Platform.OS === 'web' ? getAuth(app) : initializeAuth(app, { persistence: getReactNativePersistence(AsyncStorage) });

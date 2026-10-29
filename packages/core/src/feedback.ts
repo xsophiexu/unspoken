@@ -20,13 +20,35 @@ export type FeedbackRules = {
   appVersionMaxLength: number;
   // The topic preselected for each entry point. The player can still pick another.
   topicFor: Readonly<Record<FeedbackEntryPoint, FeedbackTopic>>;
+  // How many ideas a player may send (perWindow), counted from the first of them for windowDays
+  // days. firestore.rules enforces the same numbers.
+  sendLimit: { perWindow: number; windowDays: number };
 };
 
 export const feedbackRules: FeedbackRules = {
   maxLength: 500,
   appVersionMaxLength: 32,
   topicFor: { customize: 'styles', modes: 'modes', menu: 'other' },
+  sendLimit: { perWindow: 2, windowDays: 1 },
 };
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// A player's send window as stored in feedbackLimits/{uid}: ideas sent so far, and when the first
+// of them was sent (milliseconds since the epoch).
+export type FeedbackWindow = { count: number; since: number };
+
+// What the next idea does to the window: opens a new one, adds to the current one (count is the
+// new total), or is refused until the window ends.
+export type NextFeedback = { kind: 'open' } | { kind: 'add'; count: number } | { kind: 'full'; until: number };
+
+export function nextFeedback(window: FeedbackWindow | null, now: number, rules: FeedbackRules = feedbackRules): NextFeedback {
+  const { perWindow, windowDays } = rules.sendLimit;
+  const until = window ? window.since + windowDays * DAY_MS : 0;
+  if (!window || now > until) return { kind: 'open' };
+  if (window.count < perWindow) return { kind: 'add', count: window.count + 1 };
+  return { kind: 'full', until };
+}
 
 // The topic the form opens with.
 export function defaultFeedbackTopic(entryPoint: FeedbackEntryPoint | undefined, rules: FeedbackRules = feedbackRules): FeedbackTopic {

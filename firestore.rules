@@ -1,11 +1,12 @@
 rules_version = '2';
 
 // Firestore rules for Unspoken. Everything is denied unless a match below allows it.
-// Clients sign in anonymously (packages/firebase) and may only write Send feedback, at most one
-// message per user per minute. Nobody can read anything back; feedback is read in the Firebase
-// console or with admin credentials, which bypass these rules.
-// The enums and lengths mirror packages/core/src/feedback.ts; packages/firebase/test/rules.test.ts
-// fails if they drift apart.
+// Clients sign in anonymously (packages/firebase) and may only write Send feedback: up to 2 ideas per
+// user, then nothing until a day after the first of those two. Nobody can read feedback back; it is
+// read in the Firebase console or with admin credentials, which bypass these rules. A user may read
+// only their own feedbackLimits doc, so the client can work out the next values.
+// The enums, lengths and send limit mirror packages/core/src/feedback.ts;
+// packages/firebase/test/rules.test.ts fails if they drift apart.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -22,11 +23,39 @@ service cloud.firestore {
       return /databases/$(database)/documents/feedbackLimits/$(request.auth.uid);
     }
 
-    // The same batch stamps feedbackLimits/{uid} with this request's time, and the stamp before the
-    // batch (if any) is over a minute old.
+    // A send window, feedbackLimits/{uid} = {count, since}: ideas sent so far and when the first was.
+    // before is the doc's data before this write (null when there is none), after its data after.
+    // A doc without both keys is from the old one-a-minute limit ({last}) and counts as no window.
+    function hasWindow(before) {
+      return before != null && before.keys().hasAll(['count', 'since']);
+    }
+
+    // A new window: none yet, or a day has passed since the old one opened. It opens now with 1.
+    function opensWindow(before, after) {
+      return (!hasWindow(before) || request.time > before.since + duration.value(1, 'd'))
+        && after.since == request.time
+        && after.count == 1;
+    }
+
+    // One more idea in the current window, which still has room.
+    function addsToWindow(before, after) {
+      return hasWindow(before)
+        && before.count < 2
+        && after.count == before.count + 1
+        && after.since == before.since;
+    }
+
+    function validWindowChange(before, after) {
+      return hasExactly(after, ['count', 'since'])
+        && after.count is int
+        && after.count >= 1
+        && after.count <= 2
+        && (opensWindow(before, after) || addsToWindow(before, after));
+    }
+
+    // The same batch moves the sender's window on by one idea.
     function rateLimitHolds() {
-      return getAfter(limitPath()).data.last == request.time
-        && (!exists(limitPath()) || request.time > get(limitPath()).data.last + duration.value(60, 's'));
+      return validWindowChange(exists(limitPath()) ? get(limitPath()).data : null, getAfter(limitPath()).data);
     }
 
     function validFeedback(data) {
@@ -47,12 +76,14 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // Written in the same batch as each idea. The window logic holds here too, so writing this doc
+    // alone can never reset a window early (it can only use up the player's own ideas).
     match /feedbackLimits/{uid} {
+      allow get: if signedIn() && request.auth.uid == uid;
       allow create, update: if signedIn()
         && request.auth.uid == uid
-        && hasExactly(request.resource.data, ['last'])
-        && request.resource.data.last == request.time;
-      allow read, delete: if false;
+        && validWindowChange(resource == null ? null : resource.data, request.resource.data);
+      allow list, delete: if false;
     }
   }
 }
