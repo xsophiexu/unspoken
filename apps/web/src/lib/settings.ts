@@ -49,13 +49,16 @@ export function parseSettings(value: unknown, config = webConfig): GameSettings 
       .catch(fallback.skips),
     // Settings saved before the switch existed have a time limit (unless the config starts without one).
     noTimeLimit: z.boolean().catch(fallback.noTimeLimit),
+    // Deep dive's Easiest first; anything else deals all the cards shuffled together.
+    easiestFirst: z.boolean().optional().catch(undefined),
   });
   const raw = typeof value === 'object' && value !== null ? value : {};
-  const parsed = schema.parse(raw);
+  const { easiestFirst, ...parsed } = schema.parse(raw);
   // A list of picks, or a single difficulty saved before several could be picked.
   const difficulties = parseDifficulties(raw, config) ?? fallback.difficulties;
   // A missing or bad timer follows the hardest pick's default.
   const settings: GameSettings = { ...parsed, difficulties, roundSeconds: parsed.roundSeconds ?? defaultRoundSeconds(hardestDifficulty(difficulties, config), config) };
+  if (easiestFirst !== undefined) settings.easiestFirst = easiestFirst;
   // Specialties and Zen's rules, read as core reads them (each valid field kept, the rest defaulted).
   if (config.specialties || config.zen) {
     const { specialties, noSkipLimit, scoreTarget, noScoreTarget } = parseCoreSettings(raw, config);

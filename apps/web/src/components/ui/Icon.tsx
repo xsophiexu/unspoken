@@ -29,6 +29,9 @@ export const iconPaths = {
   brush: 'M19.5 4.5l-8.2 8.2M11.3 12.7c-1.7-.4-3.5.6-3.9 2.4-.3 1.3-.8 2.6-2.4 3.4 2.9.9 6.6.2 7.4-2.3.4-1.3 0-2.7-1.1-3.5z',
   search: 'M10.5 4a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM15.3 15.3L20 20',
   help: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9.6 9.4a2.5 2.5 0 0 1 4.9.7c0 1.7-2.5 2.3-2.5 3.9M12 17h.01',
+  // Home's Deep dive and Custom game tiles.
+  target: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM12 12h.01',
+  swap: 'M4 8h14M15 5l3 3-3 3M20 16H6M9 13l-3 3 3 3',
 } as const;
 
 export type IconName = keyof typeof iconPaths;

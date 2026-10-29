@@ -8,7 +8,7 @@ import { config } from './config';
 // (trimmed to the art); Unspoken's is the app icon's art with its background taken out.
 export const homeArt: Readonly<Record<EditionId, { src: string; width: number; height: number }>> = {
   unspoken: { src: `${config.basePath}/art/unspoken-fox-card.png`, width: 700, height: 711 },
-  md: { src: `${config.basePath}/art/unspokenmd-fox-card.png`, width: 700, height: 720 },
+  md: { src: `${config.basePath}/art/unspokenmd-fox-card.png`, width: 724, height: 789 },
 };
 
 // A player character (64 × 64), always drawn bare.

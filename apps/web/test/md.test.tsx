@@ -82,7 +82,7 @@ describe('UnspokenMD’s own link', () => {
     window.history.pushState({}, '', '/md/');
     renderApp(<HomeScreen />);
     expect(screen.getByRole('radio', { name: /Medical jargon/ })).toBeChecked();
-    expect(screen.getByRole('link', { name: /Quick Play/ })).toHaveTextContent('Zen · One phone · Tricky');
+    expect(screen.getByRole('button', { name: /^Deep dive/ })).toHaveTextContent(en.home.deepDive.detail.md);
     expect(stored(EDITION_STORAGE_KEY)).toMatchObject({ edition: 'md', look: 'dark' });
   });
 
@@ -150,19 +150,25 @@ describe('Zen setup', () => {
 });
 
 describe('UnspokenMD Quick Play', () => {
-  it('keeps each edition’s settings apart and shows the MD ones on Home', async () => {
+  it('plays all cards from Normal to Hard in either edition, whatever was played last', async () => {
     const user = userEvent.setup();
-    saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Hard'], categories: [], skips: 3 }, [MD_SETTINGS_STORAGE_KEY]: { ...zen, difficulties: ['Expert'] } });
-    renderApp(<HomeScreen />);
-    const quickPlay = () => screen.getByRole('link', { name: /Quick Play/ });
-    expect(quickPlay()).toHaveTextContent('Classic · One phone · Hard');
-    await user.click(screen.getByRole('radio', { name: /Medical jargon/ }));
-    expect(quickPlay()).toHaveTextContent('Zen · One phone · Expert');
+    inMd({ ...zen, mode: 'ladder', difficulties: ['Expert'], specialties: ['respiratory'] });
+    saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Hard'], categories: ['Society'], skips: 3 } });
+    const { game } = renderPlay(<HomeScreen />);
+
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+    expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
+    expect(stored(MD_SETTINGS_STORAGE_KEY)).toMatchObject({ mode: 'zen', difficulties: ['Normal', 'Tricky', 'Hard'], specialties: [] });
+
     await user.click(screen.getByRole('radio', { name: /Everyday words/ }));
-    expect(quickPlay()).toHaveTextContent('Classic · One phone · Hard');
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+    expect(game.getByText(en.home.quickPlay.title)).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Difficulty Normal–Hard. Tap to change.' })).toHaveTextContent('NORMAL–HARD');
+    expect(game.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
+    expect(stored(SETTINGS_STORAGE_KEY)).toMatchObject({ mode: 'endless', difficulties: ['Normal', 'Tricky', 'Hard'], categories: [] });
   });
 
-  it('starts Zen with the last settings, even after a Ladder game, and counts only the score', async () => {
+  it('starts Zen even after a Ladder game, names only the difficulty on the chip and counts the score under it', async () => {
     const user = userEvent.setup();
     inMd({ ...zen, mode: 'ladder', difficulties: ['Hard'] });
     const { game } = renderPlay(<HomeScreen />);
@@ -170,21 +176,33 @@ describe('UnspokenMD Quick Play', () => {
 
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
     expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Difficulty Hard, All specialties. Tap to change.' })).toHaveTextContent('HARD · ALL');
-    expect(game.getByText('0 correct · 0 skipped')).toBeInTheDocument();
+    expect(game.getByRole('button', { name: 'Difficulty Normal–Hard, All specialties. Tap to change.' })).toHaveTextContent('NORMAL–HARD');
+    expect(game.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
     expect(game.getByText(mdEn.play.bannedLabel)).toBeInTheDocument();
     expect(game.getAllByRole('listitem')).toHaveLength(6);
 
     // Each answer lands once the card has flown off.
     await user.click(game.getByRole('button', { name: en.play.correct }));
-    expect(await game.findByText('1 correct · 0 skipped')).toBeInTheDocument();
+    expect(await game.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: en.play.skip }));
-    expect(await game.findByText('1 correct · 1 skipped')).toBeInTheDocument();
+    expect(await game.findByText('All cards · 1 correct · 1 skipped')).toBeInTheDocument();
 
     await user.click(game.getByRole('button', { name: en.a11y.menu }));
     const menu = within(screen.getByRole('dialog', { name: en.menu.title }));
     expect(menu.getByText('1 correct · 1 skipped · All specialties')).toBeInTheDocument();
     expect(menu.getByText(mdEn.menu.changeSettings)).toBeInTheDocument();
+  });
+
+  it('carries on with the Quick Play game in progress', async () => {
+    const user = userEvent.setup();
+    inMd();
+    const { game } = renderPlay(<HomeScreen />);
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+    await user.click(game.getByRole('button', { name: en.play.correct }));
+    expect(await game.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+    expect(game.getByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
   });
 
   it('plays a card found in search next, labeled From search, then carries on', async () => {
@@ -196,7 +214,7 @@ describe('UnspokenMD Quick Play', () => {
     expect(screen.getByText('From search · Tricky · Respiratory')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: en.play.correct }));
-    expect(await screen.findByText('1 correct · 0 skipped')).toBeInTheDocument();
+    expect(await screen.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
     expect(word()).not.toHaveTextContent('Pneumothorax');
     expect(screen.getByText(en.play.yourWord)).toBeInTheDocument();
   });
@@ -226,29 +244,40 @@ describe('UnspokenMD Quick Play', () => {
     await user.click(sheet.getByRole('checkbox', { name: /^Respiratory/ }));
     await user.click(sheet.getByRole('button', { name: mdEn.picksSheet.apply }));
 
-    expect(screen.getByRole('button', { name: /^Difficulty Tricky, Respiratory/ })).toHaveTextContent('TRICKY · RESP');
+    expect(screen.getByRole('button', { name: /^Difficulty Tricky, Respiratory/ })).toHaveTextContent('TRICKY');
+    expect(screen.getByText('Resp · 0 correct · 0 skipped')).toBeInTheDocument();
     expect(stored(MD_SETTINGS_STORAGE_KEY)).toMatchObject({ specialties: ['respiratory'], difficulties: ['Tricky'] });
+
+    await user.click(screen.getByRole('button', { name: /^Difficulty Tricky, Respiratory/ }));
+    const again = within(screen.getByRole('dialog', { name: mdEn.picksSheet.tabs }));
+    await user.click(again.getByRole('radio', { name: mdEn.picksSheet.specialties }));
+    await user.click(again.getByRole('checkbox', { name: /^Renal/ }));
+    await user.click(again.getByRole('checkbox', { name: /^Neurology/ }));
+    await user.click(again.getByRole('button', { name: mdEn.picksSheet.apply }));
+    expect(screen.getByText('3 specialties · 0 correct · 0 skipped')).toBeInTheDocument();
   });
 });
 
 describe('UnspokenMD game header', () => {
   const chip = () => screen.getByRole('button', { name: /^Difficulty Tricky/ });
 
-  it('names the word bank on the chip: ALL, one specialty’s short name, or how many of 13', () => {
+  it('names only the difficulty on the chip, and the word bank on the line under the title', () => {
     inMd({ ...zen, specialties: ['gastrointestinal'] });
     const one = renderPlay();
-    expect(chip()).toHaveTextContent('TRICKY · GI');
+    expect(chip()).toHaveTextContent(/^TRICKY$/);
+    expect(screen.getByText('GI · 0 correct · 0 skipped')).toBeInTheDocument();
     one.unmount();
 
     inMd({ ...zen, specialties: ['cardiovascular', 'renal', 'neurology'] });
     const several = renderPlay();
-    expect(chip()).toHaveTextContent('TRICKY · 3 OF 13');
+    expect(chip()).toHaveTextContent(/^TRICKY$/);
+    expect(screen.getByText('3 specialties · 0 correct · 0 skipped')).toBeInTheDocument();
     several.unmount();
 
-    // Every specialty picked one by one is the same as All.
+    // Every specialty picked one by one is the same as all cards.
     inMd({ ...zen, specialties: [...SPECIALTY_IDS] });
     renderPlay();
-    expect(chip()).toHaveTextContent('TRICKY · ALL');
+    expect(screen.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
   });
 
   it('says Zen for a game started on New game, and keeps saying it after a reload', async () => {

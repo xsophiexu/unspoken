@@ -1,9 +1,24 @@
 'use client';
 
-import { en, mdEn } from '@unspoken/content';
-import { EDITION_IDS, difficultyLabel, format, isSwipeOver, type EditionId, type GameSettings, type RoundState } from '@unspoken/core';
+import { en } from '@unspoken/content';
+import {
+  difficultySpan,
+  EDITION_IDS,
+  format,
+  homeQuickPlaySettings,
+  isHomeQuickPlay,
+  isSwipeOver,
+  QUICK_PLAY_DIFFICULTIES,
+  type Difficulty,
+  type GameConfig,
+  type GameSettings,
+  type RoundState,
+} from '@unspoken/core';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
+import { DeepDiveSheet } from '@/components/sheets/DeepDiveSheet';
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { Screen } from '@/components/ui/Screen';
 import { homeArt } from '@/lib/art';
@@ -11,25 +26,23 @@ import { catalogs } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
 import { useEdition } from '@/state/edition';
-import { useGame } from '@/state/game';
+import { useGame, type GameStart } from '@/state/game';
 
 import styles from './HomeScreen.module.css';
 
 const copy = en.home;
-const difficultyNames = Object.fromEntries(Object.entries(en.difficulties).map(([id, d]) => [id, d.name])) as Record<keyof typeof en.difficulties, string>;
+const difficultyNames = Object.fromEntries(Object.entries(en.difficulties).map(([id, d]) => [id, d.name])) as Record<Difficulty, string>;
 
-// Quick Play's line: the mode and difficulty it will play, on one phone. UnspokenMD's Quick Play
-// always plays Zen, with its last settings.
-function quickPlayDetail(edition: EditionId, settings: GameSettings): string {
-  const { config } = catalogs[edition];
-  const mode = edition === 'md' ? mdEn.modes.zen.name : en.modes[settings.mode].name;
-  const difficulty = difficultyLabel(settings.difficulties, { names: difficultyNames, mixed: en.difficultyMix }, config);
-  return format(copy.quickPlay.detail, { mode, where: copy.quickPlay.onePhone, difficulty });
+// Quick Play's line: always all cards, Normal to Hard.
+function quickPlayDetail(config: GameConfig): string {
+  const difficulties = difficultySpan(QUICK_PLAY_DIFFICULTIES, { names: difficultyNames, span: en.difficultySpan.long, mixed: en.difficultyMix }, config);
+  return format(copy.quickPlay.detail, { picks: en.themes.all, difficulties });
 }
 
-// Whether UnspokenMD's Quick Play can carry on with the game in progress: a Zen game not over yet.
-function zenInProgress(round: RoundState): boolean {
-  return round.kind === 'swipe' && round.rules.optionalRules === true && !isSwipeOver(round);
+// Whether Quick Play can carry on with the game in progress: one Quick Play started, still playing
+// what Quick Play plays, and not over yet.
+function quickPlayInProgress(round: RoundState, start: GameStart, config: GameConfig): boolean {
+  return start === 'quickPlay' && round.kind === 'swipe' && isHomeQuickPlay(round.settings, config) && !isSwipeOver(round);
 }
 
 const links: { href: string; icon: IconName; label: string }[] = [
@@ -38,15 +51,22 @@ const links: { href: string; icon: IconName; label: string }[] = [
   { href: routes.howToPlay, icon: 'help', label: copy.links.howToPlay },
 ];
 
-// Home (home-v4, screens 1 and 2): the edition switch, the fox holding the edition's card, Quick
-// Play with the last settings, and links to Modes, Customize and How to play.
+// Home (home-build, screens 1 and 2): the edition switch, the fox holding the edition's card, Quick
+// Play, the Deep dive and Custom game tiles, and links to Modes, Customize and How to play.
 export function HomeScreen() {
   const { edition, setEdition } = useEdition();
-  const { settings, round, newGame } = useGame();
-  // UnspokenMD's Quick Play skips setup and starts Zen with the last settings; Unspoken's opens the
-  // game as it is.
+  const { round, start, newGame } = useGame();
+  const router = useRouter();
+  const [diving, setDiving] = useState(false);
+  const { config } = catalogs[edition];
+  // Quick Play skips setup: the default mode with all cards at Normal, Tricky and Hard, whatever was
+  // played last.
   const startQuickPlay = () => {
-    if (edition === 'md' && !zenInProgress(round)) newGame({ ...settings, mode: 'zen' }, undefined, 'quickPlay');
+    if (!quickPlayInProgress(round, start, config)) newGame(homeQuickPlaySettings(config), undefined, 'quickPlay');
+  };
+  const startDeepDive = (settings: GameSettings) => {
+    newGame(settings, undefined, 'deepDive');
+    router.push(routes.play);
   };
   const art = homeArt[edition];
 
@@ -86,10 +106,19 @@ export function HomeScreen() {
           </span>
           <span className={styles.quickText}>
             <span className={text('sheetTitle')}>{copy.quickPlay.title}</span>
-            <span className={cx(styles.quickDetail, text('small'))}>{quickPlayDetail(edition, settings)}</span>
+            <span className={cx(styles.quickDetail, text('small'))}>{quickPlayDetail(config)}</span>
           </span>
           <Icon name="chevronRight" className={styles.chevron} />
         </Link>
+
+        <div className={styles.tiles}>
+          <button type="button" className={styles.tile} onClick={() => setDiving(true)} aria-haspopup="dialog">
+            <HomeTileText icon="target" title={copy.deepDive.title} detail={copy.deepDive.detail[edition]} />
+          </button>
+          <Link href={routes.customGame(config.defaults.mode)} className={styles.tile}>
+            <HomeTileText icon="swap" title={copy.customGame.title} detail={copy.customGame.detail} />
+          </Link>
+        </div>
 
         <nav aria-label={copy.links.label} className={styles.links}>
           {links.map((link) => (
@@ -100,7 +129,23 @@ export function HomeScreen() {
           ))}
         </nav>
       </div>
+      {diving && <DeepDiveSheet onClose={() => setDiving(false)} onStart={startDeepDive} />}
     </Screen>
+  );
+}
+
+// A white tile's icon box, title (one line) and line under it.
+function HomeTileText({ icon, title, detail }: { icon: IconName; title: string; detail: string }) {
+  return (
+    <>
+      <span className={styles.tileIcon}>
+        <Icon name={icon} />
+      </span>
+      <span className={styles.tileText}>
+        <span className={cx(styles.tileTitle, text('optionTitle'))}>{title}</span>
+        <span className={cx(styles.muted, text('small'))}>{detail}</span>
+      </span>
+    </>
   );
 }
 

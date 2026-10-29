@@ -1,4 +1,5 @@
-/* Home (home-v4): the edition switch, the art, then Quick Play and the links at the bottom. */
+/* Home (home-build): the edition switch, the art, then Quick Play, the Deep dive and Custom game
+   tiles, and the links at the bottom. */
 
 .switch {
   display: flex;
@@ -63,7 +64,12 @@
 .actions {
   display: flex;
   flex-direction: column;
-  gap: var(--un-space-4);
+  gap: var(--un-space-2);
+}
+
+/* The links sit a little further from the tiles than the tiles from Quick Play. */
+.links {
+  margin-top: var(--un-space-2);
 }
 
 .quickPlay {
@@ -134,4 +140,64 @@
 
 .linkIcon {
   font-size: var(--un-layout-home-link-icon);
+}
+
+/* Deep dive and Custom game, side by side under Quick Play: white, an icon box, and a title that
+   stays on one line. */
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(var(--un-layout-grid-home-tiles), minmax(0, 1fr));
+  gap: var(--un-space-2);
+}
+
+.tile {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+  min-height: var(--un-layout-min-touch);
+  padding: var(--un-space-3) var(--un-space-2-5);
+  border: 0;
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+  color: var(--region-ink);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tile:focus-visible {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.tileIcon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-home-tile-icon);
+  height: var(--un-layout-home-tile-icon);
+  border-radius: var(--un-radius-md);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  font-size: var(--un-layout-home-tile-glyph);
+}
+
+.tileText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* One line: the title shrinks with a narrow tile rather than wrap. */
+.tileText .tileTitle {
+  font-size: min(var(--un-text-option-title-size), calc(var(--un-layout-home-tile-title-share) * 100cqi));
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--region-muted);
 }

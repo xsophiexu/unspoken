@@ -13,12 +13,14 @@ function SetupRoute() {
   const mode = parseMode(params.get('mode'), useCatalog().config);
   // Step 3 of a Custom Mind Reader game.
   const custom = mode === 'mindReader' && params.get('custom') === '1';
+  // Home's Custom game.
+  const fromHome = params.get('from') === 'home';
   const router = useRouter();
   // A missing or unavailable mode goes back to the list.
   useEffect(() => {
     if (!mode) router.replace(routes.modes);
   }, [mode, router]);
-  return mode && <SetupScreen key={mode} mode={mode} custom={custom} />;
+  return mode && <SetupScreen key={mode} mode={mode} custom={custom} fromHome={fromHome} />;
 }
 
 export default function SetupPage() {

@@ -34,21 +34,24 @@ afterEach(() => {
 });
 
 describe('Home', () => {
-  it('offers Quick Play with the last settings on one phone, and links to Modes, Customize and How to play', () => {
+  it('offers Quick Play on all cards from Normal to Hard, Deep dive, Custom game and the links', () => {
     saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Hard', 'Tough'], categories: [], skips: 3 } });
     renderApp(<HomeScreen />);
     expect(quickPlay()).toHaveAttribute('href', '/play/');
-    expect(quickPlay()).toHaveTextContent('Classic · One phone · Hard+');
+    expect(quickPlay()).toHaveTextContent('All cards · Normal to Hard');
+    expect(screen.getByRole('button', { name: /^Deep dive/ })).toHaveTextContent(home.deepDive.detail.unspoken);
+    const custom = screen.getByRole('link', { name: /^Custom game/ });
+    expect(custom).toHaveTextContent(home.customGame.detail);
+    expect(custom).toHaveAttribute('href', '/setup/?mode=endless&from=home');
     const links = within(screen.getByRole('navigation', { name: home.links.label }));
     expect(links.getByRole('link', { name: home.links.modes })).toHaveAttribute('href', '/modes/');
     expect(links.getByRole('link', { name: home.links.customize })).toHaveAttribute('href', '/customize/');
     expect(links.getByRole('link', { name: home.links.howToPlay })).toHaveAttribute('href', '/play/?tour=1');
   });
 
-  it('starts in Unspoken at Endless and Normal for a new player', () => {
+  it('starts in Unspoken for a new player', () => {
     renderApp(<HomeScreen />);
     expect(screen.getByRole('radio', { name: /Everyday words/ })).toBeChecked();
-    expect(quickPlay()).toHaveTextContent('Endless · One phone · Normal');
     expect(screen.getByRole('img')).toHaveAccessibleName(home.art.unspoken);
   });
 
@@ -60,7 +63,8 @@ describe('Home', () => {
 
     await user.click(screen.getByRole('radio', { name: /Medical jargon/ }));
     expect(html()).toHaveAttribute('data-color', 'md');
-    expect(quickPlay()).toHaveTextContent('Zen · One phone · Tricky');
+    expect(screen.getByRole('button', { name: /^Deep dive/ })).toHaveTextContent(home.deepDive.detail.md);
+    expect(screen.getByRole('link', { name: /^Custom game/ })).toHaveAttribute('href', '/setup/?mode=zen&from=home');
     expect(screen.getByRole('img')).toHaveAccessibleName(home.art.md);
     expect(stored(EDITION_STORAGE_KEY)).toMatchObject({ edition: 'md' });
 

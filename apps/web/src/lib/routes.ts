@@ -8,11 +8,13 @@ export const routes = {
   home: '/',
   // UnspokenMD's own link (unspokengame.web.app/md/): Home, switched to UnspokenMD.
   md: '/md/',
-  // The game. Quick Play opens it with the last settings; ?tour=1 opens How to play over it.
+  // The game. Quick Play and Deep dive start a game and open it; ?tour=1 opens How to play over it.
   play: '/play/',
   howToPlay: '/play/?tour=1',
   modes: '/modes/',
   setup: (mode: ModeId) => `/setup/?mode=${mode}`,
+  // Home's Custom game: New game for the edition's default mode, titled Custom game, back to Home.
+  customGame: (mode: ModeId) => `/setup/?mode=${mode}&from=home`,
   // Mind Reader: its start screen, then a Custom game's steps (players, lineup, game settings).
   mindReader: '/mind-reader/',
   mindReaderPlayers: '/mind-reader/players/',

@@ -2,6 +2,7 @@
 
 import {
   canPlayVersus,
+  cardsByDifficulty,
   cardsForSettings,
   createRound,
   EDITION_IDS,
@@ -31,10 +32,11 @@ import { readStored, writeStored } from '@/lib/storage';
 
 import { useEdition } from './edition';
 
-// How the game in progress was started: Home's Quick Play, or Start on New game. UnspokenMD's Zen
-// header says Quick Play only for the first (like Mind Reader's Quick Play), Zen otherwise.
-export type GameStart = 'quickPlay' | 'setup';
-export const GAME_STARTS = ['quickPlay', 'setup'] as const satisfies readonly GameStart[];
+// How the game in progress was started: Home's Quick Play or Deep dive, or Start on New game (also
+// Home's Custom game). The header says Quick Play or Deep dive for the first two (like Mind
+// Reader's Quick Play), and the mode's name otherwise.
+export type GameStart = 'quickPlay' | 'deepDive' | 'setup';
+export const GAME_STARTS = ['quickPlay', 'deepDive', 'setup'] as const satisfies readonly GameStart[];
 
 // The game in progress: the settings it was started with and the round state from @unspoken/core.
 // Rules live entirely in core's reducers; this only starts rounds and forwards actions. Each
@@ -72,8 +74,11 @@ function playable(settings: GameSettings, versus: VersusSetup, { config }: Catal
 function startRound(wanted: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader' | 'versus'>, catalog: Catalog): RoundState {
   const { bank, config } = catalog;
   const settings = playable(wanted, state.versus, catalog);
+  // Deep dive's Easiest first deals the cards a difficulty at a time, easiest first.
+  const groups = settings.easiestFirst ? cardsByDifficulty(bank, settings, config) : undefined;
   return createRound(settings, {
-    cards: cardsForSettings(bank, settings, config),
+    cards: groups ? groups.flat() : cardsForSettings(bank, settings, config),
+    groups,
     seed,
     config,
     showIntro: !state.introSeen[modeRules(settings.mode, config).play],
@@ -120,7 +125,8 @@ function initialGame(catalog: Catalog, random: Random): GameState {
   const fresh = {
     introSeen: {},
     play: 'quick' as const,
-    start: GAME_STARTS.find((s) => s === savedStart) ?? 'quickPlay',
+    // Nothing saved: the saved settings came from New game (or are the defaults).
+    start: GAME_STARTS.find((s) => s === savedStart) ?? 'setup',
     mindReader: { lineup: emptyLineup(), rounds: config.mindReader.rounds.default },
     versus: defaultVersusSetup(emptyLineup()),
   };
@@ -131,7 +137,7 @@ type GameContextValue = {
   settings: GameSettings;
   round: RoundState;
   dispatch: (action: RoundAction) => void;
-  // How the game in progress was started (Quick Play or New game).
+  // How the game in progress was started (Quick Play, Deep dive or New game).
   start: GameStart;
   // A fresh round with these settings (new words, score back to 0). Mind Reader also takes how to
   // play; a Custom game plays the mindReader setup. `start` says where it was started from; left

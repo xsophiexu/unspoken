@@ -65,10 +65,16 @@ type Open = 'categories' | 'difficulty' | 'info' | 'smallDeck' | null;
 // the current settings with the chosen mode. custom: step 3 of a Custom Mind Reader game, with the
 // time limit and rounds at the top. In UnspokenMD, specialties take the categories' place, and Zen
 // has its optional rules (timer, skip limit, Play to a score) in place of the timer and skips.
-export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: boolean }) {
+// fromHome: Home's Custom game, titled Custom game with a link back to Home. A Deep dive's Easiest
+// first stays out: New game deals every card shuffled together.
+export function SetupScreen({ mode, custom = false, fromHome = false }: { mode: ModeId; custom?: boolean; fromHome?: boolean }) {
   const game = useGame();
   const router = useRouter();
-  const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
+  const [settings, setSettings] = useState<GameSettings>(() => {
+    const next = { ...game.settings, mode };
+    delete next.easiestFirst;
+    return next;
+  });
   const [timerFocused, setTimerFocused] = useState(false);
   const [open, setOpen] = useState<Open>(null);
   const allCardsTap = useRef<AllCardsTap>(null);
@@ -164,9 +170,9 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
     <Screen
       tone="base"
       width="column"
-      back={custom || versus ? undefined : { href: routes.modes, label: copy.back }}
-      action={custom || versus ? undefined : <span className={cx(styles.muted, text('link'))}>{(md ? mdEn.modes[mode as keyof typeof mdEn.modes] : en.modes[mode]).name}</span>}
-      title={custom || versus ? undefined : copy.title}
+      back={custom || versus ? undefined : fromHome ? { href: routes.home, label: copy.backHome } : { href: routes.modes, label: copy.back }}
+      action={custom || versus || fromHome ? undefined : <span className={cx(styles.muted, text('link'))}>{(md ? mdEn.modes[mode as keyof typeof mdEn.modes] : en.modes[mode]).name}</span>}
+      title={custom || versus ? undefined : fromHome ? copy.customTitle : copy.title}
       footer={
         <Button size="large" disabled={!ready} onClick={start}>
           {copy.start}

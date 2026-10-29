@@ -32,7 +32,8 @@ export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
     return (
       <div className={styles.titleBlock}>
         <div className={cx(styles.titleRow, model.longBadge && styles.longBadge)}>
-          <span className={cx(styles.title, text('modeName'))} style={{ fontSize: slot.size }}>
+          {/* Beside a long chip, the title is at most layout.header.chipTitle, so both fit one line. */}
+          <span className={cx(styles.title, text('modeName'))} style={{ fontSize: model.longBadge ? `min(${slot.size}px, var(--un-layout-header-chip-title))` : slot.size }}>
             {modeName}
           </span>
           <button
