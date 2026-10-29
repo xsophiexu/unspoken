@@ -1,11 +1,12 @@
-name: Deploy web version to GitHub Pages
+name: Redirect GitHub Pages to Firebase Hosting
 
-# Builds apps/web (Next.js static export) on every push to main and publishes it to GitHub Pages
-# (Settings → Pages → Source: GitHub Actions).
+# The web version now lives on Firebase Hosting (firebase-hosting.yml). This keeps the old
+# https://<owner>.github.io/unspoken/ address working by publishing a page that forwards every path there.
 
 on:
   push:
     branches: [main]
+    paths: ['.github/pages-redirect/**', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -20,30 +21,11 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      # The site is served from https://<owner>.github.io/unspoken/.
-      NEXT_PUBLIC_BASE_PATH: /unspoken
-      # Google Analytics measurement id. A repository variable of the same name overrides it.
-      NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || 'G-9MFDEM0KXR' }}
-      # services/api base URL. Set the repository variable once the service is deployed; until then
-      # Send feedback shows its inline error.
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://unspoken-production.up.railway.app' }}
-      NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm --filter @unspoken/web lint
-      - run: pnpm --filter @unspoken/web test
-      # next build also type-checks.
-      - run: pnpm --filter @unspoken/web build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/web/out
+          path: .github/pages-redirect
 
   deploy:
     needs: build
