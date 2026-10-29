@@ -60,12 +60,6 @@ export function mdTourSteps(steps: readonly SpotlightStep[]): SpotlightStep[] {
 export const mdCopy = {
   // "unspoken" in ink and "md" in the accent color, as on the fox card.
   wordmark: { base: 'unspoken', accent: 'md' },
-  // UnspokenMD's modes (home-v4, screen 3). Zen is what Quick Play starts.
-  modes: {
-    zen: { name: 'Zen', sub: 'Explain at your own pace. Add a timer or skip limit if you want.' },
-    versus: { name: 'Versus', sub: 'Teams or free-for-all. Points per term.' },
-    ladder: { name: 'Ladder', sub: 'Get one right, and a new banned term joins.' },
-  },
   customize: {
     sub: 'Make UnspokenMD look the way you like.',
     layout: 'LAYOUT',

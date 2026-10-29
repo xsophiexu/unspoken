@@ -192,6 +192,8 @@ export const layout = {
   // UnspokenMD's player characters, always drawn bare (no circle): the size in the Customize row and
   // in the picker sheet's grid (grid.characters columns).
   character: { row: 44, picker: 48 },
+  // UnspokenMD's Find a card lists this many results at most; typing more narrows them down.
+  search: { maxResults: 50 },
   // Icon boxes and line weights for the controls the boards draw.
   icon: { sm: 14, md: 18, lg: 22, xl: 24 },
   stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },

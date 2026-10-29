@@ -128,24 +128,25 @@ export function toggleCategory(categories: readonly Category[], category: Catego
 }
 
 // Whether every category in the bank is picked (double-tapping All cards picks them all).
-export function allCategoriesPicked(categories: readonly Category[], available: readonly Category[]): boolean {
+export function allCategoriesPicked<T extends string = Category>(categories: readonly T[], available: readonly T[]): boolean {
   return available.length > 0 && available.every((c) => categories.includes(c));
 }
 
 // The last tap on All cards, so the next one can tell a double-tap: when it happened and the
 // categories picked before it.
-export type AllCardsTap = { at: number; before: readonly Category[] } | null;
+// The same tap works for UnspokenMD's All specialties chip (T = Specialty).
+export type AllCardsTap<T extends string = Category> = { at: number; before: readonly T[] } | null;
 
 // A tap on the All cards chip at `now` (ms). A single tap means All cards (no categories). A second
 // tap within `windowMs` is a double-tap: it picks every category, or, when every category was
 // already picked before the first tap, goes back to All cards.
-export function tapAllCards(
-  categories: readonly Category[],
-  last: AllCardsTap,
+export function tapAllCards<T extends string = Category>(
+  categories: readonly T[],
+  last: AllCardsTap<T>,
   now: number,
-  available: readonly Category[],
+  available: readonly T[],
   windowMs: number,
-): { categories: Category[]; last: AllCardsTap } {
+): { categories: T[]; last: AllCardsTap<T> } {
   if (last && now - last.at <= windowMs) {
     return { categories: allCategoriesPicked(last.before, available) ? [] : [...available], last: null };
   }

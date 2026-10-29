@@ -50,7 +50,7 @@ export function categoriesLabel(categories: readonly Category[], copy: Pick<Roun
 
 // What a round draws from, for the menu: its specialties in UnspokenMD ("All specialties",
 // "Respiratory", "3 specialties"), its categories otherwise.
-function picksLabel(state: RoundState, copy: RoundCopy): string {
+export function picksLabel(state: RoundState, copy: RoundCopy): string {
   if (!state.config.specialties) return categoriesLabel(state.settings.categories, copy);
   const picks = state.settings.specialties ?? [];
   if (picks.length === 0) return copy.themes.all;

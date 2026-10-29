@@ -1,4 +1,4 @@
-import { normalizeBank, SPECIALTY_IDS, type BankCardInput, type BankEntry, type MdModeId, type RoundCopy, type Specialty } from '@unspoken/core';
+import { ALL_DIFFICULTY_IDS, normalizeBank, SPECIALTY_IDS, type BankCardInput, type BankEntry, type Difficulty, type MdModeId, type RoundCopy, type Specialty } from '@unspoken/core';
 
 import mdRaw from '../data/md.json';
 import { en } from './en';
@@ -29,9 +29,21 @@ const specialties: Record<Specialty, string> = {
   biochemistryGenetics: 'Biochemistry and Genetics',
 };
 
-// English copy for UnspokenMD.
+const edition = en.home.editions.md;
+
+// The Difficulty info table's examples: the first card of a specialty at each difficulty, for three
+// specialties. MD has no Easy cards, so Easy stays blank.
+const exampleSpecialties: readonly Specialty[] = ['cardiovascular', 'respiratory', 'neurology'];
+const difficultyExamples = exampleSpecialties.map((id) => ({
+  category: specialties[id],
+  words: Object.fromEntries(ALL_DIFFICULTY_IDS.map((d) => [d, mdBank.find((c) => c.specialty === id && c.difficulty === d)?.word ?? ''])) as Record<Difficulty, string>,
+}));
+
+// English copy for UnspokenMD: what only it says. Everything else comes from the shared catalog (en).
 export const mdEn = {
-  edition: { name: 'UnspokenMD', sub: 'Medical jargon' },
+  edition: { name: `${edition.name}${edition.accent}`, sub: edition.sub },
+  // UnspokenMD's modes (home-v4, screen 3), two lines each. Zen and Ladder are only MD's, so their
+  // wording lives once in en.modes; Versus plays as Unspoken's, with MD's line.
   modes: {
     zen: en.modes.zen,
     versus: { name: en.modes.versus.name, sub: 'Teams or free-for-all. Points per term.' },
@@ -48,6 +60,71 @@ export const mdEn = {
     timer: { title: 'Timer', off: 'No time limit', on: 'The game ends when time runs out' },
     skipLimit: { title: 'Skip limit', off: 'Unlimited skips', on: 'Skipping stops when you run out', stepper: 'Skips for the game' },
     scoreTarget: { title: 'Play to a score', off: 'No score to reach', on: 'The game ends when you reach it', stepper: 'Correct to win' },
+  },
+  // New game in UnspokenMD: the Specialties box in place of Categories, and the rules' label.
+  setup: {
+    specialties: 'Specialties',
+    optionalRules: 'OPTIONAL RULES',
+    smallDeckBody: 'Cards are likely to repeat. Try adding specialties or difficulties.',
+  },
+  // The (i) at the right of DIFFICULTY.
+  difficultyInfo: {
+    title: en.difficultyInfo.title,
+    body: 'Tap to select one or more difficulties. The examples below show the same specialty at each difficulty.',
+    examples: difficultyExamples,
+  },
+  // The pull-up sheet from the Specialties box, like Choose categories.
+  specialtiesSheet: {
+    title: 'Choose specialties',
+    hint: 'Double-tap All specialties to highlight all',
+    hintAll: 'Double-tap All specialties to unhighlight all',
+    done: 'Done',
+  },
+  // The game screen (quick-play-2).
+  play: {
+    // A Zen game's header: Quick Play, then the difficulty chip.
+    title: en.home.quickPlay.title,
+    // The chip: the difficulty, then the word bank ("TRICKY · ALL", "TRICKY · 2/13").
+    badge: '{difficulty} · {picks}',
+    badgeAll: 'ALL',
+    badgePicked: '{n}/{total}',
+    bannedLabel: 'BANNED JARGON',
+    // In place of "Your word" on a card picked from search.
+    fromSearch: 'From search · {difficulty} · {specialty}',
+    search: 'Find a card',
+  },
+  // The chip's sheet: Difficulty | Specialties tabs, Custom settings and Apply.
+  picksSheet: {
+    tabs: 'Word bank',
+    difficulty: 'Difficulty',
+    specialties: 'Specialties',
+    specialtiesLabel: 'SPECIALTIES',
+    note: 'Applying starts a new game',
+    custom: 'Custom settings',
+    apply: 'Apply',
+  },
+  // Find a card: every UnspokenMD card, at any difficulty.
+  search: {
+    title: 'Find a card',
+    note: 'Searches every UnspokenMD card',
+    label: 'Search terms',
+    placeholder: 'Type part of a term',
+    // A result's second line.
+    detail: '{difficulty} · {specialty}',
+    // "Pneumothorax, Tough, Respiratory. Play it next."
+    resultLabel: '{word}, {difficulty}, {specialty}. Play it next.',
+    none: 'No terms match',
+    // When more cards match than the list shows.
+    more: 'Showing the first {shown}. Type more to narrow it down.',
+  },
+  // The Game paused sheet.
+  menu: {
+    changeSettings: 'Mode, difficulty and specialties · starts a new game',
+    customize: 'Layout and look · {style} · {look}',
+  },
+  a11y: {
+    specialties: 'Specialties: {summary}. Tap to choose.',
+    picks: 'Difficulty {difficulty}, {specialties}. Tap to change.',
   },
 };
 
