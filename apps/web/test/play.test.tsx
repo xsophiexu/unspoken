@@ -252,6 +252,12 @@ describe('Game paused', () => {
     const { menu } = await openMenu(user);
     expect(within(menu).getByRole('link', { name: new RegExp(en.menu.changeSettings.title) })).toHaveTextContent(/starts a new game/);
   });
+
+  it('goes back Home, where the edition can be switched', async () => {
+    const user = userEvent.setup();
+    const { menu } = await openMenu(user);
+    expect(within(menu).getByRole('link', { name: new RegExp(en.menu.home.title) })).toHaveAttribute('href', '/');
+  });
 });
 
 describe('Changing the time limit on the Paused screen', () => {

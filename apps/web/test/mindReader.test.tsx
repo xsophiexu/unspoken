@@ -62,7 +62,7 @@ describe('Mind Reader', () => {
       </>,
     );
     await user.click(screen.getByRole('button', { name: new RegExp(`^${m.start.quick.title}`) }));
-    expect(router.push).toHaveBeenCalledWith('/');
+    expect(router.push).toHaveBeenCalledWith('/play/');
     const game = within(screen.getByRole('region', { name: 'game' }));
     expect(game.getByRole('heading', { name: m.roles.quick.title })).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: m.roles.quick.show }));

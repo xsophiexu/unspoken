@@ -4,6 +4,7 @@ import { AppRouterContext, type AppRouterInstance } from 'next/dist/shared/lib/a
 import type { ReactNode } from 'react';
 import { vi } from 'vitest';
 
+import { EditionProvider } from '@/state/edition';
 import { GameProvider } from '@/state/game';
 import { ThemeProvider } from '@/state/theme';
 
@@ -26,9 +27,11 @@ export function renderApp(ui: ReactNode, { router = fakeRouter(), seed = 1 } = {
   const random = seededRandom(seed).random;
   const result = render(
     <AppRouterContext value={router}>
-      <ThemeProvider>
-        <GameProvider random={random}>{ui}</GameProvider>
-      </ThemeProvider>
+      <EditionProvider>
+        <ThemeProvider>
+          <GameProvider random={random}>{ui}</GameProvider>
+        </ThemeProvider>
+      </EditionProvider>
     </AppRouterContext>,
   );
   return { router, ...result };

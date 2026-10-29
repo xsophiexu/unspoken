@@ -114,7 +114,7 @@ describe('New game setup', () => {
     await user.click(screen.getByRole('radio', { name: en.a11y.unlimitedSkips }));
     await user.click(screen.getByRole('button', { name: copy.start }));
 
-    expect(router.push).toHaveBeenCalledWith('/');
+    expect(router.push).toHaveBeenCalledWith('/play/');
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toEqual({
       mode: 'classic',
       difficulties: ['Normal', 'Elite'],
@@ -222,6 +222,6 @@ describe('New game setup', () => {
 
     await user.click(screen.getByRole('button', { name: copy.start }));
     await user.click(screen.getByRole('button', { name: en.smallDeck.playAnyway }));
-    expect(router.push).toHaveBeenCalledWith('/');
+    expect(router.push).toHaveBeenCalledWith('/play/');
   });
 });

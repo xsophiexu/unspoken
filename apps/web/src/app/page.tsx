@@ -1,10 +1,10 @@
 import { ClientOnly } from '@/lib/ClientOnly';
-import { PlayScreen } from '@/screens/PlayScreen';
+import { HomeScreen } from '@/screens/HomeScreen';
 
-export default function PlayPage() {
+export default function HomePage() {
   return (
     <ClientOnly>
-      <PlayScreen />
+      <HomeScreen />
     </ClientOnly>
   );
 }

@@ -2,7 +2,7 @@
 
 import { en } from '@unspoken/content';
 import { format, menuStatus, type RoundState } from '@unspoken/core';
-import { gameMenu, resolveTheme } from '@unspoken/design-tokens';
+import { gameMenu } from '@unspoken/design-tokens';
 import { useId } from 'react';
 
 import { Button } from '@/components/ui/Button';
@@ -28,26 +28,26 @@ type GameMenuProps = {
   onLeave: () => void;
 };
 
-// The ··· menu ("Game paused"): an i for How to play beside the title, rows for settings, customize
-// and feedback, then Resume. Restart sits beside Resume (the narrower of the pair) or, with
+// The ··· menu ("Game paused"): an i for How to play beside the title, rows for settings, customize,
+// feedback and Home, then Resume. Restart sits beside Resume (the narrower of the pair) or, with
 // gameMenu.restartPlacement 'header', as a compact button at the top right.
 export function GameMenu({ round, customizeFirst, onClose, onRestart, onHowToPlay, onLeave }: GameMenuProps) {
   const id = useId();
-  const { selection } = useTheme();
-  const theme = resolveTheme(selection);
+  const { theme } = useTheme();
   const m = en.menu;
   const customize = (
     <MenuRow
       key="customize"
       title={m.customize.title}
-      detail={format(m.customize.detail, { style: en.customize.styles[selection.style], color: en.customize.colors[theme.color] })}
+      detail={format(m.customize.detail, { style: en.customize.styles[theme.selection.style], color: en.customize.colors[theme.color] })}
       href={routes.customize}
       onClick={onLeave}
     />
   );
   const settings = <MenuRow key="settings" title={m.changeSettings.title} detail={m.changeSettings.detail} href={routes.modes} onClick={onLeave} />;
   const feedback = <MenuRow key="feedback" title={m.feedback.title} detail={m.feedback.detail} href={routes.feedback('menu')} onClick={onLeave} />;
-  const rows = customizeFirst ? [customize, settings, feedback] : [settings, customize, feedback];
+  const home = <MenuRow key="home" title={m.home.title} detail={m.home.detail} href={routes.home} onClick={onLeave} />;
+  const rows = customizeFirst ? [customize, settings, feedback, home] : [settings, customize, feedback, home];
   const help = onHowToPlay && <InfoButton label={m.howToPlay.title} onClick={onHowToPlay} />;
   const inHeader = gameMenu.restartPlacement === 'header';
   // Shows the short label in either place; its name stays "Restart game".

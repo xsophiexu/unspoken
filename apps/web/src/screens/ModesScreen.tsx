@@ -18,7 +18,7 @@ export function ModesScreen() {
   const { settings } = useGame();
   const copy = en.modesScreen;
   return (
-    <Screen tone="base" width="column" back={{ href: routes.play, label: copy.back }} title={copy.title} sub={copy.hint}>
+    <Screen tone="base" width="column" back={{ href: routes.home, label: copy.back }} title={copy.title} sub={copy.hint}>
       <Grid columns={layout.grid.modes} equalRows={layout.control.modeTile}>
         {MODE_IDS.map((id) => {
           const available = modeRules(id).available;

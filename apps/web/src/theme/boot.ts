@@ -1,23 +1,48 @@
-import { COLOR_IDS, COLOR_MODES, DEFAULT_THEME, STYLE_IDS, breakpoints, layoutStyles, resolveTheme, type ThemeSelection } from '@unspoken/design-tokens';
+import { DEFAULT_EDITION, EDITION_IDS } from '@unspoken/core';
+import {
+  COLOR_IDS,
+  COLOR_MODES,
+  DEFAULT_STYLE,
+  DEFAULT_THEME,
+  LOOK_IDS,
+  STYLE_IDS,
+  breakpoints,
+  editionLooks,
+  editionStyles,
+  layoutStyles,
+  type Theme,
+  type ThemeSelection,
+} from '@unspoken/design-tokens';
+
+import { DEFAULT_EDITION_PREFS, EDITION_STORAGE_KEY } from '@/lib/edition';
 
 // Where the player's theme is saved. Read by the inline boot script before first paint and by the
 // theme provider after hydration.
 export const THEME_STORAGE_KEY = 'unspoken.theme';
 
-// The attributes on <html> that pick the theme's CSS variables (see theme/css.ts). A pinned style
-// (Split, Sheet) shows its own color whatever the player picked, and a style with its own mode (the
-// Halloween looks, always dark) its own mode.
-export function themeAttributes(selection: ThemeSelection) {
-  const theme = resolveTheme(selection);
-  return { 'data-style': selection.style, 'data-color': theme.color, 'data-mode': theme.mode } as const;
+// The attributes on <html> that pick the theme's CSS variables (see theme/css.ts): the style in use,
+// and the palette and mode it draws in (a pinned style's own color, a Halloween look's own mode,
+// UnspokenMD's blue).
+export function themeAttributes(theme: Theme) {
+  return { 'data-style': theme.selection.style, 'data-color': theme.color, 'data-mode': theme.mode } as const;
 }
+
+// What an edition changes before paint: its palette, the styles it offers, and whether it has its
+// own Look (light, dark or the device's setting).
+type BootEdition = { palette: string | null; styles: readonly string[]; ownLook: boolean };
 
 type BootData = {
   key: string;
+  editionKey: string;
   styles: readonly string[];
   colors: readonly string[];
   modes: readonly string[];
+  looks: readonly string[];
   fallback: ThemeSelection;
+  fallbackStyle: string;
+  fallbackEdition: string;
+  fallbackLook: string;
+  editions: Record<string, BootEdition>;
   pinned: Record<string, string>;
   // Styles drawn in one mode whatever the player picked.
   pinnedMode: Record<string, string>;
@@ -29,17 +54,29 @@ type BootData = {
 // flash. Self-contained: it is serialized with toString(), so it may only use its argument.
 function boot(d: BootData) {
   const root = document.documentElement;
-  let saved: Record<string, unknown> = {};
-  try {
-    saved = JSON.parse(localStorage.getItem(d.key) || '{}') || {};
-  } catch {
-    // Storage blocked or unreadable: keep the defaults.
-  }
+  const read = (key: string): Record<string, unknown> => {
+    try {
+      return JSON.parse(localStorage.getItem(key) || '{}') || {};
+    } catch {
+      // Storage blocked or unreadable: keep the defaults.
+      return {};
+    }
+  };
+  const saved = read(d.key);
+  const savedEdition = read(d.editionKey);
   const pick = (ids: readonly string[], value: unknown, fallback: string) => (ids.indexOf(value as string) >= 0 ? (value as string) : fallback);
-  const style = pick(d.styles, saved.style, d.fallback.style);
+  const edition = d.editions[pick(Object.keys(d.editions), savedEdition.edition, d.fallbackEdition)]!;
+  const savedStyle = pick(d.styles, saved.style, d.fallback.style);
+  const style = edition.styles.indexOf(savedStyle) >= 0 ? savedStyle : d.fallbackStyle;
+  let mode = pick(d.modes, saved.mode, d.fallback.mode);
+  if (edition.ownLook) {
+    const look = pick(d.looks, savedEdition.look, d.fallbackLook);
+    const dark = typeof window.matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    mode = look === 'system' ? (dark ? 'dark' : 'light') : look;
+  }
   root.setAttribute('data-style', style);
-  root.setAttribute('data-color', d.pinned[style] || pick(d.colors, saved.color, d.fallback.color));
-  root.setAttribute('data-mode', d.pinnedMode[style] || pick(d.modes, saved.mode, d.fallback.mode));
+  root.setAttribute('data-color', edition.palette || d.pinned[style] || pick(d.colors, saved.color, d.fallback.color));
+  root.setAttribute('data-mode', d.pinnedMode[style] || mode);
   const width = () => {
     let name = d.widths[0]?.[0] ?? '';
     for (const [n, min] of d.widths) if (window.innerWidth >= min) name = n;
@@ -57,12 +94,21 @@ export function bootScript(): string {
     if (policy.kind === 'pinned') pinned[id] = policy.color;
     if (mode) pinnedMode[id] = mode;
   }
+  const editions = Object.fromEntries(
+    EDITION_IDS.map((id) => [id, { palette: editionLooks[id].palette, styles: editionStyles(id), ownLook: editionLooks[id].defaultLook !== null }]),
+  );
   const data: BootData = {
     key: THEME_STORAGE_KEY,
+    editionKey: EDITION_STORAGE_KEY,
     styles: STYLE_IDS,
     colors: COLOR_IDS,
     modes: COLOR_MODES,
+    looks: LOOK_IDS,
     fallback: DEFAULT_THEME,
+    fallbackStyle: DEFAULT_STYLE,
+    fallbackEdition: DEFAULT_EDITION,
+    fallbackLook: DEFAULT_EDITION_PREFS.look,
+    editions,
     pinned,
     pinnedMode,
     widths: Object.entries(breakpoints).sort((a, b) => a[1] - b[1]),

@@ -1,0 +1,20 @@
+.wordmark {
+  margin: 0;
+  font-family: var(--un-font-brand);
+}
+
+.page {
+  color: var(--region-ink);
+}
+
+.page .accent {
+  color: var(--region-accent-text);
+}
+
+.spotlight {
+  color: var(--un-spotlight-caption);
+}
+
+.spotlight .accent {
+  color: var(--un-spotlight-brand-accent);
+}

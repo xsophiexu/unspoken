@@ -1,6 +1,7 @@
 import {
   COLOR_IDS,
   COLOR_MODES,
+  PALETTE_IDS,
   REGION_TONES,
   STYLE_IDS,
   scene,
@@ -19,7 +20,7 @@ import {
   spotlight,
   teamColors,
   textStyles,
-  type ColorId,
+  type PaletteId,
   type ColorMode,
   type RegionSlot,
   type SceneGradient,
@@ -31,8 +32,8 @@ import {
 // Nothing here is a design value: every number and color comes from the tokens.
 //
 //  :root                                   values every palette shares (space, radius, type, sizes)
-//  [data-color=…][data-mode=…]             one block per palette and mode; set on <html> for the
-//                                          player's theme and on Customize thumbnails for previews
+//  [data-color=…][data-mode=…]             one block per palette (the colors and UnspokenMD's blue)
+//                                          and mode; set on <html> for the player's theme and on Customize thumbnails for previews
 //  [data-region=…]                         region tones, mapped onto --region-* for slot components
 //  [data-scene=…]                          a Halloween look's night page: its region colors and
 //                                          background (after the region rules, so it wins)
@@ -60,8 +61,8 @@ function flatten(prefix: string, value: unknown, unit: (path: string, n: number)
   return out;
 }
 
-// Grid column counts and scale factors are plain numbers; everything else in layout is px.
-const layoutUnit = (path: string, n: number) => (path.startsWith('layout-grid') || path.endsWith('scale') ? String(n) : px(n));
+// Grid column counts, scale factors and shares are plain numbers; everything else in layout is px.
+const layoutUnit = (path: string, n: number) => (path.startsWith('layout-grid') || path.endsWith('scale') || path.endsWith('share') ? String(n) : px(n));
 // Motion keys say their unit: …Ms, …Px, …Deg; the rest (scales, opacities, spring settings) are plain.
 const motionUnit = (path: string, n: number) =>
   path.startsWith('motion-duration') || path.endsWith('-ms') ? ms(n) : path.endsWith('-px') || path.endsWith('from-y') ? px(n) : path.endsWith('-deg') ? `${n}deg` : String(n);
@@ -82,8 +83,8 @@ function sharedTokens(): Vars {
 // A style that takes the player's color, so resolveTheme returns the palette asked for.
 const followStyle = STYLE_IDS.find((id) => layoutStyles[id].color.kind === 'follow') ?? STYLE_IDS[0];
 
-function paletteVars(color: ColorId, mode: ColorMode): Vars {
-  const theme = resolveTheme({ style: followStyle, color, mode });
+function paletteVars(color: PaletteId, mode: ColorMode): Vars {
+  const theme = resolveTheme({ style: followStyle, color: COLOR_IDS[0], mode }, color);
   return {
     ...cssVariables(theme),
     // Mind Reader: the team colors by index, and the menu that opens on a player.
@@ -91,6 +92,10 @@ function paletteVars(color: ColorId, mode: ColorMode): Vars {
     ...Object.fromEntries(Object.entries(popoverColors(theme.colors, mode)).map(([k, v]) => [`--un-popover-${k}`, v])),
     // The How to play Play label: the color's light-mode accent text in both modes (see spotlight tokens).
     '--un-spotlight-play-ink': palettes[color].light.accentText,
+    // The accent half of the UnspokenMD wordmark over the dark spotlight: the dark-mode accent text.
+    '--un-spotlight-brand-accent': palettes[color].dark.accentText,
+    // "MD" in the UnspokenMD name on Home's edition switch: UnspokenMD's accent text whatever the palette.
+    '--un-md-accent-text': palettes.md[mode].accentText,
   };
 }
 
@@ -149,7 +154,7 @@ function textRules(): string[] {
 }
 
 export function themeCss(): string {
-  const combos = COLOR_IDS.flatMap((color) => COLOR_MODES.map((mode) => ({ color, mode, vars: paletteVars(color, mode) })));
+  const combos = PALETTE_IDS.flatMap((color) => COLOR_MODES.map((mode) => ({ color, mode, vars: paletteVars(color, mode) })));
   // Values every palette and mode agree on go to :root once; the rest go to each palette's block.
   const first = combos[0]?.vars ?? {};
   const shared = Object.fromEntries(Object.entries(first).filter(([k, v]) => combos.every((c) => c.vars[k] === v)));

@@ -6,7 +6,9 @@ import { layout, motion, space, spotlight, tourStepsFor, type LayoutStyle } from
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react';
 
 import { Icon } from '@/components/ui/Icon';
+import { MdWordmark } from '@/components/ui/Wordmark';
 import { cx, text } from '@/lib/ui';
+import { useEdition } from '@/state/edition';
 
 import styles from './Spotlight.module.css';
 
@@ -31,7 +33,9 @@ type Frame = { width: number; height: number; floor: number };
 // right (wheel or trackpad) or the right arrow moves forward; a swipe right or down, a scroll up or
 // left or the left arrow goes back; Play (always there) ends the tour. Nothing moves on its own.
 export function Spotlight({ rootRef, onDone, layoutStyle }: SpotlightProps) {
-  const [steps] = useState(() => tourStepsFor(en.howToPlay.steps, layoutStyle));
+  // UnspokenMD tours the same steps with its own wordmark and first step.
+  const md = useEdition().edition === 'md';
+  const [steps] = useState(() => tourStepsFor(md ? en.md.howToPlay.steps : en.howToPlay.steps, layoutStyle));
   const dialogRef = useRef<HTMLDialogElement>(null);
   const playRef = useRef<HTMLButtonElement>(null);
   const dotsRef = useRef<HTMLOListElement>(null);
@@ -167,13 +171,14 @@ export function Spotlight({ rootRef, onDone, layoutStyle }: SpotlightProps) {
         style={captionStyle}
         aria-live="polite"
       >
-        {step.art === 'logo' && <p className={cx(styles.wordmark, text('wordmark'))}>{en.app.name.toLowerCase()}</p>}
+        {step.art === 'logo' && (md ? <MdWordmark tone="spotlight" className={styles.wordmark} /> : <p className={cx(styles.wordmark, text('wordmark'))}>{en.app.name.toLowerCase()}</p>)}
         {step.art === 'mic' && (
           <span className={styles.mic}>
             <Icon name="mic" />
           </span>
         )}
         <p className={text(step.art === 'logo' ? 'lead' : 'caption')}>{step.text}</p>
+        {step.note && <p className={cx(styles.note, text('rule'))}>{step.note}</p>}
         {step.rules && (
           <ul className={cx(styles.rules, text('rule'))}>
             {step.rules.map((rule) => (

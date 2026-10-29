@@ -1,7 +1,6 @@
 'use client';
 
 import { en } from '@unspoken/content';
-import { layoutStyleFor, modeFor } from '@unspoken/design-tokens';
 import { useRef, useState } from 'react';
 
 import { Spotlight } from '@/components/play/Spotlight';
@@ -25,15 +24,16 @@ const tourDue = () => readStored(TOUR_STORAGE_KEY) !== en.howToPlay.version;
 
 type SheetKind = 'menu' | 'mode' | 'difficulty';
 
-// The game: the round in the player's style, the sheets over it, and the first-visit tour.
-export function PlayScreen() {
+// The game: the round in the player's style, the sheets over it, and the first-visit tour. `tour`
+// (How to play on Home) opens the tour whatever the round.
+export function PlayScreen({ tour = false }: { tour?: boolean }) {
   const { round, dispatch, restart, changeDifficulty } = useGame();
-  const { selection } = useTheme();
-  // The style as drawn in the mode in use (dark mode changes some slots; a Halloween look is always dark).
-  const layoutStyle = layoutStyleFor(selection.style, modeFor(selection));
+  // The style as drawn in the mode in use (dark mode changes some slots; a Halloween look is always
+  // dark) and the edition (UnspokenMD has no holiday looks).
+  const layoutStyle = useTheme().theme.style;
   const rootRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  const [touring, setTouring] = useState(tourDue);
+  const [touring, setTouring] = useState(() => tour || tourDue());
   const swipe = round.kind === 'swipe';
 
   // Sheets pause a swipe round; closing one resumes it unless the player paused it themselves.
@@ -60,7 +60,7 @@ export function PlayScreen() {
     setTouring(false);
   };
 
-  const showTour = touring && swipe;
+  const showTour = touring && (swipe || tour);
   const props = {
     blocked: showTour || sheet !== null,
     sheetOpen: sheet !== null,

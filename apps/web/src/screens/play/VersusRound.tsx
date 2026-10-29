@@ -12,7 +12,7 @@ import {
   versusClockProgress,
   type VersusRoundState,
 } from '@unspoken/core';
-import { cardSwipes, layout, layoutStyleFor, modeFor, type LayoutStyle } from '@unspoken/design-tokens';
+import { cardSwipes, layout, layoutStyleFor, type LayoutStyle } from '@unspoken/design-tokens';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -185,8 +185,7 @@ function turnModel(state: VersusRoundState): PlayModel {
 
 function Turn({ state, blocked, onMenu, onLeave, onDetails }: { state: VersusRoundState; blocked: boolean; onMenu: () => void; onLeave: () => void; onDetails: () => void }) {
   const { dispatch, restart } = useGame();
-  const { selection } = useTheme();
-  const layoutStyle = layoutStyleFor(TURN_STYLE, modeFor(selection));
+  const layoutStyle = layoutStyleFor(TURN_STYLE, useTheme().theme.mode);
   const frameRef = useRef<HTMLDivElement>(null);
   const model = turnModel(state);
   const pick = needsGuesser(state);

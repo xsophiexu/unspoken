@@ -2,7 +2,11 @@ import { FEEDBACK_ENTRY_POINTS, MODE_IDS, modeRules, type FeedbackEntryPoint, ty
 
 // Every screen's URL in one place. Trailing slashes match the static export (trailingSlash: true).
 export const routes = {
-  play: '/',
+  // Home: the edition switch, Quick Play, and the Modes, Customize and How to play links.
+  home: '/',
+  // The game. Quick Play opens it with the last settings; ?tour=1 opens How to play over it.
+  play: '/play/',
+  howToPlay: '/play/?tour=1',
   modes: '/modes/',
   setup: (mode: ModeId) => `/setup/?mode=${mode}`,
   // Mind Reader: its start screen, then a Custom game's steps (players, lineup, game settings).
