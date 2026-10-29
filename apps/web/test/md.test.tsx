@@ -110,7 +110,7 @@ describe('Zen setup', () => {
     renderApp(<SetupScreen mode="zen" />);
     expect(screen.getByRole('button', { name: /^Specialties: All specialties/ })).toHaveTextContent('All specialties · 1,021 cards');
     expect(screen.getByRole('checkbox', { name: /Tricky/ })).toBeChecked();
-    expect(screen.getByText('76 cards')).toBeInTheDocument();
+    expect(screen.getByText('126 cards')).toBeInTheDocument();
     expect(screen.queryByRole('checkbox', { name: /Easy/ })).not.toBeInTheDocument();
     for (const rule of [rules.timer, rules.skipLimit, rules.scoreTarget]) expect(screen.getByText(rule.off)).toBeInTheDocument();
     expect(screen.queryByRole('textbox', { name: /Time limit/ })).not.toBeInTheDocument();
@@ -193,7 +193,7 @@ describe('UnspokenMD Quick Play', () => {
     renderPlay();
     await playFromSearch(user, 'Pneumothorax');
     expect(word()).toHaveTextContent('Pneumothorax');
-    expect(screen.getByText('From search · Tough · Respiratory')).toBeInTheDocument();
+    expect(screen.getByText('From search · Tricky · Respiratory')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: en.play.correct }));
     expect(await screen.findByText('1 correct · 0 skipped')).toBeInTheDocument();
@@ -209,8 +209,8 @@ describe('UnspokenMD Quick Play', () => {
     await user.type(screen.getByRole('searchbox', { name: mdEn.search.label }), 'pneu');
     const sheet = within(screen.getByRole('dialog', { name: mdEn.search.title }));
     expect(sheet.getByRole('status')).toHaveTextContent('7 cards');
-    expect(sheet.getByRole('button', { name: /^Pneumonia,/ })).toHaveTextContent('Tricky · Respiratory');
-    expect(sheet.getByRole('button', { name: /^Pneumocystis pneumonia,/ })).toHaveTextContent('Legend · Infectious disease');
+    expect(sheet.getByRole('button', { name: /^Pneumonia,/ })).toHaveTextContent('Normal · Respiratory');
+    expect(sheet.getByRole('button', { name: /^Pneumocystis pneumonia,/ })).toHaveTextContent('Expert · Infectious disease');
   });
 
   it('changes the word bank from the chip: a specialty on its tab, applied as a new game', async () => {

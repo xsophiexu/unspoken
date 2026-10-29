@@ -36,7 +36,7 @@ const KNOWN_REPEATS: string[] = [];
 describe('the MD bank', () => {
   it('has 1,021 cards at the card file’s difficulty counts, with no Easy cards', () => {
     const counts = Object.fromEntries(DIFFICULTY_IDS.map((d) => [d, mdBank.filter((c) => c.difficulty === d).length]));
-    expect(counts).toEqual({ Normal: 42, Tricky: 76, Hard: 63, Tough: 84, Expert: 108, Elite: 184, Master: 124, Legend: 340 });
+    expect(counts).toEqual({ Normal: 105, Tricky: 126, Hard: 129, Tough: 134, Expert: 131, Elite: 138, Master: 127, Legend: 131 });
     expect(mdBank).toHaveLength(1021);
   });
 
@@ -136,8 +136,8 @@ describe('playing UnspokenMD with the shipped bank', () => {
     createRound(settings, { cards: cardsForSettings(mdBank, settings, mdGameConfig), seed: 1, config: mdGameConfig, showIntro: false });
   const play = (state: RoundState, actions: RoundAction[]) => actions.reduce(roundReducer, state);
 
-  it('deals the default Zen game from the 76 Tricky cards', () => {
-    expect(cardsForSettings(mdBank, settings, mdGameConfig)).toHaveLength(76);
+  it('deals the default Zen game from the 126 Tricky cards', () => {
+    expect(cardsForSettings(mdBank, settings, mdGameConfig)).toHaveLength(126);
   });
 
   it('reads the header and the paused sheet like the Quick Play design', () => {
