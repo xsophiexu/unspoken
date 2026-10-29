@@ -6,10 +6,11 @@ import { useEffect } from 'react';
 import { ClientOnly } from '@/lib/ClientOnly';
 import { parseMode, routes } from '@/lib/routes';
 import { SetupScreen } from '@/screens/SetupScreen';
+import { useCatalog } from '@/state/edition';
 
 function SetupRoute() {
   const params = useSearchParams();
-  const mode = parseMode(params.get('mode'));
+  const mode = parseMode(params.get('mode'), useCatalog().config);
   // Step 3 of a Custom Mind Reader game.
   const custom = mode === 'mindReader' && params.get('custom') === '1';
   const router = useRouter();

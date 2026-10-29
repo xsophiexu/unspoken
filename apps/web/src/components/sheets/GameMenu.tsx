@@ -1,6 +1,6 @@
 'use client';
 
-import { en } from '@unspoken/content';
+import { en, mdEn } from '@unspoken/content';
 import { format, menuStatus, type RoundState } from '@unspoken/core';
 import { gameMenu } from '@unspoken/design-tokens';
 import { useId } from 'react';
@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/ui/Icon';
 import { MenuRow } from '@/components/ui/MenuRow';
 import { Sheet } from '@/components/ui/Sheet';
+import { catalogFor } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
+import { useEdition } from '@/state/edition';
 import { useTheme } from '@/state/theme';
 
 import { SheetHead } from './SheetHead';
@@ -34,17 +36,16 @@ type GameMenuProps = {
 export function GameMenu({ round, customizeFirst, onClose, onRestart, onHowToPlay, onLeave }: GameMenuProps) {
   const id = useId();
   const { theme } = useTheme();
+  const { look } = useEdition();
   const m = en.menu;
-  const customize = (
-    <MenuRow
-      key="customize"
-      title={m.customize.title}
-      detail={format(m.customize.detail, { style: en.customize.styles[theme.selection.style], color: en.customize.colors[theme.color] })}
-      href={routes.customize}
-      onClick={onLeave}
-    />
-  );
-  const settings = <MenuRow key="settings" title={m.changeSettings.title} detail={m.changeSettings.detail} href={routes.modes} onClick={onLeave} />;
+  // UnspokenMD has no color choice: its row names the Look, and its picks are specialties.
+  const md = round.config.edition === 'md';
+  const style = en.customize.styles[theme.selection.style];
+  const customizeDetail = md
+    ? format(mdEn.menu.customize, { style, look: en.md.customize.looks[look] })
+    : format(m.customize.detail, { style, color: en.customize.colors[theme.color] });
+  const customize = <MenuRow key="customize" title={m.customize.title} detail={customizeDetail} href={routes.customize} onClick={onLeave} />;
+  const settings = <MenuRow key="settings" title={m.changeSettings.title} detail={md ? mdEn.menu.changeSettings : m.changeSettings.detail} href={routes.modes} onClick={onLeave} />;
   const feedback = <MenuRow key="feedback" title={m.feedback.title} detail={m.feedback.detail} href={routes.feedback('menu')} onClick={onLeave} />;
   const home = <MenuRow key="home" title={m.home.title} detail={m.home.detail} href={routes.home} onClick={onLeave} />;
   const rows = customizeFirst ? [customize, settings, feedback, home] : [settings, customize, feedback, home];
@@ -63,7 +64,7 @@ export function GameMenu({ round, customizeFirst, onClose, onRestart, onHowToPla
   );
   return (
     <Sheet labelledBy={id} onClose={onClose}>
-      <SheetHead id={id} title={m.title} note={menuStatus(round, en)} action={help} end={inHeader && restart} />
+      <SheetHead id={id} title={m.title} note={menuStatus(round, catalogFor(round.config).copy)} action={help} end={inHeader && restart} />
       <div className={styles.rows}>{rows}</div>
       {inHeader ? (
         <div className={styles.footer}>{resume}</div>

@@ -5,19 +5,23 @@ import {
   defaultSettings,
   hardestDifficulty,
   parseDifficulties,
+  parseSettings as parseCoreSettings,
   type Category,
   type GameSettings,
 } from '@unspoken/core';
 import { z } from 'zod';
 
-import { config as webConfig } from './catalog';
+import { catalogs, config as webConfig } from './catalog';
 
-export const SETTINGS_STORAGE_KEY = 'unspoken.settings';
+// Each edition saves its settings apart, so switching editions keeps both.
+export const SETTINGS_STORAGE_KEY = catalogs.unspoken.settingsKey;
+export const MD_SETTINGS_STORAGE_KEY = catalogs.md.settingsKey;
 
 // Reads saved game settings, keeping each valid field and defaulting the rest (like
 // parseThemeSelection does for the theme). A mode that is no longer available falls back too, an
 // old level name maps to its level (Expert 1 → Hard), and a single saved difficulty becomes a
-// one-item list. Categories the website doesn't offer drop out, keeping the rest.
+// one-item list. Categories the website doesn't offer drop out, keeping the rest. UnspokenMD's
+// settings also keep their specialties and Zen's optional rules.
 export function parseSettings(value: unknown, config = webConfig): GameSettings {
   const fallback = defaultSettings(config);
   const schema = z.object({
@@ -43,15 +47,21 @@ export function parseSettings(value: unknown, config = webConfig): GameSettings 
       .nullable()
       .refine((skips) => config.skipOptions.includes(skips))
       .catch(fallback.skips),
-    // Settings saved before the switch existed have a time limit.
-    noTimeLimit: z.boolean().catch(false),
+    // Settings saved before the switch existed have a time limit (unless the config starts without one).
+    noTimeLimit: z.boolean().catch(fallback.noTimeLimit),
   });
   const raw = typeof value === 'object' && value !== null ? value : {};
   const parsed = schema.parse(raw);
   // A list of picks, or a single difficulty saved before several could be picked.
   const difficulties = parseDifficulties(raw, config) ?? fallback.difficulties;
   // A missing or bad timer follows the hardest pick's default.
-  return { ...parsed, difficulties, roundSeconds: parsed.roundSeconds ?? defaultRoundSeconds(hardestDifficulty(difficulties, config), config) };
+  const settings: GameSettings = { ...parsed, difficulties, roundSeconds: parsed.roundSeconds ?? defaultRoundSeconds(hardestDifficulty(difficulties, config), config) };
+  // Specialties and Zen's rules, read as core reads them (each valid field kept, the rest defaulted).
+  if (config.specialties || config.zen) {
+    const { specialties, noSkipLimit, scoreTarget, noScoreTarget } = parseCoreSettings(raw, config);
+    Object.assign(settings, { specialties, noSkipLimit, scoreTarget, noScoreTarget });
+  }
+  return settings;
 }
 
 // Setup's theme chips: All cards (null) clears the chosen themes; a theme toggles, and clearing the

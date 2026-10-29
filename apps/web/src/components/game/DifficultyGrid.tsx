@@ -6,7 +6,7 @@ import type { ReactNode } from 'react';
 import { Choice, Tile } from '@/components/ui/Choice';
 import { FittedText } from '@/components/ui/FittedText';
 import { Grid } from '@/components/ui/Grid';
-import { difficultyIds } from '@/lib/catalog';
+import { useCatalog } from '@/state/edition';
 
 type DifficultyGridProps = {
   columns: number;
@@ -21,8 +21,9 @@ type DifficultyGridProps = {
   detail?: (difficulty: Difficulty) => ReactNode;
 };
 
-// The levels in a grid (Easy, then Normal to Legend). Long names shrink to fit narrow tiles.
+// The edition's difficulties in a grid (Easy, then Normal to Legend; UnspokenMD has no Easy). Long names shrink to fit narrow tiles.
 export function DifficultyGrid({ columns, current, onPick, kind, label, detail }: DifficultyGridProps) {
+  const { difficultyIds } = useCatalog();
   return (
     <Grid columns={columns} role="group" aria-label={label}>
       {difficultyIds.map((id) => {

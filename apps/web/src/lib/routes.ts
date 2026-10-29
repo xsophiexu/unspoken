@@ -1,4 +1,6 @@
-import { FEEDBACK_ENTRY_POINTS, MODE_IDS, modeRules, type FeedbackEntryPoint, type ModeId } from '@unspoken/core';
+import { FEEDBACK_ENTRY_POINTS, type FeedbackEntryPoint, type GameConfig, type ModeId } from '@unspoken/core';
+
+import { config as unspokenConfig } from './catalog';
 
 // Every screen's URL in one place. Trailing slashes match the static export (trailingSlash: true).
 export const routes = {
@@ -35,8 +37,7 @@ export function parseEntryPoint(value: string | null): FeedbackEntryPoint {
   return FEEDBACK_ENTRY_POINTS.find((id) => id === value) ?? 'menu';
 }
 
-// ?mode= on setup: a mode that can be played, or null.
-export function parseMode(value: string | null): ModeId | null {
-  const mode = MODE_IDS.find((id) => id === value);
-  return mode && modeRules(mode).available ? mode : null;
+// ?mode= on setup: a mode the edition's config offers and can play, or null.
+export function parseMode(value: string | null, config: GameConfig = unspokenConfig): ModeId | null {
+  return config.modes.find((m) => m.id === value && m.available)?.id ?? null;
 }

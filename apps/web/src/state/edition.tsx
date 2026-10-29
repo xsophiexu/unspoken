@@ -4,6 +4,7 @@ import type { CharacterId, EditionId } from '@unspoken/core';
 import type { LookId } from '@unspoken/design-tokens';
 import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { catalogs, type Catalog } from '@/lib/catalog';
 import { EDITION_STORAGE_KEY, parseEditionPrefs, type EditionPrefs } from '@/lib/edition';
 import { readStored, writeStored } from '@/lib/storage';
 
@@ -41,4 +42,9 @@ export function useEdition(): EditionContextValue {
   const value = use(EditionContext);
   if (!value) throw new Error('useEdition needs an EditionProvider');
   return value;
+}
+
+// The current edition's catalog: its config, cards, difficulties and status copy.
+export function useCatalog(): Catalog {
+  return catalogs[useEdition().edition];
 }

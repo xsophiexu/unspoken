@@ -11,6 +11,7 @@ import { PlayFrame } from '@/components/play/PlayFrame';
 import { useSwipe, type SwipeAnswer } from '@/components/play/useSwipe';
 import { ChangeTimeLimitRow, TimeLimitSheet } from '@/components/sheets/TimeLimitSheet';
 import { Button } from '@/components/ui/Button';
+import { catalogFor } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { useGame } from '@/state/game';
 
@@ -20,18 +21,20 @@ import { useAnswerKeys } from './useAnswerKeys';
 // The round ticks once a second; core counts the clock in whole seconds.
 const TICK_MS = 1000;
 
-type SwipeRoundProps = RoundScreenProps & { round: SwipeRoundState; layoutStyle: LayoutStyle };
+// onSearch: UnspokenMD's Find a card, beside ···.
+type SwipeRoundProps = RoundScreenProps & { round: SwipeRoundState; layoutStyle: LayoutStyle; onSearch?: () => void };
 
 // Classic, Endless, Time Attack, Escalate and Hot Potato: one card at a time in the chosen style.
-export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onHeader, onLeave }: SwipeRoundProps) {
+export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onHeader, onLeave, onSearch }: SwipeRoundProps) {
   const { dispatch, restart, settings: next, saveSettings } = useGame();
   // The Paused screen's time limit changer. A saved change is for the next turn (Play again, Restart
   // or a new game); this turn keeps its clock.
   const [changingTime, setChangingTime] = useState(false);
-  const timed = hasTimerSetting(round.settings.mode);
+  const { config, copy } = catalogFor(round.config);
+  const timed = hasTimerSetting(round.settings.mode, config);
   const frameRef = useRef<HTMLDivElement>(null);
   const model = swipeModel(round);
-  const summary = swipeSummary(round, en);
+  const summary = swipeSummary(round, copy);
   // A pause from the menu or a sheet shows as Paused once nothing covers the round any more.
   const paused = round.pause !== null && !sheetOpen;
   const active = !blocked && !summary && !round.passing && !paused;
@@ -95,13 +98,13 @@ export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onH
         label={en.paused.label}
         title={model.clock?.label ?? model.modeName}
         big={model.clock !== null}
-        sub={pausedStatus(round, en)}
+        sub={pausedStatus(round, copy)}
         extra={
           timed && (
             <>
               <ChangeTimeLimitRow
-                value={hasTimeLimit(next) ? formatClock(next.roundSeconds) : en.paused.noLimit}
-                pending={timeLimitDiffers(round.settings, next)}
+                value={hasTimeLimit(next, config) ? formatClock(next.roundSeconds) : en.paused.noLimit}
+                pending={timeLimitDiffers(round.settings, next, config)}
                 onClick={() => setChangingTime(true)}
               />
               {changingTime && (
@@ -148,6 +151,7 @@ export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onH
         onPause: () => dispatch({ type: 'pause', reason: 'user' }),
         onMenu,
         onHeader,
+        onSearch,
       }}
     />
   );

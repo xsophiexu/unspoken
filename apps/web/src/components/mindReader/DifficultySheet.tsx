@@ -9,7 +9,7 @@ import { SheetHead } from '@/components/sheets/SheetHead';
 import sheetStyles from '@/components/sheets/sheets.module.css';
 import { Button } from '@/components/ui/Button';
 import { Sheet } from '@/components/ui/Sheet';
-import { config } from '@/lib/catalog';
+import { useCatalog } from '@/state/edition';
 import { cx } from '@/lib/ui';
 
 import styles from './mindReader.module.css';
@@ -33,8 +33,9 @@ type Props = {
 export function DifficultySheet({ settings, onClose, onApply, customHref, onCustom, onInfo }: Props) {
   const id = useId();
   const q = en.mindReader.quick;
+  const { config } = useCatalog();
   const [draft, setDraft] = useState(settings);
-  const { difficulties, categories } = draft;
+  const { difficulties } = draft;
   const apply = () => {
     onApply(draft);
     onClose();
@@ -45,7 +46,7 @@ export function DifficultySheet({ settings, onClose, onApply, customHref, onCust
       <DifficultyTiles
         className={styles.tiles}
         picked={difficulties}
-        categories={categories}
+        picks={draft}
         onToggle={(next) => setDraft((current) => toggleDifficulty(current, next, config))}
         onInfo={onInfo ? () => onInfo(draft) : undefined}
       />

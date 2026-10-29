@@ -11,7 +11,7 @@ import { cx, text } from '@/lib/ui';
 import { BannedList } from './BannedList';
 import { Controls } from './Controls';
 import { DecorBackdrop, DecorBody, DecorTop, decorFrameClass, decorLabel, hasDecorTop } from './decor/DecorBody';
-import { Header, MenuButton } from './Header';
+import { Header, MenuButton, SearchButton } from './Header';
 import type { HeaderModel, PlayModel } from './model';
 import { SceneBody, Stars } from './scene/SceneBody';
 import { Stats } from './Stats';
@@ -26,6 +26,8 @@ export type PlayActions = {
   onMenu: () => void;
   // The header's mode/level control: the sheet for pill styles, the difficulty picker for Card.
   onHeader: () => void;
+  // UnspokenMD's search button beside ···: Find a card. Left out, there is none.
+  onSearch?: () => void;
 };
 
 type PlayFrameProps = {
@@ -50,8 +52,8 @@ type PlayFrameProps = {
 export function PlayFrame({ layoutStyle: s, model, actions, surface, frameRef, overlay, top, controls: ownControls }: PlayFrameProps) {
   const { arrangement, regions } = s;
   const card = model.card;
-  const word = card && <Word slot={s.word} word={card.word} />;
-  const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} label={decorLabel(s.decor)} />;
+  const word = card && <Word slot={s.word} word={card.word} label={card.label} />;
+  const banned = card && <BannedList slot={s.banned} words={card.banned} freshIndex={card.freshIndex} label={model.bannedLabel ?? decorLabel(s.decor)} />;
   // A Halloween look draws its own timer (the art), so the timer slot shows nowhere else.
   const timer = (at: Parameters<typeof Timer>[0]['at']) => (s.scene ? null : <Timer slot={s.timer} at={at} clock={model.clock} onPause={actions?.onPause} />);
   const controls = ownControls ?? (
@@ -271,7 +273,7 @@ function SwipeHint() {
 type FrameTopProps = {
   layoutStyle: LayoutStyle;
   model: HeaderModel;
-  actions?: Pick<PlayActions, 'onMenu' | 'onHeader'>;
+  actions?: Pick<PlayActions, 'onMenu' | 'onHeader' | 'onSearch'>;
   timer?: ReactNode;
 };
 
@@ -286,6 +288,7 @@ export function FrameTop({ layoutStyle: s, model, actions, timer }: FrameTopProp
       <div className={styles.topEnd}>
         <Stats slot={s.stats} at="header" stats={model.stats} />
         {timer}
+        {actions?.onSearch && <SearchButton slot={s.header} onSearch={actions.onSearch} />}
         <MenuButton slot={s.header} onMenu={actions?.onMenu} />
       </div>
     </div>

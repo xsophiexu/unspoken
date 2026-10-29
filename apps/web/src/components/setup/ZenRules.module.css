@@ -1,0 +1,28 @@
+/* Zen's rule cards: white (raised) on the page, the control inset on the chip fill. */
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-3);
+  padding: var(--un-space-3-5) var(--un-space-4);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+  color: var(--region-ink);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+}
+
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  min-width: 0;
+}
+
+.muted {
+  color: var(--region-muted);
+}

@@ -1,19 +1,21 @@
 'use client';
 
 import { difficultyPickNote, en } from '@unspoken/content';
-import { deckSize, plural, type Category, type Difficulty } from '@unspoken/core';
+import { plural, type Difficulty } from '@unspoken/core';
 import { layout } from '@unspoken/design-tokens';
 
 import { DifficultyGrid } from '@/components/game/DifficultyGrid';
 import { Icon } from '@/components/ui/Icon';
 import { Section } from '@/components/ui/Section';
-import { bank } from '@/lib/catalog';
+import { countCards, type Picks } from '@/lib/catalog';
+import { useCatalog } from '@/state/edition';
 
 import styles from './DifficultyTiles.module.css';
 
 type Props = {
   picked: readonly Difficulty[];
-  categories: readonly Category[];
+  // The categories (or specialties) the counts are for.
+  picks: Picks;
   onToggle: (difficulty: Difficulty) => void;
   // The i at the right of the label opens About difficulties; left out, there is none.
   onInfo?: () => void;
@@ -22,8 +24,9 @@ type Props = {
 
 // DIFFICULTY with "Pick one or more" (or the picks and their cards) at the right, and the
 // multi-select tiles with each one's card count. New game and the difficulty sheet both use it.
-export function DifficultyTiles({ picked, categories, onToggle, onInfo, className }: Props) {
-  const note = difficultyPickNote(picked, deckSize(bank, picked, categories));
+export function DifficultyTiles({ picked, picks, onToggle, onInfo, className }: Props) {
+  const catalog = useCatalog();
+  const note = difficultyPickNote(picked, countCards(catalog, picked, picks));
   return (
     <Section
       className={className}
@@ -47,7 +50,7 @@ export function DifficultyTiles({ picked, categories, onToggle, onInfo, classNam
         columns={layout.grid.setupDifficulty}
         current={picked}
         onPick={onToggle}
-        detail={(level) => plural(deckSize(bank, level, categories), en.units.cards)}
+        detail={(level) => plural(countCards(catalog, level, picks), en.units.cards)}
       />
     </Section>
   );

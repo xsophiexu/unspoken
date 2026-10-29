@@ -61,8 +61,9 @@ function flatten(prefix: string, value: unknown, unit: (path: string, n: number)
   return out;
 }
 
-// Grid column counts, scale factors and shares are plain numbers; everything else in layout is px.
-const layoutUnit = (path: string, n: number) => (path.startsWith('layout-grid') || path.endsWith('scale') || path.endsWith('share') ? String(n) : px(n));
+// Grid column counts, counts, scale factors and shares are plain numbers; everything else in layout is px.
+const layoutUnit = (path: string, n: number) =>
+  path.startsWith('layout-grid') || path.startsWith('layout-search') || path.endsWith('scale') || path.endsWith('share') ? String(n) : px(n);
 // Motion keys say their unit: …Ms, …Px, …Deg; the rest (scales, opacities, spring settings) are plain.
 const motionUnit = (path: string, n: number) =>
   path.startsWith('motion-duration') || path.endsWith('-ms') ? ms(n) : path.endsWith('-px') || path.endsWith('from-y') ? px(n) : path.endsWith('-deg') ? `${n}deg` : String(n);

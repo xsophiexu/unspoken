@@ -6,20 +6,26 @@
   min-width: 0;
 }
 
+/* The badge moves under the title when the two don't fit on one line (UnspokenMD's chip beside
+   search and ···). */
 .titleRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--un-space-2);
+  gap: var(--un-space-1) var(--un-space-2);
   min-width: 0;
+  max-width: 100%;
 }
 
 .title {
-  min-width: 0;
+  flex: none;
   overflow-wrap: normal;
+  white-space: nowrap;
 }
 
 .badge {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
   display: inline-flex;
   align-items: center;
   gap: var(--un-space-0-5);
@@ -120,4 +126,15 @@
 /* IconButton draws a bare icon (look none) at --un-space-6. */
 .menu-none {
   margin-inline-end: calc((var(--un-space-6) - var(--un-layout-min-touch)) / 2);
+}
+
+/* A badge too long even for a line of its own shortens with an ellipsis. */
+.badgeText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badgeCaret {
+  flex: none;
 }

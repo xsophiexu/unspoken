@@ -2,8 +2,9 @@
 
 import {
   canPlayVersus,
-  cardsFor,
+  cardsForSettings,
   createRound,
+  EDITION_IDS,
   defaultVersusSetup,
   emptyLineup,
   modeRules,
@@ -12,6 +13,7 @@ import {
   roundReducer,
   withDifficulty,
   type Difficulty,
+  type EditionId,
   type GameSettings,
   type MindReaderPlay,
   type MindReaderSetup,
@@ -23,12 +25,16 @@ import {
 } from '@unspoken/core';
 import { createContext, use, useCallback, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 
-import { bank, config } from '@/lib/catalog';
-import { parseSettings, SETTINGS_STORAGE_KEY } from '@/lib/settings';
+import { catalogs, type Catalog } from '@/lib/catalog';
+import { parseSettings } from '@/lib/settings';
 import { readStored, writeStored } from '@/lib/storage';
 
+import { useEdition } from './edition';
+
 // The game in progress: the settings it was started with and the round state from @unspoken/core.
-// Rules live entirely in core's reducers; this only starts rounds and forwards actions.
+// Rules live entirely in core's reducers; this only starts rounds and forwards actions. Each
+// edition (Unspoken, UnspokenMD) has its own game, settings and setups, so switching editions on
+// Home keeps the other one as it was.
 
 type GameState = {
   settings: GameSettings;
@@ -52,23 +58,24 @@ type GameAction =
   | { type: 'saveSettings'; settings: GameSettings };
 
 // A Versus game whose lineup can't play (none set up this visit) opens the default mode instead.
-function playable(settings: GameSettings, versus: VersusSetup): GameSettings {
-  return modeRules(settings.mode).play === 'versus' && !canPlayVersus(versus.lineup) ? resumableSettings(settings) : settings;
+function playable(settings: GameSettings, versus: VersusSetup, { config }: Catalog): GameSettings {
+  return modeRules(settings.mode, config).play === 'versus' && !canPlayVersus(versus.lineup) ? resumableSettings(settings, config) : settings;
 }
 
-function startRound(wanted: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader' | 'versus'>): RoundState {
-  const settings = playable(wanted, state.versus);
+function startRound(wanted: GameSettings, seed: number, state: Pick<GameState, 'introSeen' | 'play' | 'mindReader' | 'versus'>, catalog: Catalog): RoundState {
+  const { bank, config } = catalog;
+  const settings = playable(wanted, state.versus, catalog);
   return createRound(settings, {
-    cards: cardsFor(bank, settings.difficulties, settings.categories),
+    cards: cardsForSettings(bank, settings, config),
     seed,
     config,
-    showIntro: !state.introSeen[modeRules(settings.mode).play],
+    showIntro: !state.introSeen[modeRules(settings.mode, config).play],
     mindReader: { play: state.play, setup: state.mindReader },
     versus: state.versus,
   });
 }
 
-function gameReducer(state: GameState, action: GameAction): GameState {
+function gameReducer(state: GameState, action: GameAction, catalog: Catalog): GameState {
   switch (action.type) {
     case 'play': {
       const round = roundReducer(state.round, action.action);
@@ -78,7 +85,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'newGame': {
       const next = { ...state, settings: action.settings, play: action.play };
-      return { ...next, round: startRound(action.settings, action.seed, next) };
+      return { ...next, round: startRound(action.settings, action.seed, next, catalog) };
     }
     case 'setMindReader':
       return { ...state, mindReader: action.change(state.mindReader) };
@@ -88,6 +95,27 @@ function gameReducer(state: GameState, action: GameAction): GameState {
     case 'saveSettings':
       return { ...state, settings: action.settings };
   }
+}
+
+type Games = Record<EditionId, GameState>;
+
+function gamesReducer(games: Games, { edition, action }: { edition: EditionId; action: GameAction }): Games {
+  const next = gameReducer(games[edition], action, catalogs[edition]);
+  return next === games[edition] ? games : { ...games, [edition]: next };
+}
+
+// An edition's game when the page opens: its saved settings and a fresh round.
+function initialGame(catalog: Catalog, random: Random): GameState {
+  const { config, settingsKey } = catalog;
+  // A Versus lineup lasts one visit, so a saved Versus game opens the default mode.
+  const settings = resumableSettings(parseSettings(readStored(settingsKey), config), config);
+  const fresh = {
+    introSeen: {},
+    play: 'quick' as const,
+    mindReader: { lineup: emptyLineup(), rounds: config.mindReader.rounds.default },
+    versus: defaultVersusSetup(emptyLineup()),
+  };
+  return { ...fresh, settings, round: startRound(settings, newSeed(random), fresh, catalog) };
 }
 
 type GameContextValue = {
@@ -118,26 +146,23 @@ type GameProviderProps = {
 };
 
 export function GameProvider({ children, random = Math.random }: GameProviderProps) {
-  const [state, send] = useReducer(gameReducer, undefined, (): GameState => {
-    // A Versus lineup lasts one visit, so a saved Versus game opens the default mode.
-    const settings = resumableSettings(parseSettings(readStored(SETTINGS_STORAGE_KEY)));
-    const fresh = {
-      introSeen: {},
-      play: 'quick' as const,
-      mindReader: { lineup: emptyLineup(), rounds: config.mindReader.rounds.default },
-      versus: defaultVersusSetup(emptyLineup()),
-    };
-    return { ...fresh, settings, round: startRound(settings, newSeed(random), fresh) };
-  });
+  const { edition } = useEdition();
+  const [games, send] = useReducer(gamesReducer, undefined, () => Object.fromEntries(EDITION_IDS.map((id) => [id, initialGame(catalogs[id], random)])) as Games);
+  const state = games[edition];
+  const { config } = catalogs[edition];
 
-  useEffect(() => writeStored(SETTINGS_STORAGE_KEY, state.settings), [state.settings]);
+  useEffect(() => writeStored(catalogs.unspoken.settingsKey, games.unspoken.settings), [games.unspoken.settings]);
+  useEffect(() => writeStored(catalogs.md.settingsKey, games.md.settings), [games.md.settings]);
 
-  // Stable across renders, so timers and listeners that dispatch don't restart on every tick.
-  const dispatch = useCallback((action: RoundAction) => send({ type: 'play', action }), []);
-  const newGame = useCallback((settings: GameSettings, play: MindReaderPlay = 'quick') => send({ type: 'newGame', settings, seed: newSeed(random), play }), [random]);
-  const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ type: 'setMindReader', change }), []);
-  const setVersus = useCallback((change: (setup: VersusSetup) => VersusSetup) => send({ type: 'setVersus', change }), []);
-  const saveSettings = useCallback((settings: GameSettings) => send({ type: 'saveSettings', settings }), []);
+  // Stable across renders (per edition), so timers and listeners that dispatch don't restart on every tick.
+  const dispatch = useCallback((action: RoundAction) => send({ edition, action: { type: 'play', action } }), [edition]);
+  const newGame = useCallback(
+    (settings: GameSettings, play: MindReaderPlay = 'quick') => send({ edition, action: { type: 'newGame', settings, seed: newSeed(random), play } }),
+    [edition, random],
+  );
+  const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ edition, action: { type: 'setMindReader', change } }), [edition]);
+  const setVersus = useCallback((change: (setup: VersusSetup) => VersusSetup) => send({ edition, action: { type: 'setVersus', change } }), [edition]);
+  const saveSettings = useCallback((settings: GameSettings) => send({ edition, action: { type: 'saveSettings', settings } }), [edition]);
 
   const value = useMemo(
     (): GameContextValue => ({
@@ -153,7 +178,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       restart: () => newGame(state.settings, state.play),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty, config), state.play),
     }),
-    [state.settings, state.round, state.play, state.mindReader, state.versus, dispatch, newGame, setMindReader, setVersus, saveSettings],
+    [state.settings, state.round, state.play, state.mindReader, state.versus, config, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

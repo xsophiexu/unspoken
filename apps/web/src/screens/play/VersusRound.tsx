@@ -18,7 +18,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { Card, Note, TeamDot } from '@/components/mindReader/parts';
 import { Controls } from '@/components/play/Controls';
-import type { PlayModel } from '@/components/play/model';
+import { bannedLabelFor, type PlayModel } from '@/components/play/model';
 import { Overlay } from '@/components/play/Overlay';
 import { PlayFrame } from '@/components/play/PlayFrame';
 import { MenuButton } from '@/components/play/Header';
@@ -180,6 +180,7 @@ function turnModel(state: VersusRoundState): PlayModel {
     canSkip: canVersusAnswer(state, 'skip'),
     firstCard: state.cards.length === 0 && state.turns.length === 0,
     note: null,
+    bannedLabel: bannedLabelFor(state.config),
   };
 }
 

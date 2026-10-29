@@ -1,4 +1,4 @@
-import { en } from '@unspoken/content';
+import { en, mdEn } from '@unspoken/content';
 import { format } from '@unspoken/core';
 import type { HeaderSlot } from '@unspoken/design-tokens';
 
@@ -40,11 +40,11 @@ export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
             className={cx(styles.badge, text('badge'))}
             onClick={onOpen}
             tabIndex={onOpen ? undefined : -1}
-            aria-label={format(en.a11y.difficulty, { badge: difficulty.name })}
+            aria-label={difficulty.label ?? format(en.a11y.difficulty, { badge: difficulty.name })}
             data-spot="difficulty"
           >
-            {difficulty.badge}
-            <Icon name="caret" />
+            <span className={styles.badgeText}>{difficulty.badge}</span>
+            <Icon name="caret" className={styles.badgeCaret} />
           </button>
         </div>
         {subline}
@@ -88,4 +88,9 @@ export function MenuButton({ slot, onMenu }: MenuButtonProps) {
       data-spot="menu"
     />
   );
+}
+
+// UnspokenMD's search, beside the menu in the same look: opens Find a card.
+export function SearchButton({ slot, onSearch }: { slot: HeaderSlot; onSearch: () => void }) {
+  return <IconButton icon="search" look={slot.menuContainer} label={mdEn.play.search} onClick={onSearch} className={styles[`menu-${slot.menuContainer}`]} />;
 }

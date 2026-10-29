@@ -1,13 +1,13 @@
 'use client';
 
-import { en } from '@unspoken/content';
-import { EDITION_IDS, MD_QUICK_PLAY_DEFAULTS, difficultyLabel, format, type EditionId, type GameSettings } from '@unspoken/core';
+import { en, mdEn } from '@unspoken/content';
+import { EDITION_IDS, difficultyLabel, format, isSwipeOver, type EditionId, type GameSettings, type RoundState } from '@unspoken/core';
 import Link from 'next/link';
 
 import { Icon, type IconName } from '@/components/ui/Icon';
 import { Screen } from '@/components/ui/Screen';
 import { homeArt } from '@/lib/art';
-import { config } from '@/lib/catalog';
+import { catalogs } from '@/lib/catalog';
 import { routes } from '@/lib/routes';
 import { cx, text } from '@/lib/ui';
 import { useEdition } from '@/state/edition';
@@ -18,15 +18,18 @@ import styles from './HomeScreen.module.css';
 const copy = en.home;
 const difficultyNames = Object.fromEntries(Object.entries(en.difficulties).map(([id, d]) => [id, d.name])) as Record<keyof typeof en.difficulties, string>;
 
-// Quick Play's line: the mode and difficulty it will play, on one phone. UnspokenMD has no saved
-// game of its own yet, so it reads its Quick Play defaults (Zen at Tricky).
+// Quick Play's line: the mode and difficulty it will play, on one phone. UnspokenMD's Quick Play
+// always plays Zen, with its last settings.
 function quickPlayDetail(edition: EditionId, settings: GameSettings): string {
-  const where = copy.quickPlay.onePhone;
-  if (edition === 'md') {
-    return format(copy.quickPlay.detail, { mode: en.md.modes[MD_QUICK_PLAY_DEFAULTS.mode].name, where, difficulty: en.difficulties[MD_QUICK_PLAY_DEFAULTS.difficulty].name });
-  }
+  const { config } = catalogs[edition];
+  const mode = edition === 'md' ? mdEn.modes.zen.name : en.modes[settings.mode].name;
   const difficulty = difficultyLabel(settings.difficulties, { names: difficultyNames, mixed: en.difficultyMix }, config);
-  return format(copy.quickPlay.detail, { mode: en.modes[settings.mode].name, where, difficulty });
+  return format(copy.quickPlay.detail, { mode, where: copy.quickPlay.onePhone, difficulty });
+}
+
+// Whether UnspokenMD's Quick Play can carry on with the game in progress: a Zen game not over yet.
+function zenInProgress(round: RoundState): boolean {
+  return round.kind === 'swipe' && round.rules.optionalRules === true && !isSwipeOver(round);
 }
 
 const links: { href: string; icon: IconName; label: string }[] = [
@@ -39,7 +42,12 @@ const links: { href: string; icon: IconName; label: string }[] = [
 // Play with the last settings, and links to Modes, Customize and How to play.
 export function HomeScreen() {
   const { edition, setEdition } = useEdition();
-  const { settings } = useGame();
+  const { settings, round, newGame } = useGame();
+  // UnspokenMD's Quick Play skips setup and starts Zen with the last settings; Unspoken's opens the
+  // game as it is.
+  const startQuickPlay = () => {
+    if (edition === 'md' && !zenInProgress(round)) newGame({ ...settings, mode: 'zen' });
+  };
   const art = homeArt[edition];
 
   return (
@@ -72,7 +80,7 @@ export function HomeScreen() {
       </div>
 
       <div className={styles.actions}>
-        <Link href={routes.play} className={styles.quickPlay}>
+        <Link href={routes.play} className={styles.quickPlay} onClick={startQuickPlay}>
           <span className={styles.disc}>
             <Icon name="play" />
           </span>

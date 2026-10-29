@@ -1,0 +1,130 @@
+/* UnspokenMD's word bank and Find a card sheets. */
+
+.grow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  min-width: 0;
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+.tabsRow,
+.searchHead {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+}
+
+.searchHead {
+  align-items: flex-start;
+}
+
+.close {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--un-layout-control-icon-badge);
+  height: var(--un-layout-control-icon-badge);
+  padding: 0;
+  border: 0;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+  font-size: var(--un-layout-icon-sm);
+  cursor: pointer;
+}
+
+.footer {
+  margin-top: var(--un-space-4);
+}
+
+/* The search box: an accent outline, the icon, the input and the count. */
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2-5);
+  min-height: var(--un-layout-button-height);
+  padding: 0 var(--un-space-4);
+  border: var(--un-space-0-5) solid var(--region-accent);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+  color: var(--region-ink);
+}
+
+.searchIcon {
+  flex: none;
+  font-size: var(--un-layout-icon-md);
+  color: var(--region-muted);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  padding: var(--un-space-3) 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--region-muted);
+}
+
+/* Results: one white list, a hairline between rows. */
+.results {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+  list-style: none;
+}
+
+.results li + li {
+  border-top: var(--un-layout-stroke-hairline) solid var(--region-rule);
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-3);
+  width: 100%;
+  min-height: var(--un-layout-min-touch);
+  padding: var(--un-space-2-5) var(--un-space-4);
+  border: 0;
+  background: none;
+  color: var(--region-ink);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.result:focus-visible {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: calc(-1 * var(--un-space-0-5));
+}
+
+.term {
+  overflow-wrap: anywhere;
+}
+
+.mark {
+  border-radius: var(--un-radius-xs);
+  background: var(--region-chip);
+  color: inherit;
+}
+
+.searchInput::-webkit-search-cancel-button {
+  appearance: none;
+}

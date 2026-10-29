@@ -18,11 +18,14 @@ type TimerInputProps = {
   disabled?: boolean;
   // The accepted range, shown under min : sec.
   range?: string;
+  // The box's fill: raised on the page (setup's TIME LIMIT), or the chip fill inside a raised card
+  // (Zen's Timer rule).
+  fill?: 'raised' | 'chip';
 };
 
 // The time limit, typed like a microwave: digits fill from the right, so 1, 4, 5 reads 1:45.
 // Seconds over 59 roll into minutes when the box loses focus (1:75 reads 2:15).
-export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, disabled = false, range }: TimerInputProps) {
+export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, disabled = false, range, fill = 'raised' }: TimerInputProps) {
   const [digits, setDigits] = useState(() => secondsToTimerDigits(seconds));
   const [focused, setFocused] = useState(false);
   // A new difficulty moves a default time with it; show that new time.
@@ -33,7 +36,7 @@ export function TimerInput({ seconds, onChange, onFocusChange, invalid = false, 
     onFocusChange?.(next);
   };
   return (
-    <label className={cx(styles.box, invalid && styles.invalid, disabled && styles.disabled)}>
+    <label className={cx(styles.box, fill === 'chip' && styles.onChip, invalid && styles.invalid, disabled && styles.disabled)}>
       <input
         className={cx(styles.input, text('title'))}
         inputMode="numeric"

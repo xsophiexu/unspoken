@@ -7,10 +7,11 @@ import { cx, text } from '@/lib/ui';
 import styles from './Word.module.css';
 
 // The word to describe, at the largest size that fits its box (the style sets the limits).
-export function Word({ slot, word }: { slot: WordSlot; word: string }) {
+// label: the line over the word in place of "Your word" (UnspokenMD's "From search · Tough · Respiratory").
+export function Word({ slot, word, label = en.play.yourWord }: { slot: WordSlot; word: string; label?: string }) {
   return (
     <div className={styles.word} data-spot="word">
-      {slot.label && <p className={cx(styles.label, text('label'))}>{en.play.yourWord}</p>}
+      {slot.label && <p className={cx(styles.label, text('label'))}>{label}</p>}
       <FittedText
         as="h1"
         text={word}

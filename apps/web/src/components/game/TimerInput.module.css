@@ -10,6 +10,11 @@
   cursor: text;
 }
 
+.onChip {
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
 .box:has(:focus-visible) {
   outline: var(--un-space-0-5) solid var(--region-accent);
   outline-offset: var(--un-space-0-5);
