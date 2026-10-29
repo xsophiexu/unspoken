@@ -1,0 +1,6 @@
+{
+  "extends": "../../tsconfig.base.json",
+  // The rules test reads firestore.rules from disk.
+  "compilerOptions": { "types": ["node"] },
+  "include": ["src", "test"]
+}

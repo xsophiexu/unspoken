@@ -1,0 +1,58 @@
+rules_version = '2';
+
+// Firestore rules for Unspoken. Everything is denied unless a match below allows it.
+// Clients sign in anonymously (packages/firebase) and may only write Send feedback, at most one
+// message per user per minute. Nobody can read anything back; feedback is read in the Firebase
+// console or with admin credentials, which bypass these rules.
+// The enums and lengths mirror packages/core/src/feedback.ts; packages/firebase/test/rules.test.ts
+// fails if they drift apart.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function hasExactly(data, keys) {
+      return data.keys().hasAll(keys) && data.keys().hasOnly(keys);
+    }
+
+    function limitPath() {
+      return /databases/$(database)/documents/feedbackLimits/$(request.auth.uid);
+    }
+
+    // The same batch stamps feedbackLimits/{uid} with this request's time, and the stamp before the
+    // batch (if any) is over a minute old.
+    function rateLimitHolds() {
+      return getAfter(limitPath()).data.last == request.time
+        && (!exists(limitPath()) || request.time > get(limitPath()).data.last + duration.value(60, 's'));
+    }
+
+    function validFeedback(data) {
+      return hasExactly(data, ['topic', 'message', 'entryPoint', 'platform', 'appVersion', 'uid', 'receivedAt'])
+        && data.topic in ['styles', 'modes', 'words', 'other']
+        && (data.entryPoint == null || data.entryPoint in ['customize', 'modes', 'menu'])
+        && data.platform in ['ios', 'android', 'web']
+        && data.message is string
+        && data.message.size() >= 1
+        && data.message.size() <= 500
+        && (data.appVersion == null || (data.appVersion is string && data.appVersion.size() <= 32))
+        && data.uid == request.auth.uid
+        && data.receivedAt == request.time;
+    }
+
+    match /feedback/{id} {
+      allow create: if signedIn() && validFeedback(request.resource.data) && rateLimitHolds();
+      allow read, update, delete: if false;
+    }
+
+    match /feedbackLimits/{uid} {
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && hasExactly(request.resource.data, ['last'])
+        && request.resource.data.last == request.time;
+      allow read, delete: if false;
+    }
+  }
+}

@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   reactStrictMode: true,
   // The shared packages are TypeScript source with no build step.
-  transpilePackages: ['@unspoken/core', '@unspoken/content', '@unspoken/design-tokens', '@unspoken/api-contract'],
+  transpilePackages: ['@unspoken/core', '@unspoken/content', '@unspoken/design-tokens', '@unspoken/api-contract', '@unspoken/firebase'],
   env: {
     NEXT_PUBLIC_BASE_PATH: basePath,
     NEXT_PUBLIC_APP_VERSION: pkg.version,

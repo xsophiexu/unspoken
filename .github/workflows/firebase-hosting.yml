@@ -1,8 +1,10 @@
 name: Deploy web version to Firebase Hosting
 
-# Builds apps/web (Next.js static export) on every push to main and publishes it to Firebase Hosting
-# (project in .firebaserc, site unspokengame in firebase.json, served at https://unspokengame.web.app). The FIREBASE_SERVICE_ACCOUNT
-# repository secret holds the JSON key of a service account with the Firebase Hosting Admin role.
+# Builds apps/web (Next.js static export) on every push to main, deploys firestore.rules, then
+# publishes the site to Firebase Hosting (project in .firebaserc, site unspokengame in firebase.json,
+# served at https://unspokengame.web.app). The FIREBASE_SERVICE_ACCOUNT repository secret holds the
+# JSON key of a service account with the Firebase Hosting Admin role (hosting), and the Firebase
+# Rules Admin and Service Usage Consumer roles (rules).
 
 on:
   push:
@@ -24,8 +26,14 @@ jobs:
       NEXT_PUBLIC_BASE_PATH: ''
       # Google Analytics measurement id. A repository variable of the same name overrides it.
       NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || 'G-9MFDEM0KXR' }}
-      # services/api base URL. A repository variable of the same name overrides it.
-      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://unspoken-production.up.railway.app' }}
+      # Firebase web config (public by design; firestore.rules guards the data). Send feedback writes
+      # to Firestore with it. Repository variables of the same names override these.
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY || 'AIzaSyAc29CUL8KchhauL21s2tQ3xoWG4uJ8cuI' }}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || 'unspoken-34aa8.firebaseapp.com' }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID || 'unspoken-34aa8' }}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || 'unspoken-34aa8.firebasestorage.app' }}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || '954325044760' }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID || '1:954325044760:web:b99a44a2e7bc97397ffd6d' }}
       NEXT_TELEMETRY_DISABLED: 1
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +47,22 @@ jobs:
       - run: pnpm --filter @unspoken/web test
       # next build also type-checks.
       - run: pnpm --filter @unspoken/web build
+      # firestore.rules is tested against the Firestore and Auth emulators (they need Java) before it ships.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - run: pnpm --filter @unspoken/firebase test
+      - run: pnpm --filter @unspoken/firebase test:rules
+      # Rules go out before the site, so the new client never writes against old rules.
+      - name: Deploy Firestore rules
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/firebase-service-account.json"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$GOOGLE_APPLICATION_CREDENTIALS"
+          trap 'rm -f "$GOOGLE_APPLICATION_CREDENTIALS"' EXIT
+          npx --yes firebase-tools@15 deploy --only firestore:rules --project unspoken-34aa8 --non-interactive
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

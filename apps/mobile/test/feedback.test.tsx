@@ -1,23 +1,46 @@
 import { en } from '@unspoken/content';
 import { format } from '@unspoken/core';
-import { fireEvent, screen, waitFor } from 'expo-router/testing-library';
+import { SERVER_TIME, createFeedbackClient, type BatchWrite, type FirebaseOptions } from '@unspoken/firebase';
+import { fireEvent, screen } from 'expo-router/testing-library';
 
 import { openApp, resetDevice } from './helpers';
 
-const API_URL = 'https://api.unspoken.test';
+// test/setup.ts replaces src/firebase.ts, the app's only link to the Firebase SDK. Here it builds
+// the real feedback client over a stand-in adapter that signs in a fixed user and records (or
+// rejects) each batch.
+const { firebaseFeedbackClient } = jest.requireMock<{ firebaseFeedbackClient: jest.Mock }>('../src/firebase');
+
+const FIREBASE_ENV = {
+  EXPO_PUBLIC_FIREBASE_API_KEY: 'test-key',
+  EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN: 'unspoken-test.firebaseapp.com',
+  EXPO_PUBLIC_FIREBASE_PROJECT_ID: 'unspoken-test',
+  EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET: 'unspoken-test.firebasestorage.app',
+  EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: '123',
+  EXPO_PUBLIC_FIREBASE_APP_ID: '1:123:web:abc',
+};
 const IDEA = 'A team mode where each side gets its own color';
-const realFetch = globalThis.fetch;
-let fetchMock: jest.Mock;
+let batches: BatchWrite[][];
+let rejectCode: string | undefined;
 
 beforeEach(async () => {
   await resetDevice();
-  process.env.EXPO_PUBLIC_API_URL = API_URL;
-  fetchMock = jest.fn();
-  globalThis.fetch = fetchMock;
+  Object.assign(process.env, FIREBASE_ENV);
+  batches = [];
+  rejectCode = undefined;
+  firebaseFeedbackClient.mockImplementation((_options: FirebaseOptions) =>
+    createFeedbackClient({
+      currentUid: () => null,
+      signInAnonymously: async () => 'anon-1',
+      commit: async (writes) => {
+        if (rejectCode) throw Object.assign(new Error(rejectCode), { code: rejectCode });
+        batches.push([...writes]);
+      },
+    }),
+  );
 });
 afterEach(() => {
-  delete process.env.EXPO_PUBLIC_API_URL;
-  globalThis.fetch = realFetch;
+  for (const key of Object.keys(FIREBASE_ENV)) delete process.env[key];
+  firebaseFeedbackClient.mockReset();
 });
 
 const topic = (id: keyof typeof en.feedback.topics) => screen.getByRole('radio', { name: en.feedback.topics[id] });
@@ -47,20 +70,22 @@ describe('Send feedback', () => {
     expect(topic('modes')).not.toBeSelected();
   });
 
-  it('posts the topic and text to the API, then thanks the player', async () => {
-    fetchMock.mockResolvedValue(new Response(JSON.stringify({ id: 'fb_1', receivedAt: '2026-10-16T10:00:00.000Z' }), { status: 201 }));
+  it('writes the topic and text to Firestore with the configured project, then thanks the player', async () => {
     await openApp('/feedback?from=modes');
     await writeAndSend();
 
     expect(await screen.findByText(en.thanks.title)).toBeOnTheScreen();
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-    const [url, init] = fetchMock.mock.calls[0];
-    expect(url).toBe(`${API_URL}/v1/feedback`);
-    expect(JSON.parse(init.body)).toMatchObject({ topic: 'modes', message: IDEA, entryPoint: 'modes' });
+    expect(firebaseFeedbackClient).toHaveBeenCalledWith(expect.objectContaining({ projectId: 'unspoken-test', appId: '1:123:web:abc' }));
+    expect(batches).toHaveLength(1);
+    expect(batches[0]?.[0]).toMatchObject({
+      kind: 'add',
+      collection: 'feedback',
+      data: { topic: 'modes', message: IDEA, entryPoint: 'modes', uid: 'anon-1', receivedAt: SERVER_TIME },
+    });
   });
 
-  it('shows an error and keeps the text when the API fails', async () => {
-    fetchMock.mockRejectedValue(new TypeError('Network request failed'));
+  it('shows an error and keeps the text when sending fails', async () => {
+    rejectCode = 'unavailable';
     await openApp('/feedback?from=menu');
     await writeAndSend();
 
@@ -69,13 +94,23 @@ describe('Send feedback', () => {
     expect(screen.queryByText(en.thanks.title)).not.toBeOnTheScreen();
   });
 
-  it('shows the same error without calling anything when no API URL is configured', async () => {
-    delete process.env.EXPO_PUBLIC_API_URL;
+  it('asks the player to wait a minute when Firestore refuses a second idea', async () => {
+    rejectCode = 'permission-denied';
+    await openApp('/feedback?from=menu');
+    await writeAndSend();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(en.feedback.rateLimited);
+    expect(screen.getByDisplayValue(IDEA)).toBeOnTheScreen();
+    expect(screen.queryByText(en.thanks.title)).not.toBeOnTheScreen();
+  });
+
+  it('shows the same error without touching Firebase when it is not configured', async () => {
+    delete process.env.EXPO_PUBLIC_FIREBASE_APP_ID;
     await openApp('/feedback?from=menu');
     await writeAndSend();
 
     expect(await screen.findByRole('alert')).toHaveTextContent(en.feedback.failed);
     expect(screen.getByDisplayValue(IDEA)).toBeOnTheScreen();
-    expect(fetchMock).not.toHaveBeenCalled();
+    expect(firebaseFeedbackClient).not.toHaveBeenCalled();
   });
 });

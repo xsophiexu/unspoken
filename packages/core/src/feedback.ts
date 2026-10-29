@@ -16,12 +16,15 @@ export type FeedbackPlatform = (typeof FEEDBACK_PLATFORMS)[number];
 
 export type FeedbackRules = {
   maxLength: number;
+  // The longest app version a message may carry (firestore.rules checks the same number).
+  appVersionMaxLength: number;
   // The topic preselected for each entry point. The player can still pick another.
   topicFor: Readonly<Record<FeedbackEntryPoint, FeedbackTopic>>;
 };
 
 export const feedbackRules: FeedbackRules = {
   maxLength: 500,
+  appVersionMaxLength: 32,
   topicFor: { customize: 'styles', modes: 'modes', menu: 'other' },
 };
 

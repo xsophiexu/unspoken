@@ -10,11 +10,12 @@ import {
   type FeedbackEntryPoint,
 } from '@unspoken/core';
 import { layout, nativeTextStyle, radius, space } from '@unspoken/design-tokens';
+import { FeedbackError } from '@unspoken/firebase';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 
-import { apiClient, appConfig } from '../config';
+import { appConfig, feedbackClient } from '../config';
 import { goBack } from '../nav';
 import { usePrefs } from '../state/prefs';
 import { Button, LinkButton } from '../ui/Button';
@@ -28,24 +29,24 @@ function entryPoint(value: unknown): FeedbackEntryPoint | undefined {
 }
 
 // Send feedback: a topic (picked for the player by where they came from) and up to 500 characters,
-// posted to the service through the API client. When it can't be sent the text stays and an error
-// says so.
+// written to Firestore. When it can't be sent the text stays and an error says so; a second idea
+// within a minute is asked to wait.
 export default function FeedbackScreen() {
   const { theme } = usePrefs();
   const from = entryPoint(useLocalSearchParams<{ from?: string }>().from);
   const [topic, setTopic] = useState(() => defaultFeedbackTopic(from));
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<'failed' | 'rateLimited' | null>(null);
   const f = en.feedback;
   const field = theme.regions.raised;
   const place = f.places[from ?? 'menu'];
 
   const send = async () => {
-    const client = apiClient();
-    setFailed(false);
+    const client = feedbackClient();
+    setFailed(null);
     if (!client) {
-      setFailed(true);
+      setFailed('failed');
       return;
     }
     setSending(true);
@@ -53,8 +54,8 @@ export default function FeedbackScreen() {
       const { platform, appVersion } = appConfig();
       await client.sendFeedback({ topic, message, entryPoint: from, platform, appVersion });
       router.replace('/thanks');
-    } catch {
-      setFailed(true);
+    } catch (error) {
+      setFailed(error instanceof FeedbackError && error.code === 'rateLimited' ? 'rateLimited' : 'failed');
     } finally {
       setSending(false);
     }
@@ -93,7 +94,7 @@ export default function FeedbackScreen() {
               value={message}
               onChangeText={(text) => {
                 setMessage(text);
-                setFailed(false);
+                setFailed(null);
               }}
               placeholder={f.placeholder}
               placeholderTextColor={field.muted}
@@ -110,7 +111,7 @@ export default function FeedbackScreen() {
               <View accessible accessibilityRole="alert" accessibilityLiveRegion="assertive" style={[styles.error, { backgroundColor: colors.chip, borderColor: colors.outline }]}>
                 <Icon name="cross" size={layout.icon.md} color={colors.chipInk} />
                 <Txt variant="label" color={colors.chipInk} style={styles.errorText}>
-                  {f.failed}
+                  {failed === 'rateLimited' ? f.rateLimited : f.failed}
                 </Txt>
               </View>
             ) : null}

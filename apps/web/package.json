@@ -18,6 +18,7 @@
     "@unspoken/content": "workspace:*",
     "@unspoken/core": "workspace:*",
     "@unspoken/design-tokens": "workspace:*",
+    "@unspoken/firebase": "workspace:*",
     "next": "16.4.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",

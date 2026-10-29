@@ -17,9 +17,11 @@ apps/mobile            Expo app (SDK 57): Android, plus a web export for preview
 packages/core          @unspoken/core: game domain
 packages/content       @unspoken/content: word bank and English copy
 packages/design-tokens @unspoken/design-tokens: palettes, type, sizes, motion, layout styles, theme helpers
-packages/api-contract  @unspoken/api-contract: HTTP paths, zod schemas, typed client
+packages/firebase      @unspoken/firebase: Firebase setup, anonymous sign-in, Send feedback on Firestore
+packages/api-contract  @unspoken/api-contract: HTTP paths, zod schemas, typed client (the apps no longer call the service)
 apps/web               (next) Next.js site
 services/api           @unspoken/api: Hono service implementing api-contract, on Railway with Postgres (see its README)
+firestore.rules        Firestore security rules, deployed by .github/workflows/firebase-hosting.yml
 ```
 
 pnpm workspace (`pnpm-workspace.yaml` covers `apps/*`, `packages/*`, `services/*`) with `node-linker=hoisted` for React Native. Packages are `"type": "module"`, export `./src/index.ts`, and extend `tsconfig.base.json` (strict, `noUncheckedIndexedAccess`, `verbatimModuleSyntax`). Metro compiles them as source. Next.js must list them in `transpilePackages`. A service can run them with a TypeScript-aware runner (tsx, Bun) or bundle them.
@@ -40,7 +42,7 @@ Root scripts run across every workspace: `pnpm lint`, `pnpm typecheck`, `pnpm te
 | Status lines | `roundSubline`, `menuStatus`, `clockLabel`, `pausedStatus`, `swipeSummary`, `categoriesLabel` | Decide which message applies and fill it from a catalog that satisfies `RoundCopy`. |
 | Text | `format`, `plural`, `count`, `formatClock`, timer-input helpers (`sanitizeTimerDigits`, `timerDigitsToSeconds`, `secondsToTimerDigits`, `timerDigitsLabel`), `wordShape` | `{name}` placeholders; `Plural = { one, other }`. |
 | Fitting | `fitWordSize(text, metrics, { width, max, min, maxLines })`, `linesAt`, `blankCellSize` | Picks the largest font size at which a word fits its box without breaking inside a word, from glyph widths, so every platform and the server agree without measuring. Pass `wordMetrics` from design tokens and the style's `word.size` / `word.minSize` / `word.maxLines`. |
-| Feedback | `feedbackRules` (500 characters; topic preselected per entry point: Customize → Styles and colors, Modes → Game modes, game menu → Something else), `defaultFeedbackTopic`, `feedbackLength`, `canSendFeedback` | Length counts what the player sees: trimmed, one per emoji. |
+| Feedback | `feedbackRules` (500 characters; app versions up to 32 characters; topic preselected per entry point: Customize → Styles and colors, Modes → Game modes, game menu → Something else), `defaultFeedbackTopic`, `feedbackLength`, `canSendFeedback` | Length counts what the player sees: trimmed, one per emoji. |
 
 Time and randomness are injected. Rounds take a `seed` (apps use `newSeed()`, tests use fixed numbers) and advance their clock only through `tick` actions. Platforms run a 1-second interval while `isClockRunning(state)` and dispatch `{ type: 'tick', seconds: 1 }`.
 
@@ -60,6 +62,17 @@ Time and randomness are injected. Rounds take a `seed` (apps use `newSeed()`, te
 - **Layout styles** (`layoutStyles`, `STYLE_IDS` in Customize order: Card (default), Deck, Lines, Split, Ledger, Ink, Bottom, Sheet, Big timer, Chips, Ombre). A style may carry `margins` (top or bottom that differ from `layout.play`), `dark` (slot changes merged in for dark mode) and `regions.header` (the top row's tone when it differs from the page; Sheet only). `layoutStyleFor(id, mode)` returns the style as drawn in a mode, `playMargins(style)` its play screen margins, `ringCardSize(width, height)` the Card ring for a space. See below.
 - **Theme helpers**: `resolveTheme({ style, color, mode })` returns a `Theme`: the style for the mode (`layoutStyleFor`), the effective color (a pinned style overrides the player's pick), the palette roles, every region tone resolved, and shadows. `parseThemeSelection(stored)` reads a saved selection and defaults bad fields. `nativeTextStyle(name, size?)` gives React Native text props. `cssVariables(theme)` and `cssText(theme, selector)` give CSS custom properties (`--un-color-surface-raised`, `--un-ramp-1-bg`, `--un-panel-ink`, `--un-shadow-card`, `--un-space-4`, `--un-radius-card`, `--un-text-word-size`, `--un-font`).
 - **Contrast**: `test/contrast.test.ts` checks every text slot on its background, in every region tone, palette and mode, against WCAG AA (4.5:1), along with Ombre bands, spotlight captions and the Play label. Chips in `ICON_CHIP_TONES` are held to 3:1 (icons), and the same test keeps every style from putting text on them (no filled mode label, timer chip or score pill in a frosted header row). When you change a color, shade the same hue until the test passes.
+
+### @unspoken/firebase
+
+Firebase for both apps, built on the modular `firebase` JS SDK. The generic parts are meant to be reused by later Firebase features (multiplayer lobbies).
+
+- `firebaseOptions({ apiKey, authDomain, projectId, storageBucket, messagingSenderId, appId })`: the options when all six are set, otherwise `null` (the app runs without Firebase). Each app reads the values from its own env and passes them in.
+- `FirebaseAdapter` (`currentUid()`, `signInAnonymously()`, `commit(writes)`) is the only boundary to the SDK. A batch write is `{ kind: 'add', collection, data }` or `{ kind: 'set', path, data }`, and `SERVER_TIME` in data stands for `serverTimestamp()`. Tests pass a fake adapter.
+- `signInAnonymously(adapter)`: the current uid, signing in anonymously first if needed; concurrent calls share one sign-in.
+- `createFeedbackClient(adapter).sendFeedback({ topic, message, entryPoint?, platform, appVersion? })` validates with the core rules (`FEEDBACK_TOPIC_IDS`, `canSendFeedback` and the rest), signs in, then in one batch adds a `feedback` document (`topic`, trimmed `message`, `entryPoint`, `platform`, `appVersion` or `null`, `uid`, `receivedAt` = server time) and sets `feedbackLimits/{uid}` to `{ last: server time }`. Failures are a `FeedbackError` with `code` `invalid`, `rateLimited` (Firestore answered `permission-denied`: under a minute since the last idea) or `failed`.
+- `@unspoken/firebase/sdk` is the SDK side: `getFirebase(options, { auth? })` creates the app, Auth and Firestore once, on first use; `firebaseAdapter(options, setup?)` is the real adapter. The main entry never imports `firebase/*`.
+- `firestore.rules` (repo root) denies everything except creating a `feedback` document with exactly those keys, valid enums and lengths, `uid` = the caller and `receivedAt` = `request.time`, in the same batch as a `feedbackLimits/{uid}` stamp at `request.time`, and only when the previous stamp is over 60 seconds old. Nothing can be read, updated or deleted by clients; read feedback in the Firebase console. `packages/firebase/test/rules.test.ts` fails if the rules' enums and lengths drift from core.
 
 ### @unspoken/api-contract
 
@@ -146,7 +159,7 @@ Wording comes from `en`; numbers come from `gameConfig` and `layout`.
 | New game setup | Categories box (opens Choose categories: multi-select chips, All cards exclusive, double-tap All cards to highlight every category), difficulty tiles (pick one or more; the (i) opens the Difficulty info table), round timer (microwave input, default follows the hardest pick, only for visible clocks), skips (only for modes with a skip limit). Start asks first below `smallDeckCards`. | `setup`, `categoriesSheet`, `difficultyInfo`, `smallDeck` | `toggleDifficulty`, `tapAllCards`, `isSmallDeck`, `canStart` |
 | Customize page 1 | ‹ Back, Done; style grid of 3 × 2 thumbnails (Card through Ink), "Swipe for more →"; 7 color swatches; Light / Dark | `customize` | |
 | Customize page 2 | Bottom, Sheet, Big timer, Chips, Ombre and a dashed "Want another style?" tile, which opens Send feedback from `customize`; "← Swipe back" | `customize` | |
-| Send feedback | "‹ {place}" back link; topic chips (Styles and colors, Game modes, Words and cards, Something else) with the entry point's topic preselected and the "Picked for you" note; a 500-character box with an `n / 500` counter; Send (disabled until `canSendFeedback`) | `feedback` | `sendFeedback` with `entryPoint`, `platform` and `appVersion`; on failure show `feedback.failed` and keep the text |
+| Send feedback | "‹ {place}" back link; topic chips (Styles and colors, Game modes, Words and cards, Something else) with the entry point's topic preselected and the "Picked for you" note; a 500-character box with an `n / 500` counter; Send (disabled until `canSendFeedback`) | `feedback` | `sendFeedback` (`@unspoken/firebase`) with `entryPoint`, `platform` and `appVersion`; on failure show `feedback.failed` (or `feedback.rateLimited` within a minute of the last idea) and keep the text |
 | Thanks | Title, body, Done (back to where feedback was opened) | `thanks` | |
 | How to play | The play screen under the dark spotlight: 7 steps of 3 s (`motion.spotlight`), with the cut-out gliding between targets (`word`, `banned`, `difficulty`, `menu`, `play`), white captions, step dots, Skip tour, and a white Play button with the accent label that pulses on the last step | `howToPlay` | `spotlight` tokens are fixed across styles and modes. Each style maps the five targets to its own slots. |
 
@@ -163,18 +176,19 @@ Wording comes from `en`; numbers come from `gameConfig` and `layout`.
 
 ## Config and environment
 
-Rules, copy and tokens are data in the packages. Deployment-specific values come from env and are validated once at startup with `clientConfigSchema`. They are never written into source.
+Rules, copy and tokens are data in the packages. Deployment-specific values come from env and are validated once at startup (`firebaseOptions` for Firebase, `clientConfigSchema` for the rest). They are never written into source.
 
 | Value | Expo (`apps/mobile`) | Next.js (`apps/web`) | Service (`services/api`) |
 | --- | --- | --- | --- |
-| API base URL | `EXPO_PUBLIC_API_URL` | `NEXT_PUBLIC_API_URL` | `PORT`, `CORS_ORIGINS` |
+| Firebase web config (Send feedback) | `EXPO_PUBLIC_FIREBASE_API_KEY`, `_AUTH_DOMAIN`, `_PROJECT_ID`, `_STORAGE_BUCKET`, `_MESSAGING_SENDER_ID`, `_APP_ID` (defaults in `apps/mobile/.env`) | `NEXT_PUBLIC_FIREBASE_*`, same names (defaults in `firebase-hosting.yml`) | |
+| Service address | | | `PORT`, `CORS_ORIGINS` |
 | Google Analytics id | `EXPO_PUBLIC_GA_MEASUREMENT_ID` | `NEXT_PUBLIC_GA_ID` | |
 | Database | | | `DATABASE_URL` (Railway's Postgres, as `${{Postgres.DATABASE_URL}}`) |
 | Limits | | | `TRUST_PROXY_HOPS`, `BODY_LIMIT_BYTES`, `FEEDBACK_RATE_LIMIT`, `FEEDBACK_RATE_WINDOW_SECONDS` |
 | App version | `app.json` version (read with `expo-constants`) | `package.json` version at build | |
 
-- Expo inlines only literal `process.env.EXPO_PUBLIC_*` reads, and Next only `process.env.NEXT_PUBLIC_*`. Read each variable by its full name in one config module per app and pass the values to `clientConfigSchema.parse`. Locally use `.env.local` files (gitignored), with a committed `.env.example` that lists the names. For builds use EAS environment variables or `eas.json` profile `env` on mobile, and repository variables in GitHub Actions for the Pages build.
-- Public env values ship to clients, so they must not be secrets. The database credentials stay in the service. Clients send feedback to `POST /v1/feedback`, and the service writes it to the `feedback` table in PostgreSQL (the validated request plus `id` and `received_at`). It answers 503 `unavailable` when `DATABASE_URL` is not set. The service runs on Railway with a Railway Postgres; `services/api/README.md` covers the deploy. The service validates its env once at startup in `src/config.ts` and lists every variable in `.env.example`.
+- Expo inlines only literal `process.env.EXPO_PUBLIC_*` reads, and Next only `process.env.NEXT_PUBLIC_*`. Read each variable by its full name in one config module per app and pass the values to `firebaseOptions` or `clientConfigSchema`. Locally use `.env.local` files (gitignored), with a committed `.env.example` that lists the names. For builds use EAS environment variables or `eas.json` profile `env` on mobile, and repository variables in GitHub Actions for the web build.
+- Public env values ship to clients, so they must not be secrets. The Firebase web config is public by design; `firestore.rules` decides what clients may write. Clients send feedback straight to Firestore (`feedback` collection, see `@unspoken/firebase`); the Firebase Hosting workflow deploys the rules with `firebase-tools` before the site. The service still implements `POST /v1/feedback` (the `feedback` table in PostgreSQL, 503 `unavailable` without `DATABASE_URL`), but no client calls it. The service runs on Railway with a Railway Postgres; `services/api/README.md` covers the deploy. The service validates its env once at startup in `src/config.ts` and lists every variable in `.env.example`.
 - `app.json` holds the Android package `com.rensar.unspoken`, which is fixed per app and stays there. The mobile web export adds the GA tag at runtime from `EXPO_PUBLIC_GA_MEASUREMENT_ID`. The Pages workflow sets the web `baseUrl` to `/unspoken`.
 - Clients play offline from the bundled `bank` and `gameConfig`. A served config or deck (same schemas) can replace them later without changing screens.
 
@@ -182,12 +196,11 @@ Rules, copy and tokens are data in the packages. Deployment-specific values come
 
 - Test behavior through public interfaces: package exports, reducers through actions and selectors, and the API client through `createApiClient`. Never import from `src/` internals in another package.
 - No tautological tests. Don't assert that a constant equals itself or restate a config table. Assert what a player or caller would notice: the status line after three correct answers, the deck for a seed, contrast passing.
-- Mock only at boundaries: network (inject `fetch`), the database (the service's tests run its SQL on PGlite, an in-process Postgres), storage, the clock (dispatch `tick`) and randomness (pass a seed or a `Random`). Don't mock packages or modules.
+- Mock only at boundaries: network (inject `fetch`), Firebase (pass a fake `FirebaseAdapter`; `apps/mobile` replaces `src/firebase.ts`), the database (the service's tests run its SQL on PGlite, an in-process Postgres), storage, the clock (dispatch `tick`) and randomness (pass a seed or a `Random`). Don't mock packages or modules.
 - Fixtures are small and built in the test file or `test/fixtures.ts`. Content tests may read the real bank to guard the data.
 - Every package keeps `lint`, `typecheck` and `test` green. Run `pnpm check` at the root before pushing. The Expo app must also build with `npx expo export --platform web` and `--platform android` from `apps/mobile`.
-- UI tests render screens with test data and assert visible text and roles, not styles or snapshots. `apps/mobile/test` renders the real Expo Router app with `renderRouter` and mocks only storage, `fetch`, timers and font loading.
+- UI tests render screens with test data and assert visible text and roles, not styles or snapshots. `apps/mobile/test` renders the real Expo Router app with `renderRouter` and mocks only storage, `fetch`, Firebase (`src/firebase.ts`), timers and font loading.
 
 ## What is not built yet
 
-- Deploying `services/api` to Railway and setting `NEXT_PUBLIC_API_URL` / `EXPO_PUBLIC_API_URL` to its URL.
 - Multiplayer.

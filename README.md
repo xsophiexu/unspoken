@@ -62,7 +62,7 @@ Open https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1 on your phone or computer
 
 If your phone and computer are on different Wi-Fi networks, or the scan times out, run `pnpm start --tunnel` in `apps/mobile` instead.
 
-The game plays offline. To make Send feedback reach the service, copy `apps/mobile/.env.example` to `apps/mobile/.env.local` and set `EXPO_PUBLIC_API_URL`.
+The game plays offline. Send feedback signs in anonymously to Firebase and writes to Firestore, using the public Firebase config in `apps/mobile/.env`. To point it at another Firebase project, copy `apps/mobile/.env.example` to `apps/mobile/.env.local` and fill in the `EXPO_PUBLIC_FIREBASE_*` values.
 
 ### 4. Install it on an Android phone (APK)
 
@@ -120,5 +120,7 @@ A pnpm workspace. [docs/architecture.md](docs/architecture.md) describes the pac
 - `packages/core/` holds the game rules: difficulties, modes, timers, dealing, round state machines and status lines
 - `packages/content/` holds the word bank (`data/word-banks.json`; add cards there) and the English copy
 - `packages/design-tokens/` holds the palettes, type, sizes and the eleven layout styles
-- `packages/api-contract/` describes the HTTP API (`/v1/config`, `/v1/decks`, `/v1/feedback`) and has a typed client
-- `services/api/` is the HTTP service behind that contract (Hono on Node, deployed on Railway, feedback in its Postgres); its README covers running and deploying it
+- `packages/firebase/` sets up Firebase from the public config (lazy app, anonymous sign-in, an adapter over the SDK) and sends feedback to Firestore; both apps use it
+- `firestore.rules` guards Firestore: clients may only create feedback (checked shape, one message per user per minute) and read nothing. The Firebase Hosting workflow deploys it
+- `packages/api-contract/` describes the HTTP API (`/v1/config`, `/v1/decks`, `/v1/feedback`) and has a typed client. The apps no longer call it
+- `services/api/` is the HTTP service behind that contract (Hono on Node, deployed on Railway, feedback in its Postgres); its README covers running and deploying it. Feedback now goes to Firestore instead

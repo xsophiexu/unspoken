@@ -378,6 +378,8 @@ export const en = {
     send: 'Send feedback',
     sending: 'Sending…',
     failed: 'Couldn’t send that. Check your connection and try again.',
+    // One idea a minute per player; shown when the last one went out less than a minute ago.
+    rateLimited: 'You just sent an idea. Wait a minute, then try again.',
   },
   thanks: {
     title: 'Thanks for the idea!',

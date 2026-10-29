@@ -1,0 +1,27 @@
+{
+  "name": "@unspoken/firebase",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Unspoken on Firebase: app setup from public options, anonymous sign-in, and Send feedback written to Firestore. Shared by the web and mobile clients.",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./sdk": "./src/sdk.ts"
+  },
+  "dependencies": {
+    "@unspoken/core": "workspace:*",
+    "firebase": "^13.1.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "vitest run",
+    "test:rules": "npx --yes firebase-tools@15 emulators:exec --only firestore,auth --project demo-unspoken 'vitest run --config vitest.emulator.config.ts'"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5"
+  }
+}
