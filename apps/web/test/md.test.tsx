@@ -1,8 +1,10 @@
 import { en, mdEn } from '@unspoken/content';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { SPECIALTY_IDS } from '@unspoken/core';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { catalogs } from '@/lib/catalog';
 import { EDITION_STORAGE_KEY } from '@/lib/edition';
 import { MD_SETTINGS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { HomeScreen } from '@/screens/HomeScreen';
@@ -64,6 +66,41 @@ describe('UnspokenMD modes', () => {
     expect(screen.getByRole('link', { name: /^Ladder/ })).toHaveAttribute('href', '/setup/?mode=ladder');
     expect(screen.queryByRole('link', { name: /^Classic/ })).not.toBeInTheDocument();
   });
+
+  it('goes back to Home, where Modes always opens from', () => {
+    inMd();
+    renderApp(<ModesScreen />);
+    expect(screen.getByRole('link', { name: en.modesScreen.back })).toHaveAttribute('href', '/');
+  });
+});
+
+describe('UnspokenMD’s own link', () => {
+  afterEach(() => window.history.pushState({}, '', '/'));
+
+  it('opens Home in UnspokenMD at /md/ and saves the switch, keeping the other choices', () => {
+    saved({ [EDITION_STORAGE_KEY]: { edition: 'unspoken', look: 'dark', character: 'heart' } });
+    window.history.pushState({}, '', '/md/');
+    renderApp(<HomeScreen />);
+    expect(screen.getByRole('radio', { name: /Medical jargon/ })).toBeChecked();
+    expect(screen.getByRole('link', { name: /Quick Play/ })).toHaveTextContent('Zen · One phone · Tricky');
+    expect(stored(EDITION_STORAGE_KEY)).toMatchObject({ edition: 'md', look: 'dark' });
+  });
+
+  it('keeps the saved edition at /', () => {
+    saved({ [EDITION_STORAGE_KEY]: { edition: 'unspoken' } });
+    renderApp(<HomeScreen />);
+    expect(screen.getByRole('radio', { name: /Everyday words/ })).toBeChecked();
+    expect(stored(EDITION_STORAGE_KEY)).toMatchObject({ edition: 'unspoken' });
+  });
+
+  it('still lets the player switch editions from /md/', async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, '', '/md');
+    renderApp(<HomeScreen />);
+    await user.click(screen.getByRole('radio', { name: /Everyday words/ }));
+    expect(screen.getByRole('radio', { name: /Everyday words/ })).toBeChecked();
+    expect(stored(EDITION_STORAGE_KEY)).toMatchObject({ edition: 'unspoken' });
+  });
 });
 
 describe('Zen setup', () => {
@@ -71,7 +108,7 @@ describe('Zen setup', () => {
     const user = userEvent.setup();
     inMd();
     renderApp(<SetupScreen mode="zen" />);
-    expect(screen.getByRole('button', { name: /^Specialties: All specialties/ })).toHaveTextContent('All specialties · 1021 cards');
+    expect(screen.getByRole('button', { name: /^Specialties: All specialties/ })).toHaveTextContent('All specialties · 1,021 cards');
     expect(screen.getByRole('checkbox', { name: /Tricky/ })).toBeChecked();
     expect(screen.getByText('76 cards')).toBeInTheDocument();
     expect(screen.queryByRole('checkbox', { name: /Easy/ })).not.toBeInTheDocument();
@@ -189,8 +226,61 @@ describe('UnspokenMD Quick Play', () => {
     await user.click(sheet.getByRole('checkbox', { name: /^Respiratory/ }));
     await user.click(sheet.getByRole('button', { name: mdEn.picksSheet.apply }));
 
-    expect(screen.getByRole('button', { name: /^Difficulty Tricky, Respiratory/ })).toHaveTextContent('TRICKY · 1/13');
+    expect(screen.getByRole('button', { name: /^Difficulty Tricky, Respiratory/ })).toHaveTextContent('TRICKY · RESP');
     expect(stored(MD_SETTINGS_STORAGE_KEY)).toMatchObject({ specialties: ['respiratory'], difficulties: ['Tricky'] });
+  });
+});
+
+describe('UnspokenMD game header', () => {
+  const chip = () => screen.getByRole('button', { name: /^Difficulty Tricky/ });
+
+  it('names the word bank on the chip: ALL, one specialty’s short name, or how many of 13', () => {
+    inMd({ ...zen, specialties: ['gastrointestinal'] });
+    const one = renderPlay();
+    expect(chip()).toHaveTextContent('TRICKY · GI');
+    one.unmount();
+
+    inMd({ ...zen, specialties: ['cardiovascular', 'renal', 'neurology'] });
+    const several = renderPlay();
+    expect(chip()).toHaveTextContent('TRICKY · 3 OF 13');
+    several.unmount();
+
+    // Every specialty picked one by one is the same as All.
+    inMd({ ...zen, specialties: [...SPECIALTY_IDS] });
+    renderPlay();
+    expect(chip()).toHaveTextContent('TRICKY · ALL');
+  });
+
+  it('says Zen for a game started on New game, and keeps saying it after a reload', async () => {
+    const user = userEvent.setup();
+    inMd();
+    const first = renderPlay(<SetupScreen mode="zen" />);
+    await user.click(screen.getByRole('button', { name: en.setup.start }));
+    expect(first.game.getByText(mdEn.modes.zen.name)).toBeInTheDocument();
+    expect(first.game.queryByText(mdEn.play.title)).not.toBeInTheDocument();
+    first.unmount();
+
+    const { game } = renderPlay();
+    expect(game.getByText(mdEn.modes.zen.name)).toBeInTheDocument();
+  });
+
+  it('says Quick Play once Home’s Quick Play starts the next game', async () => {
+    const user = userEvent.setup();
+    inMd({ ...zen, mode: 'ladder' });
+    saved({ [catalogs.md.startKey]: 'setup' });
+    const { game } = renderPlay(<HomeScreen />);
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+    expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
+  });
+
+  it('asks for ideas for modes or terms on Game paused, and keeps the Home row', async () => {
+    const user = userEvent.setup();
+    inMd();
+    renderPlay();
+    await user.click(screen.getByRole('button', { name: en.a11y.menu }));
+    const menu = within(screen.getByRole('dialog', { name: en.menu.title }));
+    expect(menu.getByRole('link', { name: new RegExp(en.menu.feedback.title) })).toHaveTextContent(mdEn.menu.feedback);
+    expect(menu.getByRole('link', { name: new RegExp(en.menu.home.title) })).toHaveAttribute('href', '/');
   });
 });
 

@@ -6,6 +6,8 @@ import '@fontsource/manrope/700.css';
 import '@fontsource/manrope/800.css';
 import './globals.css';
 
+import { createHash } from 'node:crypto';
+
 import { en } from '@unspoken/content';
 import { DEFAULT_THEME, resolveTheme } from '@unspoken/design-tokens';
 import type { Metadata, Viewport } from 'next';
@@ -13,6 +15,7 @@ import type { ReactNode } from 'react';
 
 import { config } from '@/lib/config';
 import { bootScript, themeAttributes } from '@/theme/boot';
+import { themeCss } from '@/theme/css';
 
 import { Analytics } from './analytics';
 import { Providers } from './providers';
@@ -39,13 +42,17 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
 };
 
+// /theme.css is not hashed by Next, so its URL carries a hash of its content: new tokens mean a new
+// URL, and a returning visitor never pairs new pages with an old cached stylesheet.
+const themeVersion = createHash('sha256').update(themeCss()).digest('hex').slice(0, 12);
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // The boot script sets the saved theme's attributes before paint, so React keeps what it finds.
     <html lang="en" {...themeAttributes(resolveTheme(DEFAULT_THEME))} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript() }} />
-        <link rel="stylesheet" href={`${config.basePath}/theme.css`} />
+        <link rel="stylesheet" href={`${config.basePath}/theme.css?v=${themeVersion}`} />
       </head>
       <body>
         <Providers>{children}</Providers>

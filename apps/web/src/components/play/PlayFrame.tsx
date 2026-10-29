@@ -289,7 +289,7 @@ export function FrameTop({ layoutStyle: s, model, actions, timer }: FrameTopProp
         <Stats slot={s.stats} at="header" stats={model.stats} />
         {timer}
         {actions?.onSearch && <SearchButton slot={s.header} onSearch={actions.onSearch} />}
-        <MenuButton slot={s.header} onMenu={actions?.onMenu} />
+        <MenuButton slot={s.header} onMenu={actions?.onMenu} compact={!!actions?.onSearch} />
       </div>
     </div>
   );

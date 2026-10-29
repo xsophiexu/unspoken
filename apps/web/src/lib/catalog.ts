@@ -31,13 +31,15 @@ export type Catalog = {
   difficultyIds: readonly Difficulty[];
   copy: RoundCopy;
   settingsKey: string;
+  // Where it saves how its game was started (Quick Play or New game).
+  startKey: string;
 };
 
 const md = editionConfigs.md;
 
 export const catalogs: Readonly<Record<EditionId, Catalog>> = {
-  unspoken: { edition: 'unspoken', config, bank, difficultyIds, copy: roundCopy, settingsKey: 'unspoken.settings' },
-  md: { edition: 'md', config: md, bank: mdBank, difficultyIds: md.difficulties.map((d) => d.id), copy: mdRoundCopy, settingsKey: 'unspoken.md.settings' },
+  unspoken: { edition: 'unspoken', config, bank, difficultyIds, copy: roundCopy, settingsKey: 'unspoken.settings', startKey: 'unspoken.start' },
+  md: { edition: 'md', config: md, bank: mdBank, difficultyIds: md.difficulties.map((d) => d.id), copy: mdRoundCopy, settingsKey: 'unspoken.md.settings', startKey: 'unspoken.md.start' },
 };
 
 // The catalog a game's config belongs to (every round carries its config).

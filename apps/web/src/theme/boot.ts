@@ -14,7 +14,9 @@ import {
   type ThemeSelection,
 } from '@unspoken/design-tokens';
 
+import { config } from '@/lib/config';
 import { DEFAULT_EDITION_PREFS, EDITION_STORAGE_KEY } from '@/lib/edition';
+import { editionHomes } from '@/lib/routes';
 
 // Where the player's theme is saved. Read by the inline boot script before first paint and by the
 // theme provider after hydration.
@@ -43,6 +45,8 @@ type BootData = {
   fallbackEdition: string;
   fallbackLook: string;
   editions: Record<string, BootEdition>;
+  // An edition's own link (/md/), without its trailing slash: that page opens in that edition.
+  paths: Record<string, string>;
   pinned: Record<string, string>;
   // Styles drawn in one mode whatever the player picked.
   pinnedMode: Record<string, string>;
@@ -65,7 +69,8 @@ function boot(d: BootData) {
   const saved = read(d.key);
   const savedEdition = read(d.editionKey);
   const pick = (ids: readonly string[], value: unknown, fallback: string) => (ids.indexOf(value as string) >= 0 ? (value as string) : fallback);
-  const edition = d.editions[pick(Object.keys(d.editions), savedEdition.edition, d.fallbackEdition)]!;
+  const linked = d.paths[location.pathname.replace(/\/+$/, '')];
+  const edition = d.editions[pick(Object.keys(d.editions), linked || savedEdition.edition, d.fallbackEdition)]!;
   const savedStyle = pick(d.styles, saved.style, d.fallback.style);
   const style = edition.styles.indexOf(savedStyle) >= 0 ? savedStyle : d.fallbackStyle;
   let mode = pick(d.modes, saved.mode, d.fallback.mode);
@@ -109,6 +114,7 @@ export function bootScript(): string {
     fallbackEdition: DEFAULT_EDITION,
     fallbackLook: DEFAULT_EDITION_PREFS.look,
     editions,
+    paths: Object.fromEntries(Object.entries(editionHomes).map(([id, path]) => [`${config.basePath}${path}`.replace(/\/+$/, ''), id])),
     pinned,
     pinnedMode,
     widths: Object.entries(breakpoints).sort((a, b) => a[1] - b[1]),

@@ -163,6 +163,18 @@ describe('the theme before first paint', () => {
     expect(html()).toHaveAttribute('data-style', 'card');
   });
 
+  it('draws UnspokenMD on its own link, whatever edition was saved, and the saved one elsewhere', () => {
+    saved({ [EDITION_STORAGE_KEY]: { edition: 'unspoken' }, [THEME_STORAGE_KEY]: { style: 'ledger', color: 'rose', mode: 'dark' } });
+    for (const path of ['/md/', '/md']) {
+      window.history.pushState({}, '', path);
+      runBoot();
+      expect(html()).toHaveAttribute('data-color', 'md');
+    }
+    window.history.pushState({}, '', '/');
+    runBoot();
+    expect(html()).toHaveAttribute('data-color', 'rose');
+  });
+
   it('draws a returning Unspoken player in their own style and color', () => {
     saved({ [THEME_STORAGE_KEY]: { style: 'ledger', color: 'rose', mode: 'dark' } });
     runBoot();

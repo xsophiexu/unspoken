@@ -5,7 +5,9 @@ import type { LookId } from '@unspoken/design-tokens';
 import { createContext, use, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { catalogs, type Catalog } from '@/lib/catalog';
+import { config } from '@/lib/config';
 import { EDITION_STORAGE_KEY, parseEditionPrefs, type EditionPrefs } from '@/lib/edition';
+import { editionForPath } from '@/lib/routes';
 import { readStored, writeStored } from '@/lib/storage';
 
 type EditionContextValue = EditionPrefs & {
@@ -21,7 +23,12 @@ const EditionContext = createContext<EditionContextValue | null>(null);
 // Which edition the app is in (Unspoken or UnspokenMD) and UnspokenMD's own choices. Saved in
 // localStorage; the theme provider reads it to switch the whole app's look.
 export function EditionProvider({ children }: { children: ReactNode }) {
-  const [prefs, setPrefs] = useState(() => parseEditionPrefs(readStored(EDITION_STORAGE_KEY)));
+  // An edition's own link (/md/) opens in that edition, saved like a tap on Home's switch.
+  const [prefs, setPrefs] = useState(() => {
+    const saved = parseEditionPrefs(readStored(EDITION_STORAGE_KEY));
+    const linked = editionForPath(globalThis.location?.pathname ?? '', config.basePath);
+    return linked ? { ...saved, edition: linked } : saved;
+  });
 
   useEffect(() => writeStored(EDITION_STORAGE_KEY, prefs), [prefs]);
 

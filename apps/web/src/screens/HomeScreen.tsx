@@ -46,7 +46,7 @@ export function HomeScreen() {
   // UnspokenMD's Quick Play skips setup and starts Zen with the last settings; Unspoken's opens the
   // game as it is.
   const startQuickPlay = () => {
-    if (edition === 'md' && !zenInProgress(round)) newGame({ ...settings, mode: 'zen' });
+    if (edition === 'md' && !zenInProgress(round)) newGame({ ...settings, mode: 'zen' }, undefined, 'quickPlay');
   };
   const art = homeArt[edition];
 
@@ -103,3 +103,4 @@ export function HomeScreen() {
     </Screen>
   );
 }
+

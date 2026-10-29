@@ -26,14 +26,14 @@ type SwipeRoundProps = RoundScreenProps & { round: SwipeRoundState; layoutStyle:
 
 // Classic, Endless, Time Attack, Escalate and Hot Potato: one card at a time in the chosen style.
 export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onHeader, onLeave, onSearch }: SwipeRoundProps) {
-  const { dispatch, restart, settings: next, saveSettings } = useGame();
+  const { dispatch, restart, settings: next, saveSettings, start } = useGame();
   // The Paused screen's time limit changer. A saved change is for the next turn (Play again, Restart
   // or a new game); this turn keeps its clock.
   const [changingTime, setChangingTime] = useState(false);
   const { config, copy } = catalogFor(round.config);
   const timed = hasTimerSetting(round.settings.mode, config);
   const frameRef = useRef<HTMLDivElement>(null);
-  const model = swipeModel(round);
+  const model = swipeModel(round, start);
   const summary = swipeSummary(round, copy);
   // A pause from the menu or a sheet shows as Paused once nothing covers the round any more.
   const paused = round.pause !== null && !sheetOpen;

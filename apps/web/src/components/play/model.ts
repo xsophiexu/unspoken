@@ -20,6 +20,7 @@ import {
 } from '@unspoken/core';
 
 import { catalogFor } from '@/lib/catalog';
+import type { GameStart } from '@/state/game';
 
 // What the play screen shows, read from the round through core's selectors and the copy catalog.
 // Slot components take this and their slot config; they never look at the round or the rules.
@@ -28,6 +29,9 @@ export type HeaderModel = {
   modeName: string;
   // label: what screen readers hear for the badge, when it says more than the difficulty (UnspokenMD).
   difficulty: { name: string; badge: string; label?: string };
+  // The badge names more than the difficulty (UnspokenMD's word bank): it sits beside the title
+  // when it fits and moves whole onto the line under it when it doesn't.
+  longBadge?: boolean;
   subline: string;
   stats: RoundStats;
 };
@@ -56,30 +60,39 @@ function difficultyText(config: GameConfig, pick: 'name' | 'badge'): Record<Diff
   return Object.fromEntries(config.difficulties.map((d) => [d.id, en.difficulties[d.id][pick]])) as Record<Difficulty, string>;
 }
 
-// UnspokenMD's chip names the word bank too: "TRICKY · ALL", or "TRICKY · 2/13".
+// UnspokenMD's chip names the word bank too: "TRICKY · ALL" for every specialty, one specialty's
+// short name ("TRICKY · GI"), or "TRICKY · 3 OF 13".
 function mdBadge(badge: string, settings: GameSettings, config: GameConfig): string {
-  const picked = settings.specialties?.length ?? 0;
+  const picks = settings.specialties ?? [];
   const total = config.specialties?.length ?? 0;
-  const picks = picked === 0 ? mdEn.play.badgeAll : format(mdEn.play.badgePicked, { n: picked, total });
-  return format(mdEn.play.badge, { difficulty: badge, picks });
+  const [only] = picks;
+  const text =
+    picks.length === 0 || picks.length === total
+      ? mdEn.play.badgeAll
+      : picks.length === 1 && only
+        ? mdEn.specialtyShort[only].toUpperCase()
+        : format(mdEn.play.badgePicked, { n: picks.length, total });
+  return format(mdEn.play.badge, { difficulty: badge, picks: text });
 }
 
 function mdBadgeLabel(name: string, state: RoundState): string {
   return format(mdEn.a11y.picks, { difficulty: name, specialties: picksLabel(state, catalogFor(state.config).copy) });
 }
 
-export function headerModel(state: RoundState): HeaderModel {
+// `start`: how the game was started; UnspokenMD's Zen says Quick Play only when Home's Quick Play
+// started it.
+export function headerModel(state: RoundState, start: GameStart = 'quickPlay'): HeaderModel {
   const { mode, difficulties } = state.settings;
   const { config, copy } = catalogFor(state.config);
   const md = config.edition === 'md';
   const name = difficultyLabel(difficulties, { names: difficultyText(config, 'name'), mixed: en.difficultyMix }, config);
   const badge = difficultyLabel(difficulties, { names: difficultyText(config, 'badge'), mixed: en.difficultyMix }, config);
-  // UnspokenMD's Zen is its Quick Play: the header says so, and the line under it only counts.
+  // UnspokenMD's Zen started from Quick Play says so; the line under it only counts.
   const zen = state.kind === 'swipe' && state.rules.optionalRules === true;
   return {
-    modeName: zen ? mdEn.play.title : copy.modes[mode].name,
+    modeName: zen && start === 'quickPlay' ? mdEn.play.title : copy.modes[mode].name,
     // One difficulty by name; several as the easiest one and "+" (Hard+, HARD+).
-    difficulty: md && state.kind === 'swipe' ? { name, badge: mdBadge(badge, state.settings, config), label: mdBadgeLabel(name, state) } : { name, badge },
+    ...(md && state.kind === 'swipe' ? { difficulty: { name, badge: mdBadge(badge, state.settings, config), label: mdBadgeLabel(name, state) }, longBadge: true } : { difficulty: { name, badge } }),
     subline: roundSubline(state, copy),
     stats: roundStats(state, copy),
   };
@@ -99,12 +112,12 @@ export function bannedLabelFor(config: GameConfig): string | undefined {
   return config.edition === 'md' ? mdEn.play.bannedLabel : undefined;
 }
 
-export function swipeModel(state: SwipeRoundState): PlayModel {
+export function swipeModel(state: SwipeRoundState, start?: GameStart): PlayModel {
   const { bank, copy } = catalogFor(state.config);
   const label = clockLabel(state, copy);
   const view = swipeCard(state);
   return {
-    ...headerModel(state),
+    ...headerModel(state, start),
     clock: label === null ? null : { label, progress: clockProgress(state), running: isClockRunning(state), hidden: state.rules.clock === 'hidden' },
     card: view && {
       // The deal position, so the same word dealt again still animates in as a new card.

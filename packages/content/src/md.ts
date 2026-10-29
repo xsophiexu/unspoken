@@ -29,6 +29,23 @@ const specialties: Record<Specialty, string> = {
   biochemistryGenetics: 'Biochemistry and Genetics',
 };
 
+// Short names where space is tight (the game's chip: "TRICKY · GI").
+const specialtyShort: Record<Specialty, string> = {
+  cardiovascular: 'Cardio',
+  respiratory: 'Resp',
+  gastrointestinal: 'GI',
+  renal: 'Renal',
+  endocrine: 'Endo',
+  reproductive: 'Repro',
+  neurology: 'Neuro',
+  psychiatry: 'Psych',
+  hematologyOncology: 'Heme/Onc',
+  musculoskeletalSkin: 'MSK/Skin',
+  immunology: 'Immuno',
+  infectiousDisease: 'ID',
+  biochemistryGenetics: 'Biochem/Genetics',
+};
+
 const edition = en.home.editions.md;
 
 // The Difficulty info table's examples: the first card of a specialty at each difficulty, for three
@@ -50,6 +67,7 @@ export const mdEn = {
     ladder: en.modes.ladder,
   } satisfies Record<MdModeId, { name: string; sub: string }>,
   specialties,
+  specialtyShort,
   // The Specialties row and chips: like the categories' All cards and "{n} categories".
   specialtyPicks: { all: 'All specialties', many: { one: '{n} specialty', other: '{n} specialties' } },
   units: {
@@ -82,12 +100,14 @@ export const mdEn = {
   },
   // The game screen (quick-play-2).
   play: {
-    // A Zen game's header: Quick Play, then the difficulty chip.
+    // A Zen game's header when Home's Quick Play started it (from setup it says Zen), then the
+    // difficulty chip.
     title: en.home.quickPlay.title,
-    // The chip: the difficulty, then the word bank ("TRICKY · ALL", "TRICKY · 2/13").
+    // The chip: the difficulty, then the word bank: "TRICKY · ALL", one specialty's short name
+    // ("TRICKY · GI"), or "TRICKY · 3 OF 13". The specialty is shown in capitals like the rest.
     badge: '{difficulty} · {picks}',
     badgeAll: 'ALL',
-    badgePicked: '{n}/{total}',
+    badgePicked: '{n} OF {total}',
     bannedLabel: 'BANNED JARGON',
     // In place of "Your word" on a card picked from search.
     fromSearch: 'From search · {difficulty} · {specialty}',
@@ -120,6 +140,7 @@ export const mdEn = {
   // The Game paused sheet.
   menu: {
     changeSettings: 'Mode, difficulty and specialties · starts a new game',
+    feedback: 'Ideas for modes or terms',
     customize: 'Layout and look · {style} · {look}',
   },
   a11y: {

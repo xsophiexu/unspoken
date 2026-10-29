@@ -1,4 +1,4 @@
-import { FEEDBACK_ENTRY_POINTS, type FeedbackEntryPoint, type GameConfig, type ModeId } from '@unspoken/core';
+import { FEEDBACK_ENTRY_POINTS, type EditionId, type FeedbackEntryPoint, type GameConfig, type ModeId } from '@unspoken/core';
 
 import { config as unspokenConfig } from './catalog';
 
@@ -6,6 +6,8 @@ import { config as unspokenConfig } from './catalog';
 export const routes = {
   // Home: the edition switch, Quick Play, and the Modes, Customize and How to play links.
   home: '/',
+  // UnspokenMD's own link (unspokengame.web.app/md/): Home, switched to UnspokenMD.
+  md: '/md/',
   // The game. Quick Play opens it with the last settings; ?tour=1 opens How to play over it.
   play: '/play/',
   howToPlay: '/play/?tour=1',
@@ -24,6 +26,15 @@ export const routes = {
   feedback: (from: FeedbackEntryPoint) => `/feedback/?from=${from}`,
   thanks: (from: FeedbackEntryPoint) => `/thanks/?from=${from}`,
 } as const;
+
+// The editions with a link of their own, opening Home in that edition.
+export const editionHomes: Partial<Record<EditionId, string>> = { md: routes.md };
+
+// The edition whose own link this path is (with or without its trailing slash), or undefined.
+export function editionForPath(pathname: string, basePath = ''): EditionId | undefined {
+  const path = pathname.replace(/\/+$/, '');
+  return (Object.keys(editionHomes) as EditionId[]).find((id) => `${basePath}${editionHomes[id]}`.replace(/\/+$/, '') === path);
+}
 
 // Where each feedback entry point's Back link and Done button return to.
 export const feedbackReturn: Record<FeedbackEntryPoint, string> = {

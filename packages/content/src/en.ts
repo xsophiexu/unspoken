@@ -264,7 +264,8 @@ export const en = {
 
   // --- Modes and setup -----------------------------------------------------------------------
   modesScreen: {
-    back: '‹ Back',
+    // Modes always opens from Home.
+    back: '← Home',
     title: 'Modes',
     hint: 'Tap a mode to set up a game',
     comingSoon: 'Coming soon',

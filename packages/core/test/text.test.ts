@@ -33,6 +33,14 @@ describe('count labels', () => {
     expect(plural(7, banned)).toBe('7 banned words');
     expect(plural(1, { one: 'point', other: 'points' })).toBe('point');
   });
+
+  it('writes counts of a thousand or more with a thousands separator', () => {
+    const cards = { one: '{n} card', other: '{n} cards' };
+    expect(plural(1021, cards)).toBe('1,021 cards');
+    expect(plural(999, cards)).toBe('999 cards');
+    expect(pluralParts(12500, cards)).toEqual([{ text: '12,500', param: 'n' }, { text: ' cards' }]);
+    expect(count(1500, 'point')).toBe('1,500 points');
+  });
 });
 
 describe('format', () => {

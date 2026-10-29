@@ -99,7 +99,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
   );
 
   const play = () => {
-    game.newGame(settings, custom ? 'custom' : undefined);
+    game.newGame(settings, custom ? 'custom' : undefined, 'setup');
     router.push(routes.play);
   };
   const ready = canStart(settings, config) && (!versus || turn.noTimeLimit || isTimeLimitInRange(turn.turnSeconds, config));

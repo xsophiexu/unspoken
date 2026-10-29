@@ -31,7 +31,7 @@ export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
   if (slot.variant === 'titleBadge') {
     return (
       <div className={styles.titleBlock}>
-        <div className={styles.titleRow}>
+        <div className={cx(styles.titleRow, model.longBadge && styles.longBadge)}>
           <span className={cx(styles.title, text('modeName'))} style={{ fontSize: slot.size }}>
             {modeName}
           </span>
@@ -43,7 +43,7 @@ export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
             aria-label={difficulty.label ?? format(en.a11y.difficulty, { badge: difficulty.name })}
             data-spot="difficulty"
           >
-            <span className={styles.badgeText}>{difficulty.badge}</span>
+            {difficulty.badge}
             <Icon name="caret" className={styles.badgeCaret} />
           </button>
         </div>
@@ -73,10 +73,12 @@ export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
   );
 }
 
-type MenuButtonProps = { slot: HeaderSlot; onMenu?: () => void };
+// compact: the button is only as big as its circle (layout.header.menuButton), with the touch
+// target still the full minimum size around it (UnspokenMD's search and ··· side by side).
+type MenuButtonProps = { slot: HeaderSlot; onMenu?: () => void; compact?: boolean };
 
 // Dots open the game menu; sliders open it with Customize first.
-export function MenuButton({ slot, onMenu }: MenuButtonProps) {
+export function MenuButton({ slot, onMenu, compact = false }: MenuButtonProps) {
   return (
     <IconButton
       icon={slot.menu}
@@ -84,13 +86,13 @@ export function MenuButton({ slot, onMenu }: MenuButtonProps) {
       label={slot.menu === 'sliders' ? en.a11y.customize : en.a11y.menu}
       onClick={onMenu}
       tabIndex={onMenu ? undefined : -1}
-      className={styles[`menu-${slot.menuContainer}`]}
+      className={compact ? styles.compactButton : styles[`menu-${slot.menuContainer}`]}
       data-spot="menu"
     />
   );
 }
 
-// UnspokenMD's search, beside the menu in the same look: opens Find a card.
+// UnspokenMD's search, beside a compact menu in the same look: opens Find a card.
 export function SearchButton({ slot, onSearch }: { slot: HeaderSlot; onSearch: () => void }) {
-  return <IconButton icon="search" look={slot.menuContainer} label={mdEn.play.search} onClick={onSearch} className={styles[`menu-${slot.menuContainer}`]} />;
+  return <IconButton icon="search" look={slot.menuContainer} label={mdEn.play.search} onClick={onSearch} className={styles.compactButton} />;
 }

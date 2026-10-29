@@ -46,7 +46,7 @@ export function GameMenu({ round, customizeFirst, onClose, onRestart, onHowToPla
     : format(m.customize.detail, { style, color: en.customize.colors[theme.color] });
   const customize = <MenuRow key="customize" title={m.customize.title} detail={customizeDetail} href={routes.customize} onClick={onLeave} />;
   const settings = <MenuRow key="settings" title={m.changeSettings.title} detail={md ? mdEn.menu.changeSettings : m.changeSettings.detail} href={routes.modes} onClick={onLeave} />;
-  const feedback = <MenuRow key="feedback" title={m.feedback.title} detail={m.feedback.detail} href={routes.feedback('menu')} onClick={onLeave} />;
+  const feedback = <MenuRow key="feedback" title={m.feedback.title} detail={md ? mdEn.menu.feedback : m.feedback.detail} href={routes.feedback('menu')} onClick={onLeave} />;
   const home = <MenuRow key="home" title={m.home.title} detail={m.home.detail} href={routes.home} onClick={onLeave} />;
   const rows = customizeFirst ? [customize, settings, feedback, home] : [settings, customize, feedback, home];
   const help = onHowToPlay && <InfoButton label={m.howToPlay.title} onClick={onHowToPlay} />;

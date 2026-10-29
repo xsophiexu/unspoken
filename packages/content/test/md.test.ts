@@ -31,7 +31,7 @@ const JOINING_WORDS = new Set(['of', 'the', 'and', 'a', 'an', 'in', 'on', 'to', 
 
 // Cards in the Words thread's file that ban a word of the card itself, reported to that thread and
 // left as written. Remove a card here once the file is fixed.
-const KNOWN_REPEATS = ['Renal cell carcinoma (Clear cell)'];
+const KNOWN_REPEATS: string[] = [];
 
 describe('the MD bank', () => {
   it('has 1,021 cards at the card file’s difficulty counts, with no Easy cards', () => {
@@ -85,6 +85,13 @@ describe('MD specialties', () => {
 
   it('names each specialty by the heading the build script reads its id from', () => {
     expect(mdSpecialties.every((s) => specialtyId(s.name) === s.id)).toBe(true);
+  });
+
+  it('gives every specialty its own short name for the game’s chip, never longer than the full one', () => {
+    const short = SPECIALTY_IDS.map((id) => mdEn.specialtyShort[id]);
+    expect(short.every(Boolean)).toBe(true);
+    expect(new Set(short).size).toBe(SPECIALTY_IDS.length);
+    expect(SPECIALTY_IDS.every((id) => mdEn.specialtyShort[id].length <= mdEn.specialties[id].length)).toBe(true);
   });
 });
 

@@ -31,6 +31,11 @@ import { readStored, writeStored } from '@/lib/storage';
 
 import { useEdition } from './edition';
 
+// How the game in progress was started: Home's Quick Play, or Start on New game. UnspokenMD's Zen
+// header says Quick Play only for the first (like Mind Reader's Quick Play), Zen otherwise.
+export type GameStart = 'quickPlay' | 'setup';
+export const GAME_STARTS = ['quickPlay', 'setup'] as const satisfies readonly GameStart[];
+
 // The game in progress: the settings it was started with and the round state from @unspoken/core.
 // Rules live entirely in core's reducers; this only starts rounds and forwards actions. Each
 // edition (Unspoken, UnspokenMD) has its own game, settings and setups, so switching editions on
@@ -44,6 +49,8 @@ type GameState = {
   // How the Mind Reader game is played (Quick Play, Custom, Practice), and the Custom game being
   // set up (players, teams, rounds), kept for this visit.
   play: MindReaderPlay;
+  // Saved with the settings, so a reload keeps the game's title.
+  start: GameStart;
   mindReader: MindReaderSetup;
   // The Versus game being set up (players, teams, rounds, turn time, skips, penalty), kept for
   // this visit; a Versus game plays it.
@@ -52,7 +59,7 @@ type GameState = {
 
 type GameAction =
   | { type: 'play'; action: RoundAction }
-  | { type: 'newGame'; settings: GameSettings; seed: number; play: MindReaderPlay }
+  | { type: 'newGame'; settings: GameSettings; seed: number; play: MindReaderPlay; start?: GameStart }
   | { type: 'setMindReader'; change: (setup: MindReaderSetup) => MindReaderSetup }
   | { type: 'setVersus'; change: (setup: VersusSetup) => VersusSetup }
   | { type: 'saveSettings'; settings: GameSettings };
@@ -84,7 +91,7 @@ function gameReducer(state: GameState, action: GameAction, catalog: Catalog): Ga
       return { ...state, round, introSeen };
     }
     case 'newGame': {
-      const next = { ...state, settings: action.settings, play: action.play };
+      const next = { ...state, settings: action.settings, play: action.play, start: action.start ?? state.start };
       return { ...next, round: startRound(action.settings, action.seed, next, catalog) };
     }
     case 'setMindReader':
@@ -106,12 +113,14 @@ function gamesReducer(games: Games, { edition, action }: { edition: EditionId; a
 
 // An edition's game when the page opens: its saved settings and a fresh round.
 function initialGame(catalog: Catalog, random: Random): GameState {
-  const { config, settingsKey } = catalog;
+  const { config, settingsKey, startKey } = catalog;
+  const savedStart = readStored(startKey);
   // A Versus lineup lasts one visit, so a saved Versus game opens the default mode.
   const settings = resumableSettings(parseSettings(readStored(settingsKey), config), config);
   const fresh = {
     introSeen: {},
     play: 'quick' as const,
+    start: GAME_STARTS.find((s) => s === savedStart) ?? 'quickPlay',
     mindReader: { lineup: emptyLineup(), rounds: config.mindReader.rounds.default },
     versus: defaultVersusSetup(emptyLineup()),
   };
@@ -122,9 +131,12 @@ type GameContextValue = {
   settings: GameSettings;
   round: RoundState;
   dispatch: (action: RoundAction) => void;
+  // How the game in progress was started (Quick Play or New game).
+  start: GameStart;
   // A fresh round with these settings (new words, score back to 0). Mind Reader also takes how to
-  // play; a Custom game plays the mindReader setup.
-  newGame: (settings: GameSettings, play?: MindReaderPlay) => void;
+  // play; a Custom game plays the mindReader setup. `start` says where it was started from; left
+  // out, the new game keeps the last one's (Restart, a new difficulty, the chip's Apply).
+  newGame: (settings: GameSettings, play?: MindReaderPlay, start?: GameStart) => void;
   mindReader: MindReaderSetup;
   setMindReader: (change: (setup: MindReaderSetup) => MindReaderSetup) => void;
   versus: VersusSetup;
@@ -153,11 +165,13 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
 
   useEffect(() => writeStored(catalogs.unspoken.settingsKey, games.unspoken.settings), [games.unspoken.settings]);
   useEffect(() => writeStored(catalogs.md.settingsKey, games.md.settings), [games.md.settings]);
+  useEffect(() => writeStored(catalogs.unspoken.startKey, games.unspoken.start), [games.unspoken.start]);
+  useEffect(() => writeStored(catalogs.md.startKey, games.md.start), [games.md.start]);
 
   // Stable across renders (per edition), so timers and listeners that dispatch don't restart on every tick.
   const dispatch = useCallback((action: RoundAction) => send({ edition, action: { type: 'play', action } }), [edition]);
   const newGame = useCallback(
-    (settings: GameSettings, play: MindReaderPlay = 'quick') => send({ edition, action: { type: 'newGame', settings, seed: newSeed(random), play } }),
+    (settings: GameSettings, play: MindReaderPlay = 'quick', start?: GameStart) => send({ edition, action: { type: 'newGame', settings, seed: newSeed(random), play, start } }),
     [edition, random],
   );
   const setMindReader = useCallback((change: (setup: MindReaderSetup) => MindReaderSetup) => send({ edition, action: { type: 'setMindReader', change } }), [edition]);
@@ -168,6 +182,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
     (): GameContextValue => ({
       settings: state.settings,
       round: state.round,
+      start: state.start,
       dispatch,
       newGame,
       mindReader: state.mindReader,
@@ -178,7 +193,7 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       restart: () => newGame(state.settings, state.play),
       changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty, config), state.play),
     }),
-    [state.settings, state.round, state.play, state.mindReader, state.versus, config, dispatch, newGame, setMindReader, setVersus, saveSettings],
+    [state.settings, state.round, state.play, state.start, state.mindReader, state.versus, config, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

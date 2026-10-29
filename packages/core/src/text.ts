@@ -9,9 +9,17 @@ export function format(template: string, params: Readonly<Record<string, string 
   return template.replace(/\{(\w+)\}/g, (whole, key: string) => (key in params ? String(params[key]) : whole));
 }
 
-// Pick the singular form for exactly 1 and the plural otherwise, then fill {n} and any other params.
+// Counts are written with a thousands separator ("1,021 cards"), the catalog's locale's way.
+const numberFormat = new Intl.NumberFormat('en');
+
+export function formatNumber(n: number): string {
+  return numberFormat.format(n);
+}
+
+// Pick the singular form for exactly 1 and the plural otherwise, then fill {n} (as formatNumber
+// writes it) and any other params.
 export function plural(n: number, forms: Plural, params: Readonly<Record<string, string | number>> = {}): string {
-  return format(n === 1 ? forms.one : forms.other, { n, ...params });
+  return format(n === 1 ? forms.one : forms.other, { n: formatNumber(n), ...params });
 }
 
 // A filled message as pieces, so a platform can style the filled values apart from the words around
@@ -35,12 +43,12 @@ export function formatParts(template: string, params: Readonly<Record<string, st
 
 // plural() as pieces: the number is the part with param 'n'.
 export function pluralParts(n: number, forms: Plural, params: Readonly<Record<string, string | number>> = {}): TextPart[] {
-  return formatParts(n === 1 ? forms.one : forms.other, { n, ...params });
+  return formatParts(n === 1 ? forms.one : forms.other, { n: formatNumber(n), ...params });
 }
 
 // "1 skip", "2 skips". Pass the plural when it isn't just the word plus "s".
 export function count(n: number, singular: string, pluralForm = `${singular}s`): string {
-  return `${n} ${n === 1 ? singular : pluralForm}`;
+  return `${formatNumber(n)} ${n === 1 ? singular : pluralForm}`;
 }
 
 // 150 → "2:30".
