@@ -4,9 +4,9 @@
 import { playableCards } from '../bank';
 import { gameConfig, type GameConfig, type ModeRules } from '../config';
 import { seededRandom } from '../random';
-import { bannedCountFor, escalateProgress, hardestDifficulty, hasTimeLimit, hiddenRoundSeconds, modeRules } from '../rules';
+import { bannedCountFor, escalateProgress, hardestDifficulty, hasTimeLimit, hiddenRoundSeconds, modeRules, scoreTargetOf, skipLimitOf } from '../rules';
 import type { Card, GameSettings } from '../types';
-import { advance, currentCard, newDeck, type DeckState } from './deck';
+import { advance, currentCard, newDeck, showNow, type DeckState } from './deck';
 
 // Why the round is paused: the pause button (shows the Paused overlay), the ··· menu, or a sheet
 // such as the difficulty picker. Any of them stops the clock and ignores answers.
@@ -26,6 +26,8 @@ export type SwipeRoundState = {
   pause: PauseReason | null;
   // Hot Potato: showing "Pass the phone" until the next player is ready.
   passing: boolean;
+  // Whether the card showing was picked from search ("From search" in place of "Your word").
+  fromSearch: boolean;
 };
 
 export type SwipeAction =
@@ -36,7 +38,9 @@ export type SwipeAction =
   | { type: 'pause'; reason?: PauseReason }
   | { type: 'resume' }
   // Hot Potato: the next player has the phone.
-  | { type: 'ready' };
+  | { type: 'ready' }
+  // Play this card next (a search result): it shows now, then the game carries on.
+  | { type: 'showCard'; card: Card };
 
 export type RoundOptions = {
   // Cards for the chosen difficulty and themes (see cardsFor). The round never loads the bank itself.
@@ -67,6 +71,7 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
     clock: seconds === null ? null : { total: seconds, left: seconds },
     pause: null,
     passing: false,
+    fromSearch: false,
   };
 }
 
@@ -76,8 +81,16 @@ export function swipeEscalate(state: SwipeRoundState) {
   return escalateProgress(state.correct, state.config);
 }
 
+// Zen's Play to a score: the correct answers that end the game, or null without one.
+export function swipeScoreTarget(state: SwipeRoundState): number | null {
+  return scoreTargetOf(state.settings, state.config);
+}
+
+// Escalate and Ladder are won at the top; Zen with Play to a score is won on reaching the score.
 export function isSwipeWon(state: SwipeRoundState): boolean {
-  return state.rules.escalates && swipeEscalate(state).won;
+  if (state.rules.escalates) return swipeEscalate(state).won;
+  const target = swipeScoreTarget(state);
+  return target !== null && state.correct >= target;
 }
 
 export function isSwipeOver(state: SwipeRoundState): boolean {
@@ -96,8 +109,8 @@ export function isClockRunning(state: SwipeRoundState): boolean {
 
 // Skips left this round, or null when skips are unlimited (no skip limit, or ∞ chosen).
 export function skipsLeft(state: SwipeRoundState): number | null {
-  if (!state.rules.skipLimit || state.settings.skips === null) return null;
-  return Math.max(0, state.settings.skips - state.skipped);
+  const limit = skipLimitOf(state.settings, state.config);
+  return limit === null ? null : Math.max(0, limit - state.skipped);
 }
 
 // Whether the card takes an answer right now (Correct, or Skip when one is left).
@@ -149,6 +162,7 @@ function answer(state: SwipeRoundState, kind: 'correct' | 'skip'): SwipeRoundSta
     clock,
     passing: kind === 'correct' && state.rules.passAfterCorrect,
     deck: advance(state.deck),
+    fromSearch: false,
   };
 }
 
@@ -168,5 +182,7 @@ export function swipeReducer(state: SwipeRoundState, action: SwipeAction): Swipe
       return state.pause === null ? state : { ...state, pause: null };
     case 'ready':
       return state.passing ? { ...state, passing: false } : state;
+    case 'showCard':
+      return isSwipeOver(state) ? state : { ...state, deck: showNow(state.deck, action.card), fromSearch: true };
   }
 }

@@ -25,3 +25,9 @@ export function advance(deck: DeckState): DeckState {
   if (deck.index + 1 < deck.order.length) return { ...deck, index: deck.index + 1 };
   return newDeck(deck.pool, deck.seed);
 }
+
+// Show this card now (a card picked from search). The card that was showing comes right after it,
+// and the rest of the deck follows as dealt.
+export function showNow(deck: DeckState, card: Card): DeckState {
+  return { ...deck, order: [...deck.order.slice(0, deck.index), card, ...deck.order.slice(deck.index)] };
+}

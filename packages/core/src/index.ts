@@ -11,8 +11,10 @@ export * from './fit';
 export * from './present';
 export * from './feedback';
 export * from './spotlight';
+export * from './chips';
+export * from './search';
 
-export { advance, currentCard, newDeck, type DeckState } from './round/deck';
+export { advance, currentCard, newDeck, showNow, type DeckState } from './round/deck';
 export * from './round/swipe';
 export * from './round/reverse';
 export * from './round/mindReader';
