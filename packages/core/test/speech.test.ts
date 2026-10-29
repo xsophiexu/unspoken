@@ -49,8 +49,17 @@ describe('spotting banned words in speech', () => {
     const terms = cardSpokenTerms({ word: 'Road trip', banned: ['Car', 'Drive'] });
     expect(findSpokenTerms('a long road trip in the car', terms)).toEqual([
       { text: 'Road trip', kind: 'word' },
+      { text: 'Road', kind: 'word' },
+      { text: 'trip', kind: 'word' },
       { text: 'Car', kind: 'banned' },
     ]);
+  });
+
+  it("hears one word of a card's longer word, but not its small linking words", () => {
+    const terms = cardSpokenTerms({ word: 'Cardiac catheterization', banned: [] });
+    expect(findSpokenTerms('it is a cardiac thing', terms)).toEqual([{ text: 'Cardiac', kind: 'word' }]);
+    const rights = cardSpokenTerms({ word: 'Bill of rights', banned: [] });
+    expect(findSpokenTerms('a list of freedoms', rights)).toEqual([]);
   });
 });
 

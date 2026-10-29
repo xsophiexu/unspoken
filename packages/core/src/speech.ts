@@ -109,9 +109,15 @@ export function findSpokenTerms(text: string, terms: readonly SpokenTerm[]): Spo
   return prepared.filter((p) => counts.has(p.term.text)).map((p) => p.term);
 }
 
-// The terms to listen for on a card: its word, then the banned words showing.
+// Small words that don't give a card away on their own ("Bill of rights" can still say "of").
+const LINKING_WORDS = new Set(['a', 'an', 'and', 'the', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'or', 'by', 'from']);
+
+// The terms to listen for on a card: its word and each word in it (saying "cardiac" gives away
+// Cardiac catheterization), then the banned words showing.
 export function cardSpokenTerms(card: { word: string; banned: readonly string[] }): SpokenTerm[] {
-  return [{ text: card.word, kind: 'word' }, ...card.banned.map((text) => ({ text, kind: 'banned' as const }))];
+  const parts = card.word.split(/[\s-]+/).filter((part) => speechTokens(part).some((t) => !LINKING_WORDS.has(t)));
+  const words = parts.length > 1 ? [card.word, ...parts] : [card.word];
+  return [...words.map((text) => ({ text, kind: 'word' as const })), ...card.banned.map((text) => ({ text, kind: 'banned' as const }))];
 }
 
 // Follows a recognizer's running results and reports each new time a term is said, once. Speech
