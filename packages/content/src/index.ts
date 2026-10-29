@@ -3,6 +3,7 @@ import { normalizeBank, type BankCardInput, type BankEntry, type Category } from
 import easyRaw from '../data/easy.json';
 import christmas from '../data/packs/christmas.json';
 import halloween from '../data/packs/halloween.json';
+import medical from '../data/packs/medical.json';
 import thanksgiving from '../data/packs/thanksgiving.json';
 import raw from '../data/word-banks.json';
 
@@ -53,7 +54,8 @@ export function extendBank(base: readonly BankCardInput[], packs: readonly Categ
 // cards of the newer word bank, filed under today's categories). The Android app plays `bank`.
 export const extendedBank: readonly BankEntry[] = extendBank(
   raw as BankCardInput[],
-  [halloween, thanksgiving, christmas] as CategoryPack[],
+  // Medical (Hot Mic experiment): the Step 1 jargon cards, rated by students.
+  [halloween, thanksgiving, christmas, medical] as CategoryPack[],
   easyRaw as BankCardInput[],
 );
 

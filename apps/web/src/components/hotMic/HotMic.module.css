@@ -1,0 +1,187 @@
+/* Hot Mic's light-rose "heard" colors, mixed from the region's chip so they sit on any card. */
+.pillRow,
+.chipHeard,
+.ask {
+  --heard-fill: color-mix(in srgb, #c8574b 16%, var(--region-chip, #fff));
+  --heard-ink: #a2433a;
+}
+
+.pillRow {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--un-space-2);
+  margin-top: var(--un-space-2);
+}
+
+.pill {
+  /* Above the timer ring, which some styles draw over the card. */
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  min-height: 2rem;
+  padding: 0 var(--un-space-3);
+  border: 1.5px solid transparent;
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-accent-text);
+  cursor: pointer;
+}
+
+.pill.off {
+  background: transparent;
+  border-color: var(--region-outline);
+  color: var(--region-muted);
+}
+
+.pill.heard,
+.chipHeard {
+  --item-fill: var(--heard-fill);
+  background: var(--heard-fill);
+  color: var(--heard-ink);
+}
+
+.pill.heard {
+  animation: nudge 0.4s ease-in-out;
+}
+
+.icon {
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+}
+
+.wave {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 0.9em;
+}
+
+.wave i {
+  display: block;
+  width: 3.5px;
+  height: 35%;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+.live i {
+  animation: bar 0.9s ease-in-out infinite;
+}
+
+.live i:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.live i:nth-child(3) {
+  animation-delay: -0.6s;
+}
+
+.live i:nth-child(4) {
+  animation-delay: -0.15s;
+}
+
+.live i:nth-child(5) {
+  animation-delay: -0.45s;
+}
+
+@keyframes bar {
+  0%,
+  100% {
+    height: 30%;
+  }
+  50% {
+    height: 100%;
+  }
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-2px);
+  }
+  40% {
+    transform: translateX(2px);
+  }
+  60% {
+    transform: translateX(-1px);
+  }
+  80% {
+    transform: translateX(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill.heard,
+  .live i {
+    animation: none;
+  }
+}
+
+.note {
+  margin: 0;
+  color: var(--region-muted);
+}
+
+.link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--region-accent-text);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ask {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--un-space-3);
+  text-align: center;
+}
+
+.askIcon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: var(--un-radius-lg, 18px);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+  font-size: 1.5rem;
+}
+
+.ask h2 {
+  margin: 0;
+}
+
+.ask p {
+  margin: 0;
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+.privacy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--un-space-1-5);
+  color: var(--region-accent-text);
+}
+
+.askActions {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: var(--un-space-2);
+  margin-top: var(--un-space-2);
+}

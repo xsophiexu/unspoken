@@ -5,7 +5,7 @@ import { playableCards } from '../bank';
 import { gameConfig, type GameConfig, type ModeRules } from '../config';
 import { seededRandom } from '../random';
 import { bannedCountFor, escalateProgress, hardestDifficulty, hasTimeLimit, hiddenRoundSeconds, modeRules } from '../rules';
-import type { Card, GameSettings } from '../types';
+import type { Card, GameSettings, HotMicSettings } from '../types';
 import { advance, currentCard, newDeck, type DeckState } from './deck';
 
 // Why the round is paused: the pause button (shows the Paused overlay), the ··· menu, or a sheet
@@ -20,6 +20,8 @@ export type SwipeRoundState = {
   deck: DeckState;
   correct: number;
   skipped: number;
+  // Hot Mic: banned words the phone heard this round.
+  mistakes: number;
   // Seconds on the clock; null for modes without one and for rounds with No time limit. `total` grows when Time Attack adds time
   // beyond the starting length, so the ring never overflows.
   clock: { total: number; left: number } | null;
@@ -36,7 +38,9 @@ export type SwipeAction =
   | { type: 'pause'; reason?: PauseReason }
   | { type: 'resume' }
   // Hot Potato: the next player has the phone.
-  | { type: 'ready' };
+  | { type: 'ready' }
+  // Hot Mic: the phone heard a banned word (or part of the card's own word).
+  | { type: 'heard' };
 
 export type RoundOptions = {
   // Cards for the chosen difficulty and themes (see cardsFor). The round never loads the bank itself.
@@ -64,6 +68,7 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
     deck: newDeck(playableCards(settings.mode, cards, config), rng.seed()),
     correct: 0,
     skipped: 0,
+    mistakes: 0,
     clock: seconds === null ? null : { total: seconds, left: seconds },
     pause: null,
     passing: false,
@@ -71,6 +76,18 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
 }
 
 // --- Selectors -------------------------------------------------------------------------------
+
+export const DEFAULT_HOT_MIC: HotMicSettings = { rule: 'mistake', sound: true };
+
+export function hotMicSettings(settings: GameSettings): HotMicSettings {
+  return settings.hotMic ?? DEFAULT_HOT_MIC;
+}
+
+// The round's score: one point per correct card, less one per mistake when Hot Mic counts them.
+export function swipePoints(state: SwipeRoundState): number {
+  const penalty = state.rules.listens && hotMicSettings(state.settings).rule !== 'warning' ? state.mistakes : 0;
+  return state.correct - penalty;
+}
 
 export function swipeEscalate(state: SwipeRoundState) {
   return escalateProgress(state.correct, state.config);
@@ -168,5 +185,10 @@ export function swipeReducer(state: SwipeRoundState, action: SwipeAction): Swipe
       return state.pause === null ? state : { ...state, pause: null };
     case 'ready':
       return state.passing ? { ...state, passing: false } : state;
+    case 'heard': {
+      if (!state.rules.listens || isSwipeOver(state) || isSwipeHalted(state) || !currentCard(state.deck)) return state;
+      const loseCard = hotMicSettings(state.settings).rule === 'loseCard';
+      return { ...state, mistakes: state.mistakes + 1, deck: loseCard ? advance(state.deck) : state.deck };
+    }
   }
 }

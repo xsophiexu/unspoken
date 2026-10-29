@@ -5,6 +5,8 @@ import { fitWordSize } from '@unspoken/core';
 import { COLOR_IDS, layout, palettes, textStyles, wordMetrics, type BannedSlot } from '@unspoken/design-tokens';
 import { useRef, type CSSProperties } from 'react';
 
+import { useHotMicMarks } from '@/components/hotMic/context';
+import hotMicStyles from '@/components/hotMic/HotMic.module.css';
 import { Icon } from '@/components/ui/Icon';
 import { useElementSize } from '@/lib/hooks';
 import { cx, referenceContentWidth, text } from '@/lib/ui';
@@ -22,6 +24,8 @@ type BannedListProps = { slot: BannedSlot; words: readonly string[]; freshIndex:
 // switch to compact sizes, and every word is sized to fit its cell without breaking.
 export function BannedList({ slot, words, freshIndex, label = en.play.dontSay }: BannedListProps) {
   const ref = useRef<HTMLUListElement>(null);
+  // Hot Mic: a word heard keeps a light mark, and each time it's heard the chip shakes again.
+  const heard = useHotMicMarks()?.heard;
   const width = useElementSize(ref, { width: referenceContentWidth, height: 0 }).width;
   const compact = words.length >= layout.banned.compactFrom;
   const base = compact ? Math.min(slot.size, textStyles.chipSmall.size) : slot.size;
@@ -49,8 +53,8 @@ export function BannedList({ slot, words, freshIndex, label = en.play.dontSay }:
       >
         {words.map((word, i) => (
           <li
-            key={word}
-            className={styles.item}
+            key={heard?.has(word) ? `${word}:${heard.get(word)}` : word}
+            className={cx(styles.item, heard?.has(word) && hotMicStyles.chipHeard)}
             style={slot.variant === 'bands' ? bandStyle(i, words.length) : slot.chipRadius ? { borderRadius: `var(--un-radius-${slot.chipRadius})` } : undefined}
           >
             {slot.numbering === 'leading' && <span className={styles.number}>{i + 1}</span>}

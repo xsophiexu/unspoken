@@ -9,6 +9,7 @@ import { Grid } from '@/components/ui/Grid';
 import { Screen } from '@/components/ui/Screen';
 import { SuggestCard } from '@/components/ui/SuggestCard';
 import { routes } from '@/lib/routes';
+import { config } from '@/lib/catalog';
 import { useGame } from '@/state/game';
 
 // Pick a mode to set up a game. Modes that are not ready yet show Coming soon; the card at the
@@ -21,7 +22,7 @@ export function ModesScreen() {
     <Screen tone="base" width="column" back={{ href: routes.play, label: copy.back }} title={copy.title} sub={copy.hint}>
       <Grid columns={layout.grid.modes} equalRows={layout.control.modeTile}>
         {MODE_IDS.map((id) => {
-          const available = modeRules(id).available;
+          const available = modeRules(id, config).available;
           return (
             <Tile
               key={id}

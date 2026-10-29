@@ -173,6 +173,7 @@ function turnModel(state: VersusRoundState): PlayModel {
     modeName: en.modes.versus.name,
     difficulty: { name: '', badge: '' },
     subline: versusTitle(state),
+    mistakes: null,
     stats: { points: null, detail: '' },
     clock: state.clock ? { label: formatClock(state.clock.left), progress: versusClockProgress(state), running: isVersusClockRunning(state), hidden: false } : null,
     card: card && { key: `${state.deck.seed}:${state.deck.index}`, word: card.word, banned: card.banned.slice(0, shown), freshIndex: null },

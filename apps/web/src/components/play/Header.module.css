@@ -35,6 +35,11 @@
   color: var(--region-muted);
 }
 
+/* Hot Mic's mistake count. */
+.mistakes {
+  color: #a2433a;
+}
+
 /* "Mode · Level ▾" */
 .switch {
   display: inline-flex;

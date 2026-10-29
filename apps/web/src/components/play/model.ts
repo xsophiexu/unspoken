@@ -5,6 +5,7 @@ import {
   clockLabel,
   clockProgress,
   isClockRunning,
+  roundMistakes,
   roundStats,
   roundSubline,
   swipeCard,
@@ -23,6 +24,8 @@ export type HeaderModel = {
   modeName: string;
   difficulty: { name: string; badge: string };
   subline: string;
+  // Hot Mic: "1 mistake" after the subline, in red; null otherwise.
+  mistakes: string | null;
   stats: RoundStats;
 };
 
@@ -58,6 +61,7 @@ export function headerModel(state: RoundState): HeaderModel {
       badge: difficultyLabel(difficulties, { names: badges, mixed: en.difficultyMix }, config),
     },
     subline: roundSubline(state, en),
+    mistakes: roundMistakes(state, en),
     stats: roundStats(state, en),
   };
 }

@@ -26,6 +26,7 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
 import { DifficultyTiles } from '@/components/game/DifficultyTiles';
+import { HotMicSetup } from '@/components/hotMic/HotMicSetup';
 import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { CategoriesSheet, DifficultyInfoSheet, SmallDeckSheet } from '@/components/setup/SetupSheets';
 import { TimerInput, TimerNote } from '@/components/game/TimerInput';
@@ -59,7 +60,11 @@ type Open = 'categories' | 'difficulty' | 'info' | 'smallDeck' | null;
 export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: boolean }) {
   const game = useGame();
   const router = useRouter();
-  const [settings, setSettings] = useState<GameSettings>(() => ({ ...game.settings, mode }));
+  // Hot Mic starts on the Medical cards (the experiment's example) unless categories were picked.
+  const [settings, setSettings] = useState<GameSettings>(() => {
+    const listens = modeRules(mode, config).listens && game.settings.categories.length === 0;
+    return { ...game.settings, mode, ...(listens ? { categories: ['Medical'] } : {}) };
+  });
   const [timerFocused, setTimerFocused] = useState(false);
   const [open, setOpen] = useState<Open>(null);
   const allCardsTap = useRef<AllCardsTap>(null);
@@ -85,7 +90,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
     game.newGame(settings, custom ? 'custom' : undefined);
     router.push(routes.play);
   };
-  const ready = canStart(settings) && (!versus || turn.noTimeLimit || isTimeLimitInRange(turn.turnSeconds));
+  const ready = canStart(settings, config) && (!versus || turn.noTimeLimit || isTimeLimitInRange(turn.turnSeconds));
   const start = () => {
     if (!ready) return;
     if (isSmallDeck(cards)) setOpen('smallDeck');
@@ -165,6 +170,7 @@ export function SetupScreen({ mode, custom = false }: { mode: ModeId; custom?: b
           <VersusSettings />
         </>
       )}
+      {modeRules(mode, config).listens && <HotMicSetup settings={settings} onChange={(hotMic) => update({ hotMic })} />}
       {versus ? (
         // WORDS over the Difficulty and Categories rows, like ROUNDS and SCORING.
         <Section label={en.versus.settings.words}>

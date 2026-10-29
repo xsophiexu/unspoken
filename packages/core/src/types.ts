@@ -68,15 +68,15 @@ export const CATEGORY_IDS = [
   'Fantasy and Sci-Fi',
 ] as const;
 
-// Seasonal categories an app opts into after CATEGORY_IDS. Their pack cards play only when the
-// category is picked, never in All cards. The website offers them (extendedGameConfig); the Android
+// Seasonal categories, and Medical for the Hot Mic experiment, that an app opts into after
+// CATEGORY_IDS. Their pack cards play only when the category is picked, never in All cards. The website offers them (extendedGameConfig); the Android
 // app doesn't yet.
-export const EXTRA_CATEGORY_IDS = ['Halloween', 'Thanksgiving', 'Christmas'] as const;
+export const EXTRA_CATEGORY_IDS = ['Halloween', 'Thanksgiving', 'Christmas', 'Medical'] as const;
 
 export type Category = (typeof CATEGORY_IDS)[number] | (typeof EXTRA_CATEGORY_IDS)[number];
 
 // Order matches the Modes grid in the designs. Zen was removed; Versus took the Teams tile.
-export const MODE_IDS = ['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader'] as const;
+export const MODE_IDS = ['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader', 'hotMic'] as const;
 export type ModeId = (typeof MODE_IDS)[number];
 
 // A playable card. Banned words run strongest first.
@@ -131,7 +131,16 @@ export type GameSettings = {
   noTimeLimit: boolean;
   // Skips allowed per round, or null for unlimited. Ignored by modes without a skip limit.
   skips: number | null;
+  // Hot Mic only: what happens when the phone hears a banned word. Missing means the defaults.
+  hotMic?: HotMicSettings;
 };
+
+// Hot Mic: what a banned word heard costs. A warning costs nothing; a mistake takes a point off;
+// losing the card also deals the next one.
+export const HOT_MIC_RULES = ['warning', 'mistake', 'loseCard'] as const;
+export type HotMicRule = (typeof HOT_MIC_RULES)[number];
+// sound off: the phone only vibrates.
+export type HotMicSettings = { rule: HotMicRule; sound: boolean };
 
 // Returns a float in [0, 1). Inject one so dealing and hidden timers are reproducible in tests.
 export type Random = () => number;

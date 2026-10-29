@@ -36,6 +36,8 @@ export type ModeRules = {
   escalates: boolean;
   // Whether the phone is handed on after each correct answer (Hot Potato); a skip keeps it with the same player.
   passAfterCorrect: boolean;
+  // Whether the phone listens for banned words (Hot Mic).
+  listens: boolean;
   available: boolean;
 };
 
@@ -111,7 +113,7 @@ export type GameConfig = {
   };
 };
 
-const swipe = { play: 'swipe', escalates: false, passAfterCorrect: false, bonusSeconds: 0 } as const;
+const swipe = { play: 'swipe', escalates: false, passAfterCorrect: false, listens: false, bonusSeconds: 0 } as const;
 
 export const gameConfig: GameConfig = {
   // Default round length grows with difficulty: 1:30 at Normal to 5:00 at Legend, 2:30 at Hard.
@@ -141,6 +143,9 @@ export const gameConfig: GameConfig = {
     { ...swipe, id: 'hotPotato', clock: 'hidden', scored: false, skipLimit: false, passAfterCorrect: true, available: true },
     { ...swipe, id: 'reverse', play: 'reverse', clock: 'none', scored: true, skipLimit: false, available: true },
     { ...swipe, id: 'mindReader', play: 'mindReader', clock: 'visible', scored: true, skipLimit: false, available: true },
+    // Hot Mic (experiment): Classic with the phone listening for banned words. The website turns it
+    // on (extendedGameConfig); the Android app has no speech recognition yet.
+    { ...swipe, id: 'hotMic', clock: 'visible', scored: true, skipLimit: true, listens: true, available: false },
   ],
   // The app opens straight into an Endless game at Normal with All cards.
   defaults: { mode: 'endless', difficulty: 'Normal', categories: [], skips: 3 },
@@ -197,4 +202,5 @@ export const extendedGameConfig: GameConfig = {
   ...gameConfig,
   difficulties: [{ id: 'Easy', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 }, ...gameConfig.difficulties],
   categories: [...CATEGORY_IDS, ...EXTRA_CATEGORY_IDS],
+  modes: gameConfig.modes.map((m) => (m.listens ? { ...m, available: true } : m)),
 };

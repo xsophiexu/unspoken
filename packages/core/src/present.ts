@@ -4,7 +4,7 @@
 
 import { formatClock, format, plural, type Plural } from './text';
 import type { Category, ModeId } from './types';
-import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, type SwipeRoundState } from './round/swipe';
+import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, swipePoints, type SwipeRoundState } from './round/swipe';
 import type { ReverseRoundState } from './round/reverse';
 import { currentRoles, type MindReaderRoundState } from './round/mindReader';
 import { versusCurrentRoles, type VersusRoundState } from './round/versus';
@@ -14,7 +14,7 @@ import type { RoundState } from './round';
 // and plural(); see the English catalog in @unspoken/content for every string.
 export type RoundCopy = {
   modes: Readonly<Record<ModeId, { name: string }>>;
-  units: Record<'points' | 'pointsLabel' | 'skips' | 'words' | 'cardsLabel' | 'bannedWords', Plural>;
+  units: Record<'points' | 'pointsLabel' | 'skips' | 'words' | 'cardsLabel' | 'bannedWords' | 'mistakes', Plural>;
   themes: { all: string; many: Plural };
   status: Record<
     | 'skipsLeft'
@@ -27,6 +27,7 @@ export type RoundCopy = {
     | 'passed'
     | 'mindReaderRound'
     | 'versusRound'
+    | 'hotMic'
     | 'mindReaderWord'
     | 'reverse'
     | 'withThemes'
@@ -73,11 +74,24 @@ export function roundSubline(state: RoundState, copy: RoundCopy): string {
           : format(copy.status.escalateClimbing, { banned: plural(esc.level, copy.units.bannedWords), skips });
       }
       if (state.rules.passAfterCorrect) return copy.status.hotPotato;
+      if (state.rules.listens) return hotMicStatus(state, copy);
       if (state.rules.skipLimit) return format(copy.status.scoreAndSkips, { points: plural(state.correct, copy.units.points), skips: skipsText(state, copy) });
       // Modes without a skip limit just count, like the Endless wireframe.
       return tally(state, copy);
     }
   }
+}
+
+// Hot Mic: "2 correct", then skips left when there's a limit. The mistakes follow (roundMistakes).
+function hotMicStatus(state: SwipeRoundState, copy: RoundCopy): string {
+  const correct = format(copy.status.hotMic, { correct: state.correct });
+  return skipsLeft(state) === null ? correct : `${correct} · ${skipsText(state, copy)}`;
+}
+
+// "1 mistake" once Hot Mic has heard a banned word this round; null otherwise and in other modes.
+export function roundMistakes(state: RoundState, copy: RoundCopy): string | null {
+  if (state.kind !== 'swipe' || !state.rules.listens || state.mistakes === 0) return null;
+  return plural(state.mistakes, copy.units.mistakes);
 }
 
 export type RoundStats = {
@@ -92,6 +106,7 @@ export type RoundStats = {
 // points with copy.units.points.
 export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
   if (state.kind === 'reverse') return { points: state.score, detail: plural(state.played, copy.units.words) };
+  if (state.kind === 'swipe' && state.rules.listens) return { points: null, detail: roundSubline(state, copy) };
   if (state.kind === 'swipe' && state.rules.skipLimit && !state.rules.escalates) return { points: state.correct, detail: skipsText(state, copy) };
   return { points: null, detail: roundSubline(state, copy) };
 }
@@ -124,7 +139,7 @@ export function menuStatus(state: RoundState, copy: RoundCopy): string {
     case 'versus':
       return withThemes(versusStatus(state, copy));
     case 'swipe': {
-      const points = plural(state.correct, copy.units.points);
+      const points = plural(swipePoints(state), copy.units.points);
       if (state.rules.clock === 'hidden') return withThemes(format(copy.status.hiddenTimer, { mode: copy.modes[state.settings.mode].name }));
       if (state.clock) return withThemes(format(copy.status.clockLeft, { clock: formatClock(state.clock.left), points }));
       return withThemes(state.rules.skipLimit ? points : tally(state, copy));
@@ -142,7 +157,7 @@ export function clockLabel(state: SwipeRoundState, copy: RoundCopy): string | nu
 export function pausedStatus(state: SwipeRoundState, copy: RoundCopy): string {
   if (state.rules.passAfterCorrect) return format(copy.status.passed, { words: plural(state.correct, copy.units.words) });
   if (!state.rules.skipLimit) return tally(state, copy);
-  const points = plural(state.correct, copy.units.points);
+  const points = plural(swipePoints(state), copy.units.points);
   const skips =
     state.settings.skips === null
       ? plural(state.skipped, copy.units.skips)
@@ -175,5 +190,7 @@ export function swipeSummary(state: SwipeRoundState, copy: RoundCopy): RoundSumm
   if (state.rules.passAfterCorrect) {
     return { label, value: null, title: copy.over.hotPotatoTitle, sub: format(copy.over.hotPotatoSub, { words: plural(state.correct, copy.units.words) }) };
   }
-  return { label, value: state.correct, title: null, sub: format(copy.over.pointsSub, { label: plural(state.correct, copy.units.pointsLabel), skips }) };
+  const points = swipePoints(state);
+  const sub = format(copy.over.pointsSub, { label: plural(points, copy.units.pointsLabel), skips });
+  return { label, value: points, title: null, sub: state.mistakes > 0 ? `${sub} · ${plural(state.mistakes, copy.units.mistakes)}` : sub };
 }

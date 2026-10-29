@@ -1,5 +1,7 @@
 import { FEEDBACK_ENTRY_POINTS, MODE_IDS, modeRules, type FeedbackEntryPoint, type ModeId } from '@unspoken/core';
 
+import { config } from './catalog';
+
 // Every screen's URL in one place. Trailing slashes match the static export (trailingSlash: true).
 export const routes = {
   play: '/',
@@ -34,5 +36,5 @@ export function parseEntryPoint(value: string | null): FeedbackEntryPoint {
 // ?mode= on setup: a mode that can be played, or null.
 export function parseMode(value: string | null): ModeId | null {
   const mode = MODE_IDS.find((id) => id === value);
-  return mode && modeRules(mode).available ? mode : null;
+  return mode && modeRules(mode, config).available ? mode : null;
 }

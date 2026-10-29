@@ -13,7 +13,11 @@ import {
   roundReducer,
   skipsLeft,
   swipeCard,
+  swipePoints,
   swipeReducer,
+  swipeSummary,
+  roundSubline,
+  roundMistakes,
   type SwipeAction,
   type SwipeRoundState,
 } from '../src';
@@ -282,5 +286,48 @@ describe('createRound / roundReducer', () => {
 
   it('refuse modes that are not available', () => {
     expect(() => createRound(settingsFor('timeAttack'), { cards, seed: 1 })).toThrow();
+  });
+});
+
+describe('Hot Mic', () => {
+  const hotMic = (rule: 'warning' | 'mistake' | 'loseCard') => start('hotMic', { roundSeconds: 60, skips: 2, hotMic: { rule, sound: true } });
+  const copy = {
+    modes: { hotMic: { name: 'Hot Mic' } },
+    units: { mistakes: { one: '{n} mistake', other: '{n} mistakes' }, skips: { one: '{n} skip', other: '{n} skips' }, points: { one: '{n} pt', other: '{n} pts' } },
+    status: { hotMic: '{correct} correct', skipsLeft: '{skips} left' },
+  } as unknown as Parameters<typeof roundSubline>[1];
+
+  it('counts each banned word heard as a mistake that takes a point off, on the same card', () => {
+    const before = hotMic('mistake');
+    const after = play(before, [{ type: 'correct' }, { type: 'correct' }, { type: 'heard' }]);
+    expect(after.mistakes).toBe(1);
+    expect(swipePoints(after)).toBe(1);
+    expect(word(play(before, [{ type: 'correct' }, { type: 'correct' }]))).toBe(word(after));
+  });
+
+  it('costs nothing with just a warning', () => {
+    const after = play(hotMic('warning'), [{ type: 'correct' }, { type: 'heard' }, { type: 'heard' }]);
+    expect(after.mistakes).toBe(2);
+    expect(swipePoints(after)).toBe(1);
+  });
+
+  it('deals the next card when losing the card, without using a skip', () => {
+    const before = hotMic('loseCard');
+    const after = play(before, [{ type: 'heard' }]);
+    expect(word(after)).not.toBe(word(before));
+    expect(skipsLeft(after)).toBe(2);
+  });
+
+  it('ignores what it hears while paused, and in modes that do not listen', () => {
+    expect(play(hotMic('mistake'), [{ type: 'pause' }, { type: 'heard' }]).mistakes).toBe(0);
+    expect(play(start('classic'), [{ type: 'heard' }]).mistakes).toBe(0);
+  });
+
+  it('says "2 correct" in the header, then the mistakes, and takes them off the final score', () => {
+    const after = play(hotMic('mistake'), [{ type: 'correct' }, { type: 'correct' }, { type: 'heard' }, { type: 'tick', seconds: 60 }]);
+    expect(roundSubline(after, copy)).toBe('2 correct · 2 skips left');
+    expect(roundMistakes(after, copy)).toBe('1 mistake');
+    expect(roundMistakes(hotMic('mistake'), copy)).toBeNull();
+    expect(swipeSummary(after, { ...copy, over: { timeUp: 'TIME’S UP', pointsSub: '{label} · {skips}' }, units: { ...copy.units, pointsLabel: { one: 'point', other: 'points' } } } as typeof copy)?.value).toBe(1);
   });
 });

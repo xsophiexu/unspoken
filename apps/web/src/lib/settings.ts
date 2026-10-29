@@ -1,4 +1,5 @@
 import {
+  HOT_MIC_RULES,
   MODE_IDS,
   clampTimeLimit,
   defaultRoundSeconds,
@@ -46,6 +47,7 @@ export function parseSettings(value: unknown, config = webConfig): GameSettings 
       .catch(fallback.skips),
     // Settings saved before the switch existed have a time limit.
     noTimeLimit: z.boolean().catch(false),
+    hotMic: z.object({ rule: z.enum(HOT_MIC_RULES), sound: z.boolean() }).optional().catch(undefined),
   });
   const raw = typeof value === 'object' && value !== null ? value : {};
   const parsed = schema.parse(raw);

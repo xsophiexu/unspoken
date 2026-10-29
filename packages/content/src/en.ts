@@ -14,6 +14,7 @@ const modes: Record<ModeId, { name: string; sub: string }> = {
   hotPotato: { name: 'Hot Potato', sub: 'Hidden timer, pass it on' },
   reverse: { name: 'Reverse', sub: 'Guess the word from its clues' },
   mindReader: { name: 'Mind Reader', sub: 'Predict the clues before they’re said' },
+  hotMic: { name: 'Hot Mic', sub: 'The phone listens and lets you know if a banned word slips out' },
 };
 
 const difficulties: Record<Difficulty, { name: string; badge: string }> = {
@@ -68,6 +69,7 @@ const categories: Record<Category, string> = {
   'History and Myth': 'History and Myth',
   'Fantasy and Sci-Fi': 'Fantasy and Sci-Fi',
   Halloween: 'Halloween',
+  Medical: 'Medical',
   Thanksgiving: 'Thanksgiving',
   Christmas: 'Christmas',
 };
@@ -141,6 +143,7 @@ export const en = {
     difficulties: { one: '{n} difficulty', other: '{n} difficulties' },
     cardsLabel: { one: 'card', other: 'cards' },
     bannedWords: { one: '{n} banned word', other: '{n} banned words' },
+    mistakes: { one: '{n} mistake', other: '{n} mistakes' },
     letters: { one: '{n} letter', other: '{n} letters' },
     seconds: { one: '{n} second', other: '{n} seconds' },
   },
@@ -156,6 +159,7 @@ export const en = {
     passed: '{words} passed',
     mindReaderRound: 'Round {round} of {rounds}',
     versusRound: 'Round {round} of {rounds}',
+    hotMic: '{correct} correct',
     mindReaderWord: 'Word {word}',
     reverse: '{points} · {words}',
     withThemes: '{status} · {themes}',
@@ -257,6 +261,31 @@ export const en = {
     hint: 'Tap a mode to set up a game',
     comingSoon: 'Coming soon',
     suggest: { title: 'Want another mode?', body: 'Suggest one or tell us what to improve.', action: 'Suggest' },
+  },
+  // Hot Mic (experiment): the phone listens for banned words while the clue giver talks.
+  hotMic: {
+    hint: 'The phone listens and lets you know if you say a banned word or any part of your own word. On Heart failure, “heart” and “failure” count too.',
+    ruleLabel: 'When a banned word is heard',
+    rules: {
+      warning: { title: 'Just a warning', detail: 'No penalty, good for practice' },
+      mistake: { title: 'Count a mistake', detail: 'Each mistake takes a point off' },
+      loseCard: { title: 'Lose the card', detail: 'Counts a mistake and the next card comes up' },
+    },
+    sound: { title: 'Sound', detail: 'Off: the phone only vibrates' },
+    pill: { listening: 'Listening', heard: 'Heard: {word}', off: 'Mic off', a11yOn: 'Turn the mic off', a11yOff: 'Turn the mic on' },
+    ask: {
+      title: 'Let the phone listen for banned words?',
+      body: 'While you give clues, the phone listens. If you say a banned word, or any word from your own card, it lets you know and the word lights up.',
+      privacy: 'Nothing is recorded or stored. Everything stays on your phone.',
+      note: 'Tap the mic during a game to turn it off at any time.',
+      allow: 'Allow mic',
+      notNow: 'Not now',
+    },
+    // When the browser can't listen on the phone itself (audio would go to its speech service), or the mic is refused.
+    online: 'This browser can only listen by sending audio to its speech service.',
+    onlineAnyway: 'Listen anyway',
+    unsupported: 'This browser can’t listen. Try Chrome.',
+    blocked: 'The mic is blocked. Allow it in the browser’s site settings.',
   },
   setup: {
     back: '← Modes',

@@ -46,10 +46,12 @@ describe('Halloween', () => {
     renderApp(<SetupScreen mode="classic" />);
     await user.click(categoriesRow());
     const chips = within(screen.getByRole('group', { name: en.categoriesSheet.title })).getAllByRole('checkbox');
-    expect(chips.at(-4)).toHaveAccessibleName(/^Fantasy and Sci-Fi/);
-    expect(chips.at(-3)).toHaveAccessibleName(/^Halloween/);
-    expect(chips.at(-2)).toHaveAccessibleName(/^Thanksgiving/);
-    expect(chips.at(-1)).toHaveAccessibleName(/^Christmas/);
+    expect(chips.at(-5)).toHaveAccessibleName(/^Fantasy and Sci-Fi/);
+    expect(chips.at(-4)).toHaveAccessibleName(/^Halloween/);
+    expect(chips.at(-3)).toHaveAccessibleName(/^Thanksgiving/);
+    expect(chips.at(-2)).toHaveAccessibleName(/^Christmas/);
+    // The Hot Mic experiment's Medical pack comes last.
+    expect(chips.at(-1)).toHaveAccessibleName(/^Medical/);
   });
 
   it('counts its cards on the difficulty tiles once picked, Easy included, and saves the pick', async () => {

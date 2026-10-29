@@ -5,7 +5,7 @@ import { formatClock, hasTimeLimit, hasTimerSetting, isClockRunning, pausedStatu
 import { cardSwipes, type LayoutStyle } from '@unspoken/design-tokens';
 import { useEffect, useRef, useState } from 'react';
 
-import { MicCheck } from '@/components/play/MicCheck';
+import { HotMicRound } from '@/components/hotMic/HotMic';
 import { swipeModel } from '@/components/play/model';
 import { Overlay } from '@/components/play/Overlay';
 import { PlayFrame } from '@/components/play/PlayFrame';
@@ -136,23 +136,26 @@ export function SwipeRound({ round, layoutStyle, blocked, sheetOpen, onMenu, onH
     );
   }
 
+  const frame = (
+    <PlayFrame
+      layoutStyle={layoutStyle}
+      model={model}
+      frameRef={frameRef}
+      surface={surface}
+      overlay={overlay}
+      actions={{
+        onCorrect: () => answer('correct'),
+        onSkip: () => answer('skip'),
+        onPause: () => dispatch({ type: 'pause', reason: 'user' }),
+        onMenu,
+        onHeader,
+      }}
+    />
+  );
+  if (!round.rules.listens) return frame;
   return (
-    <>
-      <PlayFrame
-        layoutStyle={layoutStyle}
-        model={model}
-        frameRef={frameRef}
-        surface={surface}
-        overlay={overlay}
-        actions={{
-          onCorrect: () => answer('correct'),
-          onSkip: () => answer('skip'),
-          onPause: () => dispatch({ type: 'pause', reason: 'user' }),
-          onMenu,
-          onHeader,
-        }}
-      />
-      <MicCheck card={model.card} active={active} />
-    </>
+    <HotMicRound settings={round.settings} card={model.card} active={!blocked && !summary && !paused} onHeard={() => dispatch({ type: 'heard' })}>
+      {frame}
+    </HotMicRound>
   );
 }

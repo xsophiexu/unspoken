@@ -40,7 +40,7 @@ export function roundReducer(state: RoundState, action: RoundAction): RoundState
   }
 }
 
-const SWIPE: readonly string[] = ['correct', 'skip', 'tick', 'pause', 'resume', 'ready'] satisfies SwipeAction['type'][];
+const SWIPE: readonly string[] = ['correct', 'skip', 'tick', 'pause', 'resume', 'ready', 'heard'] satisfies SwipeAction['type'][];
 const REVERSE: readonly string[] = ['start', 'revealClue', 'togglePeek', 'showAnswer', 'got', 'missed'] satisfies ReverseAction['type'][];
 const MIND_READER: readonly string[] = [
   'showWord',

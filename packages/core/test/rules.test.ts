@@ -34,8 +34,12 @@ import { settingsFor } from './fixtures';
 
 describe('catalogs', () => {
   it('lists the modes in Modes-grid order, Versus where Teams was, Time Attack coming soon and no Zen', () => {
-    expect(MODE_IDS).toEqual(['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader']);
-    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['timeAttack']);
+    expect(MODE_IDS).toEqual(['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader', 'hotMic']);
+    expect(gameConfig.modes.filter((m) => !m.available).map((m) => m.id)).toEqual(['timeAttack', 'hotMic']);
+  });
+
+  it('offers Hot Mic on the website only, the one mode that listens', () => {
+    expect(extendedGameConfig.modes.filter((m) => m.listens).map((m) => [m.id, m.available])).toEqual([['hotMic', true]]);
   });
 
   it('starts a fresh install on Endless at Normal with All cards, 1:30 and 3 skips', () => {
@@ -79,7 +83,7 @@ describe('round timer', () => {
   });
 
   it('is set in setup only for modes with a visible clock (Mind Reader’s Custom games have one)', () => {
-    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'mindReader']);
+    expect(MODE_IDS.filter((m) => hasTimerSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'mindReader', 'hotMic']);
   });
 });
 
@@ -90,8 +94,8 @@ describe('banned words', () => {
 });
 
 describe('skips', () => {
-  it('are limited only in Classic, Versus, Time Attack and Escalate', () => {
-    expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'escalate']);
+  it('are limited only in Classic, Versus, Time Attack, Escalate and Hot Mic', () => {
+    expect(MODE_IDS.filter((m) => hasSkipSetting(m))).toEqual(['classic', 'versus', 'timeAttack', 'escalate', 'hotMic']);
   });
 });
 
@@ -362,9 +366,9 @@ describe('the extended catalog (the website)', () => {
     expect(hasEasierDifficulty(['Easy'], extendedGameConfig)).toBe(false);
   });
 
-  it('lists Halloween, Thanksgiving and Christmas after the other categories, which the Android app keeps as they are', () => {
-    expect(extendedGameConfig.categories).toEqual([...gameConfig.categories, 'Halloween', 'Thanksgiving', 'Christmas']);
-    for (const seasonal of ['Halloween', 'Thanksgiving', 'Christmas'] as const) expect(gameConfig.categories).not.toContain(seasonal);
+  it('lists Halloween, Thanksgiving, Christmas and Medical after the other categories, which the Android app keeps as they are', () => {
+    expect(extendedGameConfig.categories).toEqual([...gameConfig.categories, 'Halloween', 'Thanksgiving', 'Christmas', 'Medical']);
+    for (const seasonal of ['Halloween', 'Thanksgiving', 'Christmas', 'Medical'] as const) expect(gameConfig.categories).not.toContain(seasonal);
     expect(gameConfig.difficulties.map((d) => d.id)).toEqual([...DIFFICULTY_IDS]);
   });
 });

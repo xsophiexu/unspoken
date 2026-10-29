@@ -26,7 +26,17 @@ type HeaderProps = {
 export function Header({ slot, at, model, withSubline, onOpen }: HeaderProps) {
   if (slot.position !== at) return null;
   const { modeName, difficulty } = model;
-  const subline = withSubline && <p className={cx(styles.subline, text('subline'))}>{model.subline}</p>;
+  const subline = withSubline && (
+    <p className={cx(styles.subline, text('subline'))}>
+      {model.subline}
+      {model.mistakes && (
+        <>
+          {' · '}
+          <span className={styles.mistakes}>{model.mistakes}</span>
+        </>
+      )}
+    </p>
+  );
 
   if (slot.variant === 'titleBadge') {
     return (

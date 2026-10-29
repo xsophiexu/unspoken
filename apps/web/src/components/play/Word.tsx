@@ -1,6 +1,7 @@
 import { en } from '@unspoken/content';
 import type { WordSlot } from '@unspoken/design-tokens';
 
+import { useHotMicMarks } from '@/components/hotMic/context';
 import { FittedText } from '@/components/ui/FittedText';
 import { cx, text } from '@/lib/ui';
 
@@ -8,6 +9,7 @@ import styles from './Word.module.css';
 
 // The word to describe, at the largest size that fits its box (the style sets the limits).
 export function Word({ slot, word }: { slot: WordSlot; word: string }) {
+  const hotMic = useHotMicMarks();
   return (
     <div className={styles.word} data-spot="word">
       {slot.label && <p className={cx(styles.label, text('label'))}>{en.play.yourWord}</p>}
@@ -19,6 +21,7 @@ export function Word({ slot, word }: { slot: WordSlot; word: string }) {
         maxLines={slot.maxLines}
         className={cx(styles[`color-${slot.color}`], text('word'))}
       />
+      {hotMic?.pill}
     </div>
   );
 }

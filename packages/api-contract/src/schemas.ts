@@ -49,6 +49,8 @@ export const gameConfigSchema = z.object({
       bonusSeconds: whole,
       escalates: z.boolean(),
       passAfterCorrect: z.boolean(),
+      // Configs served before Hot Mic existed have no listening modes.
+      listens: z.boolean().default(false),
       available: z.boolean(),
     }),
   ),

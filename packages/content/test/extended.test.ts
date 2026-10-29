@@ -15,7 +15,8 @@ const everyLevel = [...ALL_DIFFICULTY_IDS];
 const words = (cards: readonly Card[]) => cards.map((c) => c.word).sort();
 const lower = (list: readonly string[]) => new Set(list.map((w) => w.toLowerCase()));
 const freeWords = lower(raw.map((c) => c.word));
-const seasonal = new Set<Category>(['Halloween', 'Thanksgiving', 'Christmas']);
+// The categories packs add to the website (Medical is the Hot Mic experiment's pack).
+const seasonal = new Set<Category>(['Halloween', 'Thanksgiving', 'Christmas', 'Medical']);
 // Halloween cards that aren't already in the free bank.
 const packOnly = halloween.cards.map((c) => c.word).filter((w) => !freeWords.has(w.toLowerCase()));
 
