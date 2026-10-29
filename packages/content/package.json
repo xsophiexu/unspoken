@@ -16,6 +16,7 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit -p .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:md": "node scripts/md-cards.ts"
   }
 }

@@ -14,6 +14,9 @@ const modes: Record<ModeId, { name: string; sub: string }> = {
   hotPotato: { name: 'Hot Potato', sub: 'Hidden timer, pass it on' },
   reverse: { name: 'Reverse', sub: 'Guess the word from its clues' },
   mindReader: { name: 'Mind Reader', sub: 'Predict the clues before they’re said' },
+  // UnspokenMD's own modes (its Versus is the one above; mdEn.modes has its MD wording).
+  zen: { name: 'Zen', sub: 'Explain at your own pace. Add a timer or skip limit if you want.' },
+  ladder: { name: 'Ladder', sub: 'Get one right, and a new banned term joins.' },
 };
 
 const difficulties: Record<Difficulty, { name: string; badge: string }> = {

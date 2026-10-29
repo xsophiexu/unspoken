@@ -66,3 +66,6 @@ export * from './mindReader';
 
 // What each Versus screen says, from the round state.
 export * from './versus';
+
+// UnspokenMD: its bank, specialties and copy.
+export * from './md';
