@@ -21,3 +21,4 @@ export * from './versus/match';
 export * from './mindReader/lineup';
 export * from './mindReader/match';
 export * from './round';
+export * from './speech';
