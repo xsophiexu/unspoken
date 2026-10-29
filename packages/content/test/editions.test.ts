@@ -18,8 +18,11 @@ describe('How to play in UnspokenMD', () => {
 });
 
 describe('Chip names', () => {
-  it('fits every category and specialty on the 11-character chip', () => {
-    const names = [...Object.values(en.categoryBadge), ...Object.values(mdEn.specialtyBadge)];
-    expect(names.filter((name) => name.length > gameConfig.badgeMaxChars)).toEqual([]);
+  it('fits every category and specialty on the 11-character chip, unless the full name is kept', () => {
+    const pairs = [
+      ...Object.entries(en.categoryBadge).map(([id, badge]) => [badge, en.categories[id as keyof typeof en.categories]] as const),
+      ...Object.entries(mdEn.specialtyBadge).map(([id, badge]) => [badge, mdEn.specialties[id as keyof typeof mdEn.specialties]] as const),
+    ];
+    expect(pairs.filter(([badge, name]) => badge.length > gameConfig.badgeMaxChars && badge !== name)).toEqual([]);
   });
 });

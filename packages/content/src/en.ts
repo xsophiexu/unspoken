@@ -102,7 +102,7 @@ const categoryBadge: Record<Category, string> = {
   'History and Myth': 'History',
   'Fantasy and Sci-Fi': 'Fantasy',
   Halloween: 'Halloween',
-  Thanksgiving: 'Turkey Day',
+  Thanksgiving: 'Thanksgiving',
   Christmas: 'Christmas',
 };
 

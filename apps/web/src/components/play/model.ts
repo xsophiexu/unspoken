@@ -84,14 +84,14 @@ function picksText(settings: GameSettings, config: GameConfig): string {
   return picks.length === 1 && only ? mdEn.specialtyShort[only] : plural(picks.length, mdEn.specialtyPicks.many);
 }
 
-// A Deep dive's one specialty or category, as the chip shows it ("CARDIO", within the chip's
-// characters) and by its full name.
+// A Deep dive's one specialty or category, as the chip shows it ("CARDIO") and by its full name.
+// Short names only shorten a name; one that can't be shortened stays whole and the chip wraps.
 function deepDivePick(settings: GameSettings, config: GameConfig): { badge: string; name: string } | undefined {
   const pick = singlePick(settings, config);
   if (pick === undefined) return undefined;
   const isSpecialty = (id: DeepDivePick): id is Specialty => (config.specialties ?? []).includes(id as Specialty);
   const [badge, name] = isSpecialty(pick) ? [mdEn.specialtyBadge[pick], mdEn.specialties[pick]] : [en.categoryBadge[pick], en.categories[pick]];
-  return { badge: badge.toUpperCase().slice(0, config.badgeMaxChars), name };
+  return { badge: badge.toUpperCase(), name };
 }
 
 function mdBadgeLabel(name: string, state: RoundState): string {
