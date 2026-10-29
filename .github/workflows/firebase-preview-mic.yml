@@ -1,0 +1,43 @@
+name: Preview the mic experiment on a Firebase preview channel
+
+# Experiment branch only: builds apps/web and publishes it to the temporary Firebase Hosting
+# channel "mic-test" (its own URL, expires after 7 days). The live site is never touched.
+
+on:
+  push:
+    branches: [experiment/mic-banned-words]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-preview-mic
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_BASE_PATH: ''
+      # No analytics on the preview, so test plays don't count.
+      NEXT_PUBLIC_GA_ID: ''
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://unspoken-production.up.railway.app' }}
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @unspoken/web build
+      - id: deploy
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: unspoken-34aa8
+          channelId: mic-test
+          expires: 7d
+      - run: echo "Preview at ${{ steps.deploy.outputs.details_url }}"
