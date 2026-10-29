@@ -1,9 +1,9 @@
-import type { Difficulty } from './types';
+import { EDITION_IDS, type Difficulty, type Edition } from './types';
 
 // The two editions the app switches between on Home: Unspoken (everyday words) and UnspokenMD
 // (medical terms with banned jargon). Switching changes the cards, the modes and the look.
-export const EDITION_IDS = ['unspoken', 'md'] as const;
-export type EditionId = (typeof EDITION_IDS)[number];
+// The ids themselves (EDITION_IDS, Edition) live in ./types.
+export type EditionId = Edition;
 
 export const DEFAULT_EDITION: EditionId = 'unspoken';
 

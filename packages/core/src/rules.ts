@@ -1,6 +1,6 @@
-import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules } from './config';
+import { gameConfig, type DifficultyRules, type GameConfig, type ModeRules, type Stepper } from './config';
 import { format, plural, type Plural } from './text';
-import { LEGACY_DIFFICULTIES, type Category, type Difficulty, type GameSettings, type ModeId, type Random } from './types';
+import { LEGACY_DIFFICULTIES, type Category, type Difficulty, type GameSettings, type ModeId, type Random, type Specialty } from './types';
 
 function difficultyRules(id: Difficulty, config: GameConfig = gameConfig): DifficultyRules {
   const found = config.difficulties.find((d) => d.id === id);
@@ -167,8 +167,54 @@ export function categoriesSummary(
 // The settings a fresh install starts with.
 export function defaultSettings(config: GameConfig = gameConfig): GameSettings {
   const { defaults } = config;
-  const { difficulty, ...rest } = defaults;
-  return { ...rest, difficulties: [difficulty], categories: [...defaults.categories], roundSeconds: defaultRoundSeconds(difficulty, config), noTimeLimit: false };
+  const { difficulty, noTimeLimit = false, ...rest } = defaults;
+  const settings: GameSettings = { ...rest, difficulties: [difficulty], categories: [...defaults.categories], roundSeconds: defaultRoundSeconds(difficulty, config), noTimeLimit };
+  if (defaults.specialties) settings.specialties = [...defaults.specialties];
+  return settings;
+}
+
+// Setup's specialty chips, like toggleCategory: All specialties (null) clears the picks; any other
+// specialty toggles, and clearing the last one means All specialties again. Picks stay in catalog order.
+export function toggleSpecialty(specialties: readonly Specialty[], specialty: Specialty | null, config: GameConfig): Specialty[] {
+  if (specialty === null) return [];
+  const next = specialties.includes(specialty) ? specialties.filter((s) => s !== specialty) : [...specialties, specialty];
+  return (config.specialties ?? []).filter((s) => next.includes(s));
+}
+
+// What the Specialties row calls the picks: All specialties for none, the names of one or two, and
+// "{n} specialties" for more.
+export function specialtiesSummary(
+  specialties: readonly Specialty[],
+  copy: { all: string; names: Readonly<Record<Specialty, string>>; many: Plural },
+  config: GameConfig = gameConfig,
+): string {
+  if (specialties.length === 0) return copy.all;
+  if (specialties.length > config.namedCategories) return plural(specialties.length, copy.many);
+  return specialties.map((s) => copy.names[s]).join(', ');
+}
+
+// A − n + stepper moved by `steps` (−1 is one down), kept between its min and max.
+export function stepWithin(value: number, steps: number, stepper: Stepper): number {
+  return Math.min(stepper.max, Math.max(stepper.min, Math.round(value) + steps));
+}
+
+// Whether setup offers Zen's optional rules (the timer, skip limit and Play to a score switches).
+export function hasOptionalRules(mode: ModeId, config: GameConfig = gameConfig): boolean {
+  return modeRules(mode, config).optionalRules === true;
+}
+
+// The correct answers that end the game (Zen's Play to a score), or null when there is no score to reach.
+export function scoreTargetOf(settings: GameSettings, config: GameConfig = gameConfig): number | null {
+  if (!hasOptionalRules(settings.mode, config) || settings.noScoreTarget || settings.scoreTarget === undefined) return null;
+  return settings.scoreTarget;
+}
+
+// Skips allowed in a game with these settings, or null for unlimited: no skip limit for the mode,
+// Zen's Skip limit switch off, or ∞ picked.
+export function skipLimitOf(settings: GameSettings, config: GameConfig = gameConfig): number | null {
+  if (!hasSkipSetting(settings.mode, config)) return null;
+  if (settings.noSkipLimit && hasOptionalRules(settings.mode, config)) return null;
+  return settings.skips;
 }
 
 // Whether a time limit is one setup accepts (0:30 to 10:00).
@@ -245,7 +291,20 @@ export function parseSettings(value: unknown, config: GameConfig = gameConfig): 
       ? clampTimeLimit(seconds, config)
       : defaultRoundSeconds(hardestDifficulty(difficulties, config), config);
   const skips = config.skipOptions.find((n) => n === v.skips);
-  // Settings saved before the switch existed have a time limit.
-  const noTimeLimit = v.noTimeLimit === true;
-  return { mode, difficulties, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips, noTimeLimit };
+  // Settings saved before the switch existed have a time limit (unless the config starts without one).
+  const noTimeLimit = typeof v.noTimeLimit === 'boolean' ? v.noTimeLimit : fallback.noTimeLimit;
+  const settings: GameSettings = { mode, difficulties, categories, roundSeconds, skips: skips === undefined ? fallback.skips : skips, noTimeLimit };
+  if (config.specialties) {
+    const picked = Array.isArray(v.specialties) ? (v.specialties as unknown[]) : [];
+    settings.specialties = config.specialties.filter((s) => picked.includes(s));
+  }
+  if (config.zen) {
+    const { scoreTarget } = config.zen;
+    const target = v.scoreTarget;
+    const bool = (value: unknown, fallbackValue: boolean | undefined) => (typeof value === 'boolean' ? value : (fallbackValue ?? true));
+    settings.noSkipLimit = bool(v.noSkipLimit, fallback.noSkipLimit);
+    settings.scoreTarget = typeof target === 'number' && Number.isInteger(target) ? stepWithin(target, 0, scoreTarget) : (fallback.scoreTarget ?? scoreTarget.default);
+    settings.noScoreTarget = bool(v.noScoreTarget, fallback.noScoreTarget);
+  }
+  return settings;
 }

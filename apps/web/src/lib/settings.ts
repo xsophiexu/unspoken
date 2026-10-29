@@ -1,10 +1,9 @@
 import {
-  MODE_IDS,
+  ALL_MODE_IDS,
   clampTimeLimit,
   defaultRoundSeconds,
   defaultSettings,
   hardestDifficulty,
-  modeRules,
   parseDifficulties,
   type Category,
   type GameSettings,
@@ -23,8 +22,8 @@ export function parseSettings(value: unknown, config = webConfig): GameSettings 
   const fallback = defaultSettings(config);
   const schema = z.object({
     mode: z
-      .enum(MODE_IDS)
-      .refine((mode) => modeRules(mode, config).available)
+      .enum(ALL_MODE_IDS)
+      .refine((mode) => config.modes.some((m) => m.id === mode && m.available))
       .catch(fallback.mode),
     categories: z
       .array(z.unknown())

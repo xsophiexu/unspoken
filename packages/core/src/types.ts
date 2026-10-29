@@ -77,7 +77,39 @@ export type Category = (typeof CATEGORY_IDS)[number] | (typeof EXTRA_CATEGORY_ID
 
 // Order matches the Modes grid in the designs. Zen was removed; Versus took the Teams tile.
 export const MODE_IDS = ['classic', 'endless', 'versus', 'timeAttack', 'escalate', 'hotPotato', 'reverse', 'mindReader'] as const;
-export type ModeId = (typeof MODE_IDS)[number];
+
+// The editions of the game: Unspoken (everyday words) and UnspokenMD (medical jargon). Each has its
+// own bank, modes and config (gameConfig or extendedGameConfig, and mdGameConfig).
+export const EDITION_IDS = ['unspoken', 'md'] as const;
+export type Edition = (typeof EDITION_IDS)[number];
+
+// UnspokenMD's modes, in the order its Modes list shows them. Zen is like Endless with optional
+// rules; Versus is Unspoken's Versus; Ladder is Escalate with MD's numbers.
+export const MD_MODE_IDS = ['zen', 'versus', 'ladder'] as const;
+
+// Every mode id in either edition.
+export const ALL_MODE_IDS = [...MODE_IDS, 'zen', 'ladder'] as const;
+export type ModeId = (typeof ALL_MODE_IDS)[number];
+export type MdModeId = (typeof MD_MODE_IDS)[number];
+
+// UnspokenMD's specialties: First Aid's organ systems, in the order the card file lists them. MD
+// cards are filed under one each, the way Unspoken cards are filed under categories.
+export const SPECIALTY_IDS = [
+  'cardiovascular',
+  'respiratory',
+  'gastrointestinal',
+  'renal',
+  'endocrine',
+  'reproductive',
+  'neurology',
+  'psychiatry',
+  'hematologyOncology',
+  'musculoskeletalSkin',
+  'immunology',
+  'infectiousDisease',
+  'biochemistryGenetics',
+] as const;
+export type Specialty = (typeof SPECIALTY_IDS)[number];
 
 // A playable card. Banned words run strongest first.
 export type Card = {
@@ -104,6 +136,8 @@ export type BankCardInput = {
   allCards?: boolean;
   // Balances themes in All cards.
   allCardsWeight?: number;
+  // UnspokenMD cards: the specialty the card is filed under.
+  specialty?: Specialty;
 };
 
 // A bank card after normalization (see normalizeBank).
@@ -115,6 +149,8 @@ export type BankEntry = {
   categories: readonly Category[];
   inAll: boolean;
   allWeight: number;
+  // UnspokenMD cards only.
+  specialty?: Specialty;
 };
 
 export type GameSettings = {
@@ -131,6 +167,13 @@ export type GameSettings = {
   noTimeLimit: boolean;
   // Skips allowed per round, or null for unlimited. Ignored by modes without a skip limit.
   skips: number | null;
+  // Zen's Skip limit switch, off: skips are unlimited and `skips` is kept for when it turns on.
+  noSkipLimit?: boolean;
+  // Zen's Play to a score: the game ends at this many correct answers, unless noScoreTarget is on.
+  scoreTarget?: number;
+  noScoreTarget?: boolean;
+  // UnspokenMD: the specialties to draw from. Empty means All specialties.
+  specialties?: readonly Specialty[];
 };
 
 // Returns a float in [0, 1). Inject one so dealing and hidden timers are reproducible in tests.

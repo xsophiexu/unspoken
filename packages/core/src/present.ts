@@ -3,7 +3,7 @@
 // decides which message applies and fills it in.
 
 import { formatClock, format, plural, type Plural } from './text';
-import type { Category, ModeId } from './types';
+import type { Category, ModeId, Specialty } from './types';
 import { isSwipeOver, isSwipeWon, skipsLeft, swipeEscalate, type SwipeRoundState } from './round/swipe';
 import type { ReverseRoundState } from './round/reverse';
 import { currentRoles, type MindReaderRoundState } from './round/mindReader';
@@ -14,6 +14,8 @@ import type { RoundState } from './round';
 // and plural(); see the English catalog in @unspoken/content for every string.
 export type RoundCopy = {
   modes: Readonly<Record<ModeId, { name: string }>>;
+  // UnspokenMD's specialty names; its round copy's `themes` says All specialties and "{n} specialties".
+  specialties?: Readonly<Record<Specialty, string>>;
   units: Record<'points' | 'pointsLabel' | 'skips' | 'words' | 'cardsLabel' | 'bannedWords', Plural>;
   themes: { all: string; many: Plural };
   status: Record<
@@ -46,6 +48,21 @@ export function categoriesLabel(categories: readonly Category[], copy: Pick<Roun
   return plural(categories.length, copy.themes.many);
 }
 
+// What a round draws from, for the menu: its specialties in UnspokenMD ("All specialties",
+// "Respiratory", "3 specialties"), its categories otherwise.
+function picksLabel(state: RoundState, copy: RoundCopy): string {
+  if (!state.config.specialties) return categoriesLabel(state.settings.categories, copy);
+  const picks = state.settings.specialties ?? [];
+  if (picks.length === 0) return copy.themes.all;
+  if (picks.length === 1) return copy.specialties?.[picks[0] as Specialty] ?? (picks[0] as string);
+  return plural(picks.length, copy.themes.many);
+}
+
+// Modes whose header only counts: no skip limit (Endless), or Zen, whose rules are optional.
+function countsOnly(state: SwipeRoundState): boolean {
+  return !state.rules.skipLimit || state.rules.optionalRules === true;
+}
+
 function skipsText(state: SwipeRoundState, copy: RoundCopy): string {
   const left = skipsLeft(state);
   return left === null ? plural(state.skipped, copy.units.skips) : format(copy.status.skipsLeft, { skips: plural(left, copy.units.skips) });
@@ -73,9 +90,9 @@ export function roundSubline(state: RoundState, copy: RoundCopy): string {
           : format(copy.status.escalateClimbing, { banned: plural(esc.level, copy.units.bannedWords), skips });
       }
       if (state.rules.passAfterCorrect) return copy.status.hotPotato;
-      if (state.rules.skipLimit) return format(copy.status.scoreAndSkips, { points: plural(state.correct, copy.units.points), skips: skipsText(state, copy) });
-      // Modes without a skip limit just count, like the Endless wireframe.
-      return tally(state, copy);
+      // Modes without a skip limit (and Zen) just count, like the Endless wireframe.
+      if (countsOnly(state)) return tally(state, copy);
+      return format(copy.status.scoreAndSkips, { points: plural(state.correct, copy.units.points), skips: skipsText(state, copy) });
     }
   }
 }
@@ -92,7 +109,7 @@ export type RoundStats = {
 // points with copy.units.points.
 export function roundStats(state: RoundState, copy: RoundCopy): RoundStats {
   if (state.kind === 'reverse') return { points: state.score, detail: plural(state.played, copy.units.words) };
-  if (state.kind === 'swipe' && state.rules.skipLimit && !state.rules.escalates) return { points: state.correct, detail: skipsText(state, copy) };
+  if (state.kind === 'swipe' && !countsOnly(state) && !state.rules.escalates) return { points: state.correct, detail: skipsText(state, copy) };
   return { points: null, detail: roundSubline(state, copy) };
 }
 
@@ -114,7 +131,7 @@ function reverseStatus(state: ReverseRoundState, copy: RoundCopy): string {
 
 // The status line on the ··· menu sheet.
 export function menuStatus(state: RoundState, copy: RoundCopy): string {
-  const themes = categoriesLabel(state.settings.categories, copy);
+  const themes = picksLabel(state, copy);
   const withThemes = (status: string) => format(copy.status.withThemes, { status, themes });
   switch (state.kind) {
     case 'reverse':
@@ -126,8 +143,9 @@ export function menuStatus(state: RoundState, copy: RoundCopy): string {
     case 'swipe': {
       const points = plural(state.correct, copy.units.points);
       if (state.rules.clock === 'hidden') return withThemes(format(copy.status.hiddenTimer, { mode: copy.modes[state.settings.mode].name }));
+      if (state.rules.optionalRules) return withThemes(tally(state, copy));
       if (state.clock) return withThemes(format(copy.status.clockLeft, { clock: formatClock(state.clock.left), points }));
-      return withThemes(state.rules.skipLimit ? points : tally(state, copy));
+      return withThemes(countsOnly(state) ? tally(state, copy) : points);
     }
   }
 }
@@ -141,7 +159,7 @@ export function clockLabel(state: SwipeRoundState, copy: RoundCopy): string | nu
 // The line under the clock on the Paused overlay.
 export function pausedStatus(state: SwipeRoundState, copy: RoundCopy): string {
   if (state.rules.passAfterCorrect) return format(copy.status.passed, { words: plural(state.correct, copy.units.words) });
-  if (!state.rules.skipLimit) return tally(state, copy);
+  if (countsOnly(state)) return tally(state, copy);
   const points = plural(state.correct, copy.units.points);
   const skips =
     state.settings.skips === null

@@ -1,4 +1,4 @@
-import { CATEGORY_IDS, EXTRA_CATEGORY_IDS, type Category, type Difficulty, type GameSettings, type ModeId } from './types';
+import { CATEGORY_IDS, EXTRA_CATEGORY_IDS, SPECIALTY_IDS, type Category, type Difficulty, type Edition, type GameSettings, type ModeId, type Specialty } from './types';
 
 // Everything tunable about the rules lives in this one JSON-serializable object, so the service can
 // serve it (GET /v1/config) and clients can run on a served copy. Display text lives in the copy
@@ -37,19 +37,32 @@ export type ModeRules = {
   // Whether the phone is handed on after each correct answer (Hot Potato); a skip keeps it with the same player.
   passAfterCorrect: boolean;
   available: boolean;
+  // Zen: the timer, the skip limit and Play to a score are each a switch, off to start
+  // (GameSettings.noTimeLimit, noSkipLimit and noScoreTarget), and the header only counts.
+  optionalRules?: boolean;
 };
+
+// A − n + stepper: where it starts and how far it goes.
+export type Stepper = { default: number; min: number; max: number };
 
 // Who can play a game with a lineup (Mind Reader's Custom games, Versus): at least minPlayers, up to
 // maxPlayers; Teams need minTeams teams of at least minPerTeam each, up to maxTeams.
 export type LineupLimits = { minPlayers: number; maxPlayers: number; minPerTeam: number; minTeams: number; maxTeams: number };
 
 export type GameConfig = {
+  // Which edition this config plays; Unspoken when missing.
+  edition?: Edition;
   difficulties: readonly DifficultyRules[];
   categories: readonly Category[];
+  // UnspokenMD: the specialties its cards are filed under, in the order setup lists them.
+  specialties?: readonly Specialty[];
   modes: readonly ModeRules[];
-  // The time limit follows the difficulty, and No time limit starts off. Defaults name one
-  // difficulty (served as before by GET /v1/config); settings start with it as their only pick.
-  defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit' | 'difficulties'> & { difficulty: Difficulty };
+  // The time limit follows the difficulty, and No time limit starts off unless defaults turn it
+  // on. Defaults name one difficulty (served as before by GET /v1/config); settings start with it
+  // as their only pick.
+  defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit' | 'difficulties'> & { difficulty: Difficulty; noTimeLimit?: boolean };
+  // Zen's steppers: "Skips for the game" and "Correct to win".
+  zen?: { skips: Stepper; scoreTarget: Stepper };
   // Choices on the "Skips per round" grid; null is unlimited (∞).
   skipOptions: readonly (number | null)[];
   // The shortest time limit setup accepts. The box takes any four digits; outside this range setup
@@ -198,3 +211,42 @@ export const extendedGameConfig: GameConfig = {
   difficulties: [{ id: 'Easy', roundSeconds: 90, bannedCount: 5, hotPotatoMinSeconds: 45 }, ...gameConfig.difficulties],
   categories: [...CATEGORY_IDS, ...EXTRA_CATEGORY_IDS],
 };
+
+// UnspokenMD's catalog. Its cards come from the MD bank (mdBank in @unspoken/content), filed under
+// specialties instead of categories, at gameConfig's difficulties (MD has no Easy cards). Every card
+// shows all 6 of its banned terms. Timer limits, Versus and the skip grid are gameConfig's.
+export const mdGameConfig: GameConfig = {
+  ...gameConfig,
+  edition: 'md',
+  // Zen's timer starts at 1:30 at every difficulty.
+  difficulties: gameConfig.difficulties.map((d) => ({ ...d, roundSeconds: 90, bannedCount: 6 })),
+  categories: [],
+  specialties: SPECIALTY_IDS,
+  modes: [
+    // Zen: like Endless, with a timer, a skip limit and a score to play to, each off to start.
+    { ...swipe, id: 'zen', clock: 'visible', scored: true, skipLimit: true, optionalRules: true, available: true },
+    { ...swipe, id: 'versus', play: 'versus', clock: 'visible', scored: true, skipLimit: true, available: true },
+    // Ladder: Escalate with this config's `escalate` numbers.
+    { ...swipe, id: 'ladder', clock: 'none', scored: true, skipLimit: true, escalates: true, available: true },
+  ],
+  // The app opens into Zen at Tricky with All specialties and every optional rule off. Turned on,
+  // the skip limit starts at 3 and Play to a score at 10.
+  defaults: {
+    mode: 'zen',
+    difficulty: 'Tricky',
+    categories: [],
+    specialties: [],
+    skips: 3,
+    noTimeLimit: true,
+    noSkipLimit: true,
+    scoreTarget: 10,
+    noScoreTarget: true,
+  },
+  zen: { skips: { default: 3, min: 0, max: 10 }, scoreTarget: { default: 10, min: 1, max: 50 } },
+  // Ladder (Design's suggestion, not confirmed yet): 3 banned terms to start, one more per correct
+  // answer, and one correct answer with all 6 showing wins.
+  escalate: { start: 3, max: 6, winAtMax: 1, minFullCards: 20 },
+};
+
+// The config each edition plays on the website.
+export const editionConfigs: Readonly<Record<Edition, GameConfig>> = { unspoken: extendedGameConfig, md: mdGameConfig };

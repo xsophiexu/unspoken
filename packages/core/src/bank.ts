@@ -1,7 +1,7 @@
 import { gameConfig, type GameConfig } from './config';
 import { dealDeck, seededRandom } from './random';
 import { modeRules, toDifficulty } from './rules';
-import { ALL_DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type ModeId } from './types';
+import { ALL_DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, SPECIALTY_IDS, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type GameSettings, type ModeId, type Specialty } from './types';
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
 function capitalize(word: string): string {
@@ -35,8 +35,9 @@ function cardDifficulty(card: BankCardInput): Difficulty {
 // Turn raw bank cards (as stored in @unspoken/content) into entries the dealing functions use.
 // Each card's level comes from its score (see cardDifficulty). Ids are unique: a word whose id is
 // taken (the same word with or without accents at another level) gets its level appended, so ids
-// stay stable as long as the bank keeps its order.
-export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
+// stay stable as long as the bank keeps its order. `keepCase` leaves banned words as written (MD
+// jargon such as p-ANCA and hCG starts lowercase on purpose).
+export function normalizeBank(raw: readonly BankCardInput[], { keepCase = false }: { keepCase?: boolean } = {}): BankEntry[] {
   const taken = new Set<string>();
   const uniqueId = (word: string, difficulty: string) => {
     let id = cardId(word);
@@ -47,15 +48,17 @@ export function normalizeBank(raw: readonly BankCardInput[]): BankEntry[] {
   };
   return raw.map((c) => {
     const difficulty = cardDifficulty(c);
-    return {
+    const entry: BankEntry = {
       id: uniqueId(c.word, difficulty),
       word: c.word,
-      banned: c.banned.map(capitalize),
+      banned: keepCase ? [...c.banned] : c.banned.map(capitalize),
       difficulty,
       categories: c.themes ?? (c.theme ? [c.theme] : []),
       inAll: c.allCards !== false,
       allWeight: c.allCardsWeight ?? 1,
     };
+    if (c.specialty) entry.specialty = c.specialty;
+    return entry;
   });
 }
 
@@ -73,6 +76,26 @@ export function cardsFor(bank: readonly BankEntry[], difficulty: Difficulty | re
   return bank
     .filter((c) => atPicks(c) && c.categories.some((t) => categories.includes(t)))
     .map(({ id, word, banned }) => ({ id, word, banned }));
+}
+
+// UnspokenMD's cards for a game: every card at any of the picked difficulties in any of the picked
+// specialties (none picked means All specialties), each equally likely.
+export function cardsForSpecialties(bank: readonly BankEntry[], difficulty: Difficulty | readonly Difficulty[], specialties: readonly Specialty[]): Card[] {
+  const picked = specialties.length === 0 ? bank : bank.filter((c) => c.specialty !== undefined && specialties.includes(c.specialty));
+  return cardsFor(picked, difficulty, []);
+}
+
+// The cards a game with these settings draws from, in either edition: by specialties for a config
+// that has them (UnspokenMD), by categories otherwise.
+export function cardsForSettings(bank: readonly BankEntry[], settings: GameSettings, config: GameConfig = gameConfig): Card[] {
+  return config.specialties
+    ? cardsForSpecialties(bank, settings.difficulties, settings.specialties ?? [])
+    : cardsFor(bank, settings.difficulties, settings.categories);
+}
+
+// How many cards in each specialty at the picked difficulties (the Choose specialties sheet's counts).
+export function specialtyCounts(bank: readonly BankEntry[], difficulty: Difficulty | readonly Difficulty[], specialties: readonly Specialty[] = SPECIALTY_IDS): Partial<Record<Specialty, number>> {
+  return Object.fromEntries(specialties.map((s) => [s, cardsForSpecialties(bank, difficulty, [s]).length]));
 }
 
 // How many cards a difficulty and theme choice draws from (setup shows these counts).
@@ -106,6 +129,8 @@ export type DealRequest = (
 ) & {
   // Empty means All cards.
   categories: readonly Category[];
+  // UnspokenMD: deal by specialties instead of categories (empty means All specialties).
+  specialties?: readonly Specialty[];
   // The mode the deck is for; Escalate only plays cards with every banned word. Defaults to Classic.
   mode?: ModeId;
   // How many cards to return; the whole shuffled deck when omitted.
@@ -123,7 +148,9 @@ export type DealtDeck = {
 // Deal a deck straight from the bank: the same seed and request always give the same cards, so the
 // service and offline clients agree. This is what POST /v1/decks runs.
 export function dealFromBank(bank: readonly BankEntry[], request: DealRequest, config: GameConfig = gameConfig): DealtDeck {
-  const pool = playableCards(request.mode ?? 'classic', cardsFor(bank, request.difficulties ?? [request.difficulty], request.categories), config);
+  const difficulties = request.difficulties ?? [request.difficulty];
+  const cards = request.specialties ? cardsForSpecialties(bank, difficulties, request.specialties) : cardsFor(bank, difficulties, request.categories);
+  const pool = playableCards(request.mode ?? 'classic', cards, config);
   const deck = dealDeck(pool, seededRandom(request.seed).random);
   const count = request.count === undefined ? deck.length : Math.max(0, Math.floor(request.count));
   return { seed: request.seed >>> 0, total: pool.length, cards: deck.slice(0, count) };
