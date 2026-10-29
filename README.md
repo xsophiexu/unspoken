@@ -2,7 +2,7 @@
 
 A word guessing game for grown-ups. Get your team to say the word on the card without saying any of the six banned words.
 
-**Play now, no setup:** https://xsophiexu.github.io/unspoken/ (works on any phone or computer browser; also at https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1)
+**Play now, no setup:** https://unspokengame.web.app/ (works on any phone or computer browser; also at https://claude.ai/artifact/SXDwUy3D3ZzAyVBZun3dq1)
 
 Every push to `main` rebuilds the GitHub Pages site (`.github/workflows/pages.yml`).
 

@@ -1,0 +1,47 @@
+name: Deploy web version to Firebase Hosting
+
+# Builds apps/web (Next.js static export) on every push to main and publishes it to Firebase Hosting
+# (project in .firebaserc, site unspokengame in firebase.json, served at https://unspokengame.web.app). The FIREBASE_SERVICE_ACCOUNT
+# repository secret holds the JSON key of a service account with the Firebase Hosting Admin role.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firebase-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      # Firebase Hosting serves the site from the root, so there is no base path.
+      NEXT_PUBLIC_BASE_PATH: ''
+      # Google Analytics measurement id. A repository variable of the same name overrides it.
+      NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID || 'G-9MFDEM0KXR' }}
+      # services/api base URL. A repository variable of the same name overrides it.
+      NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://unspoken-production.up.railway.app' }}
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @unspoken/web lint
+      - run: pnpm --filter @unspoken/web test
+      # next build also type-checks.
+      - run: pnpm --filter @unspoken/web build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: unspoken-34aa8
+          channelId: live

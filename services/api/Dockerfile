@@ -28,8 +28,8 @@ ENV NODE_ENV=production
 # Railway's edge sends X-Forwarded-For as the client followed by one hop of its own. Use 0 when
 # nothing sits in front of the container, or 1 behind a proxy that appends a single entry.
 ENV TRUST_PROXY_HOPS=2
-# The web app's origin on GitHub Pages. A CORS_ORIGINS variable on the host replaces it.
-ENV CORS_ORIGINS=https://xsophiexu.github.io
+# The web app's origins on Firebase Hosting and GitHub Pages. A CORS_ORIGINS variable on the host replaces it.
+ENV CORS_ORIGINS=https://unspokengame.web.app,https://unspokengame.firebaseapp.com,https://xsophiexu.github.io
 WORKDIR /app/services/api
 COPY --from=runtime-deps /repo/node_modules /app/node_modules
 COPY --from=runtime-deps /repo/services/api/node_modules ./node_modules

@@ -49,7 +49,7 @@ In the Railway dashboard:
 3. In the API service's **Variables**, add:
    - `RAILWAY_DOCKERFILE_PATH` = `services/api/Dockerfile`
    - `DATABASE_URL` = `${{Postgres.DATABASE_URL}}`
-   - `CORS_ORIGINS` = `https://xsophiexu.github.io`, plus the Next.js site's origin once it has one, comma-separated
+   - `CORS_ORIGINS` = `https://unspokengame.web.app,https://unspokengame.firebaseapp.com,https://xsophiexu.github.io`, comma-separated
 4. In its **Settings**: leave **Root Directory** empty, and clear any custom build or start command Railway filled in (the image runs `node --enable-source-maps dist/main.js`, which listens on the `PORT` Railway sets). Set **Healthcheck Path** to `/health` and **Watch Paths** to `/services/api/**`, `/packages/core/**`, `/packages/content/**`, `/packages/api-contract/**`, `/package.json` and `/pnpm-lock.yaml`.
 5. **Deploy** the staged changes. When the deploy is green, open **Settings → Networking → Generate Domain**.
 

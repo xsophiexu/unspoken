@@ -25,7 +25,7 @@ export default defineRailway(() => {
     env: {
       DATABASE_URL: db.env.DATABASE_URL,
       // Browser origins of the web apps, comma-separated. Native apps need no entry.
-      CORS_ORIGINS: 'https://xsophiexu.github.io',
+      CORS_ORIGINS: 'https://unspokengame.web.app,https://unspokengame.firebaseapp.com,https://xsophiexu.github.io',
     },
   });
 
