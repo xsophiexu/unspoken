@@ -21,8 +21,14 @@ export const homeCopy = {
     unspoken: 'A fox holding a card that says unspoken',
     md: 'A fox holding a card that says unspokenmd',
   } satisfies Record<EditionId, string>,
-  // Quick Play plays the last settings on this phone: "Endless · One phone · Normal".
-  quickPlay: { title: 'Quick Play', detail: '{mode} · {where} · {difficulty}', onePhone: 'One phone' },
+  // Quick Play always plays all cards at Normal, Tricky and Hard: "All cards · Normal to Hard".
+  quickPlay: { title: 'Quick Play', detail: '{picks} · {difficulties}' },
+  // The two white tiles under Quick Play. Deep dive opens its sheet; Custom game opens New game.
+  deepDive: {
+    title: 'Deep dive',
+    detail: { unspoken: 'Pick a category', md: 'Pick a specialty' } satisfies Record<EditionId, string>,
+  },
+  customGame: { title: 'Custom game', detail: 'Your own rules' },
   links: { label: 'More', modes: 'Modes', customize: 'Customize', howToPlay: 'How to play' },
 };
 

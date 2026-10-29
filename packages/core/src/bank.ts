@@ -1,6 +1,6 @@
 import { gameConfig, type GameConfig } from './config';
 import { dealDeck, seededRandom } from './random';
-import { modeRules, toDifficulty } from './rules';
+import { modeRules, sortDifficulties, toDifficulty } from './rules';
 import { ALL_DIFFICULTY_IDS, DIFFICULTY_MIN_SCORES, SPECIALTY_IDS, type BankCardInput, type BankEntry, type Card, type Category, type Difficulty, type GameSettings, type ModeId, type Specialty } from './types';
 
 // Some banned words arrive lowercase; capitalize them to match the rest, leaving names like iPhone alone.
@@ -76,6 +76,14 @@ export function cardsFor(bank: readonly BankEntry[], difficulty: Difficulty | re
   return bank
     .filter((c) => atPicks(c) && c.categories.some((t) => categories.includes(t)))
     .map(({ id, word, banned }) => ({ id, word, banned }));
+}
+
+// The cards for these settings grouped by difficulty, easiest first, leaving out difficulties with
+// none: what an Easiest first deal goes through in turn (RoundOptions.groups, dealEasiestFirst).
+export function cardsByDifficulty(bank: readonly BankEntry[], settings: GameSettings, config: GameConfig = gameConfig): Card[][] {
+  return sortDifficulties(settings.difficulties, config)
+    .map((difficulty) => cardsForSettings(bank, { ...settings, difficulties: [difficulty] }, config))
+    .filter((cards) => cards.length > 0);
 }
 
 // UnspokenMD's cards for a game: every card at any of the picked difficulties in any of the picked

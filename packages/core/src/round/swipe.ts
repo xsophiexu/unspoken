@@ -48,9 +48,13 @@ export type RoundOptions = {
   // Seeds dealing and Hot Potato's hidden length. Use newSeed() in apps, fixed numbers in tests.
   seed: number;
   config?: GameConfig;
+  // Easiest first (settings.easiestFirst): the same cards grouped by difficulty, easiest first
+  // (cardsByDifficulty). A swipe round then deals the groups in turn; Escalate and Ladder, which
+  // pick their own cards, ignore them.
+  groups?: readonly (readonly Card[])[];
 };
 
-export function createSwipeRound(settings: GameSettings, { cards, seed, config = gameConfig }: RoundOptions): SwipeRoundState {
+export function createSwipeRound(settings: GameSettings, { cards, seed, config = gameConfig, groups }: RoundOptions): SwipeRoundState {
   const rules = modeRules(settings.mode, config);
   if (rules.play !== 'swipe') throw new Error(`${settings.mode} is not a swipe mode`);
   const rng = seededRandom(seed);
@@ -65,7 +69,7 @@ export function createSwipeRound(settings: GameSettings, { cards, seed, config =
     settings,
     rules,
     config,
-    deck: newDeck(playableCards(settings.mode, cards, config), rng.seed()),
+    deck: groups && !rules.escalates ? newDeck(groups.flat(), rng.seed(), groups) : newDeck(playableCards(settings.mode, cards, config), rng.seed()),
     correct: 0,
     skipped: 0,
     clock: seconds === null ? null : { total: seconds, left: seconds },

@@ -49,3 +49,10 @@ export function dealDeck(cards: readonly Card[], random: Random): Card[] {
     .sort((a, b) => b.key - a.key)
     .map(({ card }) => card);
 }
+
+// Deal easiest first (Deep dive): the groups in the order given, each dealt as dealDeck deals, one
+// after another. Pass the cards grouped by difficulty, easiest first (cardsByDifficulty), so every
+// Normal card comes before any Tricky card, and so on up to Legend.
+export function dealEasiestFirst(groups: readonly (readonly Card[])[], random: Random): Card[] {
+  return groups.flatMap((group) => dealDeck(group, random));
+}

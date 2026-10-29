@@ -29,7 +29,7 @@ const specialties: Record<Specialty, string> = {
   biochemistryGenetics: 'Biochemistry and Genetics',
 };
 
-// Short names where space is tight (the game's chip: "TRICKY · GI").
+// Short names where space is tight (the line under the game's title: "GI · 2 correct · 1 skipped").
 const specialtyShort: Record<Specialty, string> = {
   cardiovascular: 'Cardio',
   respiratory: 'Resp',
@@ -45,6 +45,10 @@ const specialtyShort: Record<Specialty, string> = {
   infectiousDisease: 'ID',
   biochemistryGenetics: 'Biochem/Genetics',
 };
+
+// Each specialty on the game's chip, which holds config.badgeMaxChars (11) characters at most
+// (Deep dive's chip: "CARDIO").
+const specialtyBadge: Record<Specialty, string> = { ...specialtyShort, biochemistryGenetics: 'Biochem' };
 
 const edition = en.home.editions.md;
 
@@ -68,6 +72,7 @@ export const mdEn = {
   } satisfies Record<MdModeId, { name: string; sub: string }>,
   specialties,
   specialtyShort,
+  specialtyBadge,
   // The Specialties row and chips: like the categories' All cards and "{n} categories".
   specialtyPicks: { all: 'All specialties', many: { one: '{n} specialty', other: '{n} specialties' } },
   units: {
@@ -98,16 +103,13 @@ export const mdEn = {
     hintAll: 'Double-tap All specialties to unhighlight all',
     done: 'Done',
   },
+  // Deep dive: one specialty in place of one category.
+  deepDive: { ...en.deepDive, pickOne: 'Pick one specialty.', listLabel: 'Specialties' },
   // The game screen (quick-play-2).
   play: {
-    // A Zen game's header when Home's Quick Play started it (from setup it says Zen), then the
-    // difficulty chip.
+    // A Zen game's header when Home's Quick Play started it (from setup it says Zen). The chip
+    // beside it names only the difficulty; the line under it names the word bank.
     title: en.home.quickPlay.title,
-    // The chip: the difficulty, then the word bank: "TRICKY · ALL", one specialty's short name
-    // ("TRICKY · GI"), or "TRICKY · 3 OF 13". The specialty is shown in capitals like the rest.
-    badge: '{difficulty} · {picks}',
-    badgeAll: 'ALL',
-    badgePicked: '{n} OF {total}',
     bannedLabel: 'BANNED JARGON',
     // In place of "Your word" on a card picked from search.
     fromSearch: 'From search · {difficulty} · {specialty}',

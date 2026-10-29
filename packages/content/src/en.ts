@@ -36,6 +36,10 @@ const difficulties: Record<Difficulty, { name: string; badge: string }> = {
 // Several difficulties picked: the easiest one's name or badge, then "+" ("HARD+", "Hard+").
 const difficultyMixed = '{easiest}+';
 
+// Several difficulties in a row, from the easiest to the hardest: the chip's "NORMAL–HARD", and
+// "Normal to Legend" in a line of text.
+const difficultySpan = { short: '{easiest}–{hardest}', long: '{easiest} to {hardest}' };
+
 // The Difficulty info sheet on New game: the same category at each difficulty, every word from the
 // word bank at that difficulty (Easy's from the website's bank, which has Easy cards).
 const difficultyExamples: { category: string; words: Record<Difficulty, string> }[] = [
@@ -74,6 +78,31 @@ const categories: Record<Category, string> = {
   'Fantasy and Sci-Fi': 'Fantasy and Sci-Fi',
   Halloween: 'Halloween',
   Thanksgiving: 'Thanksgiving',
+  Christmas: 'Christmas',
+};
+
+// Each category on the game's chip, which holds config.badgeMaxChars (11) characters at most
+// (Deep dive's chip: "FOOD").
+const categoryBadge: Record<Category, string> = {
+  'Inner World': 'Inner World',
+  'Literature and Language': 'Language',
+  'Pop Culture': 'Pop Culture',
+  'Arts and Entertainment': 'Arts',
+  'Science and Nature': 'Science',
+  'Health and Body': 'Health',
+  Technology: 'Technology',
+  'Computer Science': 'Computing',
+  Society: 'Society',
+  'Law and Diplomacy': 'Law',
+  Business: 'Business',
+  'Love and Relationships': 'Love',
+  'Everyday Life': 'Everyday',
+  'Culture and Travel': 'Travel',
+  'Sports and Games': 'Sports',
+  'History and Myth': 'History',
+  'Fantasy and Sci-Fi': 'Fantasy',
+  Halloween: 'Halloween',
+  Thanksgiving: 'Turkey Day',
   Christmas: 'Christmas',
 };
 
@@ -140,7 +169,9 @@ export const en = {
   modes,
   difficulties,
   difficultyMix: difficultyMixed,
+  difficultySpan,
   categories,
+  categoryBadge,
 
   // --- Shared units and status lines (RoundCopy in @unspoken/core) ---------------------------
   units: {
@@ -204,6 +235,23 @@ export const en = {
     hotPotatoNote: 'Holding it when time runs out loses a point',
     // The mode and level in a header pill; the platform styles the level lighter.
     modeAndLevel: '{mode} · {difficulty}',
+    // Over the word in a Deep dive: "Your word · Hard", with that card's difficulty.
+    yourWordAt: '{label} · {difficulty}',
+    // The line under the title in Quick Play (and UnspokenMD's games): the word bank, then the
+    // score ("All cards · 2 correct · 1 skipped", "Cardio · …", "3 specialties · …").
+    picksStatus: '{picks} · {status}',
+  },
+  // Deep dive (from Home): one category (one specialty in UnspokenMD) at every difficulty.
+  deepDive: {
+    title: 'Deep dive',
+    // Under the sheet's title: "Pick one category. You get Easy to Legend."
+    line: '{pickOne} You get {difficulties}.',
+    pickOne: 'Pick one category.',
+    listLabel: 'Categories',
+    easiestFirst: { title: 'Easiest first', on: 'Start at {easiest} and work up to {hardest}', off: 'Every difficulty shuffled together' },
+    start: 'Start deep dive · {cards}',
+    // The line under the title in game: "Normal to Legend · 6 correct · 1 skipped".
+    status: '{difficulties} · {status}',
   },
   paused: {
     label: 'PAUSED',
@@ -274,6 +322,9 @@ export const en = {
   setup: {
     back: '← Modes',
     title: 'New game',
+    // New game opened from Home's Custom game tile.
+    customTitle: 'Custom game',
+    backHome: '← Home',
     // The Categories box above DIFFICULTY: its title, and the picks with their card count.
     categories: 'Categories',
     categoriesDetail: '{summary} · {cards}',
@@ -896,6 +947,8 @@ export const en = {
     customize: 'Customize',
     pause: 'Pause',
     difficulty: 'Difficulty {badge}. Tap to change.',
+    // Deep dive's chip, which names what it draws from.
+    deepDive: 'Deep dive: {pick}, {difficulties}. Tap to pick another.',
     modeAndDifficulty: '{mode}, {difficulty}. Tap to change.',
     closeMenu: 'Close menu',
     closeSheet: 'Close',

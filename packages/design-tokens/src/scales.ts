@@ -154,7 +154,10 @@ export const layout = {
   play: { paddingX: 32, paddingTop: 30, paddingBottom: 38, footerTop: 22 },
   minTouch: 44,
   // caretScale: the ▾ after the mode and level, relative to the header text size.
-  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62 },
+  // chipTitle: the title beside a chip that names more than one difficulty (Quick Play, Deep dive,
+  // UnspokenMD's games), at most this size, so "Quick Play", the chip and two menuButton boxes fit
+  // one line at 390 wide.
+  header: { menuButton: 36, pillHeight: 40, badgeRadius: radius.xs, caretScale: 0.62, chipTitle: 23 },
   // Card style: the word tile inside the timer ring. The ring keeps the maxWidth × maxHeight shape
   // and fills the space inside the side margins, so its edges line up with the header and the
   // controls (Kurt), shrinking with narrower screens (ringCardSize). ringScale: on wide screens the
@@ -181,14 +184,17 @@ export const layout = {
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
-  grid: { homeLinks: 3, characters: 5, modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
+  grid: { homeLinks: 3, homeTiles: 2, characters: 5, modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },
   // Home (home-v4): the edition switch at the top, the fox-and-card art (artWidth wide, at most
   // artShare of the window height), the Quick Play button with its play disc, and the icons over
-  // the Modes, Customize and How to play links.
-  home: { switchHeight: 52, artWidth: 236, artShare: 0.3, quickPlayHeight: 72, playDisc: 40, linkIcon: 22 },
+  // the Modes, Customize and How to play links. tileIcon: the icon box on the Deep dive and Custom
+  // game tiles under Quick Play, with the icon tileGlyph inside it. tileTitleShare: the tile's title
+  // is at most this share of its text column's width (so "Custom game" stays on one line on a
+  // narrow phone), and otherwise the optionTitle size.
+  home: { switchHeight: 52, artWidth: 236, artShare: 0.3, quickPlayHeight: 72, playDisc: 40, linkIcon: 22, tileIcon: 34, tileGlyph: 18, tileTitleShare: 0.145 },
   // UnspokenMD's player characters, always drawn bare (no circle): the size in the Customize row and
   // in the picker sheet's grid (grid.characters columns).
   character: { row: 44, picker: 48 },

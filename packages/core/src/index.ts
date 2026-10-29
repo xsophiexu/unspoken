@@ -14,6 +14,7 @@ export * from './spotlight';
 export * from './edition';
 export * from './chips';
 export * from './search';
+export * from './home';
 
 export { advance, currentCard, newDeck, showNow, type DeckState } from './round/deck';
 export * from './round/swipe';

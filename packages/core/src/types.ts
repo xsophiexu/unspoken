@@ -174,6 +174,9 @@ export type GameSettings = {
   noScoreTarget?: boolean;
   // UnspokenMD: the specialties to draw from. Empty means All specialties.
   specialties?: readonly Specialty[];
+  // Deal the easiest cards first (Deep dive's Easiest first switch): every picked difficulty in
+  // turn, easiest first, shuffled within each. Off or missing, all the cards are shuffled together.
+  easiestFirst?: boolean;
 };
 
 // Returns a float in [0, 1). Inject one so dealing and hidden timers are reproducible in tests.
