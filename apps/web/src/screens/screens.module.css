@@ -34,10 +34,9 @@
   border-color: var(--region-accent);
 }
 
-/* The inline error after a failed send: ink on a chip, marked with the accent edge. */
+/* The inline notice after a send that didn't go through: a plain rounded bubble, ink on a chip. */
 .error {
   padding: var(--un-space-3) var(--un-space-3-5);
-  border-inline-start: var(--un-space-1) solid var(--region-accent);
   border-radius: var(--un-radius-md);
   background: var(--region-chip);
   color: var(--region-chip-ink);
