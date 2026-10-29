@@ -17,7 +17,7 @@ export type BatchWrite = { kind: 'add'; collection: string; data: DocData } | { 
 export type FirebaseAdapter = {
   // The signed-in user's id, or null before sign-in.
   currentUid(): string | null;
-  // Signs in as a new anonymous user and returns its id.
+  // Returns the user restored from an earlier visit, or signs in as a new anonymous user, and returns its id.
   signInAnonymously(): Promise<string>;
   // Applies every write or none. Rejects with the SDK's error, whose code is e.g. 'permission-denied'.
   commit(writes: readonly BatchWrite[]): Promise<void>;

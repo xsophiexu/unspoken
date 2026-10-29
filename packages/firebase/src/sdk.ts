@@ -37,7 +37,13 @@ export function firebaseAdapter(options: FirebaseOptions, setup?: FirebaseSetup)
   const firebase = () => getFirebase(options, setup);
   return {
     currentUid: () => firebase().auth.currentUser?.uid ?? null,
-    signInAnonymously: async () => (await signInAnonymously(firebase().auth)).user.uid,
+    // Waits for a user saved by an earlier visit to be restored, so a reload keeps the same player
+    // (and their feedback limit) instead of signing in as someone new.
+    signInAnonymously: async () => {
+      const { auth } = firebase();
+      await auth.authStateReady();
+      return auth.currentUser?.uid ?? (await signInAnonymously(auth)).user.uid;
+    },
     commit: async (writes: readonly BatchWrite[]) => {
       const { firestore } = firebase();
       const batch = writeBatch(firestore);

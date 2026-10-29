@@ -6,7 +6,14 @@ import { SERVER_TIME } from '../src';
 // tests check what the real adapter asks Firebase to do.
 const sdk = vi.hoisted(() => ({
   initializeApp: vi.fn((options: unknown) => ({ name: '[DEFAULT]', options })),
-  auth: { currentUser: null as { uid: string } | null },
+  // restored stands for a user Firebase brings back from an earlier visit once auth state is ready.
+  auth: {
+    currentUser: null as { uid: string } | null,
+    restored: null as { uid: string } | null,
+    async authStateReady() {
+      this.currentUser = this.restored;
+    },
+  },
   signInAnonymously: vi.fn(async () => ({ user: { uid: 'anon-uid' } })),
   sets: [] as { ref: unknown; data: unknown }[],
   commit: vi.fn(async () => undefined),
@@ -26,6 +33,9 @@ const options = { apiKey: 'k', authDomain: 'd', projectId: 'p', storageBucket: '
 
 beforeEach(() => {
   sdk.sets.length = 0;
+  sdk.auth.currentUser = null;
+  sdk.auth.restored = null;
+  sdk.signInAnonymously.mockClear();
 });
 
 describe('firebaseAdapter', () => {
@@ -39,6 +49,14 @@ describe('firebaseAdapter', () => {
     getFirebase(options);
     expect(sdk.initializeApp).toHaveBeenCalledTimes(1);
     expect(sdk.initializeApp).toHaveBeenCalledWith(options);
+  });
+
+  it('reuses the user restored from an earlier visit instead of signing in as someone new', async () => {
+    const { firebaseAdapter } = await import('../src/sdk');
+    sdk.auth.restored = { uid: 'returning-uid' };
+
+    expect(await firebaseAdapter(options).signInAnonymously()).toBe('returning-uid');
+    expect(sdk.signInAnonymously).not.toHaveBeenCalled();
   });
 
   it('commits adds and sets in one batch, with server timestamps in place of SERVER_TIME', async () => {
