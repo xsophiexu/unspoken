@@ -6,6 +6,8 @@ export const fonts = {
   // Web: load Manrope 400–800 from Google Fonts (or next/font) and use this stack.
   family: 'Manrope',
   webStack: "'Manrope', system-ui, sans-serif",
+  // The UnspokenMD wordmark ("unspoken" in ink, "md" in accent): Fredoka 600 on web.
+  brand: { family: 'Fredoka', webStack: "'Fredoka', 'Manrope', system-ui, sans-serif" },
   // React Native: one family per weight, as registered by @expo-google-fonts/manrope.
   native: {
     400: 'Manrope_400Regular',
@@ -74,6 +76,8 @@ export const textStyles = {
   // How to play: the wordmark on the first step, the captions over the dark spotlight, the intro
   // text under the wordmark, and the rules listed under "Describe it out loud."
   wordmark: { size: 44, weight: 800, lineHeight: 1.28, letterSpacing: -0.03 },
+  // The UnspokenMD wordmark on How to play's first step, set in fonts.brand.
+  brandWordmark: { size: 44, weight: 600, lineHeight: 1.28, letterSpacing: -0.01 },
   caption: { size: 21, weight: 800, lineHeight: 1.3 },
   lead: { size: 15.5, weight: 600, lineHeight: 1.42 },
   rule: { size: 15, weight: 600, lineHeight: 1.3 },

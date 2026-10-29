@@ -14,6 +14,15 @@
 export const COLOR_IDS = ['teal', 'clay', 'lilac', 'sage', 'mustard', 'slateBlue', 'rose'] as const;
 export type ColorId = (typeof COLOR_IDS)[number];
 
+// Palettes an edition uses in place of the player's color (editionLooks in editions.ts). They are
+// never offered on Customize.
+export const EDITION_PALETTE_IDS = ['md'] as const;
+export type EditionPaletteId = (typeof EDITION_PALETTE_IDS)[number];
+
+// Every palette: the colors players pick from, then the edition palettes.
+export const PALETTE_IDS = [...COLOR_IDS, ...EDITION_PALETTE_IDS] as const;
+export type PaletteId = (typeof PALETTE_IDS)[number];
+
 export const COLOR_MODES = ['light', 'dark'] as const;
 export type ColorMode = (typeof COLOR_MODES)[number];
 
@@ -95,7 +104,7 @@ export type Palette = {
   dark: ColorRoles;
 };
 
-export const palettes: Readonly<Record<ColorId, Palette>> = {
+export const palettes: Readonly<Record<PaletteId, Palette>> = {
   teal: {
     swatch: '#3F7470',
     light: {
@@ -591,6 +600,81 @@ export const palettes: Readonly<Record<ColorId, Palette>> = {
       onDeepAccent: '#371B25',
       scrim: '#00000099',
       ramp: [{ bg: '#262425', ink: '#EBEAEB' }, { bg: '#342E30', ink: '#EBEAEB' }, { bg: '#44363B', ink: '#EBEAEB' }, { bg: '#543E46', ink: '#EBEAEB' }, { bg: '#664450', ink: '#EBEAEB' }, { bg: '#784A5B', ink: '#EBEAEB' }],
+    },
+  },
+  // UnspokenMD's blue. Light comes from unspokenmd-colors.json on the design canvas (bg, surface,
+  // ink, muted, accent, accentText, track, barIdle, rule and outline); the other light roles follow
+  // slateBlue's relations to those. Dark isn't designed yet: it is "Ink and stone" (slateBlue's
+  // dark, the same neutral base) with the accent roles moved to the MD accent's hue and saturation.
+  md: {
+    swatch: '#486889',
+    light: {
+      canvas: '#F3F6F9',
+      bg: '#E9EEF3',
+      surface: '#D3DDE8',
+      surfaceRaised: '#FFFFFF',
+      ink: '#1F2C39',
+      muted: '#515C67',
+      accent: '#486889',
+      onAccent: '#FFFFFF',
+      onAccentStrong: '#FFFFFF',
+      onAccentMuted: '#EEF2F6',
+      accentText: '#365472',
+      accentVivid: '#365472',
+      accentTint: '#D3DDE8',
+      accentShade: '#D3DDE8',
+      accentPanel: '#42607F',
+      outline: '#92A0B0',
+      rule: '#D2D9E1',
+      track: '#C5D1E0',
+      sunken: '#D3DDE8',
+      barIdle: '#D8E1EA',
+      barSkip: '#8C9AA9',
+      panel: '#1F2C39',
+      onPanel: '#E8EEF4',
+      onPanelMuted: '#8FA2B5',
+      deep: '#1F2C39',
+      onDeep: '#E8EEF4',
+      onDeepMuted: '#8FA2B5',
+      deepOutline: '#5B6876',
+      deepAccent: '#E8EEF4',
+      onDeepAccent: '#1F2C39',
+      scrim: '#161E2759',
+      ramp: [{ bg: '#D8E2EC', ink: '#1F2C39' }, { bg: '#C9D7E5', ink: '#1F2C39' }, { bg: '#B7C9DC', ink: '#1F2C39' }, { bg: '#859FBA', ink: '#16212D' }, { bg: '#56769A', ink: '#FFFFFF' }, { bg: '#486889', ink: '#F0F5FA' }],
+    },
+    dark: {
+      canvas: '#131314',
+      bg: '#151616',
+      surface: '#28292A',
+      surfaceRaised: '#373839',
+      ink: '#EAEBEB',
+      muted: '#B7B8B8',
+      accent: '#466584',
+      onAccent: '#F3F6F9',
+      onAccentStrong: '#FFFFFF',
+      onAccentMuted: '#DAE2EA',
+      accentText: '#B3C8DE',
+      accentVivid: '#6AA2D6',
+      accentTint: '#263A4F',
+      accentShade: '#283543',
+      accentPanel: '#466584',
+      outline: '#525456',
+      rule: '#272828',
+      track: '#2C2D2E',
+      sunken: '#2C2D2E',
+      barIdle: '#2F3031',
+      barSkip: '#707375',
+      panel: '#323334',
+      onPanel: '#EAEBEB',
+      onPanelMuted: '#ACADAE',
+      deep: '#243D56',
+      onDeep: '#E5EBF1',
+      onDeepMuted: '#A0B4C8',
+      deepOutline: '#6F8EAE',
+      deepAccent: '#CFDCEA',
+      onDeepAccent: '#192A3B',
+      scrim: '#00000099',
+      ramp: [{ bg: '#242526', ink: '#EAEBEB' }, { bg: '#2D3135', ink: '#EAEBEB' }, { bg: '#343D47', ink: '#EAEBEB' }, { bg: '#3A4959', ink: '#EAEBEB' }, { bg: '#3F566E', ink: '#EAEBEB' }, { bg: '#456384', ink: '#EAEBEB' }],
     },
   },
 };

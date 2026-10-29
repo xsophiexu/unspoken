@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   AA_NON_TEXT,
   AA_TEXT,
-  COLOR_IDS,
+  PALETTE_IDS,
   COLOR_MODES,
   ICON_CHIP_TONES,
   REGION_TEXT_PAIRS,
@@ -48,7 +48,7 @@ describe('contrast helpers', () => {
 
 // Coming soon mode tiles on the Modes screen (a base region): the chip (surface) faded to
 // opacity.disabled over the page, with a muted title and an accentText pill that both read at AA.
-describe.each(COLOR_IDS)('Coming soon tile in %s', (color) => {
+describe.each(PALETTE_IDS)('Coming soon tile in %s', (color) => {
   it.each(COLOR_MODES)('fades the chip and keeps its text at AA in %s', (mode) => {
     const colors = palettes[color][mode];
     const region = regionColors(colors, 'base');
@@ -66,7 +66,7 @@ function minimumFor(tone: RegionTone, background: string): number {
 
 // Every text slot in every region tone, palette and mode meets WCAG AA for normal text (icons on
 // icon-only chips meet AA for non-text).
-describe.each(COLOR_IDS)('%s palette', (color) => {
+describe.each(PALETTE_IDS)('%s palette', (color) => {
   describe.each(COLOR_MODES)('%s mode', (mode) => {
     const colors = palettes[color][mode];
 

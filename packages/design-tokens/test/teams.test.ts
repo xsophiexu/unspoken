@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
-import { AA_NON_TEXT, AA_TEXT, COLOR_IDS, COLOR_MODES, contrastRatio, palettes, popoverColors, teamColor, teamColorOrder, teamColors } from '../src';
+import { AA_NON_TEXT, AA_TEXT, PALETTE_IDS, COLOR_MODES, contrastRatio, palettes, popoverColors, teamColor, teamColorOrder, teamColors } from '../src';
 
 describe('Mind Reader team colors', () => {
   it('every team dot stands out on the page and on raised cards in every color and mode', () => {
     const misses: string[] = [];
-    for (const id of COLOR_IDS)
+    for (const id of PALETTE_IDS)
       for (const mode of COLOR_MODES)
         for (const dot of teamColors[mode])
           for (const bg of [palettes[id][mode].bg, palettes[id][mode].surfaceRaised])
@@ -19,7 +19,7 @@ describe('Mind Reader team colors', () => {
   });
 
   it('keeps the player menu’s text readable', () => {
-    for (const id of COLOR_IDS)
+    for (const id of PALETTE_IDS)
       for (const mode of COLOR_MODES) {
         const p = popoverColors(palettes[id][mode], mode);
         expect(contrastRatio(p.ink, p.bg)).toBeGreaterThanOrEqual(AA_TEXT);

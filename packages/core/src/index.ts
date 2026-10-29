@@ -11,6 +11,7 @@ export * from './fit';
 export * from './present';
 export * from './feedback';
 export * from './spotlight';
+export * from './edition';
 
 export { advance, currentCard, newDeck, type DeckState } from './round/deck';
 export * from './round/swipe';

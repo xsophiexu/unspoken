@@ -1,4 +1,5 @@
 export * from './color';
+export * from './editions';
 export * from './palettes';
 export * from './regions';
 export * from './scales';

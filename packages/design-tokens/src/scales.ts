@@ -181,10 +181,17 @@ export const layout = {
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
-  grid: { modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
+  grid: { homeLinks: 3, characters: 5, modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },
+  // Home (home-v4): the edition switch at the top, the fox-and-card art (artWidth wide, at most
+  // artShare of the window height), the Quick Play button with its play disc, and the icons over
+  // the Modes, Customize and How to play links.
+  home: { switchHeight: 52, artWidth: 236, artShare: 0.3, quickPlayHeight: 72, playDisc: 40, linkIcon: 22 },
+  // UnspokenMD's player characters, always drawn bare (no circle): the size in the Customize row and
+  // in the picker sheet's grid (grid.characters columns).
+  character: { row: 44, picker: 48 },
   // Icon boxes and line weights for the controls the boards draw.
   icon: { sm: 14, md: 18, lg: 22, xl: 24 },
   stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },
@@ -239,7 +246,8 @@ export const layout = {
 } as const;
 
 // Feedback for pressed and unavailable controls, and the page color behind the Paused overlay.
-export const opacity = { pressed: 0.8, disabled: 0.45, overlay: 0.94 } as const;
+// playDisc: the round disc behind Quick Play's play icon on Home, onAccent at this opacity.
+export const opacity = { pressed: 0.8, disabled: 0.45, overlay: 0.94, playDisc: 0.2 } as const;
 
 // The How to play walkthrough ("Dark spotlight, white captions", option A). Colors are fixed so the
 // overlay reads the same over every style, color and mode. The Play label is the color's light-mode

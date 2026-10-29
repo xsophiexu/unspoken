@@ -1,5 +1,7 @@
 import type { Category, Difficulty, FeedbackEntryPoint, FeedbackTopic, ModeId, RoundCopy } from '@unspoken/core';
 
+import { homeCopy, mdCopy, mdTourSteps } from './editions';
+
 // English copy for every screen. Keys follow the ids in @unspoken/core (modes, difficulties, categories,
 // feedback topics) and the style and color ids in @unspoken/design-tokens, so a platform never
 // writes user-facing text itself. Placeholders in braces are filled with format() / plural() from
@@ -98,6 +100,8 @@ export type SpotlightStep = {
   text: string;
   // Short rules listed under the text.
   rules?: string[];
+  // A quieter line under the text (UnspokenMD's first step).
+  note?: string;
 };
 
 // The walkthrough as drawn on the design canvas ("How to play · animated walkthrough").
@@ -126,6 +130,10 @@ export const en = {
     name: 'Unspoken',
     tagline: 'Describe the word so your team guesses it, without saying any of the banned words.',
   },
+  // Home: the edition switch, Quick Play and the links under it.
+  home: homeCopy,
+  // UnspokenMD, the medical edition: its wordmark, modes, Customize and How to play.
+  md: { ...mdCopy, howToPlay: { steps: mdTourSteps(howToPlaySteps) } },
   modes,
   difficulties,
   difficultyMix: difficultyMixed,
@@ -229,6 +237,7 @@ export const en = {
     howToPlay: { title: 'How to play' },
     changeSettings: { title: 'Change settings', detail: 'Mode, difficulty and categories · starts a new game' },
     customize: { title: 'Customize', detail: 'Layout and color · {style} · {color}' },
+    home: { title: 'Home', detail: 'Switch edition, pick a mode or see how to play' },
     feedback: { title: 'Send feedback', detail: 'Ideas for styles, modes or words' },
     // The Restart button shows restartShort, beside Resume or in the header; restart is its name.
     restart: 'Restart game',
@@ -356,6 +365,8 @@ export const en = {
       mustard: 'Mustard',
       slateBlue: 'Slate blue',
       rose: 'Rose',
+      // UnspokenMD's own blue (EDITION_PALETTE_IDS); never offered as a choice.
+      md: 'UnspokenMD blue',
     },
     pinnedColor: 'This style has its own colors',
     // Headings over a group of styles (STYLE_GROUPS in @unspoken/design-tokens); the everyday styles

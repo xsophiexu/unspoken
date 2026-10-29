@@ -1,4 +1,4 @@
-import { COLOR_IDS, COLOR_MODES, palettes, type ColorId, type ColorMode, type ColorRoles } from './palettes';
+import { COLOR_IDS, COLOR_MODES, palettes, type ColorId, type ColorMode, type ColorRoles, type PaletteId } from './palettes';
 import { REGION_TONES, regionColors, type RegionColors, type RegionTone } from './regions';
 import { elevation, radius, space } from './scales';
 import { DEFAULT_STYLE, STYLE_IDS, layoutStyleFor, modeFor, type LayoutStyle, type StyleId } from './styles';
@@ -13,8 +13,8 @@ export type Theme = {
   selection: ThemeSelection;
   // The style as drawn in the selected mode (layoutStyleFor): dark changes already merged in.
   style: LayoutStyle;
-  // The color in use: the player's pick, or the style's pinned color.
-  color: ColorId;
+  // The palette in use: the player's pick, the style's pinned color, or an edition's own palette.
+  color: PaletteId;
   // The mode in use: the player's pick, or the style's own (modeFor).
   mode: ColorMode;
   colors: ColorRoles;
@@ -22,10 +22,11 @@ export type Theme = {
   shadow: (typeof elevation)[ColorMode];
 };
 
-export function resolveTheme(selection: ThemeSelection): Theme {
+// `palette` replaces both the player's color and a style's pinned color (UnspokenMD's blue).
+export function resolveTheme(selection: ThemeSelection, palette?: PaletteId): Theme {
   const mode = modeFor(selection);
   const style = layoutStyleFor(selection.style, mode);
-  const color = style.color.kind === 'pinned' ? style.color.color : selection.color;
+  const color = palette ?? (style.color.kind === 'pinned' ? style.color.color : selection.color);
   const colors = palettes[color][mode];
   const regions = Object.fromEntries(REGION_TONES.map((tone) => [tone, regionColors(colors, tone)]));
   return { selection, style, color, mode, colors, regions: regions as Theme['regions'], shadow: elevation[mode] };
@@ -70,7 +71,7 @@ const kebab = (name: string) => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase(
 // --un-ramp-1-bg, --un-panel-ink (region tone slots), --un-shadow-card, --un-space-4,
 // --un-radius-card, --un-text-word-size. Numbers are px; line heights are unitless.
 export function cssVariables(theme: Theme): Record<string, string> {
-  const vars: Record<string, string> = { '--un-font': fonts.webStack };
+  const vars: Record<string, string> = { '--un-font': fonts.webStack, '--un-font-brand': fonts.brand.webStack };
   const set = (name: string, value: string | number) => {
     vars[`--un-${kebab(name)}`] = typeof value === 'number' ? `${value}px` : value;
   };
