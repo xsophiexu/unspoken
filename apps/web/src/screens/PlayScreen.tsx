@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 
 import { Spotlight } from '@/components/play/Spotlight';
 import { DeepDiveSheet } from '@/components/sheets/DeepDiveSheet';
-import { DifficultyPicker } from '@/components/sheets/DifficultyPicker';
+import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { FindCardSheet } from '@/components/sheets/FindCardSheet';
 import { GameMenu } from '@/components/sheets/GameMenu';
 import { ModeSheet } from '@/components/sheets/ModeSheet';
@@ -35,7 +35,7 @@ type SheetKind = 'menu' | 'mode' | 'difficulty' | 'wordBank' | 'search' | 'deepD
 // The game: the round in the player's style, the sheets over it, and the first-visit tour. `tour`
 // (How to play on Home) opens the tour whatever the round.
 export function PlayScreen({ tour = false }: { tour?: boolean }) {
-  const { round, dispatch, restart, changeDifficulty, newGame, start } = useGame();
+  const { round, dispatch, restart, newGame, start } = useGame();
   // The style as drawn in the mode in use (dark mode changes some slots; a Halloween look is always
   // dark) and the edition (UnspokenMD has no holiday looks).
   const layoutStyle = useTheme().theme.style;
@@ -113,9 +113,17 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
         />
       )}
       {sheet === 'mode' && (
-        <ModeSheet round={round} onClose={close} onPick={(difficulty) => fresh(() => changeDifficulty(difficulty))} onRestart={() => fresh(restart)} onLeave={leave} />
+        <ModeSheet round={round} onClose={close} onApply={(settings) => fresh(() => newGame(settings))} onRestart={() => fresh(restart)} onLeave={leave} />
       )}
-      {sheet === 'difficulty' && <DifficultyPicker round={round} onClose={close} onPick={(difficulty) => fresh(() => changeDifficulty(difficulty))} />}
+      {sheet === 'difficulty' && (
+        <DifficultySheet
+          settings={round.settings}
+          onClose={close}
+          onApply={(settings) => fresh(() => newGame(settings))}
+          customHref={routes.setup(round.settings.mode)}
+          onCustom={leave}
+        />
+      )}
       {sheet === 'wordBank' && (
         <WordBankSheet
           settings={round.settings}

@@ -49,6 +49,13 @@ describe('Home', () => {
     expect(links.getByRole('link', { name: home.links.howToPlay })).toHaveAttribute('href', '/play/?tour=1');
   });
 
+  it('offers UnspokenMD’s Quick Play on all cards from Hard to Expert', async () => {
+    const user = userEvent.setup();
+    renderApp(<HomeScreen />);
+    await user.click(screen.getByRole('radio', { name: /Medical jargon/ }));
+    expect(quickPlay()).toHaveTextContent('All cards · Hard to Expert');
+  });
+
   it('starts in Unspoken for a new player', () => {
     renderApp(<HomeScreen />);
     expect(screen.getByRole('radio', { name: /Everyday words/ })).toBeChecked();

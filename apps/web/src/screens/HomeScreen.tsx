@@ -8,7 +8,7 @@ import {
   homeQuickPlaySettings,
   isHomeQuickPlay,
   isSwipeOver,
-  QUICK_PLAY_DIFFICULTIES,
+  quickPlayDifficulties,
   type Difficulty,
   type GameConfig,
   type GameSettings,
@@ -33,9 +33,9 @@ import styles from './HomeScreen.module.css';
 const copy = en.home;
 const difficultyNames = Object.fromEntries(Object.entries(en.difficulties).map(([id, d]) => [id, d.name])) as Record<Difficulty, string>;
 
-// Quick Play's line: always all cards, Normal to Hard.
+// Quick Play's line: always all cards, at the edition's Quick Play difficulties.
 function quickPlayDetail(config: GameConfig): string {
-  const difficulties = difficultySpan(QUICK_PLAY_DIFFICULTIES, { names: difficultyNames, span: en.difficultySpan.long, mixed: en.difficultyMix }, config);
+  const difficulties = difficultySpan(quickPlayDifficulties(config), { names: difficultyNames, span: en.difficultySpan.long, mixed: en.difficultyMix }, config);
   return format(copy.quickPlay.detail, { picks: en.themes.all, difficulties });
 }
 

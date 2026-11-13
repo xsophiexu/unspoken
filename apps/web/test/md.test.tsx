@@ -150,7 +150,7 @@ describe('Zen setup', () => {
 });
 
 describe('UnspokenMD Quick Play', () => {
-  it('plays all cards from Normal to Hard in either edition, whatever was played last', async () => {
+  it('plays all cards from Hard to Expert in UnspokenMD and Normal to Hard in Unspoken, whatever was played last', async () => {
     const user = userEvent.setup();
     inMd({ ...zen, mode: 'ladder', difficulties: ['Expert'], specialties: ['respiratory'] });
     saved({ [SETTINGS_STORAGE_KEY]: { mode: 'classic', difficulties: ['Hard'], categories: ['Society'], skips: 3 } });
@@ -158,7 +158,7 @@ describe('UnspokenMD Quick Play', () => {
 
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
     expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
-    expect(stored(MD_SETTINGS_STORAGE_KEY)).toMatchObject({ mode: 'zen', difficulties: ['Normal', 'Tricky', 'Hard'], specialties: [] });
+    expect(stored(MD_SETTINGS_STORAGE_KEY)).toMatchObject({ mode: 'zen', difficulties: ['Hard', 'Tough', 'Expert'], specialties: [] });
 
     await user.click(screen.getByRole('radio', { name: /Everyday words/ }));
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
@@ -176,7 +176,7 @@ describe('UnspokenMD Quick Play', () => {
 
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
     expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Difficulty Normal–Hard, All specialties. Tap to change.' })).toHaveTextContent('NORMAL–HARD');
+    expect(game.getByRole('button', { name: 'Difficulty Hard–Expert, All specialties. Tap to change.' })).toHaveTextContent('HARD–EXPERT');
     expect(game.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
     expect(game.getByText(mdEn.play.bannedLabel)).toBeInTheDocument();
     expect(game.getAllByRole('listitem')).toHaveLength(6);

@@ -68,7 +68,7 @@ describe('Play', () => {
     expect(badge).toHaveTextContent('HARD+');
   });
 
-  it('starts a new round when a difficulty is picked on the mode sheet', async () => {
+  it('plays several difficulties picked on the mode sheet once they are applied', async () => {
     const user = userEvent.setup();
     saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
     const { game } = renderPlay();
@@ -79,12 +79,15 @@ describe('Play', () => {
     await user.click(game.getByRole('button', { name: 'Classic, Hard. Tap to change.' }));
     const sheet = screen.getByRole('dialog');
     expect(within(sheet).getByText(en.modeSheet.note)).toBeInTheDocument();
-    await user.click(within(sheet).getByRole('button', { name: 'Expert' }));
+    await user.click(within(sheet).getByRole('checkbox', { name: /^Expert/ }));
+    await user.click(within(sheet).getByRole('checkbox', { name: /^Tough/ }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(within(sheet).getByRole('checkbox', { name: /^Hard/ })).toBeChecked();
 
+    await user.click(within(sheet).getByRole('button', { name: en.mindReader.quick.applyMany }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(game.getByRole('button', { name: 'Classic, Expert. Tap to change.' })).toBeInTheDocument();
     expect(game.getByText('3 skips left')).toBeInTheDocument();
-    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Expert'] });
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Hard', 'Tough', 'Expert'] });
   });
 
   it('runs the clock, stops it while the menu is open, and answers from the keyboard', () => {

@@ -53,6 +53,8 @@ export const gameConfigSchema = z.object({
     }),
   ),
   defaults: z.object({ mode, difficulty, categories: z.array(category), skips: whole.nullable() }),
+  // Servers from before Quick Play don't send it; clients then use their own.
+  quickPlayDifficulties: z.array(difficulty).min(1).default(() => gameConfig.quickPlayDifficulties.filter((d) => difficulty.safeParse(d).success) as z.infer<typeof difficulty>[]),
   skipOptions: z.array(whole.nullable()),
   minRoundSeconds: whole,
   maxRoundSeconds: whole,
