@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, useSyncExternalStore, type RefObject } from 'react';
+import { useLayoutEffect, useMemo, useState, useSyncExternalStore, type RefObject } from 'react';
 
 const noSubscribe = () => () => {};
 
@@ -36,17 +36,25 @@ export const useReducedMotion = () => useMediaQuery('(prefers-reduced-motion: re
 
 export type Size = { width: number; height: number };
 
-// The element's content box, kept up to date as the window resizes. Starts at `fallback` until the
-// first measurement (and stays there where ResizeObserver is missing).
+// The element's content box, measured before the first paint and kept up to date as the window
+// resizes. `fallback` is only the server render's guess (and a box that has no width yet).
 export function useElementSize(ref: RefObject<HTMLElement | null>, fallback: Size): Size {
   const [size, setSize] = useState(fallback);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || typeof ResizeObserver === 'undefined') return;
+    if (!el) return;
+    const update = (width: number, height: number) =>
+      setSize((prev) => (prev.width === width && prev.height === height ? prev : { width, height }));
+    // Measure once before the first paint, so text fitted to this box never draws at the fallback
+    // width (a long word sized for a wider box would wrap off the card until the observer runs).
+    const style = getComputedStyle(el);
+    const padX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+    const padY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+    if (el.clientWidth > 0) update(el.clientWidth - padX, el.clientHeight - padY);
+    if (typeof ResizeObserver === 'undefined') return;
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return;
-      const { width, height } = entry.contentRect;
-      setSize((prev) => (prev.width === width && prev.height === height ? prev : { width, height }));
+      update(entry.contentRect.width, entry.contentRect.height);
     });
     observer.observe(el);
     return () => observer.disconnect();
