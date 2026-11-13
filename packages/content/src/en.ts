@@ -317,7 +317,7 @@ export const en = {
     back: '← Back to game',
     title: 'Word bank',
     label: 'Search the word bank',
-    placeholder: 'Search a word or banned word',
+    placeholder: 'Search',
     // The filter beside the search: one specialty (UnspokenMD) or category, or all of them.
     pickLabel: { unspoken: 'Category', md: 'Specialty' },
     all: { unspoken: 'All categories', md: 'All specialties' },
