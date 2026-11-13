@@ -1,19 +1,217 @@
-/* One list per difficulty, under its name and card count. */
-.group {
+.page {
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  background: var(--region-bg);
+  color: var(--region-ink);
+}
+
+.column {
+  flex: 1;
+  width: 100%;
+  max-width: var(--un-max-width-column);
+  padding: 0 var(--un-space-4) var(--un-space-8);
+}
+
+/* The compact sticky bar: back and title on one row, search with the filter, difficulty chips, count. */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: var(--un-space-2);
+  padding: var(--un-space-2) 0 var(--un-space-2-5);
+  border-bottom: var(--un-layout-stroke-hairline) solid var(--region-rule);
+  background: var(--region-bg);
 }
 
-.heading {
+.top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--un-space-3);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--un-layout-min-touch);
+  color: var(--region-accent-text);
+  text-decoration: none;
+}
+
+.title {
   margin: 0;
+}
+
+.search {
+  display: flex;
+  gap: var(--un-space-2);
+}
+
+.searchBox {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-2);
+  padding: 0 var(--un-space-3);
+  border: var(--un-layout-stroke-hairline) solid var(--region-rule);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+}
+
+.searchBox:focus-within {
+  border-color: var(--region-accent);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--un-layout-min-touch);
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.searchInput:focus {
+  outline: none;
+}
+
+.searchInput::placeholder {
   color: var(--region-muted);
 }
 
-/* A card: the word, then where it is filed. Rows can't be tapped. */
-.row {
+.select {
+  max-width: 46%;
+  padding: 0 var(--un-space-2);
+  border: var(--un-layout-stroke-hairline) solid var(--region-rule);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+  color: var(--region-ink);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1-5);
+}
+
+.chip {
+  padding: var(--un-space-1) var(--un-space-3);
+  border: var(--un-layout-stroke-hairline) solid var(--region-rule);
+  border-radius: var(--un-radius-pill);
+  background: var(--un-raised-bg);
+  color: var(--region-ink);
+  cursor: pointer;
+}
+
+.chip[aria-pressed='true'] {
+  border-color: var(--region-accent);
+  background: var(--region-accent);
+  color: var(--region-on-accent);
+}
+
+.chip:focus-visible,
+.select:focus-visible,
+.clear:focus-visible,
+.more:focus-visible {
+  outline: var(--un-space-0-5) solid var(--region-accent);
+  outline-offset: var(--un-space-0-5);
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--region-muted);
+}
+
+.clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--region-accent-text);
+  cursor: pointer;
+}
+
+.muted {
+  color: var(--region-muted);
+}
+
+.empty {
+  padding: var(--un-space-6) 0;
+  text-align: center;
+}
+
+.list {
   display: flex;
   flex-direction: column;
-  gap: var(--un-space-0-5);
-  padding: var(--un-space-2-5) var(--un-space-4);
+  gap: var(--un-space-2);
+  margin: var(--un-space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+  padding: var(--un-space-3) var(--un-space-3-5);
+  border-radius: var(--un-radius-lg);
+  background: var(--un-raised-bg);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--un-space-1) var(--un-space-2-5);
+}
+
+.word {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  gap: var(--un-space-1-5);
+}
+
+.level {
+  padding: var(--un-space-0-5) var(--un-space-2);
+  border-radius: var(--un-radius-pill);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.banned {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--un-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.banned li {
+  padding: var(--un-space-0-5) var(--un-space-2);
+  border-radius: var(--un-radius-sm);
+  background: var(--region-chip);
+  color: var(--region-chip-ink);
+}
+
+.more {
+  display: block;
+  margin: var(--un-space-4) auto 0;
+  padding: var(--un-space-2-5) var(--un-space-5);
+  border: var(--un-space-0-5) solid var(--region-accent);
+  border-radius: var(--un-radius-lg);
+  background: none;
+  color: var(--region-accent-text);
+  cursor: pointer;
 }
