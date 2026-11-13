@@ -68,7 +68,7 @@ describe('Play', () => {
     expect(badge).toHaveTextContent('HARD+');
   });
 
-  it('starts a new round when a difficulty is picked on the mode sheet', async () => {
+  it('starts a new round when difficulties are changed and applied on the mode sheet', async () => {
     const user = userEvent.setup();
     saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
     const { game } = renderPlay();
@@ -79,12 +79,45 @@ describe('Play', () => {
     await user.click(game.getByRole('button', { name: 'Classic, Hard. Tap to change.' }));
     const sheet = screen.getByRole('dialog');
     expect(within(sheet).getByText(en.modeSheet.note)).toBeInTheDocument();
+    // A tap adds or removes a pick without leaving the round; Apply only shows once they change.
+    expect(within(sheet).queryByRole('button', { name: en.mindReader.quick.apply })).not.toBeInTheDocument();
     await user.click(within(sheet).getByRole('button', { name: 'Expert' }));
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    await user.click(within(sheet).getByRole('button', { name: 'Hard' }));
+    await user.click(within(sheet).getByRole('button', { name: en.mindReader.quick.apply }));
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(game.getByRole('button', { name: 'Classic, Expert. Tap to change.' })).toBeInTheDocument();
     expect(game.getByText('3 skips left')).toBeInTheDocument();
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Expert'] });
+  });
+
+  it('plays several difficulties picked in game', async () => {
+    const user = userEvent.setup();
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'deck', color: 'teal', mode: 'light' } });
+    const { game } = renderPlay();
+
+    await user.click(game.getByRole('button', { name: 'Classic, Hard. Tap to change.' }));
+    const sheet = screen.getByRole('dialog');
+    await user.click(within(sheet).getByRole('button', { name: 'Expert' }));
+    await user.click(within(sheet).getByRole('button', { name: en.mindReader.quick.applyMany }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Hard', 'Expert'] });
+  });
+
+  it('changes difficulties from the Card badge with the multi-select sheet', async () => {
+    const user = userEvent.setup();
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [SETTINGS_STORAGE_KEY]: classic, [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' } });
+    const { game } = renderPlay();
+
+    await user.click(game.getByRole('button', { name: /^Difficulty .*Tap to change\.$/ }));
+    const sheet = screen.getByRole('dialog');
+    await user.click(within(sheet).getByRole('checkbox', { name: /^Expert/ }));
+    await user.click(within(sheet).getByRole('button', { name: en.mindReader.quick.applyMany }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ mode: 'classic', difficulties: ['Hard', 'Expert'] });
   });
 
   it('runs the clock, stops it while the menu is open, and answers from the keyboard', () => {

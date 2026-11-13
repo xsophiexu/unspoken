@@ -1,7 +1,7 @@
-import { bank, en } from '@unspoken/content';
-import { DIFFICULTY_IDS, deckSize, format, plural, type Category, type Difficulty, type ModeId } from '@unspoken/core';
+import { difficultyApplyLabel, en } from '@unspoken/content';
+import { DIFFICULTY_IDS, format, toggleDifficulty, type GameSettings } from '@unspoken/core';
 import { gameMenu, layout, radius, space, type RegionColors } from '@unspoken/design-tokens';
-import { useMemo } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { usePrefs } from '../state/prefs';
@@ -79,28 +79,45 @@ export function GameMenu({ visible, onClose, status, onRestart, onSettings, onCu
 type ModeSheetProps = {
   visible: boolean;
   onClose: () => void;
-  mode: ModeId;
-  // Every pick is highlighted; picking one plays just that difficulty.
-  difficulties: readonly Difficulty[];
-  onPick: (difficulty: Difficulty) => void;
+  settings: GameSettings;
+  // Apply starts a new round with the picked difficulties (one or more).
+  onApply: (settings: GameSettings) => void;
   onRestart: () => void;
   onNewGame: () => void;
 };
 
-// The sheet from the header pill: pick a level (starts a new round), restart, or a new game.
-export function ModeSheet({ visible, onClose, mode, difficulties, onPick, onRestart, onNewGame }: ModeSheetProps) {
+// The sheet from the header pill: change the difficulties, restart, or a new game. The difficulty
+// tiles add or remove picks like the setup's; Apply appears once they change.
+export function ModeSheet({ visible, onClose, settings, onApply, onRestart, onNewGame }: ModeSheetProps) {
   const s = en.modeSheet;
+  const [draft, setDraft] = useState(settings);
+  const [open, setOpen] = useState(false);
+  if (visible !== open) {
+    setOpen(visible);
+    if (visible) setDraft(settings);
+  }
+  const changed = draft.difficulties.join() !== settings.difficulties.join();
   return (
     <Sheet visible={visible} onClose={onClose}>
       {(colors) => (
         <>
-          <SheetHeader title={en.modes[mode].name} note={s.note} colors={colors} />
+          <SheetHeader title={en.modes[settings.mode].name} note={s.note} colors={colors} />
           <SectionLabel label={s.difficulty} colors={colors} />
           <Grid columns={layout.grid.sheetDifficulty} gap={space[2]}>
             {DIFFICULTY_IDS.map((d) => (
-              <Tile key={d} title={en.difficulties[d].name} colors={colors} selected={difficulties.includes(d)} onPress={() => onPick(d)} height={layout.control.levelTile} centered />
+              <Tile
+                key={d}
+                title={en.difficulties[d].name}
+                colors={colors}
+                selected={draft.difficulties.includes(d)}
+                onPress={() => setDraft((cur) => toggleDifficulty(cur, d))}
+                height={layout.control.levelTile}
+                centered
+                checkbox
+              />
             ))}
           </Grid>
+          {changed ? <Button kind="primary" label={difficultyApplyLabel(draft.difficulties)} colors={colors} onPress={() => onApply(draft)} style={styles.gapAbove} /> : null}
           <View style={[styles.actions, styles.gapAbove]}>
             <ActionTile icon="restart" title={s.restart.title} detail={s.restart.detail} colors={colors} onPress={onRestart} />
             <ActionTile icon="newGame" title={s.newGame.title} detail={s.newGame.detail} colors={colors} onPress={onNewGame} primary />
@@ -126,36 +143,6 @@ function ActionTile({ icon, title, detail, colors, onPress, primary }: { icon: I
         </Txt>
       </View>
     </Press>
-  );
-}
-
-type PickerProps = {
-  visible: boolean;
-  onClose: () => void;
-  // Every pick is highlighted; picking one plays just that difficulty.
-  difficulties: readonly Difficulty[];
-  categories: readonly Category[];
-  onPick: (difficulty: Difficulty) => void;
-};
-
-// Card's level badge opens this: every level with how many cards it has for the chosen themes.
-export function DifficultyPicker({ visible, onClose, difficulties, categories, onPick }: PickerProps) {
-  const p = en.difficultyPicker;
-  const counts = useMemo(() => DIFFICULTY_IDS.map((d) => deckSize(bank, d, categories)), [categories]);
-  return (
-    <Sheet visible={visible} onClose={onClose}>
-      {(colors) => (
-        <>
-          <SheetHeader title={p.title} sub={p.note} colors={colors} />
-          <Grid columns={layout.grid.setupDifficulty} gap={space[2]}>
-            {DIFFICULTY_IDS.map((d, i) => (
-              <Tile key={d} title={en.difficulties[d].name} detail={plural(counts[i] ?? 0, en.units.cards)} colors={colors} selected={difficulties.includes(d)} onPress={() => onPick(d)} />
-            ))}
-          </Grid>
-          <Button label={p.keepPlaying} colors={colors} onPress={onClose} style={styles.gapAbove} />
-        </>
-      )}
-    </Sheet>
   );
 }
 

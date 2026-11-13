@@ -132,7 +132,11 @@ describe('Easy', () => {
     });
     renderApp(<PlayScreen />);
     await user.click(screen.getByRole('button', { name: 'Classic, Hard. Tap to change.' }));
-    await user.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Easy' }));
+    const sheet = screen.getByRole('dialog');
+    // Tiles add or remove picks; Apply starts the new game.
+    await user.click(within(sheet).getByRole('button', { name: 'Easy' }));
+    await user.click(within(sheet).getByRole('button', { name: 'Hard' }));
+    await user.click(within(sheet).getByRole('button', { name: en.mindReader.quick.apply }));
     expect(screen.getByRole('button', { name: 'Classic, Easy. Tap to change.' })).toBeInTheDocument();
     expect(JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) ?? '{}')).toMatchObject({ difficulties: ['Easy'] });
   });

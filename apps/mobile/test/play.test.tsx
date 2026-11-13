@@ -34,16 +34,18 @@ describe('a returning player', () => {
 });
 
 describe('several difficulties', () => {
-  it('shows the easiest pick with a plus on the badge, and picking one in game plays just that one', async () => {
+  it('shows the easiest pick with a plus on the badge, and changes the picks in game', async () => {
     await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Hard', 'Tough', 'Expert'] } });
     expect(await screen.findByText('HARD+')).toBeOnTheScreen();
 
     fireEvent.press(screen.getByLabelText(levelBadge('Hard+')));
-    // Every pick is highlighted in the picker.
-    const picked = (await screen.findAllByRole('radio', { selected: true })).map((tile) => tile.props.accessibilityLabel as string);
+    // Every pick is ticked in the sheet; taps add or remove picks, and Apply plays them.
+    const picked = (await screen.findAllByRole('checkbox', { checked: true })).map((tile) => tile.props.accessibilityLabel as string);
     expect(picked.map((label) => label.split(',')[0])).toEqual(['Hard', 'Tough', 'Expert']);
 
-    fireEvent.press(screen.getByRole('radio', { name: /^Tough/ }));
+    fireEvent.press(screen.getByRole('checkbox', { name: /^Hard/ }));
+    fireEvent.press(screen.getByRole('checkbox', { name: /^Expert/ }));
+    fireEvent.press(screen.getByLabelText(en.mindReader.quick.apply));
     expect(await screen.findByLabelText(levelBadge('Tough'))).toBeOnTheScreen();
     await waitFor(async () => expect((await savedPrefs()).settings.difficulties).toEqual(['Tough']));
   });
@@ -100,7 +102,9 @@ describe('picking a difficulty', () => {
     expect(screen.getByText(/1 pt/)).toBeOnTheScreen();
 
     fireEvent.press(screen.getByLabelText(levelBadge('Tricky')));
-    fireEvent.press(await screen.findByRole('radio', { name: /^Hard/ }));
+    fireEvent.press(await screen.findByRole('checkbox', { name: /^Hard/ }));
+    fireEvent.press(screen.getByRole('checkbox', { name: /^Tricky/ }));
+    fireEvent.press(screen.getByLabelText(en.mindReader.quick.apply));
 
     // A fresh round: the new level and the score back to zero, saved for next time.
     expect(await screen.findByLabelText(levelBadge('Hard'))).toBeOnTheScreen();
@@ -110,6 +114,17 @@ describe('picking a difficulty', () => {
     // ...with that level's full clock (the menu's status line shows the time left).
     fireEvent.press(screen.getByLabelText(en.a11y.menu));
     expect(await screen.findByText(new RegExp(`^${formatClock(defaultRoundSeconds('Hard'))}`))).toBeOnTheScreen();
+  });
+});
+
+describe('picking several difficulties in game', () => {
+  it('plays every difficulty applied from the badge sheet', async () => {
+    await openApp('/', { theme: { style: 'card' }, settings: { mode: 'classic', difficulties: ['Hard'] } });
+    fireEvent.press(await screen.findByLabelText(levelBadge('Hard')));
+    fireEvent.press(await screen.findByRole('checkbox', { name: /^Expert/ }));
+    fireEvent.press(screen.getByLabelText(en.mindReader.quick.applyMany));
+    expect(await screen.findByLabelText(levelBadge('Hard+'))).toBeOnTheScreen();
+    await waitFor(async () => expect((await savedPrefs()).settings.difficulties).toEqual(['Hard', 'Expert']));
   });
 });
 

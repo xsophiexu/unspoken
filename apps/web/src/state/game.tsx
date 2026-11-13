@@ -12,8 +12,6 @@ import {
   newSeed,
   resumableSettings,
   roundReducer,
-  withDifficulty,
-  type Difficulty,
   type EditionId,
   type GameSettings,
   type MindReaderPlay,
@@ -151,8 +149,9 @@ type GameContextValue = {
   saveSettings: (settings: GameSettings) => void;
   // A fresh round with the same settings (and the same way of playing Mind Reader).
   restart: () => void;
-  // A fresh round at another level; a timer still on its default follows the level.
-  changeDifficulty: (difficulty: Difficulty) => void;
+  // A fresh round with new difficulty picks (one or more, from toggleDifficulty, so a timer still on
+  // its default follows the hardest pick).
+  changeDifficulties: (settings: GameSettings) => void;
 };
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -167,7 +166,6 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
   const { edition } = useEdition();
   const [games, send] = useReducer(gamesReducer, undefined, () => Object.fromEntries(EDITION_IDS.map((id) => [id, initialGame(catalogs[id], random)])) as Games);
   const state = games[edition];
-  const { config } = catalogs[edition];
 
   useEffect(() => writeStored(catalogs.unspoken.settingsKey, games.unspoken.settings), [games.unspoken.settings]);
   useEffect(() => writeStored(catalogs.md.settingsKey, games.md.settings), [games.md.settings]);
@@ -197,9 +195,9 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       setVersus,
       saveSettings,
       restart: () => newGame(state.settings, state.play),
-      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty, config), state.play),
+      changeDifficulties: (settings) => newGame(settings, state.play),
     }),
-    [state.settings, state.round, state.play, state.start, state.mindReader, state.versus, config, dispatch, newGame, setMindReader, setVersus, saveSettings],
+    [state.settings, state.round, state.play, state.start, state.mindReader, state.versus, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );
 
   return <GameContext value={value}>{children}</GameContext>;

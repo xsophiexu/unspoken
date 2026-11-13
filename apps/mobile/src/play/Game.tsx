@@ -11,8 +11,7 @@ import {
   pausedStatus,
   swipeSummary,
   timeLimitDiffers,
-  withDifficulty,
-  type Difficulty,
+  type GameSettings,
   type RoundAction,
   type SwipeRoundState,
 } from '@unspoken/core';
@@ -31,7 +30,8 @@ import { playModel } from './model';
 import { OverOverlay, PassOverlay, PausedOverlay } from './overlays';
 import { PlayView, type HeaderHandlers, type Insets } from './PlayView';
 import { ReverseRound } from './ReverseRound';
-import { GameMenu, DifficultyPicker, ModeSheet } from './sheets';
+import { DifficultySheet } from '../mindReader/DifficultySheet';
+import { GameMenu, ModeSheet } from './sheets';
 import { TargetsProvider, useTargets } from './spotlight';
 import { TimeLimitSheet } from './TimeLimitSheet';
 import { useRound } from './useRound';
@@ -121,9 +121,10 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
     },
     changeSettings,
   };
-  const pick = (d: Difficulty) => {
+  // Apply on the difficulty sheets: a new round with the picks (one or more).
+  const applyDifficulties = (next: GameSettings) => {
     close();
-    prefs.startGame(withDifficulty(settings, d));
+    prefs.startGame(next);
   };
 
   let body: ReactNode;
@@ -168,13 +169,23 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
       <ModeSheet
         visible={sheet === 'mode'}
         onClose={close}
-        mode={settings.mode}
-        difficulties={settings.difficulties}
-        onPick={pick}
+        settings={settings}
+        onApply={applyDifficulties}
         onRestart={chrome.restart}
         onNewGame={changeSettings}
       />
-      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulties={settings.difficulties} categories={settings.categories} onPick={pick} />
+      {/* The same multi-select sheet as the setup and Quick Play: tap to add or remove difficulties,
+          then Apply starts a new game; Custom settings opens this mode's setup. */}
+      <DifficultySheet
+        visible={sheet === 'level'}
+        settings={settings}
+        onClose={close}
+        onApply={applyDifficulties}
+        onCustom={() => {
+          close();
+          router.push({ pathname: '/setup', params: { mode: settings.mode } });
+        }}
+      />
       {prefs.tourOpen ? <HowToPlay targets={targets} theme={theme} insets={insets} onClose={prefs.closeTour} /> : null}
     </View>
   );
