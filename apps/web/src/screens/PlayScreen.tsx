@@ -26,7 +26,10 @@ import { VersusRound } from './play/VersusRound';
 // and again once whenever the walkthrough changes (a returning player who saw an older one, saved
 // here as true, gets the new one).
 export const TOUR_STORAGE_KEY = 'unspoken.tourSeen';
-const tourDue = () => readStored(TOUR_STORAGE_KEY) !== en.howToPlay.version;
+// UnspokenMD's tour is seen on its own: a player new to UnspokenMD sees it once there too.
+export const MD_TOUR_STORAGE_KEY = 'unspoken.md.tourSeen';
+const tourKey = (edition: string | undefined) => (edition === 'md' ? MD_TOUR_STORAGE_KEY : TOUR_STORAGE_KEY);
+const tourDue = (edition: string | undefined) => readStored(tourKey(edition)) !== en.howToPlay.version;
 
 // wordBank and search: UnspokenMD's chip sheet and Find a card. deepDive: a Deep dive's chip, to
 // pick another specialty or category.
@@ -41,7 +44,7 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
   const layoutStyle = useTheme().theme.style;
   const rootRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  const [touring, setTouring] = useState(() => tour || tourDue());
+  const [touring, setTouring] = useState(() => tour || tourDue(round.config.edition));
   const swipe = round.kind === 'swipe';
   // UnspokenMD's one-card rounds (Zen, Ladder): the chip opens the word bank sheet, and search sits beside ···.
   const mdSwipe = swipe && round.config.edition === 'md';
@@ -68,7 +71,7 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
     start();
   };
   const finishTour = () => {
-    writeStored(TOUR_STORAGE_KEY, en.howToPlay.version);
+    writeStored(tourKey(round.config.edition), en.howToPlay.version);
     setTouring(false);
   };
 

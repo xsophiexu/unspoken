@@ -54,13 +54,14 @@ const characters: Record<CharacterId, string> = {
   mask: 'Mask',
 };
 
-// How to play in UnspokenMD: the same tour, with the MD wordmark and its own first step.
+// How to play in UnspokenMD: the same tour, with the MD wordmark and its own first step, and the
+// chip at the top left changing both the difficulty and the specialties.
 export function mdTourSteps(steps: readonly SpotlightStep[]): SpotlightStep[] {
-  return steps.map((step) =>
-    step.art === 'logo'
-      ? { ...step, text: 'Get someone to guess a medical term without saying any of the banned jargon.', note: 'Talk the way you would to a patient.' }
-      : step,
-  );
+  return steps.map((step) => {
+    if (step.art === 'logo') return { ...step, text: 'Get someone to guess a medical term without saying any of the banned jargon.', note: 'Talk the way you would to a patient.' };
+    if (step.target === 'difficulty') return { ...step, text: 'Tap here to change the difficulty and the specialties.' };
+    return step;
+  });
 }
 
 export const mdCopy = {

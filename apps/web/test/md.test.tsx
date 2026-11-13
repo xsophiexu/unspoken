@@ -9,7 +9,7 @@ import { EDITION_STORAGE_KEY } from '@/lib/edition';
 import { MD_SETTINGS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { HomeScreen } from '@/screens/HomeScreen';
 import { ModesScreen } from '@/screens/ModesScreen';
-import { PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
+import { MD_TOUR_STORAGE_KEY, PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
 import { SetupScreen } from '@/screens/SetupScreen';
 import { THEME_STORAGE_KEY } from '@/theme/boot';
 
@@ -25,6 +25,7 @@ function inMd(settings: Record<string, unknown> = zen) {
     [EDITION_STORAGE_KEY]: { edition: 'md', look: 'light', character: 'heart' },
     [MD_SETTINGS_STORAGE_KEY]: settings,
     [TOUR_STORAGE_KEY]: en.howToPlay.version,
+    [MD_TOUR_STORAGE_KEY]: en.howToPlay.version,
     [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' },
   });
 }
@@ -177,15 +178,15 @@ describe('UnspokenMD Quick Play', () => {
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
     expect(game.getByText(mdEn.play.title)).toBeInTheDocument();
     expect(game.getByRole('button', { name: 'Difficulty Hard–Expert, All specialties. Tap to change.' })).toHaveTextContent('HARD–EXPERT');
-    expect(game.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
+    expect(game.getByText('All specialties · 0 correct · 0 skipped')).toBeInTheDocument();
     expect(game.getByText(mdEn.play.bannedLabel)).toBeInTheDocument();
     expect(game.getAllByRole('listitem')).toHaveLength(6);
 
     // Each answer lands once the card has flown off.
     await user.click(game.getByRole('button', { name: en.play.correct }));
-    expect(await game.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
+    expect(await game.findByText('All specialties · 1 correct · 0 skipped')).toBeInTheDocument();
     await user.click(game.getByRole('button', { name: en.play.skip }));
-    expect(await game.findByText('All cards · 1 correct · 1 skipped')).toBeInTheDocument();
+    expect(await game.findByText('All specialties · 1 correct · 1 skipped')).toBeInTheDocument();
 
     await user.click(game.getByRole('button', { name: en.a11y.menu }));
     const menu = within(screen.getByRole('dialog', { name: en.menu.title }));
@@ -199,10 +200,10 @@ describe('UnspokenMD Quick Play', () => {
     const { game } = renderPlay(<HomeScreen />);
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
     await user.click(game.getByRole('button', { name: en.play.correct }));
-    expect(await game.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
+    expect(await game.findByText('All specialties · 1 correct · 0 skipped')).toBeInTheDocument();
 
     await user.click(screen.getByRole('link', { name: /Quick Play/ }));
-    expect(game.getByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
+    expect(game.getByText('All specialties · 1 correct · 0 skipped')).toBeInTheDocument();
   });
 
   it('plays a card found in search next, labeled From search, then carries on', async () => {
@@ -214,7 +215,7 @@ describe('UnspokenMD Quick Play', () => {
     expect(screen.getByText('From search · Tricky · Respiratory')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: en.play.correct }));
-    expect(await screen.findByText('All cards · 1 correct · 0 skipped')).toBeInTheDocument();
+    expect(await screen.findByText('All specialties · 1 correct · 0 skipped')).toBeInTheDocument();
     expect(word()).not.toHaveTextContent('Pneumothorax');
     expect(screen.getByText(en.play.yourWord)).toBeInTheDocument();
   });
@@ -277,7 +278,7 @@ describe('UnspokenMD game header', () => {
     // Every specialty picked one by one is the same as all cards.
     inMd({ ...zen, specialties: [...SPECIALTY_IDS] });
     renderPlay();
-    expect(screen.getByText('All cards · 0 correct · 0 skipped')).toBeInTheDocument();
+    expect(screen.getByText('All specialties · 0 correct · 0 skipped')).toBeInTheDocument();
   });
 
   it('says Zen for a game started on New game, and keeps saying it after a reload', async () => {
