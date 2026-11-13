@@ -184,7 +184,7 @@ export const layout = {
   sheet: { radius: radius.sheet, grabberWidth: 40, grabberHeight: 5, paddingX: 20, paddingTop: 10, paddingBottom: 26, headerRoom: 12, headerGap: 16 },
   button: { height: 54, primaryHeight: 58, radius: radius.xl },
   // Grid columns on each screen.
-  grid: { homeLinks: 3, homeTiles: 2, characters: 5, modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
+  grid: { homeLinks: 4, homeTiles: 2, characters: 5, modes: 2, setupDifficulty: 3, sheetDifficulty: 4, skips: 6, customizeColumns: 3, customizeRows: 2 },
   // Customize shows each style as a live miniature of the play screen.
   thumbnail: { scale: 0.235, radius: radius.md },
   swatch: { size: 28, ring: 2, gap: 3 },

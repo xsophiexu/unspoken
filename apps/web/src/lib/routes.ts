@@ -4,7 +4,7 @@ import { config as unspokenConfig } from './catalog';
 
 // Every screen's URL in one place. Trailing slashes match the static export (trailingSlash: true).
 export const routes = {
-  // Home: the edition switch, Quick Play, and the Modes, Customize and How to play links.
+  // Home: the edition switch, Quick Play, and the Modes, Customize, Word bank and How to play links.
   home: '/',
   // UnspokenMD's own link (unspokengame.web.app/md/): Home, switched to UnspokenMD.
   md: '/md/',
@@ -12,6 +12,8 @@ export const routes = {
   play: '/play/',
   howToPlay: '/play/?tour=1',
   modes: '/modes/',
+  // Every card in the edition, read only, with a link back to the game.
+  wordBank: '/words/',
   setup: (mode: ModeId) => `/setup/?mode=${mode}`,
   // Home's Custom game: New game for the edition's default mode, titled Custom game, back to Home.
   customGame: (mode: ModeId) => `/setup/?mode=${mode}&from=home`,
