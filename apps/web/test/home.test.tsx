@@ -7,7 +7,7 @@ import { catalogs } from '@/lib/catalog';
 import { EDITION_STORAGE_KEY } from '@/lib/edition';
 import { MD_SETTINGS_STORAGE_KEY, SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { HomeScreen } from '@/screens/HomeScreen';
-import { PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
+import { MD_TOUR_STORAGE_KEY, PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
 import { SetupScreen } from '@/screens/SetupScreen';
 import { THEME_STORAGE_KEY } from '@/theme/boot';
 
@@ -20,6 +20,7 @@ function returning(edition: 'md' | 'unspoken') {
   saved({
     [EDITION_STORAGE_KEY]: { edition, look: 'light', character: 'heart' },
     [TOUR_STORAGE_KEY]: en.howToPlay.version,
+    [MD_TOUR_STORAGE_KEY]: en.howToPlay.version,
     [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' },
   });
 }

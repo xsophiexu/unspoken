@@ -61,6 +61,8 @@ export type GameConfig = {
   // on. Defaults name one difficulty (served as before by GET /v1/config); settings start with it
   // as their only pick.
   defaults: Omit<GameSettings, 'roundSeconds' | 'noTimeLimit' | 'difficulties'> & { difficulty: Difficulty; noTimeLimit?: boolean };
+  // What Home's Quick Play always plays, whatever was played last.
+  quickPlayDifficulties: readonly Difficulty[];
   // Zen's steppers: "Skips for the game" and "Correct to win".
   zen?: { skips: Stepper; scoreTarget: Stepper };
   // Choices on the "Skips per round" grid; null is unlimited (∞).
@@ -157,6 +159,8 @@ export const gameConfig: GameConfig = {
   ],
   // The app opens straight into an Endless game at Normal with All cards.
   defaults: { mode: 'endless', difficulty: 'Normal', categories: [], skips: 3 },
+  // Quick Play: Normal to Hard.
+  quickPlayDifficulties: ['Normal', 'Tricky', 'Hard'],
   skipOptions: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, null],
   // Time limits run from 0:30 to 10:00.
   minRoundSeconds: 30,
@@ -242,6 +246,8 @@ export const mdGameConfig: GameConfig = {
     scoreTarget: 10,
     noScoreTarget: true,
   },
+  // Quick Play: Hard to Expert (Kurt, 2026-11-13).
+  quickPlayDifficulties: ['Hard', 'Tough', 'Expert'],
   zen: { skips: { default: 3, min: 0, max: 10 }, scoreTarget: { default: 10, min: 1, max: 50 } },
   // Ladder (Design's suggestion, not confirmed yet): 3 banned terms to start, one more per correct
   // answer, and one correct answer with all 6 showing wins.

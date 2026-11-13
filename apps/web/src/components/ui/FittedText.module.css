@@ -1,7 +1,8 @@
 .fitted {
   display: block;
   min-width: 0;
-  overflow-wrap: normal;
+  /* Only when a word cannot fit even at the floor size; fitWordSize normally prevents it. */
+  overflow-wrap: break-word;
   word-break: normal;
   hyphens: manual;
 }

@@ -74,13 +74,13 @@ function spanText(difficulties: readonly Difficulty[], config: GameConfig, kind:
   return difficultySpan(difficulties, { names, span, mixed: en.difficultyMix }, config, kind === 'badge' ? config.badgeMaxChars : Infinity);
 }
 
-// What the game draws from, before the score on the line under the title: All cards, one
-// specialty's short name ("Cardio") or one category, or how many ("3 specialties").
+// What the game draws from, before the score on the line under the title: All cards (All
+// specialties in UnspokenMD), one specialty's short name ("Cardio") or one category, or how many ("3 specialties").
 function picksText(settings: GameSettings, config: GameConfig): string {
   if (!config.specialties) return categoriesLabel(settings.categories, en);
   const picks = settings.specialties ?? [];
   const [only] = picks;
-  if (picks.length === 0 || picks.length === config.specialties.length) return en.themes.all;
+  if (picks.length === 0 || picks.length === config.specialties.length) return mdEn.specialtyPicks.all;
   return picks.length === 1 && only ? mdEn.specialtyShort[only] : plural(picks.length, mdEn.specialtyPicks.many);
 }
 

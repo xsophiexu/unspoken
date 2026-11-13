@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 
 import { Spotlight } from '@/components/play/Spotlight';
 import { DeepDiveSheet } from '@/components/sheets/DeepDiveSheet';
-import { DifficultyPicker } from '@/components/sheets/DifficultyPicker';
+import { DifficultySheet } from '@/components/mindReader/DifficultySheet';
 import { FindCardSheet } from '@/components/sheets/FindCardSheet';
 import { GameMenu } from '@/components/sheets/GameMenu';
 import { ModeSheet } from '@/components/sheets/ModeSheet';
@@ -26,7 +26,10 @@ import { VersusRound } from './play/VersusRound';
 // and again once whenever the walkthrough changes (a returning player who saw an older one, saved
 // here as true, gets the new one).
 export const TOUR_STORAGE_KEY = 'unspoken.tourSeen';
-const tourDue = () => readStored(TOUR_STORAGE_KEY) !== en.howToPlay.version;
+// UnspokenMD's tour is seen on its own: a player new to UnspokenMD sees it once there too.
+export const MD_TOUR_STORAGE_KEY = 'unspoken.md.tourSeen';
+const tourKey = (edition: string | undefined) => (edition === 'md' ? MD_TOUR_STORAGE_KEY : TOUR_STORAGE_KEY);
+const tourDue = (edition: string | undefined) => readStored(tourKey(edition)) !== en.howToPlay.version;
 
 // wordBank and search: UnspokenMD's chip sheet and Find a card. deepDive: a Deep dive's chip, to
 // pick another specialty or category.
@@ -35,13 +38,13 @@ type SheetKind = 'menu' | 'mode' | 'difficulty' | 'wordBank' | 'search' | 'deepD
 // The game: the round in the player's style, the sheets over it, and the first-visit tour. `tour`
 // (How to play on Home) opens the tour whatever the round.
 export function PlayScreen({ tour = false }: { tour?: boolean }) {
-  const { round, dispatch, restart, changeDifficulty, newGame, start } = useGame();
+  const { round, dispatch, restart, newGame, start } = useGame();
   // The style as drawn in the mode in use (dark mode changes some slots; a Halloween look is always
   // dark) and the edition (UnspokenMD has no holiday looks).
   const layoutStyle = useTheme().theme.style;
   const rootRef = useRef<HTMLDivElement>(null);
   const [sheet, setSheet] = useState<SheetKind | null>(null);
-  const [touring, setTouring] = useState(() => tour || tourDue());
+  const [touring, setTouring] = useState(() => tour || tourDue(round.config.edition));
   const swipe = round.kind === 'swipe';
   // UnspokenMD's one-card rounds (Zen, Ladder): the chip opens the word bank sheet, and search sits beside ···.
   const mdSwipe = swipe && round.config.edition === 'md';
@@ -68,7 +71,7 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
     start();
   };
   const finishTour = () => {
-    writeStored(TOUR_STORAGE_KEY, en.howToPlay.version);
+    writeStored(tourKey(round.config.edition), en.howToPlay.version);
     setTouring(false);
   };
 
@@ -113,9 +116,17 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
         />
       )}
       {sheet === 'mode' && (
-        <ModeSheet round={round} onClose={close} onPick={(difficulty) => fresh(() => changeDifficulty(difficulty))} onRestart={() => fresh(restart)} onLeave={leave} />
+        <ModeSheet round={round} onClose={close} onApply={(settings) => fresh(() => newGame(settings))} onRestart={() => fresh(restart)} onLeave={leave} />
       )}
-      {sheet === 'difficulty' && <DifficultyPicker round={round} onClose={close} onPick={(difficulty) => fresh(() => changeDifficulty(difficulty))} />}
+      {sheet === 'difficulty' && (
+        <DifficultySheet
+          settings={round.settings}
+          onClose={close}
+          onApply={(settings) => fresh(() => newGame(settings))}
+          customHref={routes.setup(round.settings.mode)}
+          onCustom={leave}
+        />
+      )}
       {sheet === 'wordBank' && (
         <WordBankSheet
           settings={round.settings}

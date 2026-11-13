@@ -1,4 +1,4 @@
-// Home's ways into a game that skip New game: Quick Play (all cards, Normal to Hard) and Deep dive
+// Home's ways into a game that skip New game: Quick Play (all cards at the edition's Quick Play difficulties) and Deep dive
 // (one specialty or category at every difficulty). Both play the edition's default mode: Zen in
 // UnspokenMD, Endless in Unspoken.
 
@@ -7,8 +7,11 @@ import { defaultSettings, difficultyLabel, sortDifficulties, withDifficulty } fr
 import { format } from './text';
 import type { Category, Difficulty, GameSettings, Specialty } from './types';
 
-// Quick Play's difficulties, whatever was played last.
-export const QUICK_PLAY_DIFFICULTIES: readonly Difficulty[] = ['Normal', 'Tricky', 'Hard'];
+// Quick Play's difficulties, whatever was played last: Normal to Hard in Unspoken, Hard to Expert
+// in UnspokenMD.
+export function quickPlayDifficulties(config: GameConfig = gameConfig): readonly Difficulty[] {
+  return config.quickPlayDifficulties;
+}
 
 // The edition's default settings with these picks and nothing else carried over: no categories, no
 // specialties, the time limit on the hardest pick's default.
@@ -24,10 +27,10 @@ function freshSettings(config: GameConfig, difficulties: readonly Difficulty[], 
   return settings;
 }
 
-// What Home's Quick Play starts: the default mode with all cards at QUICK_PLAY_DIFFICULTIES (the
-// ones the edition has).
+// What Home's Quick Play starts: the default mode with all cards at the edition's Quick Play
+// difficulties.
 export function homeQuickPlaySettings(config: GameConfig = gameConfig): GameSettings {
-  return freshSettings(config, QUICK_PLAY_DIFFICULTIES, { categories: [], specialties: [] });
+  return freshSettings(config, quickPlayDifficulties(config), { categories: [], specialties: [] });
 }
 
 // Whether a game plays exactly what Quick Play starts (same mode, difficulties and word bank), so

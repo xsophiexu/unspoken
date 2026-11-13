@@ -40,8 +40,30 @@ describe('fitWordSize', () => {
     expect(linesAt('Abcde-fghij', 40, 250, mono)).toBe(1);
   });
 
-  it('never goes below the minimum, even when the word cannot fit', () => {
-    expect(fitWordSize('A'.repeat(200), mono, { width: 100, min: 22 })).toBe(22);
+  it('goes below the minimum to keep a long word inside its box', () => {
+    // 30 letters are 15em: 22px would need 330px, so it shrinks to 19px (285px of 291px).
+    const word = 'A'.repeat(30);
+    const size = fitWordSize(word, mono, { width: 300, min: 22 });
+    expect(size).toBe(19);
+    expect(linesAt(word, size, 291, mono)).toBe(1);
+  });
+
+  it('keeps a long phrase within maxLines by shrinking below the minimum', () => {
+    // Five 12-letter words: at 22px two fit a line (269.5px of 291px), so five need 3 lines.
+    const phrase = Array.from({ length: 5 }, () => 'A'.repeat(12)).join(' ');
+    expect(linesAt(phrase, 22, 291, mono)).toBe(3);
+    const size = fitWordSize(phrase, mono, { width: 300, min: 22, maxLines: 2 });
+    expect(size).toBeLessThan(22);
+    expect(linesAt(phrase, size, 291, mono)).toBeLessThanOrEqual(2);
+  });
+
+  it('stops at the floor when even that cannot fit', () => {
+    expect(fitWordSize('A'.repeat(200), mono, { width: 100, min: 22 })).toBe(12);
+    expect(fitWordSize('A'.repeat(200), mono, { width: 100, min: 22, floor: 16 })).toBe(16);
+  });
+
+  it('never sets a floor above the minimum', () => {
+    expect(fitWordSize('A'.repeat(200), mono, { width: 100, min: 10, floor: 16 })).toBe(10);
   });
 
   it('gives a smaller or equal size to a longer word in the same box', () => {

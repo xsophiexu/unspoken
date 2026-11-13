@@ -21,7 +21,13 @@ export type FitOptions = {
   maxLines?: number;
   // Share of the width the text may use, leaving room for rendering differences between engines.
   safety?: number;
+  // The smallest size the text may shrink to when nothing between max and min fits (long medical
+  // terms). Below min the text gets small but stays inside its box instead of spilling off the card.
+  floor?: number;
 };
+
+// The legibility floor when a caller sets none.
+export const FIT_FLOOR = 12;
 
 function charEm(ch: string, metrics: GlyphMetrics): number {
   const direct = metrics.widths[ch];
@@ -61,15 +67,18 @@ export function linesAt(text: string, size: number, width: number, metrics: Glyp
   return lines;
 }
 
-// The biggest whole font size, from max down to min, at which the text fits the width in at most
-// maxLines lines without breaking inside a word. Returns min when nothing larger fits.
+// The biggest whole font size, from max down, at which the text fits the width in at most maxLines
+// lines without breaking inside a word. Sizes from max to min come first; when none of them fits,
+// it keeps shrinking below min down to floor, so a long term stays on the card. Returns floor when
+// even that doesn't fit (a box too narrow for any legible size).
 export function fitWordSize(text: string, metrics: GlyphMetrics, options: FitOptions): number {
   const { width, max = 50, min = 22, maxLines = 2, safety = 0.97 } = options;
+  const floor = Math.min(options.floor ?? FIT_FLOOR, min);
   const room = width * safety;
-  for (let size = max; size > min; size -= 1) {
+  for (let size = max; size > floor; size -= 1) {
     if (linesAt(text, size, room, metrics) <= maxLines) return size;
   }
-  return min;
+  return floor;
 }
 
 // Reverse shows one underline per letter. Long answers get narrower blanks so the longest word
