@@ -200,6 +200,8 @@ export const layout = {
   character: { row: 44, picker: 48 },
   // UnspokenMD's Find a card lists this many results at most; typing more narrows them down.
   search: { maxResults: 50 },
+  // The Word bank page shows this many cards, then Show more adds as many again.
+  wordBank: { page: 100 },
   // Icon boxes and line weights for the controls the boards draw.
   icon: { sm: 14, md: 18, lg: 22, xl: 24 },
   stroke: { hairline: 1, outline: 1.5, focus: 2, heavy: 4 },

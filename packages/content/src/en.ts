@@ -316,11 +316,16 @@ export const en = {
   wordBank: {
     back: '← Back to game',
     title: 'Word bank',
-    sub: { unspoken: 'Every card in Unspoken: {cards}.', md: 'Every card in UnspokenMD: {cards}.' },
     label: 'Search the word bank',
-    placeholder: 'Search for a word',
-    none: 'No cards match that.',
-    group: '{difficulty} · {cards}',
+    placeholder: 'Search a word or banned word',
+    // The filter beside the search: one specialty (UnspokenMD) or category, or all of them.
+    pickLabel: { unspoken: 'Category', md: 'Specialty' },
+    all: { unspoken: 'All categories', md: 'All specialties' },
+    difficulty: 'Difficulty',
+    count: '{shown} of {total}',
+    clear: 'Clear filters',
+    none: 'No cards match these filters.',
+    more: 'Show more',
   },
   modesScreen: {
     // Modes always opens from Home.
