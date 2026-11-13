@@ -50,11 +50,12 @@ function quickPlayInProgress(round: RoundState, start: GameStart, config: GameCo
 const links: { href: string; icon: IconName; label: string }[] = [
   { href: routes.modes, icon: 'grid', label: copy.links.modes },
   { href: routes.customize, icon: 'brush', label: copy.links.customize },
+  { href: routes.wordBank, icon: 'list', label: copy.links.wordBank },
   { href: routes.howToPlay, icon: 'help', label: copy.links.howToPlay },
 ];
 
 // Home (home-build, screens 1 and 2): the edition switch, the fox holding the edition's card, Quick
-// Play, the Deep dive and Custom game tiles, and links to Modes, Customize and How to play.
+// Play, the Deep dive and Custom game tiles, and links to Modes, Customize, Word bank and How to play.
 export function HomeScreen() {
   const { edition, setEdition } = useEdition();
   const { round, start, newGame } = useGame();

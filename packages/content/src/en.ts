@@ -311,6 +311,17 @@ export const en = {
   },
 
   // --- Modes and setup -----------------------------------------------------------------------
+  // Every card in the edition, to read through: grouped by difficulty, with a search. Nothing here
+  // changes the game.
+  wordBank: {
+    back: '← Back to game',
+    title: 'Word bank',
+    sub: { unspoken: 'Every card in Unspoken: {cards}.', md: 'Every card in UnspokenMD: {cards}.' },
+    label: 'Search the word bank',
+    placeholder: 'Search for a word',
+    none: 'No cards match that.',
+    group: '{difficulty} · {cards}',
+  },
   modesScreen: {
     // Modes always opens from Home.
     back: '← Home',

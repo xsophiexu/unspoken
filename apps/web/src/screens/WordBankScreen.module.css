@@ -1,0 +1,19 @@
+/* One list per difficulty, under its name and card count. */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-2);
+}
+
+.heading {
+  margin: 0;
+  color: var(--region-muted);
+}
+
+/* A card: the word, then where it is filed. Rows can't be tapped. */
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--un-space-0-5);
+  padding: var(--un-space-2-5) var(--un-space-4);
+}

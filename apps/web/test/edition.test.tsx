@@ -47,6 +47,8 @@ describe('Home', () => {
     expect(links.getByRole('link', { name: home.links.modes })).toHaveAttribute('href', '/modes/');
     expect(links.getByRole('link', { name: home.links.customize })).toHaveAttribute('href', '/customize/');
     expect(links.getByRole('link', { name: home.links.howToPlay })).toHaveAttribute('href', '/play/?tour=1');
+    expect(links.getAllByRole('link').map((link) => link.textContent)).toEqual([home.links.modes, home.links.customize, home.links.wordBank, home.links.howToPlay]);
+    expect(links.getByRole('link', { name: home.links.wordBank })).toHaveAttribute('href', '/words/');
   });
 
   it('offers UnspokenMD’s Quick Play on all specialties from Hard to Expert', async () => {

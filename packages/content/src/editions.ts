@@ -19,7 +19,7 @@ export const homeCopy = {
   // The art's text alternative.
   art: {
     unspoken: 'A fox holding a card that says unspoken',
-    md: 'A fox holding a card that says unspokenmd',
+    md: 'A card that says unspokenmd',
   } satisfies Record<EditionId, string>,
   // Quick Play always plays all cards at the edition's Quick Play difficulties: "All cards · Normal to Hard".
   quickPlay: { title: 'Quick Play', detail: '{picks} · {difficulties}' },
@@ -29,7 +29,7 @@ export const homeCopy = {
     detail: { unspoken: 'Pick a category', md: 'Pick a specialty' } satisfies Record<EditionId, string>,
   },
   customGame: { title: 'Custom game', detail: 'Your own rules' },
-  links: { label: 'More', modes: 'Modes', customize: 'Customize', howToPlay: 'How to play' },
+  links: { label: 'More', modes: 'Modes', customize: 'Customize', wordBank: 'Word bank', howToPlay: 'How to play' },
 };
 
 const characters: Record<CharacterId, string> = {
