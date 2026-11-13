@@ -7,7 +7,7 @@ import { EDITION_STORAGE_KEY } from '@/lib/edition';
 import { SETTINGS_STORAGE_KEY } from '@/lib/settings';
 import { CustomizeScreen } from '@/screens/CustomizeScreen';
 import { HomeScreen } from '@/screens/HomeScreen';
-import { PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
+import { MD_TOUR_STORAGE_KEY, PlayScreen, TOUR_STORAGE_KEY } from '@/screens/PlayScreen';
 import { bootScript, THEME_STORAGE_KEY } from '@/theme/boot';
 
 import { renderApp, saved } from './app';
@@ -47,6 +47,13 @@ describe('Home', () => {
     expect(links.getByRole('link', { name: home.links.modes })).toHaveAttribute('href', '/modes/');
     expect(links.getByRole('link', { name: home.links.customize })).toHaveAttribute('href', '/customize/');
     expect(links.getByRole('link', { name: home.links.howToPlay })).toHaveAttribute('href', '/play/?tour=1');
+  });
+
+  it('offers UnspokenMD’s Quick Play on all specialties from Hard to Expert', async () => {
+    const user = userEvent.setup();
+    renderApp(<HomeScreen />);
+    await user.click(screen.getByRole('radio', { name: /Medical jargon/ }));
+    expect(quickPlay()).toHaveTextContent('All specialties · Hard to Expert');
   });
 
   it('starts in Unspoken for a new player', () => {
@@ -139,12 +146,26 @@ describe('Customize in UnspokenMD', () => {
 
 describe('How to play in UnspokenMD', () => {
   it('opens from Home with the MD wordmark and its own first step', () => {
-    saved({ [EDITION_STORAGE_KEY]: { edition: 'md' }, [TOUR_STORAGE_KEY]: en.howToPlay.version });
+    saved({ [EDITION_STORAGE_KEY]: { edition: 'md' }, [MD_TOUR_STORAGE_KEY]: en.howToPlay.version });
     renderApp(<PlayScreen tour />);
     const tour = within(screen.getByRole('dialog', { name: en.menu.howToPlay.title }));
     expect(tour.getByText(en.md.wordmark.base, { exact: false })).toHaveTextContent('unspokenmd');
     expect(tour.getByText('Get someone to guess a medical term without saying any of the banned jargon.')).toBeInTheDocument();
     expect(tour.getByText('Talk the way you would to a patient.')).toBeInTheDocument();
+  });
+
+  it('opens once on a first UnspokenMD game, even after Unspoken’s, and points at the chip for difficulty and specialties', async () => {
+    const user = userEvent.setup();
+    saved({ [EDITION_STORAGE_KEY]: { edition: 'md' }, [TOUR_STORAGE_KEY]: en.howToPlay.version });
+    const first = renderApp(<PlayScreen />);
+    const tour = within(screen.getByRole('dialog', { name: en.menu.howToPlay.title }));
+    expect(tour.getByText('Get someone to guess a medical term without saying any of the banned jargon.')).toBeInTheDocument();
+    expect(en.md.howToPlay.steps.find((step) => step.target === 'difficulty')?.text).toBe('Tap here to change the difficulty and the specialties.');
+    await user.click(tour.getByRole('button', { name: en.howToPlay.play }));
+
+    first.unmount();
+    renderApp(<PlayScreen />);
+    expect(screen.queryByRole('dialog', { name: en.menu.howToPlay.title })).not.toBeInTheDocument();
   });
 
   it('keeps Unspoken’s first step in Unspoken', () => {

@@ -21,7 +21,7 @@ export const homeCopy = {
     unspoken: 'A fox holding a card that says unspoken',
     md: 'A fox holding a card that says unspokenmd',
   } satisfies Record<EditionId, string>,
-  // Quick Play always plays all cards at Normal, Tricky and Hard: "All cards · Normal to Hard".
+  // Quick Play always plays all cards at the edition's Quick Play difficulties: "All cards · Normal to Hard".
   quickPlay: { title: 'Quick Play', detail: '{picks} · {difficulties}' },
   // The two white tiles under Quick Play. Deep dive opens its sheet; Custom game opens New game.
   deepDive: {
@@ -54,13 +54,14 @@ const characters: Record<CharacterId, string> = {
   mask: 'Mask',
 };
 
-// How to play in UnspokenMD: the same tour, with the MD wordmark and its own first step.
+// How to play in UnspokenMD: the same tour, with the MD wordmark and its own first step, and the
+// chip at the top left changing both the difficulty and the specialties.
 export function mdTourSteps(steps: readonly SpotlightStep[]): SpotlightStep[] {
-  return steps.map((step) =>
-    step.art === 'logo'
-      ? { ...step, text: 'Get someone to guess a medical term without saying any of the banned jargon.', note: 'Talk the way you would to a patient.' }
-      : step,
-  );
+  return steps.map((step) => {
+    if (step.art === 'logo') return { ...step, text: 'Get someone to guess a medical term without saying any of the banned jargon.', note: 'Talk the way you would to a patient.' };
+    if (step.target === 'difficulty') return { ...step, text: 'Tap here to change the difficulty and the specialties.' };
+    return step;
+  });
 }
 
 export const mdCopy = {

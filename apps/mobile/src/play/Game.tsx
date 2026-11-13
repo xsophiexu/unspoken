@@ -11,8 +11,7 @@ import {
   pausedStatus,
   swipeSummary,
   timeLimitDiffers,
-  withDifficulty,
-  type Difficulty,
+  type GameSettings,
   type RoundAction,
   type SwipeRoundState,
 } from '@unspoken/core';
@@ -31,7 +30,8 @@ import { playModel } from './model';
 import { OverOverlay, PassOverlay, PausedOverlay } from './overlays';
 import { PlayView, type HeaderHandlers, type Insets } from './PlayView';
 import { ReverseRound } from './ReverseRound';
-import { GameMenu, DifficultyPicker, ModeSheet } from './sheets';
+import { DifficultySheet } from '../mindReader/DifficultySheet';
+import { GameMenu, ModeSheet } from './sheets';
 import { TargetsProvider, useTargets } from './spotlight';
 import { TimeLimitSheet } from './TimeLimitSheet';
 import { useRound } from './useRound';
@@ -121,9 +121,9 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
     },
     changeSettings,
   };
-  const pick = (d: Difficulty) => {
+  const apply = (next: GameSettings) => {
     close();
-    prefs.startGame(withDifficulty(settings, d));
+    prefs.startGame(next);
   };
 
   let body: ReactNode;
@@ -168,13 +168,12 @@ function Round({ settings }: { settings: Parameters<typeof useRound>[0] }) {
       <ModeSheet
         visible={sheet === 'mode'}
         onClose={close}
-        mode={settings.mode}
-        difficulties={settings.difficulties}
-        onPick={pick}
+        settings={settings}
+        onApply={apply}
         onRestart={chrome.restart}
         onNewGame={changeSettings}
       />
-      <DifficultyPicker visible={sheet === 'level'} onClose={close} difficulties={settings.difficulties} categories={settings.categories} onPick={pick} />
+      <DifficultySheet visible={sheet === 'level'} settings={settings} onClose={close} onApply={apply} onCustom={changeSettings} />
       {prefs.tourOpen ? <HowToPlay targets={targets} theme={theme} insets={insets} onClose={prefs.closeTour} /> : null}
     </View>
   );

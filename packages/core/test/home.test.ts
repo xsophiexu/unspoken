@@ -111,9 +111,9 @@ describe('Deep dive', () => {
 });
 
 describe('Home Quick Play', () => {
-  it('plays Zen with all specialties at Normal, Tricky and Hard in UnspokenMD', () => {
+  it('plays Zen with all specialties at Hard, Tough and Expert in UnspokenMD', () => {
     const settings = homeQuickPlaySettings(mdGameConfig);
-    expect(settings).toMatchObject({ mode: 'zen', difficulties: ['Normal', 'Tricky', 'Hard'], specialties: [], categories: [] });
+    expect(settings).toMatchObject({ mode: 'zen', difficulties: ['Hard', 'Tough', 'Expert'], specialties: [], categories: [] });
     expect(isHomeQuickPlay(settings, mdGameConfig)).toBe(true);
   });
 
@@ -124,7 +124,7 @@ describe('Home Quick Play', () => {
 
   it('carries on only with a game playing exactly that', () => {
     const quick = homeQuickPlaySettings(mdGameConfig);
-    expect(isHomeQuickPlay({ ...quick, difficulties: ['Hard', 'Normal', 'Tricky'] }, mdGameConfig)).toBe(true);
+    expect(isHomeQuickPlay({ ...quick, difficulties: ['Expert', 'Hard', 'Tough'] }, mdGameConfig)).toBe(true);
     expect(isHomeQuickPlay({ ...quick, difficulties: ['Tricky'] }, mdGameConfig)).toBe(false);
     expect(isHomeQuickPlay({ ...quick, specialties: ['renal'] }, mdGameConfig)).toBe(false);
     expect(isHomeQuickPlay({ ...quick, mode: 'ladder' }, mdGameConfig)).toBe(false);

@@ -12,8 +12,6 @@ import {
   newSeed,
   resumableSettings,
   roundReducer,
-  withDifficulty,
-  type Difficulty,
   type EditionId,
   type GameSettings,
   type MindReaderPlay,
@@ -151,8 +149,6 @@ type GameContextValue = {
   saveSettings: (settings: GameSettings) => void;
   // A fresh round with the same settings (and the same way of playing Mind Reader).
   restart: () => void;
-  // A fresh round at another level; a timer still on its default follows the level.
-  changeDifficulty: (difficulty: Difficulty) => void;
 };
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -197,7 +193,6 @@ export function GameProvider({ children, random = Math.random }: GameProviderPro
       setVersus,
       saveSettings,
       restart: () => newGame(state.settings, state.play),
-      changeDifficulty: (difficulty) => newGame(withDifficulty(state.settings, difficulty, config), state.play),
     }),
     [state.settings, state.round, state.play, state.start, state.mindReader, state.versus, config, dispatch, newGame, setMindReader, setVersus, saveSettings],
   );
