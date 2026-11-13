@@ -257,6 +257,23 @@ describe('UnspokenMD Quick Play', () => {
     await user.click(again.getByRole('button', { name: mdEn.picksSheet.apply }));
     expect(screen.getByText('3 specialties · 0 correct · 0 skipped')).toBeInTheDocument();
   });
+
+  it('gives Unspoken’s Quick Play chip the same sheet, with several difficulties and Categories', async () => {
+    const user = userEvent.setup();
+    saved({ [TOUR_STORAGE_KEY]: en.howToPlay.version, [THEME_STORAGE_KEY]: { style: 'card', color: 'teal', mode: 'light' } });
+    const { game } = renderPlay(<HomeScreen />);
+    await user.click(screen.getByRole('link', { name: /Quick Play/ }));
+
+    await user.click(game.getByRole('button', { name: 'Difficulty Normal–Hard. Tap to change.' }));
+    const sheet = within(screen.getByRole('dialog', { name: mdEn.picksSheet.tabs }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Tough/ }));
+    await user.click(sheet.getByRole('radio', { name: mdEn.picksSheet.categories }));
+    await user.click(sheet.getByRole('checkbox', { name: /^Technology/ }));
+    await user.click(sheet.getByRole('button', { name: mdEn.picksSheet.apply }));
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(stored(SETTINGS_STORAGE_KEY)).toMatchObject({ difficulties: ['Normal', 'Tricky', 'Hard', 'Tough'], categories: ['Technology'] });
+  });
 });
 
 describe('UnspokenMD game header', () => {

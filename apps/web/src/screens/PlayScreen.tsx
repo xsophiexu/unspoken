@@ -80,8 +80,9 @@ export function PlayScreen({ tour = false }: { tour?: boolean }) {
     blocked: showTour || sheet !== null,
     sheetOpen: sheet !== null,
     onMenu: () => open('menu'),
-    // The Card badge names only the level, so it opens the level picker; "Mode · Level" opens both.
-    onHeader: () => open(deepDive ? 'deepDive' : mdSwipe ? 'wordBank' : layoutStyle.header.variant === 'titleBadge' ? 'difficulty' : 'mode'),
+    // A one-card game's chip opens the word bank sheet (Difficulty with Specialties or Categories); a
+    // Deep dive's opens Deep dive; other games' badge opens the level picker, "Mode · Level" the mode sheet.
+    onHeader: () => open(deepDive ? 'deepDive' : mdSwipe || (swipe && layoutStyle.header.variant === 'titleBadge') ? 'wordBank' : layoutStyle.header.variant === 'titleBadge' ? 'difficulty' : 'mode'),
     onLeave: leave,
   };
   // A card from search plays next; then the game carries on.

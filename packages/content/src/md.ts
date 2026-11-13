@@ -121,6 +121,9 @@ export const mdEn = {
     difficulty: 'Difficulty',
     specialties: 'Specialties',
     specialtiesLabel: 'SPECIALTIES',
+    // Unspoken's sheet has Categories where UnspokenMD has Specialties.
+    categories: 'Categories',
+    categoriesLabel: 'CATEGORIES',
     note: 'Applying starts a new game',
     custom: 'Custom settings',
     apply: 'Apply',

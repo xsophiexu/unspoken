@@ -1,7 +1,7 @@
 'use client';
 
 import { en, mdEn, mdSpecialties } from '@unspoken/content';
-import { plural, tapAllCards, toggleDifficulty, toggleSpecialty, type AllCardsTap, type GameSettings, type Specialty } from '@unspoken/core';
+import { categoriesInBank, plural, tapAllCards, toggleDifficulty, toggleSpecialty, type AllCardsTap, type Category, type GameSettings, type Specialty } from '@unspoken/core';
 import { motion } from '@unspoken/design-tokens';
 import { useId, useRef, useState } from 'react';
 
@@ -12,14 +12,15 @@ import { Icon } from '@/components/ui/Icon';
 import { Section } from '@/components/ui/Section';
 import { Segmented } from '@/components/ui/Segmented';
 import { Sheet } from '@/components/ui/Sheet';
-import { countCards } from '@/lib/catalog';
+import { catalogs, countCards } from '@/lib/catalog';
+import { toggleCategory } from '@/lib/settings';
 import { cx, text } from '@/lib/ui';
 import { useCatalog } from '@/state/edition';
 
 import sheetStyles from './sheets.module.css';
 import styles from './mdSheets.module.css';
 
-type Tab = 'difficulty' | 'specialties';
+type Tab = 'difficulty' | 'picks';
 
 type Props = {
   // The game's settings; the sheet edits a copy until Apply.
@@ -34,24 +35,37 @@ type Props = {
 
 const p = mdEn.picksSheet;
 const specialtyIds = mdSpecialties.map((s) => s.id);
+const themes = categoriesInBank(catalogs.unspoken.bank, catalogs.unspoken.config);
 
-// UnspokenMD's word bank sheet (quick-play-2, option B), from the header chip: Difficulty and
-// Specialties tabs, then Custom settings and Apply, like Mind Reader's Quick Play difficulty sheet.
+// The word bank sheet (quick-play-2, option B), from the header chip: Difficulty and Specialties
+// tabs in UnspokenMD, Difficulty and Categories in Unspoken, then Custom settings and Apply, like
+// Mind Reader's Quick Play difficulty sheet.
 export function WordBankSheet({ settings, onClose, onApply, customHref, onCustom }: Props) {
   const id = useId();
   const catalog = useCatalog();
   const { config } = catalog;
   const [tab, setTab] = useState<Tab>('difficulty');
   const [draft, setDraft] = useState(settings);
+  const md = Boolean(config.specialties);
   const allTap = useRef<AllCardsTap<Specialty>>(null);
+  const allCategoriesTap = useRef<AllCardsTap<Category>>(null);
   const specialties = draft.specialties ?? [];
+  const { categories } = draft;
   const specialtyCards = (picks: readonly Specialty[]) => countCards(catalog, catalog.difficultyIds, { categories: [], specialties: picks });
+  const categoryCards = (picks: readonly Category[]) => countCards(catalog, catalog.difficultyIds, { categories: picks });
   const setSpecialties = (next: readonly Specialty[]) => setDraft((current) => ({ ...current, specialties: next }));
+  const setCategories = (next: readonly Category[]) => setDraft((current) => ({ ...current, categories: [...next] }));
   const onAll = () => {
     const tap = tapAllCards(specialties, allTap.current, Date.now(), specialtyIds, motion.doubleTapMs);
     allTap.current = tap.last;
     setSpecialties(tap.categories);
   };
+  const onAllCategories = () => {
+    const tap = tapAllCards(categories, allCategoriesTap.current, Date.now(), themes, motion.doubleTapMs);
+    allCategoriesTap.current = tap.last;
+    setCategories(tap.categories);
+  };
+  const picksLabel = md ? p.specialties : p.categories;
   const apply = () => {
     onApply(draft);
     onClose();
@@ -70,7 +84,7 @@ export function WordBankSheet({ settings, onClose, onApply, customHref, onCustom
             value={tab}
             options={[
               { value: 'difficulty', label: p.difficulty },
-              { value: 'specialties', label: p.specialties },
+              { value: 'picks', label: picksLabel },
             ]}
             onChange={setTab}
           />
@@ -82,7 +96,7 @@ export function WordBankSheet({ settings, onClose, onApply, customHref, onCustom
       <p className={cx(styles.muted, text('small'))}>{p.note}</p>
       {tab === 'difficulty' ? (
         <DifficultyTiles picked={draft.difficulties} picks={draft} onToggle={(next) => setDraft((current) => toggleDifficulty(current, next, config))} />
-      ) : (
+      ) : md ? (
         <Section label={p.specialtiesLabel} aside={plural(specialtyCards(specialties), en.units.cards)}>
           <PickChips<Specialty>
             label={p.specialties}
@@ -91,6 +105,17 @@ export function WordBankSheet({ settings, onClose, onApply, customHref, onCustom
             picked={specialties}
             onAll={onAll}
             onToggle={(next) => setSpecialties(toggleSpecialty(specialties, next, config))}
+          />
+        </Section>
+      ) : (
+        <Section label={p.categoriesLabel} aside={plural(categoryCards(categories), en.units.cards)}>
+          <PickChips<Category>
+            label={p.categories}
+            all={{ label: en.themes.all, count: categoryCards([]) }}
+            items={themes.map((theme) => ({ id: theme, name: en.categories[theme], count: categoryCards([theme]) }))}
+            picked={categories}
+            onAll={onAllCategories}
+            onToggle={(next) => setCategories(toggleCategory(categories, next))}
           />
         </Section>
       )}
